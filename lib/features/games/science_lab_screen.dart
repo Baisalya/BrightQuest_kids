@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../../app/brightquest_scope.dart';
 import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
-import '../../core/gameplay/game_logic.dart';
+import '../../core/learning/game_evidence_adapter.dart';
+import '../../core/learning/learning_models.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
 import '../../core/theme/app_theme.dart';
@@ -27,6 +28,7 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
   String? selectedQuiz;
   bool? quizCorrect;
   bool experimentRecorded = false;
+  DateTime _quizStarted = DateTime.now();
   bool finished = false;
   MissionReward? missionReward;
   int _difficulty = 1;
@@ -48,16 +50,28 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
   void _addIngredient(String ingredient) {
     if (finished) return;
     setState(() => ingredients.add(ingredient));
-    final reaction = evaluateReaction(ingredients);
+    final reaction = BrightQuestScope.contentOf(context)
+        .scienceReactionForIngredients(_classNumber, ingredients);
     if (reaction.id == 'fizz' && !experimentRecorded) {
-      BrightQuestScope.of(context).recordAnswer(
+      final controller = BrightQuestScope.of(context);
+      final activity =
+          BrightQuestScope.contentOf(context).activityForScienceReaction(
+        classNumber: _classNumber,
+        reactionId: reaction.id,
+      );
+      controller.recordAnswer(
         gameId: 'science_lab',
         correct: true,
-        topicId: 'reactions',
-        difficulty: _difficulty,
+        topicId: activity?.topicId ?? 'reactions',
+        difficulty: activity?.difficulty ?? _difficulty,
         masteryGain: 0.06,
         coinReward: 8,
         xpReward: 12,
+        itemId: activity?.id,
+        competencyId: activity?.competencyId,
+        evidenceKind: LearningAttemptKind.guided,
+        responseTimeMs: DateTime.now().difference(_quizStarted).inMilliseconds,
+        confidence: 0.8,
       );
       FeedbackService.correct(
         BrightQuestScope.of(context),
@@ -76,14 +90,28 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
   void _answerQuiz(ScienceQuizQuestion question, String value) {
     if (selectedQuiz != null || finished) return;
     final correct = value == question.answer;
-    BrightQuestScope.of(context).recordAnswer(
+    final controller = BrightQuestScope.of(context);
+    final adapter = const GameEvidenceAdapter();
+    final activity = adapter.resolve(
+      repository: BrightQuestScope.contentOf(context),
+      classNumber: _classNumber,
+      gameId: 'science_lab',
+      legacyContentId: question.id,
+    );
+    controller.recordAnswer(
       gameId: 'science_lab',
       correct: correct,
       topicId: question.topicId,
       difficulty: question.difficulty,
       masteryGain: 0.05,
+      itemId: activity?.id,
+      competencyId: activity?.competencyId,
+      evidenceKind: adapter.kindFor(widget.learningLevel),
+      responseTimeMs: DateTime.now().difference(_quizStarted).inMilliseconds,
+      misconceptionId:
+          correct ? null : adapter.misconceptionFor(activity, value),
+      confidence: 0.84,
     );
-    final controller = BrightQuestScope.of(context);
     if (correct) {
       FeedbackService.correct(
         controller,
@@ -134,6 +162,7 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
       quizIndex += 1;
       selectedQuiz = null;
       quizCorrect = null;
+      _quizStarted = DateTime.now();
     });
   }
 
@@ -144,6 +173,7 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
       quizScore = 0;
       selectedQuiz = null;
       quizCorrect = null;
+      _quizStarted = DateTime.now();
       experimentRecorded = false;
       finished = false;
       missionReward = null;
@@ -153,9 +183,10 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
   @override
   Widget build(BuildContext context) {
     final classNumber = _classNumber;
-    final questions =
-        scienceQuestionsForClass(classNumber, difficulty: _difficulty);
-    final reaction = evaluateReaction(ingredients);
+    final questions = BrightQuestScope.contentOf(context)
+        .scienceQuestionsForClass(classNumber, difficulty: _difficulty);
+    final reaction = BrightQuestScope.contentOf(context)
+        .scienceReactionForIngredients(classNumber, ingredients);
     final question = questions[quizIndex];
 
     return GameScaffold(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app/brightquest_scope.dart';
 import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
+import '../../core/learning/game_evidence_adapter.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
 import '../../widgets/bright_widgets.dart';
@@ -25,6 +26,7 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
   bool checked = false;
   bool? correct;
   bool hadMistake = false;
+  DateTime _itemStarted = DateTime.now();
   bool finished = false;
   MissionReward? missionReward;
   int _difficulty = 1;
@@ -48,14 +50,27 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
     final isCorrect = noun == mission.noun &&
         verb == mission.verb &&
         adjective == mission.adjective;
-    BrightQuestScope.of(context).recordAnswer(
+    final controller = BrightQuestScope.of(context);
+    final activity = const GameEvidenceAdapter().resolve(
+      repository: BrightQuestScope.contentOf(context),
+      classNumber: _classNumber,
+      gameId: 'grammar_puzzle',
+      legacyContentId: mission.id,
+    );
+    controller.recordAnswer(
       gameId: 'grammar_puzzle',
       correct: isCorrect,
       topicId: mission.topicId,
       difficulty: mission.difficulty,
       masteryGain: 0.06,
+      itemId: activity?.id,
+      competencyId: activity?.competencyId,
+      evidenceKind: const GameEvidenceAdapter().kindFor(widget.learningLevel),
+      retries: hadMistake ? 1 : 0,
+      responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
+      misconceptionId: isCorrect ? null : 'parts_of_speech_classification',
+      confidence: hadMistake ? 0.6 : 0.84,
     );
-    final controller = BrightQuestScope.of(context);
     final chosen = '$noun as noun, $verb as verb, and $adjective as adjective';
     if (isCorrect) {
       FeedbackService.correct(
@@ -105,6 +120,7 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
       checked = false;
       correct = null;
       hadMistake = false;
+      _itemStarted = DateTime.now();
     });
   }
 
@@ -136,8 +152,8 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
   @override
   Widget build(BuildContext context) {
     final classNumber = _classNumber;
-    final missions =
-        grammarMissionsForClass(classNumber, difficulty: _difficulty);
+    final missions = BrightQuestScope.contentOf(context)
+        .grammarMissionsForClass(classNumber, difficulty: _difficulty);
     final mission = missions[missionIndex];
 
     final nounOptions = <String>{mission.noun, 'castle', 'quickly'}.toList();

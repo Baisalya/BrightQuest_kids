@@ -1,6 +1,10 @@
 import 'package:flutter/foundation.dart';
 
 import '../content/achievement_catalog.dart';
+import '../content/content_repository.dart';
+import '../entitlements/entitlement_models.dart';
+import '../learning/learning_models.dart';
+import '../learning/learning_progress_engine.dart';
 import '../curriculum/curriculum_catalog.dart';
 import '../curriculum/curriculum_models.dart';
 import '../models/game_models.dart';
@@ -17,6 +21,9 @@ class GameController extends ChangeNotifier {
   bool _loaded = false;
   bool _parentSessionUnlocked = false;
   Future<void> _saveTail = Future<void>.value();
+
+  static const LearningProgressEngine _learningProgress =
+      LearningProgressEngine();
 
   ChildProfileSnapshot get _profile => _snapshot.activeProfile;
 
@@ -40,9 +47,12 @@ class GameController extends ChangeNotifier {
   int get studySecondsToday => _profile.studySecondsToday;
   double get studyMinutesToday => _profile.studySecondsToday / 60;
   int get level => (xp ~/ 100) + 1;
-  double get accuracy => totalAnswers == 0 ? 0.0 : correctAnswers / totalAnswers;
-  double get dailyAccuracy => answersToday == 0 ? 0.0 : correctToday / answersToday;
-  Set<String> get unlockedRewards => Set<String>.unmodifiable(_profile.unlockedRewards);
+  double get accuracy =>
+      totalAnswers == 0 ? 0.0 : correctAnswers / totalAnswers;
+  double get dailyAccuracy =>
+      answersToday == 0 ? 0.0 : correctToday / answersToday;
+  Set<String> get unlockedRewards =>
+      Set<String>.unmodifiable(_profile.unlockedRewards);
   Set<String> get unlockedAchievementIds =>
       Set<String>.unmodifiable(_profile.unlockedAchievementIds);
 
@@ -58,6 +68,22 @@ class GameController extends ChangeNotifier {
   bool get reducedMotionEnabled => _snapshot.reducedMotionEnabled;
   bool get hapticsEnabled => _snapshot.hapticsEnabled;
   double get textScale => _snapshot.textScale;
+  LearningProfileState get learningState => _profile.learning;
+  DiagnosticProgress get diagnosticProgress => _profile.learning.diagnostic;
+  Map<String, SkillMastery> get skillMastery =>
+      Map<String, SkillMastery>.unmodifiable(_profile.learning.skillMastery);
+  List<AttemptEvidence> get attemptEvidence =>
+      List<AttemptEvidence>.unmodifiable(_profile.learning.attemptEvidence);
+  List<ReviewTask> get reviewTasks =>
+      List<ReviewTask>.unmodifiable(_profile.learning.reviewTasks);
+  List<ProjectEvidence> get projectEvidence =>
+      List<ProjectEvidence>.unmodifiable(_profile.learning.projectEvidence);
+  String get learningLocaleCode => _profile.learning.localeCode;
+  bool get dyslexiaFriendlySpacing => _profile.learning.dyslexiaFriendlySpacing;
+  bool get readingFocusEnabled => _profile.learning.readingFocusEnabled;
+  bool get captionsEnabled => _profile.learning.captionsEnabled;
+  Map<int, ClassEntitlement> get entitlementCache =>
+      Map<int, ClassEntitlement>.unmodifiable(_snapshot.entitlementCache);
   bool get dailyTimeLimitReached =>
       timeLimitEnabled && studySecondsToday >= dailyTimeLimitMinutes * 60;
 
@@ -114,8 +140,10 @@ class GameController extends ChangeNotifier {
     if (raw != null) {
       _snapshot = PlayerSnapshot.fromJson(raw);
     }
-    _snapshot.schemaVersion = 4;
+    _snapshot.schemaVersion = 5;
     _normalizeToday();
+    _profile.learning = _learningProgress.refreshReviewStates(
+        _profile.learning, DateTime.now());
     _loaded = true;
     notifyListeners();
   }
@@ -123,12 +151,11 @@ class GameController extends ChangeNotifier {
   GameProgress statsFor(String gameId) =>
       _profile.gameProgress.putIfAbsent(gameId, GameProgress.new);
 
-  TopicProgress topicStatsFor(String gameId, String topicId) => statsFor(gameId)
-      .topicProgress
-      .putIfAbsent(topicId, TopicProgress.new);
+  TopicProgress topicStatsFor(String gameId, String topicId) =>
+      statsFor(gameId).topicProgress.putIfAbsent(topicId, TopicProgress.new);
 
-  LearningLevelProgress levelStatsFor(String levelId) => _profile.levelProgress
-      .putIfAbsent(levelId, LearningLevelProgress.new);
+  LearningLevelProgress levelStatsFor(String levelId) =>
+      _profile.levelProgress.putIfAbsent(levelId, LearningLevelProgress.new);
 
   double progressFor(String gameId) => statsFor(gameId).mastery;
 
@@ -166,7 +193,8 @@ class GameController extends ChangeNotifier {
   LearningLevel? nextRecommendedLearningLevel() {
     final classLevels = levelsForClass(selectedClass);
     final available = classLevels
-        .where((level) => isLevelUnlocked(level) && !levelStatsFor(level.id).completed)
+        .where((level) =>
+            isLevelUnlocked(level) && !levelStatsFor(level.id).completed)
         .toList();
     if (available.isEmpty) return null;
 
@@ -206,7 +234,8 @@ class GameController extends ChangeNotifier {
     return completedLevelsForSubject(subject) / total;
   }
 
-  int dailyChallengeValue(DailyChallenge challenge) => switch (challenge.metric) {
+  int dailyChallengeValue(DailyChallenge challenge) =>
+      switch (challenge.metric) {
         DailyChallengeMetric.answers => answersToday,
         DailyChallengeMetric.xp => xpToday,
         DailyChallengeMetric.missions => missionsToday,
@@ -257,6 +286,144 @@ class GameController extends ChangeNotifier {
         .take(limit.clamp(0, played.length).toInt())
         .map((entry) => entry.key)
         .toList();
+  }
+
+  void startOrRestartDiagnostic(
+    ContentRepository repository, {
+    DateTime? now,
+  }) {
+    final timestamp = now ?? DateTime.now();
+    final progress = _learningProgress.startDiagnostic(
+      repository: repository,
+      classNumber: selectedClass,
+      now: timestamp,
+    );
+    _profile.learning = _profile.learning.copyWith(diagnostic: progress);
+    _changed();
+  }
+
+  bool recordDiagnosticEvidence({
+    required ContentRepository repository,
+    required bool correct,
+    required int responseTimeMs,
+    required double confidence,
+    int hintLevel = 0,
+    int retries = 0,
+    String? misconceptionId,
+    DateTime? now,
+  }) {
+    final progress = diagnosticProgress;
+    if (!progress.started || progress.completed) return false;
+    final activity = _learningProgress.currentDiagnosticActivity(
+      repository: repository,
+      progress: progress,
+    );
+    if (activity == null || activity.classNumber != selectedClass) return false;
+    final timestamp = now ?? DateTime.now();
+    recordLearningEvidence(
+      AttemptEvidence(
+        id: 'e:${activeProfileId}:${timestamp.microsecondsSinceEpoch}',
+        profileId: activeProfileId,
+        classNumber: selectedClass,
+        competencyId: activity.competencyId,
+        itemId: activity.id,
+        kind: LearningAttemptKind.diagnostic,
+        correct: correct,
+        hintLevel: hintLevel.clamp(0, 2).toInt(),
+        retries: retries.clamp(0, 99).toInt(),
+        responseTimeMs: responseTimeMs.clamp(0, 3600000).toInt(),
+        confidence: confidence.clamp(0.0, 1.0).toDouble(),
+        recordedAtIso: timestamp.toIso8601String(),
+        misconceptionId: misconceptionId,
+        sourceGameId: activity.gameId,
+      ),
+      saveImmediately: false,
+    );
+    _profile.learning = _profile.learning.copyWith(
+      diagnostic: _learningProgress.advanceDiagnostic(
+        progress: progress,
+        now: timestamp,
+      ),
+    );
+    _changed();
+    return true;
+  }
+
+  void recordLearningEvidence(
+    AttemptEvidence evidence, {
+    bool saveImmediately = true,
+  }) {
+    if (evidence.profileId != activeProfileId ||
+        evidence.classNumber != selectedClass) {
+      return;
+    }
+    _profile.learning =
+        _learningProgress.recordEvidence(_profile.learning, evidence);
+    if (saveImmediately) _changed();
+  }
+
+  List<ReviewTask> dueReviewTasks({DateTime? now, int limit = 10}) {
+    final timestamp = now ?? DateTime.now();
+    _profile.learning =
+        _learningProgress.refreshReviewStates(_profile.learning, timestamp);
+    return _learningProgress.dueReviewTasks(
+      _profile.learning,
+      classNumber: selectedClass,
+      now: timestamp,
+      limit: limit,
+    );
+  }
+
+  List<LearningRecommendation> learningRecommendations({int limit = 5}) =>
+      _learningProgress.recommendations(
+        _profile.learning,
+        limit: limit,
+      );
+
+  void recordProjectEvidence(ProjectEvidence evidence) {
+    if (evidence.classNumber != selectedClass) return;
+    final values = <ProjectEvidence>[
+      ..._profile.learning.projectEvidence,
+      evidence
+    ];
+    if (values.length > 100) {
+      values.removeRange(0, values.length - 100);
+    }
+    _profile.learning = _profile.learning.copyWith(
+      projectEvidence: List<ProjectEvidence>.unmodifiable(values),
+    );
+    _changed();
+  }
+
+  void setLearningLocale(String localeCode) {
+    if (localeCode != 'en-IN') return;
+    if (_profile.learning.localeCode == localeCode) return;
+    _profile.learning = _profile.learning.copyWith(localeCode: localeCode);
+    _changed();
+  }
+
+  void setDyslexiaFriendlySpacing(bool value) {
+    if (_profile.learning.dyslexiaFriendlySpacing == value) return;
+    _profile.learning =
+        _profile.learning.copyWith(dyslexiaFriendlySpacing: value);
+    _changed();
+  }
+
+  void setReadingFocusEnabled(bool value) {
+    if (_profile.learning.readingFocusEnabled == value) return;
+    _profile.learning = _profile.learning.copyWith(readingFocusEnabled: value);
+    _changed();
+  }
+
+  void setCaptionsEnabled(bool value) {
+    if (_profile.learning.captionsEnabled == value) return;
+    _profile.learning = _profile.learning.copyWith(captionsEnabled: value);
+    _changed();
+  }
+
+  void cacheEntitlement(ClassEntitlement entitlement) {
+    _snapshot.entitlementCache[entitlement.classNumber] = entitlement;
+    _changed();
   }
 
   void setClass(int value) {
@@ -415,6 +582,14 @@ class GameController extends ChangeNotifier {
     double masteryGain = 0.05,
     int coinReward = 10,
     int xpReward = 10,
+    String? itemId,
+    String? competencyId,
+    LearningAttemptKind evidenceKind = LearningAttemptKind.independent,
+    int hintLevel = 0,
+    int retries = 0,
+    int responseTimeMs = 0,
+    String? misconceptionId,
+    double confidence = 0.75,
   }) {
     _normalizeToday();
     _touchActivity();
@@ -460,6 +635,29 @@ class GameController extends ChangeNotifier {
     coinsAwarded += achievementCoins;
     _profile.coins += achievementCoins;
 
+    if (itemId != null && competencyId != null) {
+      final now = DateTime.now();
+      recordLearningEvidence(
+        AttemptEvidence(
+          id: 'e:${activeProfileId}:${now.microsecondsSinceEpoch}',
+          profileId: activeProfileId,
+          classNumber: selectedClass,
+          competencyId: competencyId,
+          itemId: itemId,
+          kind: evidenceKind,
+          correct: correct,
+          hintLevel: hintLevel.clamp(0, 2).toInt(),
+          retries: retries.clamp(0, 99).toInt(),
+          responseTimeMs: responseTimeMs.clamp(0, 3600000).toInt(),
+          confidence: confidence.clamp(0.0, 1.0).toDouble(),
+          recordedAtIso: now.toIso8601String(),
+          misconceptionId: misconceptionId,
+          sourceGameId: gameId,
+        ),
+        saveImmediately: false,
+      );
+    }
+
     _changed();
     return AnswerReward(
       correct: correct,
@@ -490,7 +688,8 @@ class GameController extends ChangeNotifier {
     final progress = statsFor(gameId);
     progress.completedRuns += 1;
     final normalizedScore = score.clamp(0, maxScore).toInt();
-    if (normalizedScore > progress.bestScore) progress.bestScore = normalizedScore;
+    if (normalizedScore > progress.bestScore)
+      progress.bestScore = normalizedScore;
 
     final ratio = (normalizedScore / maxScore).clamp(0.0, 1.0);
     var firstCompletion = false;
@@ -691,6 +890,12 @@ class GameController extends ChangeNotifier {
       timeLimitEnabled: current.timeLimitEnabled,
       soundEnabled: current.soundEnabled,
       remindersEnabled: current.remindersEnabled,
+      learning: LearningProfileState(
+        localeCode: current.learning.localeCode,
+        dyslexiaFriendlySpacing: current.learning.dyslexiaFriendlySpacing,
+        readingFocusEnabled: current.learning.readingFocusEnabled,
+        captionsEnabled: current.learning.captionsEnabled,
+      ),
     );
     await _waitForPendingSaves();
     _snapshot.profiles[current.id] = replacement;
@@ -720,8 +925,10 @@ class GameController extends ChangeNotifier {
       }
     }
 
-    final completedAny = _profile.levelProgress.values.any((value) => value.completed);
-    final hasPerfect = _profile.levelProgress.values.any((value) => value.earnedStars >= 3);
+    final completedAny =
+        _profile.levelProgress.values.any((value) => value.completed);
+    final hasPerfect =
+        _profile.levelProgress.values.any((value) => value.earnedStars >= 3);
     final pathStars = _profile.levelProgress.values.fold<int>(
       0,
       (sum, value) => sum + value.earnedStars,

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "locale": "en-IN",
+  "purpose": "Visible-text equivalents for meaningful BrightQuest audio cues. These do not re-enable Windows Flutter semantics.",
+  "cues": {
+    "levelStart": "Adventure starting.",
+    "tap": "Control activated.",
+    "hint": "A hint is available on screen.",
+    "correct": "Correct. Feedback and explanation are shown on screen.",
+    "wrong": "Try again. Guidance and the explanation are shown on screen.",
+    "star": "A learning star was earned.",
+    "unlock": "A learning level was unlocked.",
+    "complete": "Learning session complete.",
+    "menuMusic": "Background music only; no learning information is conveyed by music.",
+    "gameMusic": "Background music only; no learning information is conveyed by music."
+  },
+  "review": {
+    "status": "needsReview",
+    "revision": 1,
+    "reviewerOwnerId": "primary_teacher_reviewer"
+  }
+}

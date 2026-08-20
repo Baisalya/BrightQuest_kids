@@ -1,18 +1,34 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'app/brightquest_app.dart';
+import 'core/content/content_repository.dart';
+import 'core/entitlements/entitlement_service.dart';
 import 'core/persistence/shared_preferences_progress_store.dart';
 import 'core/services/bright_audio_service.dart';
 import 'core/state/game_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final entitlementService = EntitlementService();
+  final contentRepository = await ContentRepository.loadBundled(
+    loadAssetString: rootBundle.loadString,
+    accessPolicy: DevelopmentPackAccessPolicy.fromEnvironment(
+      developmentMode: kDebugMode,
+    ),
+    verifiedAccessResolver: entitlementService.hasProductionAccess,
+  );
   final controller = GameController(store: SharedPreferencesProgressStore());
   await controller.load();
-  final app = BrightQuestApp(controller: controller);
+  final app = BrightQuestApp(
+    controller: controller,
+    contentRepository: contentRepository,
+    entitlementService: entitlementService,
+  );
 
   // Current Flutter Windows builds can repeatedly submit invalid incremental
   // AXTree updates for this dense, eager IndexedStack and eventually fault in

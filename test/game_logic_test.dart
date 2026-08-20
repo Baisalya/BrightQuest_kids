@@ -1,6 +1,24 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:brightquest_kids/core/content/content_repository.dart';
 import 'package:brightquest_kids/core/content/game_content.dart';
 import 'package:brightquest_kids/core/gameplay/game_logic.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+Map<String, dynamic> _readJson(String path) => Map<String, dynamic>.from(
+      jsonDecode(File(path).readAsStringSync()) as Map,
+    );
+
+ContentRepository _repository() => ContentRepository.fromJsonPacks(
+      curriculumJson: _readJson('assets/content/curriculum_map.json'),
+      schemaJson: _readJson('assets/content/content_schema_v1.json'),
+      packJson: <Map<String, dynamic>>[
+        _readJson('assets/content/class_3/pack.json'),
+        _readJson('assets/content/class_4/pack.json'),
+        _readJson('assets/content/class_5/pack.json'),
+      ],
+    );
 
 void main() {
   group('fraction logic', () {
@@ -31,21 +49,28 @@ void main() {
   });
 
   group('science logic', () {
-    test('detects fizzing reaction', () {
-      final reaction = evaluateReaction({'Baking Soda', 'Vinegar'});
+    test('detects fizzing reaction from repository content', () {
+      final reaction = _repository().scienceReactionForIngredients(
+        4,
+        {'Baking Soda', 'Vinegar'},
+      );
       expect(reaction.id, 'fizz');
     });
 
     test('does not fake fizz for unrelated ingredients', () {
-      final reaction = evaluateReaction({'Water', 'Vinegar'});
+      final reaction = _repository().scienceReactionForIngredients(
+        4,
+        {'Water', 'Vinegar'},
+      );
       expect(reaction.id, 'none');
     });
   });
 
   group('coding maze simulation', () {
-    test('mission one reaches the goal with a valid sequence', () {
+    test('first Class 4 mission reaches the goal with a valid sequence', () {
+      final mission = _repository().codingMissionsForClass(4).first;
       final result = runCodingMission(
-        codingMissions.first,
+        mission,
         const [
           CodingCommand.move,
           CodingCommand.move,
@@ -60,8 +85,9 @@ void main() {
     });
 
     test('leaving the board is invalid', () {
+      final mission = _repository().codingMissionsForClass(4).first;
       final result = runCodingMission(
-        codingMissions.first,
+        mission,
         const [CodingCommand.turnLeft, CodingCommand.move],
       );
       expect(result.valid, isFalse);
@@ -89,46 +115,84 @@ void main() {
   });
 
   test('class content changes difficulty and subject depth', () {
-    final class3 = mathQuestionsForClass(3, difficulty: 1);
-    final class5 = mathQuestionsForClass(5, difficulty: 1);
+    final repository = _repository();
+    final class3 = repository.mathQuestionsForClass(3, difficulty: 1);
+    final class5 = repository.mathQuestionsForClass(5, difficulty: 1);
     expect(class3.first.text, isNot(class5.first.text));
     expect(class3, isNotEmpty);
     expect(class5, isNotEmpty);
 
-    final class4Easy = mathQuestionsForClass(4, difficulty: 1);
-    final class4Advanced = mathQuestionsForClass(4, difficulty: 3);
+    final class4Easy = repository.mathQuestionsForClass(4, difficulty: 1);
+    final class4Advanced = repository.mathQuestionsForClass(4, difficulty: 3);
     expect(class4Advanced.length, greaterThan(class4Easy.length));
-    expect(class4Advanced.any((question) => question.difficulty == 3), isTrue);
+    expect(
+      class4Advanced.any((question) => question.difficulty == 3),
+      isTrue,
+    );
   });
 
-  test('class-aware banks keep finite playable missions', () {
+  test('repository keeps finite playable missions for every class', () {
+    final repository = _repository();
     for (final classNumber in [3, 4, 5]) {
-      expect(fractionMissionsForClass(classNumber, difficulty: 1), isNotEmpty);
-      expect(scienceQuestionsForClass(classNumber, difficulty: 1), isNotEmpty);
-      expect(storyMissionsForClass(classNumber, difficulty: 1), isNotEmpty);
-      expect(grammarMissionsForClass(classNumber, difficulty: 1), isNotEmpty);
-      expect(mapQuestionsForClass(classNumber, difficulty: 1), isNotEmpty);
-      expect(codingMissionsForClass(classNumber, difficulty: 1), isNotEmpty);
-      expect(recyclingItemsForClass(classNumber, difficulty: 1), isNotEmpty);
+      expect(
+        repository.fractionMissionsForClass(classNumber, difficulty: 1),
+        isNotEmpty,
+      );
+      expect(
+        repository.scienceQuestionsForClass(classNumber, difficulty: 1),
+        isNotEmpty,
+      );
+      expect(
+        repository.storyMissionsForClass(classNumber, difficulty: 1),
+        isNotEmpty,
+      );
+      expect(
+        repository.grammarMissionsForClass(classNumber, difficulty: 1),
+        isNotEmpty,
+      );
+      expect(
+        repository.mapQuestionsForClass(classNumber, difficulty: 1),
+        isNotEmpty,
+      );
+      expect(
+        repository.codingMissionsForClass(classNumber, difficulty: 1),
+        isNotEmpty,
+      );
+      expect(
+        repository.recyclingItemsForClass(classNumber, difficulty: 1),
+        isNotEmpty,
+      );
     }
   });
 
   test('coding banks are class-specific and difficulty-tiered', () {
-    final class3 = codingMissionsForClass(3, difficulty: 3);
-    final class4 = codingMissionsForClass(4, difficulty: 3);
-    final class5 = codingMissionsForClass(5, difficulty: 3);
+    final repository = _repository();
+    final class3 = repository.codingMissionsForClass(3, difficulty: 3);
+    final class4 = repository.codingMissionsForClass(4, difficulty: 3);
+    final class5 = repository.codingMissionsForClass(5, difficulty: 3);
 
     expect(class3.length, 6);
     expect(class4.length, 6);
     expect(class5.length, 6);
     expect(class3.first.id, isNot(class4.first.id));
     expect(class4.first.id, isNot(class5.first.id));
-    expect(codingMissionsForClass(5, difficulty: 1).every((mission) => mission.difficulty == 1), isTrue);
-    expect(codingMissionsForClass(5, difficulty: 2).any((mission) => mission.difficulty == 2), isTrue);
+    expect(
+      repository
+          .codingMissionsForClass(5, difficulty: 1)
+          .every((mission) => mission.difficulty == 1),
+      isTrue,
+    );
+    expect(
+      repository
+          .codingMissionsForClass(5, difficulty: 2)
+          .any((mission) => mission.difficulty == 2),
+      isTrue,
+    );
   });
 
-
-  test('all class-specific coding missions have a known valid route within budget', () {
+  test(
+      'all class-specific coding missions have a known valid route within budget',
+      () {
     const routes = <String, String>{
       'c3_code_1': 'MM',
       'c3_code_2': 'MRMM',
@@ -150,22 +214,30 @@ void main() {
       'c5_code_6': 'RMMMMMLMMMMM',
     };
 
+    final repository = _repository();
     for (final classNumber in [3, 4, 5]) {
-      for (final mission in codingMissionsForClass(classNumber, difficulty: 3)) {
+      for (final mission
+          in repository.codingMissionsForClass(classNumber, difficulty: 3)) {
         final encoded = routes[mission.id];
         expect(encoded, isNotNull, reason: mission.id);
-        final commands = encoded!.split('').map((symbol) => switch (symbol) {
-              'M' => CodingCommand.move,
-              'L' => CodingCommand.turnLeft,
-              'R' => CodingCommand.turnRight,
-              _ => throw StateError('Unknown route symbol $symbol'),
-            }).toList();
-        expect(commands.length, lessThanOrEqualTo(mission.maxCommands), reason: mission.id);
+        final commands = encoded!
+            .split('')
+            .map((symbol) => switch (symbol) {
+                  'M' => CodingCommand.move,
+                  'L' => CodingCommand.turnLeft,
+                  'R' => CodingCommand.turnRight,
+                  _ => throw StateError('Unknown route symbol $symbol'),
+                })
+            .toList();
+        expect(
+          commands.length,
+          lessThanOrEqualTo(mission.maxCommands),
+          reason: mission.id,
+        );
         final result = runCodingMission(mission, commands);
         expect(result.valid, isTrue, reason: mission.id);
         expect(result.success, isTrue, reason: mission.id);
       }
     }
   });
-
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app/brightquest_scope.dart';
 import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
+import '../../core/learning/game_evidence_adapter.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
 import '../../widgets/bright_widgets.dart';
@@ -22,6 +23,8 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
   String? selected;
   bool checked = false;
   bool? correct;
+  bool _hintUsed = false;
+  DateTime _itemStarted = DateTime.now();
   bool finished = false;
   MissionReward? missionReward;
   int _difficulty = 1;
@@ -43,14 +46,29 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
   void _check(MapQuestion question) {
     if (checked || selected == null) return;
     final isCorrect = selected == question.answer;
-    BrightQuestScope.of(context).recordAnswer(
+    final controller = BrightQuestScope.of(context);
+    final adapter = const GameEvidenceAdapter();
+    final activity = adapter.resolve(
+      repository: BrightQuestScope.contentOf(context),
+      classNumber: _classNumber,
+      gameId: 'map_quest',
+      legacyContentId: question.id,
+    );
+    controller.recordAnswer(
       gameId: 'map_quest',
       correct: isCorrect,
       topicId: question.topicId,
       difficulty: question.difficulty,
       masteryGain: 0.06,
+      itemId: activity?.id,
+      competencyId: activity?.competencyId,
+      evidenceKind: adapter.kindFor(widget.learningLevel),
+      hintLevel: _hintUsed ? 1 : 0,
+      responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
+      misconceptionId:
+          isCorrect ? null : adapter.misconceptionFor(activity, selected),
+      confidence: _hintUsed ? 0.58 : 0.84,
     );
-    final controller = BrightQuestScope.of(context);
     if (isCorrect) {
       FeedbackService.correct(controller, answer: selected);
     } else {
@@ -91,6 +109,8 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
       selected = null;
       checked = false;
       correct = null;
+      _hintUsed = false;
+      _itemStarted = DateTime.now();
     });
   }
 
@@ -101,6 +121,8 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
       selected = null;
       checked = false;
       correct = null;
+      _hintUsed = false;
+      _itemStarted = DateTime.now();
       finished = false;
       missionReward = null;
     });
@@ -109,8 +131,8 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
   @override
   Widget build(BuildContext context) {
     final classNumber = _classNumber;
-    final questions =
-        mapQuestionsForClass(classNumber, difficulty: _difficulty);
+    final questions = BrightQuestScope.contentOf(context)
+        .mapQuestionsForClass(classNumber, difficulty: _difficulty);
     final question = questions[questionIndex];
 
     return GameScaffold(
@@ -206,6 +228,7 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(question.hint)),
                             );
+                            setState(() => _hintUsed = true);
                             FeedbackService.hint(controller, question.hint);
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(

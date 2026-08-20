@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app/brightquest_scope.dart';
 import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
+import '../../core/learning/game_evidence_adapter.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
 import '../../core/theme/app_theme.dart';
@@ -30,6 +31,7 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
   int _difficulty = 1;
   int _classNumber = 4;
   bool _sessionConfigured = false;
+  DateTime _itemStarted = DateTime.now();
 
   @override
   void didChangeDependencies() {
@@ -46,6 +48,14 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
   void _check(MathQuestion question, int value) {
     if (selected != null || finished) return;
     final controller = BrightQuestScope.of(context);
+    final repository = BrightQuestScope.contentOf(context);
+    const adapter = GameEvidenceAdapter();
+    final activity = adapter.resolve(
+      repository: repository,
+      classNumber: _classNumber,
+      gameId: 'math_market',
+      legacyContentId: question.id,
+    );
     final correct = value == question.answer;
     controller.recordAnswer(
       gameId: 'math_market',
@@ -53,6 +63,13 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
       topicId: question.topicId,
       difficulty: question.difficulty,
       masteryGain: 0.045,
+      itemId: activity?.id,
+      competencyId: activity?.competencyId,
+      evidenceKind: adapter.kindFor(widget.learningLevel),
+      hintLevel: hint == null ? 0 : 1,
+      responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
+      misconceptionId:
+          correct ? null : adapter.misconceptionFor(activity, value),
     );
     if (correct) {
       FeedbackService.correct(controller, answer: '$value');
@@ -93,6 +110,7 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
       selected = null;
       wasCorrect = null;
       hint = null;
+      _itemStarted = DateTime.now();
     });
   }
 
@@ -116,14 +134,15 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
       hint = null;
       finished = false;
       missionReward = null;
+      _itemStarted = DateTime.now();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final classNumber = _classNumber;
-    final questions =
-        mathQuestionsForClass(classNumber, difficulty: _difficulty);
+    final questions = BrightQuestScope.contentOf(context)
+        .mathQuestionsForClass(classNumber, difficulty: _difficulty);
     final question = questions[questionIndex];
 
     return GameScaffold(

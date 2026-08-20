@@ -1,7 +1,7 @@
 name: brightquest_kids
 description: BrightQuest Kids - offline-first educational adventure app for Classes 3 to 5.
 publish_to: 'none'
-version: 0.4.21+24
+version: 0.6.0+26
 
 environment:
   sdk: '>=3.4.0 <4.0.0'
@@ -32,3 +32,13 @@ flutter:
   assets:
     - assets/audio/bgm/
     - assets/audio/sfx/
+    - assets/content/content_schema_v1.json
+    - assets/content/curriculum_map.json
+    - assets/content/current_content_audit.json
+    - assets/content/class_3/pack.json
+    - assets/content/class_4/pack.json
+    - assets/content/class_5/pack.json
+    - assets/content/class_3/learning_blueprints.json
+    - assets/content/class_4/learning_blueprints.json
+    - assets/content/class_5/learning_blueprints.json
+    - assets/content/shared/audio_transcripts.json

@@ -1,0 +1,1182 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Phase 0 audit of currently reachable authored learning content grouped by legacy class/game/topic selector.",
+  "scopeNotes": [
+    "The legacy global codingMissions list is excluded because current Coding Maze screens call codingMissionsForClass().",
+    "Science Lab reaction outcomes fizz, dissolve and none are included for every class because evaluateReaction() is reachable in the current Science Lab.",
+    "Rewards Room is non-learning reward UI and is excluded from curriculum coverage."
+  ],
+  "boundaryAssessment": "pendingQualifiedReviewer",
+  "duplicateAssessment": {
+    "mode": "automatedAtValidationTime",
+    "rule": "The coverage tool fingerprints current authored records and reports exact duplicate signatures across class packs; duplicate findings remain review items until human disposition."
+  },
+  "selectors": [
+    {
+      "classNumber": 3,
+      "gameId": "coding_maze",
+      "topicId": "repeat_patterns",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c3_ct_patterns_repeats"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "coding_maze",
+      "topicId": "route_planning",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c3_ct_decompose_routes"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "coding_maze",
+      "topicId": "sequences",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c3_ct_sequences"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "coding_maze",
+      "topicId": "turns",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c3_ct_grid_turns"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "fraction_pizza",
+      "topicId": "equivalent_fractions",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c3_math_unit_fractions"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "fraction_pizza",
+      "topicId": "fraction_models",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c3_math_unit_fractions"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "fraction_pizza",
+      "topicId": "unit_fractions",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c3_math_unit_fractions"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "grammar_puzzle",
+      "topicId": "parts_of_speech",
+      "expectedCurrentRecordCount": 6,
+      "competencyIds": [
+        "c3_eng_nouns_pronouns",
+        "c3_eng_verbs_tense",
+        "c3_eng_adjectives_description"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "map_quest",
+      "topicId": "community_places",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c3_soc_community_places_routes"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "map_quest",
+      "topicId": "directions",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c3_soc_directions"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "map_quest",
+      "topicId": "map_skills",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c3_soc_map_symbols",
+        "c3_soc_community_places_routes"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "math_market",
+      "topicId": "addition",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c3_math_add_sub_3digit"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "math_market",
+      "topicId": "division",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c3_math_equal_sharing_division"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "math_market",
+      "topicId": "mixed_operations",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c3_math_operation_choice"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "math_market",
+      "topicId": "multiplication",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c3_math_multiplication_facts"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "math_market",
+      "topicId": "subtraction",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c3_math_add_sub_3digit"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "recycling_challenge",
+      "topicId": "clean_surroundings",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c3_evs_cleanliness_waste"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "recycling_challenge",
+      "topicId": "reuse_and_recycle",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c3_evs_resource_care_safety"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "recycling_challenge",
+      "topicId": "sorting_basics",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c3_evs_cleanliness_waste"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "science_lab",
+      "topicId": "materials",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c3_sci_material_properties",
+        "c3_sci_float_sink"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "science_lab",
+      "topicId": "matter",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c3_sci_states_changes"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "science_lab",
+      "topicId": "plants",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c3_sci_plant_parts"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "science_lab",
+      "topicId": "reactions",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c3_sci_safe_experiment",
+        "c3_sci_observe_compare"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "story_builder",
+      "topicId": "descriptive_language",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c3_eng_adjectives_description"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "story_builder",
+      "topicId": "sentence_building",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c3_eng_sentence_building"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 3,
+      "gameId": "story_builder",
+      "topicId": "story_sequence",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c3_eng_sequence_events"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "coding_maze",
+      "topicId": "efficient_algorithms",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c4_ct_patterns",
+        "c4_ct_algorithms_routes"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "coding_maze",
+      "topicId": "route_planning",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c4_ct_decomposition",
+        "c4_ct_algorithms_routes"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "coding_maze",
+      "topicId": "sequences",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c4_ct_algorithms_routes"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "coding_maze",
+      "topicId": "turns",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c4_ct_algorithms_routes"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "fraction_pizza",
+      "topicId": "equivalent_fractions",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c4_math_fraction_models_equiv"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "fraction_pizza",
+      "topicId": "fraction_models",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c4_math_fraction_models_equiv"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "fraction_pizza",
+      "topicId": "fraction_reasoning",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c4_math_fraction_models_equiv"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "grammar_puzzle",
+      "topicId": "parts_of_speech",
+      "expectedCurrentRecordCount": 6,
+      "competencyIds": [
+        "c4_eng_parts_speech",
+        "c4_eng_tense",
+        "c4_eng_agreement_pronouns"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "map_quest",
+      "topicId": "directions",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c4_soc_directions_routes"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "map_quest",
+      "topicId": "india_places",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c4_soc_india_states_landmarks"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "map_quest",
+      "topicId": "physical_geography",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c4_soc_physical_features"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "map_quest",
+      "topicId": "rivers",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c4_soc_physical_features"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "map_quest",
+      "topicId": "states_capitals",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c4_soc_india_states_landmarks"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "math_market",
+      "topicId": "addition",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c4_math_add_sub"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "math_market",
+      "topicId": "division",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c4_math_division"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "math_market",
+      "topicId": "mixed_operations",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c4_math_multi_step"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "math_market",
+      "topicId": "multiplication",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c4_math_multiplication"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "math_market",
+      "topicId": "subtraction",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c4_math_add_sub"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "recycling_challenge",
+      "topicId": "environmental_impact",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c4_evs_sustainable_actions"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "recycling_challenge",
+      "topicId": "resources",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c4_evs_resources_waste"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "recycling_challenge",
+      "topicId": "sorting",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c4_evs_resources_waste"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "science_lab",
+      "topicId": "forces",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c4_sci_forces_magnets"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "science_lab",
+      "topicId": "materials",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c4_sci_material_changes"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "science_lab",
+      "topicId": "matter",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c4_sci_states_water"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "science_lab",
+      "topicId": "plants",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c4_sci_plants_living"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "science_lab",
+      "topicId": "reactions",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c4_sci_material_changes",
+        "c4_sci_observe_predict_explain"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "science_lab",
+      "topicId": "scientific_method",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c4_sci_fair_testing",
+        "c4_sci_observe_predict_explain"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "story_builder",
+      "topicId": "cause_and_effect",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c4_eng_sequence_cause"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "story_builder",
+      "topicId": "descriptive_language",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c4_eng_descriptive_writing"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "story_builder",
+      "topicId": "sentence_building",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c4_eng_sentence_paragraph"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 4,
+      "gameId": "story_builder",
+      "topicId": "story_sequence",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c4_eng_sequence_cause"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "coding_maze",
+      "topicId": "algorithm_planning",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c5_ct_decomposition"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "coding_maze",
+      "topicId": "debugging_routes",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c5_ct_debugging"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "coding_maze",
+      "topicId": "efficient_algorithms",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c5_ct_algorithm_efficiency"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "coding_maze",
+      "topicId": "repeat_and_route",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c5_ct_abstraction_patterns",
+        "c5_ct_decomposition"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "fraction_pizza",
+      "topicId": "equivalent_fractions",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c5_math_fraction_equiv"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "fraction_pizza",
+      "topicId": "fraction_models",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c5_math_fraction_equiv"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "fraction_pizza",
+      "topicId": "fraction_reasoning",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c5_math_fraction_decimal_compare"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "grammar_puzzle",
+      "topicId": "parts_of_speech",
+      "expectedCurrentRecordCount": 6,
+      "competencyIds": [
+        "c5_eng_parts_speech",
+        "c5_eng_tense_agreement"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "map_quest",
+      "topicId": "directions",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c5_soc_map_scale_directions"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "map_quest",
+      "topicId": "map_skills",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c5_soc_map_scale_directions"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "map_quest",
+      "topicId": "physical_geography",
+      "expectedCurrentRecordCount": 4,
+      "competencyIds": [
+        "c5_soc_india_physical_geography",
+        "c5_soc_states_rivers_features"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "math_market",
+      "topicId": "addition",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c5_math_four_operations"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "math_market",
+      "topicId": "division",
+      "expectedCurrentRecordCount": 4,
+      "competencyIds": [
+        "c5_math_four_operations"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "math_market",
+      "topicId": "mixed_operations",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c5_math_multi_step_application"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "math_market",
+      "topicId": "multiplication",
+      "expectedCurrentRecordCount": 4,
+      "competencyIds": [
+        "c5_math_four_operations"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "math_market",
+      "topicId": "subtraction",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c5_math_four_operations"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "recycling_challenge",
+      "topicId": "resource_conservation",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c5_evs_resources_sustainability"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "recycling_challenge",
+      "topicId": "resource_sorting",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c5_evs_waste_environment"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "recycling_challenge",
+      "topicId": "sustainability",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c5_evs_responsible_action",
+        "c5_evs_resources_sustainability"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "changes",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c5_sci_states_changes"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "forces",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c5_sci_forces_motion"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "human_body",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c5_sci_human_body"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "light",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c5_sci_light_inquiry"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "materials",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c5_sci_materials_magnets"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "matter",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c5_sci_states_changes"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "plants",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c5_sci_plants_processes"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "reactions",
+      "expectedCurrentRecordCount": 3,
+      "competencyIds": [
+        "c5_sci_states_changes",
+        "c5_sci_light_inquiry"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "story_builder",
+      "topicId": "cause_and_effect",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c5_eng_sequence_cause_effect"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "story_builder",
+      "topicId": "complex_sentences",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c5_eng_complex_sentences"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "story_builder",
+      "topicId": "descriptive_language",
+      "expectedCurrentRecordCount": 2,
+      "competencyIds": [
+        "c5_eng_paragraph_composition"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    },
+    {
+      "classNumber": 5,
+      "gameId": "story_builder",
+      "topicId": "story_sequence",
+      "expectedCurrentRecordCount": 1,
+      "competencyIds": [
+        "c5_eng_sequence_cause_effect"
+      ],
+      "disposition": "mapped",
+      "boundaryStatus": "pendingHumanReview"
+    }
+  ],
+  "totals": {
+    "selectorCount": 88,
+    "currentRecordCount": 189
+  },
+  "gapAssessment": {
+    "mode": "derivedFromCurrentMappings",
+    "classes": [
+      {
+        "classNumber": 3,
+        "missingCompetencyIds": [
+          "c3_math_place_value_999",
+          "c3_math_money_bills",
+          "c3_math_measurement",
+          "c3_math_time_calendar",
+          "c3_math_shapes_patterns_data",
+          "c3_eng_literal_comprehension",
+          "c3_eng_main_idea_details",
+          "c3_eng_vocab_context",
+          "c3_eng_punctuation_capitals",
+          "c3_eng_short_composition",
+          "c3_evs_family_community",
+          "c3_evs_food_water_shelter"
+        ],
+        "unreviewedCompetencyIds": [
+          "c3_math_place_value_999",
+          "c3_math_add_sub_3digit",
+          "c3_math_multiplication_facts",
+          "c3_math_equal_sharing_division",
+          "c3_math_operation_choice",
+          "c3_math_unit_fractions",
+          "c3_math_money_bills",
+          "c3_math_measurement",
+          "c3_math_time_calendar",
+          "c3_math_shapes_patterns_data",
+          "c3_eng_literal_comprehension",
+          "c3_eng_main_idea_details",
+          "c3_eng_sequence_events",
+          "c3_eng_vocab_context",
+          "c3_eng_sentence_building",
+          "c3_eng_nouns_pronouns",
+          "c3_eng_verbs_tense",
+          "c3_eng_adjectives_description",
+          "c3_eng_punctuation_capitals",
+          "c3_eng_short_composition",
+          "c3_sci_plant_parts",
+          "c3_sci_material_properties",
+          "c3_sci_states_changes",
+          "c3_sci_float_sink",
+          "c3_sci_observe_compare",
+          "c3_sci_safe_experiment",
+          "c3_evs_family_community",
+          "c3_evs_food_water_shelter",
+          "c3_evs_cleanliness_waste",
+          "c3_evs_resource_care_safety",
+          "c3_soc_directions",
+          "c3_soc_map_symbols",
+          "c3_soc_community_places_routes",
+          "c3_ct_sequences",
+          "c3_ct_grid_turns",
+          "c3_ct_patterns_repeats",
+          "c3_ct_decompose_routes"
+        ]
+      },
+      {
+        "classNumber": 4,
+        "missingCompetencyIds": [
+          "c4_math_place_value_10000",
+          "c4_math_measure_perimeter",
+          "c4_math_time_money",
+          "c4_math_geometry_symmetry",
+          "c4_math_data_patterns",
+          "c4_eng_comprehend_main_infer",
+          "c4_eng_vocab_context",
+          "c4_eng_read_compare",
+          "c4_eng_punctuation",
+          "c4_evs_food_water",
+          "c4_evs_community_interdependence",
+          "c4_ct_visual_abstraction"
+        ],
+        "unreviewedCompetencyIds": [
+          "c4_math_place_value_10000",
+          "c4_math_add_sub",
+          "c4_math_multiplication",
+          "c4_math_division",
+          "c4_math_multi_step",
+          "c4_math_fraction_models_equiv",
+          "c4_math_measure_perimeter",
+          "c4_math_time_money",
+          "c4_math_geometry_symmetry",
+          "c4_math_data_patterns",
+          "c4_eng_comprehend_main_infer",
+          "c4_eng_sequence_cause",
+          "c4_eng_vocab_context",
+          "c4_eng_read_compare",
+          "c4_eng_sentence_paragraph",
+          "c4_eng_parts_speech",
+          "c4_eng_tense",
+          "c4_eng_agreement_pronouns",
+          "c4_eng_punctuation",
+          "c4_eng_descriptive_writing",
+          "c4_sci_material_changes",
+          "c4_sci_states_water",
+          "c4_sci_plants_living",
+          "c4_sci_forces_magnets",
+          "c4_sci_fair_testing",
+          "c4_sci_observe_predict_explain",
+          "c4_evs_resources_waste",
+          "c4_evs_food_water",
+          "c4_evs_community_interdependence",
+          "c4_evs_sustainable_actions",
+          "c4_soc_india_states_landmarks",
+          "c4_soc_directions_routes",
+          "c4_soc_physical_features",
+          "c4_ct_visual_abstraction",
+          "c4_ct_patterns",
+          "c4_ct_decomposition",
+          "c4_ct_algorithms_routes"
+        ]
+      },
+      {
+        "classNumber": 5,
+        "missingCompetencyIds": [
+          "c5_math_large_numbers_100000",
+          "c5_math_estimation",
+          "c5_math_factors_multiples",
+          "c5_math_geometry_angles_symmetry",
+          "c5_math_measure_conversion_volume",
+          "c5_math_data",
+          "c5_eng_comprehend_infer_evidence",
+          "c5_eng_main_summary",
+          "c5_eng_vocab_morphology_context",
+          "c5_eng_punctuation_editing",
+          "c5_eng_explain_justify",
+          "c5_evs_food_water_community"
+        ],
+        "unreviewedCompetencyIds": [
+          "c5_math_large_numbers_100000",
+          "c5_math_four_operations",
+          "c5_math_estimation",
+          "c5_math_factors_multiples",
+          "c5_math_fraction_equiv",
+          "c5_math_fraction_decimal_compare",
+          "c5_math_geometry_angles_symmetry",
+          "c5_math_measure_conversion_volume",
+          "c5_math_data",
+          "c5_math_multi_step_application",
+          "c5_eng_comprehend_infer_evidence",
+          "c5_eng_main_summary",
+          "c5_eng_sequence_cause_effect",
+          "c5_eng_vocab_morphology_context",
+          "c5_eng_complex_sentences",
+          "c5_eng_parts_speech",
+          "c5_eng_tense_agreement",
+          "c5_eng_punctuation_editing",
+          "c5_eng_paragraph_composition",
+          "c5_eng_explain_justify",
+          "c5_sci_human_body",
+          "c5_sci_plants_processes",
+          "c5_sci_states_changes",
+          "c5_sci_materials_magnets",
+          "c5_sci_forces_motion",
+          "c5_sci_light_inquiry",
+          "c5_evs_resources_sustainability",
+          "c5_evs_waste_environment",
+          "c5_evs_food_water_community",
+          "c5_evs_responsible_action",
+          "c5_soc_india_physical_geography",
+          "c5_soc_map_scale_directions",
+          "c5_soc_states_rivers_features",
+          "c5_ct_abstraction_patterns",
+          "c5_ct_decomposition",
+          "c5_ct_algorithm_efficiency",
+          "c5_ct_debugging"
+        ]
+      }
+    ]
+  },
+  "outOfClassAssessment": {
+    "confirmedItemIds": [],
+    "status": "pendingQualifiedReviewer",
+    "reason": "Automated class selectors are mapped, but no current item is declared confirmed in-class or out-of-class until the draft reading/vocabulary/number boundaries receive qualified human approval."
+  }
+}

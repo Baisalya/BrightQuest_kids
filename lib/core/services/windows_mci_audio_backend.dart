@@ -34,7 +34,8 @@ class WindowsMciAudioBackend {
     try {
       _winmm = DynamicLibrary.open('winmm.dll');
       _crt = DynamicLibrary.open('msvcrt.dll');
-      _mciSendString = _winmm!.lookupFunction<_MciSendStringNative, _MciSendStringDart>(
+      _mciSendString =
+          _winmm!.lookupFunction<_MciSendStringNative, _MciSendStringDart>(
         'mciSendStringW',
       );
       _malloc = _crt!.lookupFunction<_MallocNative, _MallocDart>('malloc');
@@ -71,7 +72,8 @@ class WindowsMciAudioBackend {
     final filePath = _resolveAssetFile(asset);
     if (filePath == null) return;
 
-    final openCode = _send('open "${_escapePath(filePath)}" type mpegvideo alias $_musicAlias');
+    final openCode = _send(
+        'open "${_escapePath(filePath)}" type mpegvideo alias $_musicAlias');
     if (openCode != 0) return;
 
     _musicOpen = true;
@@ -112,7 +114,8 @@ class WindowsMciAudioBackend {
     if (filePath == null) return;
 
     _closeAlias(_sfxAlias);
-    final openCode = _send('open "${_escapePath(filePath)}" type mpegvideo alias $_sfxAlias');
+    final openCode = _send(
+        'open "${_escapePath(filePath)}" type mpegvideo alias $_sfxAlias');
     if (openCode != 0) return;
 
     final nativeVolume = (_clamp01(volume) * 1000).round().clamp(0, 1000);
@@ -151,7 +154,8 @@ class WindowsMciAudioBackend {
     final send = _mciSendString;
     final malloc = _malloc;
     final free = _free;
-    if (!_available || send == null || malloc == null || free == null) return -1;
+    if (!_available || send == null || malloc == null || free == null)
+      return -1;
 
     final units = command.codeUnits;
     final raw = malloc((units.length + 1) * sizeOf<Uint16>());

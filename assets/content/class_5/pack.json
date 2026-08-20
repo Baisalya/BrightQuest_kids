@@ -1,0 +1,3758 @@
+{
+  "schemaVersion": 1,
+  "packId": "brightquest_class_5",
+  "packVersion": "1.0.0",
+  "classNumber": 5,
+  "locale": "en-IN",
+  "commercial": {
+    "priceInr": 299,
+    "purchaseModel": "oneTimePerClass",
+    "paidEligibility": false,
+    "freeSampleUnitIds": [
+      "c5_coding_ct",
+      "c5_english_reading",
+      "c5_evs_world",
+      "c5_math_numbers",
+      "c5_science_inquiry",
+      "c5_social_maps"
+    ]
+  },
+  "development": {
+    "lockable": true,
+    "defaultLocked": false
+  },
+  "activities": [
+    {
+      "id": "c5_math_market_q01",
+      "legacyContentId": "q01",
+      "classNumber": 5,
+      "gameId": "math_market",
+      "topicId": "division",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_four_operations",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_four_operations_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "144 ÷ 12 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 12
+      },
+      "explanation": "Think: 12 × ? = 144. The correct value is 12.",
+      "distractors": [
+        {
+          "value": 10,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 11,
+          "misconceptionId": "arithmetic_error_2"
+        },
+        {
+          "value": 14,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think: 12 × ? = 144."
+        }
+      ],
+      "narration": {
+        "text": "144 ÷ 12 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 12,
+        "choices": [
+          10,
+          11,
+          12,
+          14
+        ],
+        "hint": "Think: 12 × ? = 144."
+      }
+    },
+    {
+      "id": "c5_math_market_q02",
+      "legacyContentId": "q02",
+      "classNumber": 5,
+      "gameId": "math_market",
+      "topicId": "addition",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_four_operations",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_four_operations_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "375 + 248 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 623
+      },
+      "explanation": "Add by place value. The correct value is 623.",
+      "distractors": [
+        {
+          "value": 613,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 633,
+          "misconceptionId": "arithmetic_error_3"
+        },
+        {
+          "value": 643,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Add by place value."
+        }
+      ],
+      "narration": {
+        "text": "375 + 248 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 623,
+        "choices": [
+          613,
+          623,
+          633,
+          643
+        ],
+        "hint": "Add by place value."
+      }
+    },
+    {
+      "id": "c5_math_market_q03",
+      "legacyContentId": "q03",
+      "classNumber": 5,
+      "gameId": "math_market",
+      "topicId": "subtraction",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_four_operations",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_four_operations_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "900 - 457 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 443
+      },
+      "explanation": "Regroup across the zeros. The correct value is 443.",
+      "distractors": [
+        {
+          "value": 433,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 453,
+          "misconceptionId": "arithmetic_error_3"
+        },
+        {
+          "value": 463,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Regroup across the zeros."
+        }
+      ],
+      "narration": {
+        "text": "900 - 457 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 443,
+        "choices": [
+          433,
+          443,
+          453,
+          463
+        ],
+        "hint": "Regroup across the zeros."
+      }
+    },
+    {
+      "id": "c5_math_market_q04",
+      "legacyContentId": "q04",
+      "classNumber": 5,
+      "gameId": "math_market",
+      "topicId": "multiplication",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_four_operations",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_four_operations_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "32 × 10 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 320
+      },
+      "explanation": "Multiplying by 10 shifts the place value. The correct value is 320.",
+      "distractors": [
+        {
+          "value": 32,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 300,
+          "misconceptionId": "arithmetic_error_2"
+        },
+        {
+          "value": 3200,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Multiplying by 10 shifts the place value."
+        }
+      ],
+      "narration": {
+        "text": "32 × 10 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 320,
+        "choices": [
+          32,
+          300,
+          320,
+          3200
+        ],
+        "hint": "Multiplying by 10 shifts the place value."
+      }
+    },
+    {
+      "id": "c5_math_market_q05",
+      "legacyContentId": "q05",
+      "classNumber": 5,
+      "gameId": "math_market",
+      "topicId": "multiplication",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_four_operations",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_four_operations_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "25 × 16 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 400
+      },
+      "explanation": "Break 16 into 10 + 6. The correct value is 400.",
+      "distractors": [
+        {
+          "value": 350,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 375,
+          "misconceptionId": "arithmetic_error_2"
+        },
+        {
+          "value": 425,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Break 16 into 10 + 6."
+        }
+      ],
+      "narration": {
+        "text": "25 × 16 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 400,
+        "choices": [
+          350,
+          375,
+          400,
+          425
+        ],
+        "hint": "Break 16 into 10 + 6."
+      }
+    },
+    {
+      "id": "c5_math_market_q06",
+      "legacyContentId": "q06",
+      "classNumber": 5,
+      "gameId": "math_market",
+      "topicId": "division",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_four_operations",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_four_operations_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "840 ÷ 7 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 120
+      },
+      "explanation": "84 ÷ 7 = 12, then keep the zero. The correct value is 120.",
+      "distractors": [
+        {
+          "value": 110,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 130,
+          "misconceptionId": "arithmetic_error_3"
+        },
+        {
+          "value": 140,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "84 ÷ 7 = 12, then keep the zero."
+        }
+      ],
+      "narration": {
+        "text": "840 ÷ 7 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 120,
+        "choices": [
+          110,
+          120,
+          130,
+          140
+        ],
+        "hint": "84 ÷ 7 = 12, then keep the zero."
+      }
+    },
+    {
+      "id": "c5_math_market_q07",
+      "legacyContentId": "q07",
+      "classNumber": 5,
+      "gameId": "math_market",
+      "topicId": "multiplication",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_four_operations",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_four_operations_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "18 × 24 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 432
+      },
+      "explanation": "18 × 20 plus 18 × 4. The correct value is 432.",
+      "distractors": [
+        {
+          "value": 412,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 422,
+          "misconceptionId": "arithmetic_error_2"
+        },
+        {
+          "value": 442,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "18 × 20 plus 18 × 4."
+        }
+      ],
+      "narration": {
+        "text": "18 × 24 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 432,
+        "choices": [
+          412,
+          422,
+          432,
+          442
+        ],
+        "hint": "18 × 20 plus 18 × 4."
+      }
+    },
+    {
+      "id": "c5_math_market_q08",
+      "legacyContentId": "q08",
+      "classNumber": 5,
+      "gameId": "math_market",
+      "topicId": "subtraction",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_four_operations",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_four_operations_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "1,250 - 675 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 575
+      },
+      "explanation": "Subtract with regrouping. The correct value is 575.",
+      "distractors": [
+        {
+          "value": 565,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 585,
+          "misconceptionId": "arithmetic_error_3"
+        },
+        {
+          "value": 595,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Subtract with regrouping."
+        }
+      ],
+      "narration": {
+        "text": "1,250 - 675 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 575,
+        "choices": [
+          565,
+          575,
+          585,
+          595
+        ],
+        "hint": "Subtract with regrouping."
+      }
+    },
+    {
+      "id": "c5_math_market_q09",
+      "legacyContentId": "q09",
+      "classNumber": 5,
+      "gameId": "math_market",
+      "topicId": "multiplication",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_four_operations",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_four_operations_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "48 × 25 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 1200
+      },
+      "explanation": "25 is one quarter of 100. The correct value is 1200.",
+      "distractors": [
+        {
+          "value": 1000,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 1100,
+          "misconceptionId": "arithmetic_error_2"
+        },
+        {
+          "value": 1250,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "25 is one quarter of 100."
+        }
+      ],
+      "narration": {
+        "text": "48 × 25 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 1200,
+        "choices": [
+          1000,
+          1100,
+          1200,
+          1250
+        ],
+        "hint": "25 is one quarter of 100."
+      }
+    },
+    {
+      "id": "c5_math_market_q10",
+      "legacyContentId": "q10",
+      "classNumber": 5,
+      "gameId": "math_market",
+      "topicId": "division",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_four_operations",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_four_operations_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "960 ÷ 24 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 40
+      },
+      "explanation": "24 × 4 = 96, then scale by ten. The correct value is 40.",
+      "distractors": [
+        {
+          "value": 30,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 35,
+          "misconceptionId": "arithmetic_error_2"
+        },
+        {
+          "value": 45,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "24 × 4 = 96, then scale by ten."
+        }
+      ],
+      "narration": {
+        "text": "960 ÷ 24 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 40,
+        "choices": [
+          30,
+          35,
+          40,
+          45
+        ],
+        "hint": "24 × 4 = 96, then scale by ten."
+      }
+    },
+    {
+      "id": "c5_math_market_q11",
+      "legacyContentId": "q11",
+      "classNumber": 5,
+      "gameId": "math_market",
+      "topicId": "mixed_operations",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_multi_step_application",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_multi_step_application_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "36 × 18 - 148 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 500
+      },
+      "explanation": "Multiply first: 36 × 18 = 648. The correct value is 500.",
+      "distractors": [
+        {
+          "value": 480,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 490,
+          "misconceptionId": "arithmetic_error_2"
+        },
+        {
+          "value": 510,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Multiply first: 36 × 18 = 648."
+        }
+      ],
+      "narration": {
+        "text": "36 × 18 - 148 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 500,
+        "choices": [
+          480,
+          490,
+          500,
+          510
+        ],
+        "hint": "Multiply first: 36 × 18 = 648."
+      }
+    },
+    {
+      "id": "c5_math_market_q12",
+      "legacyContentId": "q12",
+      "classNumber": 5,
+      "gameId": "math_market",
+      "topicId": "division",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_four_operations",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_four_operations_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "2,400 ÷ 16 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 150
+      },
+      "explanation": "16 × 15 = 240, then scale by ten. The correct value is 150.",
+      "distractors": [
+        {
+          "value": 125,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 140,
+          "misconceptionId": "arithmetic_error_2"
+        },
+        {
+          "value": 160,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "16 × 15 = 240, then scale by ten."
+        }
+      ],
+      "narration": {
+        "text": "2,400 ÷ 16 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 150,
+        "choices": [
+          125,
+          140,
+          150,
+          160
+        ],
+        "hint": "16 × 15 = 240, then scale by ten."
+      }
+    },
+    {
+      "id": "c5_fraction_pizza_f5_1",
+      "legacyContentId": "f5_1",
+      "classNumber": 5,
+      "gameId": "fraction_pizza",
+      "topicId": "fraction_models",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_fraction_equiv",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_fraction_equiv_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Select slices to show 5/6 of a pizza with 12 equal slices.",
+      "correctResponseRule": {
+        "type": "selectedSlices",
+        "value": 10,
+        "totalSlices": 12
+      },
+      "explanation": "5/6 of 12 equal slices is 10 slices because 12 × 5 ÷ 6 = 10.",
+      "distractors": [
+        {
+          "value": 5,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 6,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 9,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 11,
+          "misconceptionId": "fraction_slice_count"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find how many slices make one denominator part, then multiply by the numerator."
+        }
+      ],
+      "narration": {
+        "text": "Select slices to show 5/6 of a pizza with 12 equal slices."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "totalSlices": 12,
+        "numerator": 5,
+        "denominator": 6
+      }
+    },
+    {
+      "id": "c5_fraction_pizza_f5_2",
+      "legacyContentId": "f5_2",
+      "classNumber": 5,
+      "gameId": "fraction_pizza",
+      "topicId": "fraction_models",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_fraction_equiv",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_fraction_equiv_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Select slices to show 3/8 of a pizza with 16 equal slices.",
+      "correctResponseRule": {
+        "type": "selectedSlices",
+        "value": 6,
+        "totalSlices": 16
+      },
+      "explanation": "3/8 of 16 equal slices is 6 slices because 16 × 3 ÷ 8 = 6.",
+      "distractors": [
+        {
+          "value": 3,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 5,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 7,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 8,
+          "misconceptionId": "fraction_slice_count"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find how many slices make one denominator part, then multiply by the numerator."
+        }
+      ],
+      "narration": {
+        "text": "Select slices to show 3/8 of a pizza with 16 equal slices."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "totalSlices": 16,
+        "numerator": 3,
+        "denominator": 8
+      }
+    },
+    {
+      "id": "c5_fraction_pizza_f5_3",
+      "legacyContentId": "f5_3",
+      "classNumber": 5,
+      "gameId": "fraction_pizza",
+      "topicId": "equivalent_fractions",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_fraction_equiv",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_fraction_equiv_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Select slices to show 7/10 of a pizza with 20 equal slices.",
+      "correctResponseRule": {
+        "type": "selectedSlices",
+        "value": 14,
+        "totalSlices": 20
+      },
+      "explanation": "7/10 of 20 equal slices is 14 slices because 20 × 7 ÷ 10 = 14.",
+      "distractors": [
+        {
+          "value": 7,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 10,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 13,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 15,
+          "misconceptionId": "fraction_slice_count"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find how many slices make one denominator part, then multiply by the numerator."
+        }
+      ],
+      "narration": {
+        "text": "Select slices to show 7/10 of a pizza with 20 equal slices."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "totalSlices": 20,
+        "numerator": 7,
+        "denominator": 10
+      }
+    },
+    {
+      "id": "c5_fraction_pizza_f5_4",
+      "legacyContentId": "f5_4",
+      "classNumber": 5,
+      "gameId": "fraction_pizza",
+      "topicId": "equivalent_fractions",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_fraction_equiv",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_fraction_equiv_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Select slices to show 5/9 of a pizza with 18 equal slices.",
+      "correctResponseRule": {
+        "type": "selectedSlices",
+        "value": 10,
+        "totalSlices": 18
+      },
+      "explanation": "5/9 of 18 equal slices is 10 slices because 18 × 5 ÷ 9 = 10.",
+      "distractors": [
+        {
+          "value": 5,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 9,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 11,
+          "misconceptionId": "fraction_slice_count"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find how many slices make one denominator part, then multiply by the numerator."
+        }
+      ],
+      "narration": {
+        "text": "Select slices to show 5/9 of a pizza with 18 equal slices."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "totalSlices": 18,
+        "numerator": 5,
+        "denominator": 9
+      }
+    },
+    {
+      "id": "c5_fraction_pizza_f5_5",
+      "legacyContentId": "f5_5",
+      "classNumber": 5,
+      "gameId": "fraction_pizza",
+      "topicId": "fraction_reasoning",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_fraction_decimal_compare",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_fraction_decimal_compare_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Select slices to show 7/12 of a pizza with 24 equal slices.",
+      "correctResponseRule": {
+        "type": "selectedSlices",
+        "value": 14,
+        "totalSlices": 24
+      },
+      "explanation": "7/12 of 24 equal slices is 14 slices because 24 × 7 ÷ 12 = 14.",
+      "distractors": [
+        {
+          "value": 7,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 12,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 13,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 15,
+          "misconceptionId": "fraction_slice_count"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find how many slices make one denominator part, then multiply by the numerator."
+        }
+      ],
+      "narration": {
+        "text": "Select slices to show 7/12 of a pizza with 24 equal slices."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "totalSlices": 24,
+        "numerator": 7,
+        "denominator": 12
+      }
+    },
+    {
+      "id": "c5_fraction_pizza_f5_6",
+      "legacyContentId": "f5_6",
+      "classNumber": 5,
+      "gameId": "fraction_pizza",
+      "topicId": "fraction_reasoning",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_fraction_decimal_compare",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_fraction_decimal_compare_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Select slices to show 4/5 of a pizza with 30 equal slices.",
+      "correctResponseRule": {
+        "type": "selectedSlices",
+        "value": 24,
+        "totalSlices": 30
+      },
+      "explanation": "4/5 of 30 equal slices is 24 slices because 30 × 4 ÷ 5 = 24.",
+      "distractors": [
+        {
+          "value": 4,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 5,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 23,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 25,
+          "misconceptionId": "fraction_slice_count"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find how many slices make one denominator part, then multiply by the numerator."
+        }
+      ],
+      "narration": {
+        "text": "Select slices to show 4/5 of a pizza with 30 equal slices."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "totalSlices": 30,
+        "numerator": 4,
+        "denominator": 5
+      }
+    },
+    {
+      "id": "c5_science_lab_q01",
+      "legacyContentId": "q01",
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "human_body",
+      "subject": "science",
+      "unitId": "c5_science_inquiry",
+      "competencyId": "c5_sci_human_body",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_sci_human_body_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Which organ pumps blood around the body?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Heart"
+      },
+      "explanation": "The heart pumps blood through blood vessels.",
+      "distractors": [
+        {
+          "value": "Lungs",
+          "misconceptionId": "science_concept_confusion_2"
+        },
+        {
+          "value": "Stomach",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "Brain",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "Which organ pumps blood around the body?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Heart",
+        "choices": [
+          "Heart",
+          "Lungs",
+          "Stomach",
+          "Brain"
+        ]
+      }
+    },
+    {
+      "id": "c5_science_lab_q02",
+      "legacyContentId": "q02",
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "matter",
+      "subject": "science",
+      "unitId": "c5_science_inquiry",
+      "competencyId": "c5_sci_states_changes",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_sci_states_changes_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Which state of matter spreads to fill its container?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Gas"
+      },
+      "explanation": "A gas spreads out and fills available space.",
+      "distractors": [
+        {
+          "value": "Solid",
+          "misconceptionId": "science_concept_confusion_2"
+        },
+        {
+          "value": "Rock",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "Ice",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "Which state of matter spreads to fill its container?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Gas",
+        "choices": [
+          "Gas",
+          "Solid",
+          "Rock",
+          "Ice"
+        ]
+      }
+    },
+    {
+      "id": "c5_science_lab_q03",
+      "legacyContentId": "q03",
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "materials",
+      "subject": "science",
+      "unitId": "c5_science_inquiry",
+      "competencyId": "c5_sci_materials_magnets",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_sci_materials_magnets_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Which material is attracted strongly by a magnet?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Iron"
+      },
+      "explanation": "Iron is a magnetic material.",
+      "distractors": [
+        {
+          "value": "Wood",
+          "misconceptionId": "science_concept_confusion_2"
+        },
+        {
+          "value": "Rubber",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "Glass",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "Which material is attracted strongly by a magnet?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Iron",
+        "choices": [
+          "Iron",
+          "Wood",
+          "Rubber",
+          "Glass"
+        ]
+      }
+    },
+    {
+      "id": "c5_science_lab_q04",
+      "legacyContentId": "q04",
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "changes",
+      "subject": "science",
+      "unitId": "c5_science_inquiry",
+      "competencyId": "c5_sci_states_changes",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_sci_states_changes_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Which change can usually be reversed?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Melting ice"
+      },
+      "explanation": "Melted water can freeze back into ice.",
+      "distractors": [
+        {
+          "value": "Burning paper",
+          "misconceptionId": "science_concept_confusion_1"
+        },
+        {
+          "value": "Cooking an egg",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "Rusting iron",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "Which change can usually be reversed?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Melting ice",
+        "choices": [
+          "Burning paper",
+          "Melting ice",
+          "Cooking an egg",
+          "Rusting iron"
+        ]
+      }
+    },
+    {
+      "id": "c5_science_lab_q05",
+      "legacyContentId": "q05",
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "plants",
+      "subject": "science",
+      "unitId": "c5_science_inquiry",
+      "competencyId": "c5_sci_plants_processes",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_sci_plants_processes_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Plants mainly take in which gas for photosynthesis?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Carbon dioxide"
+      },
+      "explanation": "Plants use carbon dioxide, water and light to make food.",
+      "distractors": [
+        {
+          "value": "Oxygen",
+          "misconceptionId": "science_concept_confusion_1"
+        },
+        {
+          "value": "Nitrogen",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "Helium",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "Plants mainly take in which gas for photosynthesis?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Carbon dioxide",
+        "choices": [
+          "Oxygen",
+          "Carbon dioxide",
+          "Nitrogen",
+          "Helium"
+        ]
+      }
+    },
+    {
+      "id": "c5_science_lab_q06",
+      "legacyContentId": "q06",
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "forces",
+      "subject": "science",
+      "unitId": "c5_science_inquiry",
+      "competencyId": "c5_sci_forces_motion",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_sci_forces_motion_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Which simple machine helps lift a load using a wheel and rope?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Pulley"
+      },
+      "explanation": "A pulley changes the direction of a pulling force.",
+      "distractors": [
+        {
+          "value": "Magnet",
+          "misconceptionId": "science_concept_confusion_2"
+        },
+        {
+          "value": "Thermometer",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "Compass",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "Which simple machine helps lift a load using a wheel and rope?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Pulley",
+        "choices": [
+          "Pulley",
+          "Magnet",
+          "Thermometer",
+          "Compass"
+        ]
+      }
+    },
+    {
+      "id": "c5_science_lab_q07",
+      "legacyContentId": "q07",
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "light",
+      "subject": "science",
+      "unitId": "c5_science_inquiry",
+      "competencyId": "c5_sci_light_inquiry",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_sci_light_inquiry_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Why does a shadow change length during the day?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "The Sun appears at different angles"
+      },
+      "explanation": "The angle of incoming sunlight changes as Earth rotates.",
+      "distractors": [
+        {
+          "value": "The object loses mass",
+          "misconceptionId": "science_concept_confusion_2"
+        },
+        {
+          "value": "Air becomes solid",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "Gravity switches off",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "Why does a shadow change length during the day?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "The Sun appears at different angles",
+        "choices": [
+          "The Sun appears at different angles",
+          "The object loses mass",
+          "Air becomes solid",
+          "Gravity switches off"
+        ]
+      }
+    },
+    {
+      "id": "c5_science_lab_q08",
+      "legacyContentId": "q08",
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "human_body",
+      "subject": "science",
+      "unitId": "c5_science_inquiry",
+      "competencyId": "c5_sci_human_body",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_sci_human_body_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Which body system carries oxygen and nutrients around the body?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Circulatory system"
+      },
+      "explanation": "Blood in the circulatory system transports oxygen and nutrients.",
+      "distractors": [
+        {
+          "value": "Digestive system only",
+          "misconceptionId": "science_concept_confusion_2"
+        },
+        {
+          "value": "Skeleton only",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "Skin only",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "Which body system carries oxygen and nutrients around the body?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Circulatory system",
+        "choices": [
+          "Circulatory system",
+          "Digestive system only",
+          "Skeleton only",
+          "Skin only"
+        ]
+      }
+    },
+    {
+      "id": "c5_science_lab_q09",
+      "legacyContentId": "q09",
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "changes",
+      "subject": "science",
+      "unitId": "c5_science_inquiry",
+      "competencyId": "c5_sci_states_changes",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_sci_states_changes_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Rusting is an example of…",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "A chemical change"
+      },
+      "explanation": "Rust forms a new substance when iron reacts with oxygen and moisture.",
+      "distractors": [
+        {
+          "value": "A reversible shape change",
+          "misconceptionId": "science_concept_confusion_2"
+        },
+        {
+          "value": "Freezing",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "Evaporation only",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "Rusting is an example of…"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "A chemical change",
+        "choices": [
+          "A chemical change",
+          "A reversible shape change",
+          "Freezing",
+          "Evaporation only"
+        ]
+      }
+    },
+    {
+      "id": "c5_science_lab_reaction_fizz",
+      "legacyContentId": "reaction_fizz",
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "reactions",
+      "subject": "science",
+      "unitId": "c5_science_inquiry",
+      "competencyId": "c5_sci_states_changes",
+      "relatedCompetencyIds": [
+        "c5_sci_light_inquiry"
+      ],
+      "learningOutcomeId": "c5_sci_states_changes_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_sci_light_inquiry_lo1"
+      ],
+      "activityType": "experiment",
+      "difficulty": 1,
+      "prompt": "Mix safe virtual ingredients and observe what happens.",
+      "correctResponseRule": {
+        "type": "experimentOutcome",
+        "reactionId": "fizz"
+      },
+      "explanation": "Baking soda and vinegar release carbon dioxide gas bubbles.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Observe the selected virtual ingredients and compare the result."
+        }
+      ],
+      "narration": {
+        "text": "Mix safe virtual ingredients and observe what happens."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "reactionId": "fizz",
+        "title": "Fizzing reaction",
+        "emoji": "🧪🫧✨",
+        "requiredIngredients": [
+          "Baking Soda",
+          "Vinegar"
+        ],
+        "fallback": false
+      }
+    },
+    {
+      "id": "c5_science_lab_reaction_dissolve",
+      "legacyContentId": "reaction_dissolve",
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "reactions",
+      "subject": "science",
+      "unitId": "c5_science_inquiry",
+      "competencyId": "c5_sci_states_changes",
+      "relatedCompetencyIds": [
+        "c5_sci_light_inquiry"
+      ],
+      "learningOutcomeId": "c5_sci_states_changes_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_sci_light_inquiry_lo1"
+      ],
+      "activityType": "experiment",
+      "difficulty": 1,
+      "prompt": "Mix safe virtual ingredients and observe what happens.",
+      "correctResponseRule": {
+        "type": "experimentOutcome",
+        "reactionId": "dissolve"
+      },
+      "explanation": "Salt spreads through the water to form a solution.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Observe the selected virtual ingredients and compare the result."
+        }
+      ],
+      "narration": {
+        "text": "Mix safe virtual ingredients and observe what happens."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "reactionId": "dissolve",
+        "title": "Dissolving",
+        "emoji": "💧✨",
+        "requiredIngredients": [
+          "Water",
+          "Salt"
+        ],
+        "fallback": false
+      }
+    },
+    {
+      "id": "c5_science_lab_reaction_none",
+      "legacyContentId": "reaction_none",
+      "classNumber": 5,
+      "gameId": "science_lab",
+      "topicId": "reactions",
+      "subject": "science",
+      "unitId": "c5_science_inquiry",
+      "competencyId": "c5_sci_states_changes",
+      "relatedCompetencyIds": [
+        "c5_sci_light_inquiry"
+      ],
+      "learningOutcomeId": "c5_sci_states_changes_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_sci_light_inquiry_lo1"
+      ],
+      "activityType": "experiment",
+      "difficulty": 1,
+      "prompt": "Mix safe virtual ingredients and observe what happens.",
+      "correctResponseRule": {
+        "type": "experimentOutcome",
+        "reactionId": "none"
+      },
+      "explanation": "Try a different safe virtual combination.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Observe the selected virtual ingredients and compare the result."
+        }
+      ],
+      "narration": {
+        "text": "Mix safe virtual ingredients and observe what happens."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "reactionId": "none",
+        "title": "No target reaction yet",
+        "emoji": "🔬",
+        "requiredIngredients": [],
+        "fallback": true
+      }
+    },
+    {
+      "id": "c5_story_builder_story5_1",
+      "legacyContentId": "story5_1",
+      "classNumber": 5,
+      "gameId": "story_builder",
+      "topicId": "story_sequence",
+      "subject": "english",
+      "unitId": "c5_english_reading",
+      "competencyId": "c5_eng_sequence_cause_effect",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_sequence_cause_effect_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Arjun recorded the first clue in his notebook.",
+      "correctResponseRule": {
+        "type": "orderedWords",
+        "value": [
+          "Arjun",
+          "recorded",
+          "the",
+          "first",
+          "clue",
+          "in",
+          "his",
+          "notebook"
+        ]
+      },
+      "explanation": "Arrange the words in sentence order to rebuild: “Arjun recorded the first clue in his notebook.”",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Start with “Arjun” and look for the word that naturally follows it."
+        }
+      ],
+      "narration": {
+        "text": "Arjun recorded the first clue in his notebook."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "words": [
+          "Arjun",
+          "recorded",
+          "the",
+          "first",
+          "clue",
+          "in",
+          "his",
+          "notebook"
+        ]
+      }
+    },
+    {
+      "id": "c5_story_builder_story5_2",
+      "legacyContentId": "story5_2",
+      "classNumber": 5,
+      "gameId": "story_builder",
+      "topicId": "descriptive_language",
+      "subject": "english",
+      "unitId": "c5_english_language",
+      "competencyId": "c5_eng_paragraph_composition",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_paragraph_composition_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "The patient explorer waited beside the ancient gate.",
+      "correctResponseRule": {
+        "type": "orderedWords",
+        "value": [
+          "The",
+          "patient",
+          "explorer",
+          "waited",
+          "beside",
+          "the",
+          "ancient",
+          "gate"
+        ]
+      },
+      "explanation": "Arrange the words in sentence order to rebuild: “The patient explorer waited beside the ancient gate.”",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Start with “The” and look for the word that naturally follows it."
+        }
+      ],
+      "narration": {
+        "text": "The patient explorer waited beside the ancient gate."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "words": [
+          "The",
+          "patient",
+          "explorer",
+          "waited",
+          "beside",
+          "the",
+          "ancient",
+          "gate"
+        ]
+      }
+    },
+    {
+      "id": "c5_story_builder_story5_3",
+      "legacyContentId": "story5_3",
+      "classNumber": 5,
+      "gameId": "story_builder",
+      "topicId": "complex_sentences",
+      "subject": "english",
+      "unitId": "c5_english_language",
+      "competencyId": "c5_eng_complex_sentences",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_complex_sentences_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Although the path was steep, the team continued bravely.",
+      "correctResponseRule": {
+        "type": "orderedWords",
+        "value": [
+          "Although",
+          "the",
+          "path",
+          "was",
+          "steep",
+          "the",
+          "team",
+          "continued",
+          "bravely"
+        ]
+      },
+      "explanation": "Arrange the words in sentence order to rebuild: “Although the path was steep, the team continued bravely.”",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Start with “Although” and look for the word that naturally follows it."
+        }
+      ],
+      "narration": {
+        "text": "Although the path was steep, the team continued bravely."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "words": [
+          "Although",
+          "the",
+          "path",
+          "was",
+          "steep",
+          "the",
+          "team",
+          "continued",
+          "bravely"
+        ]
+      }
+    },
+    {
+      "id": "c5_story_builder_story5_4",
+      "legacyContentId": "story5_4",
+      "classNumber": 5,
+      "gameId": "story_builder",
+      "topicId": "cause_and_effect",
+      "subject": "english",
+      "unitId": "c5_english_reading",
+      "competencyId": "c5_eng_sequence_cause_effect",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_sequence_cause_effect_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "A sudden storm forced the travellers to change their plan.",
+      "correctResponseRule": {
+        "type": "orderedWords",
+        "value": [
+          "A",
+          "sudden",
+          "storm",
+          "forced",
+          "the",
+          "travellers",
+          "to",
+          "change",
+          "their",
+          "plan"
+        ]
+      },
+      "explanation": "Arrange the words in sentence order to rebuild: “A sudden storm forced the travellers to change their plan.”",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Start with “A” and look for the word that naturally follows it."
+        }
+      ],
+      "narration": {
+        "text": "A sudden storm forced the travellers to change their plan."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "words": [
+          "A",
+          "sudden",
+          "storm",
+          "forced",
+          "the",
+          "travellers",
+          "to",
+          "change",
+          "their",
+          "plan"
+        ]
+      }
+    },
+    {
+      "id": "c5_story_builder_story5_5",
+      "legacyContentId": "story5_5",
+      "classNumber": 5,
+      "gameId": "story_builder",
+      "topicId": "cause_and_effect",
+      "subject": "english",
+      "unitId": "c5_english_reading",
+      "competencyId": "c5_eng_sequence_cause_effect",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_sequence_cause_effect_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Because they shared their supplies, everyone reached the village safely.",
+      "correctResponseRule": {
+        "type": "orderedWords",
+        "value": [
+          "Because",
+          "they",
+          "shared",
+          "their",
+          "supplies",
+          "everyone",
+          "reached",
+          "the",
+          "village",
+          "safely"
+        ]
+      },
+      "explanation": "Arrange the words in sentence order to rebuild: “Because they shared their supplies, everyone reached the village safely.”",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Start with “Because” and look for the word that naturally follows it."
+        }
+      ],
+      "narration": {
+        "text": "Because they shared their supplies, everyone reached the village safely."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "words": [
+          "Because",
+          "they",
+          "shared",
+          "their",
+          "supplies",
+          "everyone",
+          "reached",
+          "the",
+          "village",
+          "safely"
+        ]
+      }
+    },
+    {
+      "id": "c5_story_builder_story5_6",
+      "legacyContentId": "story5_6",
+      "classNumber": 5,
+      "gameId": "story_builder",
+      "topicId": "descriptive_language",
+      "subject": "english",
+      "unitId": "c5_english_language",
+      "competencyId": "c5_eng_paragraph_composition",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_paragraph_composition_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "At dawn, the determined group finally discovered the hidden observatory.",
+      "correctResponseRule": {
+        "type": "orderedWords",
+        "value": [
+          "At",
+          "dawn",
+          "the",
+          "determined",
+          "group",
+          "finally",
+          "discovered",
+          "the",
+          "hidden",
+          "observatory"
+        ]
+      },
+      "explanation": "Arrange the words in sentence order to rebuild: “At dawn, the determined group finally discovered the hidden observatory.”",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Start with “At” and look for the word that naturally follows it."
+        }
+      ],
+      "narration": {
+        "text": "At dawn, the determined group finally discovered the hidden observatory."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "words": [
+          "At",
+          "dawn",
+          "the",
+          "determined",
+          "group",
+          "finally",
+          "discovered",
+          "the",
+          "hidden",
+          "observatory"
+        ]
+      }
+    },
+    {
+      "id": "c5_grammar_puzzle_grammar5_1",
+      "legacyContentId": "grammar5_1",
+      "classNumber": 5,
+      "gameId": "grammar_puzzle",
+      "topicId": "parts_of_speech",
+      "subject": "english",
+      "unitId": "c5_english_language",
+      "competencyId": "c5_eng_parts_speech",
+      "relatedCompetencyIds": [
+        "c5_eng_tense_agreement"
+      ],
+      "learningOutcomeId": "c5_eng_parts_speech_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_eng_tense_agreement_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "The curious student observes.",
+      "correctResponseRule": {
+        "type": "grammarParts",
+        "noun": "student",
+        "verb": "observes",
+        "adjective": "curious"
+      },
+      "explanation": "In this sentence, “student” is the noun, “observes” is the verb, and “curious” is the adjective.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find the naming word, then the action word, then the describing word."
+        }
+      ],
+      "narration": {
+        "text": "The curious student observes."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "sentence": "The curious student observes.",
+        "noun": "student",
+        "verb": "observes",
+        "adjective": "curious"
+      }
+    },
+    {
+      "id": "c5_grammar_puzzle_grammar5_2",
+      "legacyContentId": "grammar5_2",
+      "classNumber": 5,
+      "gameId": "grammar_puzzle",
+      "topicId": "parts_of_speech",
+      "subject": "english",
+      "unitId": "c5_english_language",
+      "competencyId": "c5_eng_parts_speech",
+      "relatedCompetencyIds": [
+        "c5_eng_tense_agreement"
+      ],
+      "learningOutcomeId": "c5_eng_parts_speech_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_eng_tense_agreement_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "A powerful river flows.",
+      "correctResponseRule": {
+        "type": "grammarParts",
+        "noun": "river",
+        "verb": "flows",
+        "adjective": "powerful"
+      },
+      "explanation": "In this sentence, “river” is the noun, “flows” is the verb, and “powerful” is the adjective.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find the naming word, then the action word, then the describing word."
+        }
+      ],
+      "narration": {
+        "text": "A powerful river flows."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "sentence": "A powerful river flows.",
+        "noun": "river",
+        "verb": "flows",
+        "adjective": "powerful"
+      }
+    },
+    {
+      "id": "c5_grammar_puzzle_grammar5_3",
+      "legacyContentId": "grammar5_3",
+      "classNumber": 5,
+      "gameId": "grammar_puzzle",
+      "topicId": "parts_of_speech",
+      "subject": "english",
+      "unitId": "c5_english_language",
+      "competencyId": "c5_eng_parts_speech",
+      "relatedCompetencyIds": [
+        "c5_eng_tense_agreement"
+      ],
+      "learningOutcomeId": "c5_eng_parts_speech_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_eng_tense_agreement_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "The ancient monument attracts visitors.",
+      "correctResponseRule": {
+        "type": "grammarParts",
+        "noun": "monument",
+        "verb": "attracts",
+        "adjective": "ancient"
+      },
+      "explanation": "In this sentence, “monument” is the noun, “attracts” is the verb, and “ancient” is the adjective.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find the naming word, then the action word, then the describing word."
+        }
+      ],
+      "narration": {
+        "text": "The ancient monument attracts visitors."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "sentence": "The ancient monument attracts visitors.",
+        "noun": "monument",
+        "verb": "attracts",
+        "adjective": "ancient"
+      }
+    },
+    {
+      "id": "c5_grammar_puzzle_grammar5_4",
+      "legacyContentId": "grammar5_4",
+      "classNumber": 5,
+      "gameId": "grammar_puzzle",
+      "topicId": "parts_of_speech",
+      "subject": "english",
+      "unitId": "c5_english_language",
+      "competencyId": "c5_eng_parts_speech",
+      "relatedCompetencyIds": [
+        "c5_eng_tense_agreement"
+      ],
+      "learningOutcomeId": "c5_eng_parts_speech_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_eng_tense_agreement_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "The careful scientist records results.",
+      "correctResponseRule": {
+        "type": "grammarParts",
+        "noun": "scientist",
+        "verb": "records",
+        "adjective": "careful"
+      },
+      "explanation": "In this sentence, “scientist” is the noun, “records” is the verb, and “careful” is the adjective.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find the naming word, then the action word, then the describing word."
+        }
+      ],
+      "narration": {
+        "text": "The careful scientist records results."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "sentence": "The careful scientist records results.",
+        "noun": "scientist",
+        "verb": "records",
+        "adjective": "careful"
+      }
+    },
+    {
+      "id": "c5_grammar_puzzle_grammar5_5",
+      "legacyContentId": "grammar5_5",
+      "classNumber": 5,
+      "gameId": "grammar_puzzle",
+      "topicId": "parts_of_speech",
+      "subject": "english",
+      "unitId": "c5_english_language",
+      "competencyId": "c5_eng_parts_speech",
+      "relatedCompetencyIds": [
+        "c5_eng_tense_agreement"
+      ],
+      "learningOutcomeId": "c5_eng_parts_speech_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_eng_tense_agreement_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "The enormous telescope reveals distant planets.",
+      "correctResponseRule": {
+        "type": "grammarParts",
+        "noun": "telescope",
+        "verb": "reveals",
+        "adjective": "enormous"
+      },
+      "explanation": "In this sentence, “telescope” is the noun, “reveals” is the verb, and “enormous” is the adjective.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find the naming word, then the action word, then the describing word."
+        }
+      ],
+      "narration": {
+        "text": "The enormous telescope reveals distant planets."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "sentence": "The enormous telescope reveals distant planets.",
+        "noun": "telescope",
+        "verb": "reveals",
+        "adjective": "enormous"
+      }
+    },
+    {
+      "id": "c5_grammar_puzzle_grammar5_6",
+      "legacyContentId": "grammar5_6",
+      "classNumber": 5,
+      "gameId": "grammar_puzzle",
+      "topicId": "parts_of_speech",
+      "subject": "english",
+      "unitId": "c5_english_language",
+      "competencyId": "c5_eng_parts_speech",
+      "relatedCompetencyIds": [
+        "c5_eng_tense_agreement"
+      ],
+      "learningOutcomeId": "c5_eng_parts_speech_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_eng_tense_agreement_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "A determined athlete completes the difficult race.",
+      "correctResponseRule": {
+        "type": "grammarParts",
+        "noun": "athlete",
+        "verb": "completes",
+        "adjective": "determined"
+      },
+      "explanation": "In this sentence, “athlete” is the noun, “completes” is the verb, and “determined” is the adjective.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find the naming word, then the action word, then the describing word."
+        }
+      ],
+      "narration": {
+        "text": "A determined athlete completes the difficult race."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "sentence": "A determined athlete completes the difficult race.",
+        "noun": "athlete",
+        "verb": "completes",
+        "adjective": "determined"
+      }
+    },
+    {
+      "id": "c5_map_quest_map5_1",
+      "legacyContentId": "map5_1",
+      "classNumber": 5,
+      "gameId": "map_quest",
+      "topicId": "physical_geography",
+      "subject": "social",
+      "unitId": "c5_social_maps",
+      "competencyId": "c5_soc_india_physical_geography",
+      "relatedCompetencyIds": [
+        "c5_soc_states_rivers_features"
+      ],
+      "learningOutcomeId": "c5_soc_india_physical_geography_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_soc_states_rivers_features_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Which mountain range forms a major natural boundary in northern India?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Himalayas"
+      },
+      "explanation": "It includes many of the world’s highest peaks. The correct answer is Himalayas.",
+      "distractors": [
+        {
+          "value": "Aravallis",
+          "misconceptionId": "map_concept_confusion_2"
+        },
+        {
+          "value": "Western Ghats",
+          "misconceptionId": "map_concept_confusion_3"
+        },
+        {
+          "value": "Nilgiris",
+          "misconceptionId": "map_concept_confusion_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "It includes many of the world’s highest peaks."
+        }
+      ],
+      "narration": {
+        "text": "Which mountain range forms a major natural boundary in northern India?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Himalayas",
+        "choices": [
+          "Himalayas",
+          "Aravallis",
+          "Western Ghats",
+          "Nilgiris"
+        ],
+        "hint": "It includes many of the world’s highest peaks."
+      }
+    },
+    {
+      "id": "c5_map_quest_map5_2",
+      "legacyContentId": "map5_2",
+      "classNumber": 5,
+      "gameId": "map_quest",
+      "topicId": "physical_geography",
+      "subject": "social",
+      "unitId": "c5_social_maps",
+      "competencyId": "c5_soc_india_physical_geography",
+      "relatedCompetencyIds": [
+        "c5_soc_states_rivers_features"
+      ],
+      "learningOutcomeId": "c5_soc_india_physical_geography_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_soc_states_rivers_features_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Which ocean lies to the south of India?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Indian Ocean"
+      },
+      "explanation": "The ocean shares India’s name. The correct answer is Indian Ocean.",
+      "distractors": [
+        {
+          "value": "Atlantic Ocean",
+          "misconceptionId": "map_concept_confusion_2"
+        },
+        {
+          "value": "Arctic Ocean",
+          "misconceptionId": "map_concept_confusion_3"
+        },
+        {
+          "value": "Pacific Ocean",
+          "misconceptionId": "map_concept_confusion_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "The ocean shares India’s name."
+        }
+      ],
+      "narration": {
+        "text": "Which ocean lies to the south of India?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Indian Ocean",
+        "choices": [
+          "Indian Ocean",
+          "Atlantic Ocean",
+          "Arctic Ocean",
+          "Pacific Ocean"
+        ],
+        "hint": "The ocean shares India’s name."
+      }
+    },
+    {
+      "id": "c5_map_quest_map5_3",
+      "legacyContentId": "map5_3",
+      "classNumber": 5,
+      "gameId": "map_quest",
+      "topicId": "directions",
+      "subject": "social",
+      "unitId": "c5_social_maps",
+      "competencyId": "c5_soc_map_scale_directions",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_soc_map_scale_directions_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "If you travel from Mumbai to Kolkata, your main direction is mostly…",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "East"
+      },
+      "explanation": "Kolkata lies east of Mumbai. The correct answer is East.",
+      "distractors": [
+        {
+          "value": "West",
+          "misconceptionId": "map_concept_confusion_2"
+        },
+        {
+          "value": "North",
+          "misconceptionId": "map_concept_confusion_3"
+        },
+        {
+          "value": "South",
+          "misconceptionId": "map_concept_confusion_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Kolkata lies east of Mumbai."
+        }
+      ],
+      "narration": {
+        "text": "If you travel from Mumbai to Kolkata, your main direction is mostly…"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "East",
+        "choices": [
+          "East",
+          "West",
+          "North",
+          "South"
+        ],
+        "hint": "Kolkata lies east of Mumbai."
+      }
+    },
+    {
+      "id": "c5_map_quest_map5_4",
+      "legacyContentId": "map5_4",
+      "classNumber": 5,
+      "gameId": "map_quest",
+      "topicId": "physical_geography",
+      "subject": "social",
+      "unitId": "c5_social_maps",
+      "competencyId": "c5_soc_india_physical_geography",
+      "relatedCompetencyIds": [
+        "c5_soc_states_rivers_features"
+      ],
+      "learningOutcomeId": "c5_soc_india_physical_geography_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_soc_states_rivers_features_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Which river is strongly associated with the northern plains of India?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Ganga"
+      },
+      "explanation": "It is one of India’s major river systems. The correct answer is Ganga.",
+      "distractors": [
+        {
+          "value": "Nile",
+          "misconceptionId": "map_concept_confusion_2"
+        },
+        {
+          "value": "Amazon",
+          "misconceptionId": "map_concept_confusion_3"
+        },
+        {
+          "value": "Thames",
+          "misconceptionId": "map_concept_confusion_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "It is one of India’s major river systems."
+        }
+      ],
+      "narration": {
+        "text": "Which river is strongly associated with the northern plains of India?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Ganga",
+        "choices": [
+          "Ganga",
+          "Nile",
+          "Amazon",
+          "Thames"
+        ],
+        "hint": "It is one of India’s major river systems."
+      }
+    },
+    {
+      "id": "c5_map_quest_map5_5",
+      "legacyContentId": "map5_5",
+      "classNumber": 5,
+      "gameId": "map_quest",
+      "topicId": "physical_geography",
+      "subject": "social",
+      "unitId": "c5_social_maps",
+      "competencyId": "c5_soc_india_physical_geography",
+      "relatedCompetencyIds": [
+        "c5_soc_states_rivers_features"
+      ],
+      "learningOutcomeId": "c5_soc_india_physical_geography_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_soc_states_rivers_features_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "The Deccan Plateau is mainly in which part of India?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Peninsular India"
+      },
+      "explanation": "Think of the large plateau south of the northern plains. The correct answer is Peninsular India.",
+      "distractors": [
+        {
+          "value": "Far northern Himalayas",
+          "misconceptionId": "map_concept_confusion_2"
+        },
+        {
+          "value": "Only the Thar Desert",
+          "misconceptionId": "map_concept_confusion_3"
+        },
+        {
+          "value": "Only the Ganga delta",
+          "misconceptionId": "map_concept_confusion_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think of the large plateau south of the northern plains."
+        }
+      ],
+      "narration": {
+        "text": "The Deccan Plateau is mainly in which part of India?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Peninsular India",
+        "choices": [
+          "Peninsular India",
+          "Far northern Himalayas",
+          "Only the Thar Desert",
+          "Only the Ganga delta"
+        ],
+        "hint": "Think of the large plateau south of the northern plains."
+      }
+    },
+    {
+      "id": "c5_map_quest_map5_6",
+      "legacyContentId": "map5_6",
+      "classNumber": 5,
+      "gameId": "map_quest",
+      "topicId": "map_skills",
+      "subject": "social",
+      "unitId": "c5_social_maps",
+      "competencyId": "c5_soc_map_scale_directions",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_soc_map_scale_directions_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Why are map scales useful?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "They compare map distance with real distance"
+      },
+      "explanation": "A scale lets us estimate actual distance. The correct answer is They compare map distance with real distance.",
+      "distractors": [
+        {
+          "value": "They show only weather",
+          "misconceptionId": "map_concept_confusion_2"
+        },
+        {
+          "value": "They name every person",
+          "misconceptionId": "map_concept_confusion_3"
+        },
+        {
+          "value": "They replace directions",
+          "misconceptionId": "map_concept_confusion_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "A scale lets us estimate actual distance."
+        }
+      ],
+      "narration": {
+        "text": "Why are map scales useful?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "They compare map distance with real distance",
+        "choices": [
+          "They compare map distance with real distance",
+          "They show only weather",
+          "They name every person",
+          "They replace directions"
+        ],
+        "hint": "A scale lets us estimate actual distance."
+      }
+    },
+    {
+      "id": "c5_coding_maze_c5_code_1",
+      "legacyContentId": "c5_code_1",
+      "classNumber": 5,
+      "gameId": "coding_maze",
+      "topicId": "algorithm_planning",
+      "subject": "coding",
+      "unitId": "c5_coding_ct",
+      "competencyId": "c5_ct_decomposition",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_ct_decomposition_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "simulation",
+      "difficulty": 1,
+      "prompt": "Guide the robot from (0, 3) to (3, 2) within 5 commands.",
+      "correctResponseRule": {
+        "type": "reachGridGoal",
+        "goalX": 3,
+        "goalY": 2,
+        "maxCommands": 5
+      },
+      "explanation": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Plan the route before moving. Use turns to face the next safe path."
+        }
+      ],
+      "narration": {
+        "text": "Guide the robot from (0, 3) to (3, 2) within 5 commands."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "width": 5,
+        "height": 4,
+        "startX": 0,
+        "startY": 3,
+        "goalX": 3,
+        "goalY": 2,
+        "startDirection": "east",
+        "obstacles": [],
+        "maxCommands": 5
+      }
+    },
+    {
+      "id": "c5_coding_maze_c5_code_2",
+      "legacyContentId": "c5_code_2",
+      "classNumber": 5,
+      "gameId": "coding_maze",
+      "topicId": "algorithm_planning",
+      "subject": "coding",
+      "unitId": "c5_coding_ct",
+      "competencyId": "c5_ct_decomposition",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_ct_decomposition_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "simulation",
+      "difficulty": 1,
+      "prompt": "Guide the robot from (1, 4) to (4, 1) within 8 commands.",
+      "correctResponseRule": {
+        "type": "reachGridGoal",
+        "goalX": 4,
+        "goalY": 1,
+        "maxCommands": 8
+      },
+      "explanation": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Plan the route before moving. Use turns to face the next safe path."
+        }
+      ],
+      "narration": {
+        "text": "Guide the robot from (1, 4) to (4, 1) within 8 commands."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "width": 5,
+        "height": 5,
+        "startX": 1,
+        "startY": 4,
+        "goalX": 4,
+        "goalY": 1,
+        "startDirection": "north",
+        "obstacles": [
+          "1,2"
+        ],
+        "maxCommands": 8
+      }
+    },
+    {
+      "id": "c5_coding_maze_c5_code_3",
+      "legacyContentId": "c5_code_3",
+      "classNumber": 5,
+      "gameId": "coding_maze",
+      "topicId": "repeat_and_route",
+      "subject": "coding",
+      "unitId": "c5_coding_ct",
+      "competencyId": "c5_ct_abstraction_patterns",
+      "relatedCompetencyIds": [
+        "c5_ct_decomposition"
+      ],
+      "learningOutcomeId": "c5_ct_abstraction_patterns_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_ct_decomposition_lo1"
+      ],
+      "activityType": "simulation",
+      "difficulty": 2,
+      "prompt": "Guide the robot from (0, 4) to (5, 2) within 10 commands.",
+      "correctResponseRule": {
+        "type": "reachGridGoal",
+        "goalX": 5,
+        "goalY": 2,
+        "maxCommands": 10
+      },
+      "explanation": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Plan the route before moving. Use turns to face the next safe path."
+        }
+      ],
+      "narration": {
+        "text": "Guide the robot from (0, 4) to (5, 2) within 10 commands."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "width": 6,
+        "height": 5,
+        "startX": 0,
+        "startY": 4,
+        "goalX": 5,
+        "goalY": 2,
+        "startDirection": "east",
+        "obstacles": [
+          "2,4",
+          "3,3"
+        ],
+        "maxCommands": 10
+      }
+    },
+    {
+      "id": "c5_coding_maze_c5_code_4",
+      "legacyContentId": "c5_code_4",
+      "classNumber": 5,
+      "gameId": "coding_maze",
+      "topicId": "repeat_and_route",
+      "subject": "coding",
+      "unitId": "c5_coding_ct",
+      "competencyId": "c5_ct_abstraction_patterns",
+      "relatedCompetencyIds": [
+        "c5_ct_decomposition"
+      ],
+      "learningOutcomeId": "c5_ct_abstraction_patterns_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_ct_decomposition_lo1"
+      ],
+      "activityType": "simulation",
+      "difficulty": 2,
+      "prompt": "Guide the robot from (1, 5) to (5, 1) within 13 commands.",
+      "correctResponseRule": {
+        "type": "reachGridGoal",
+        "goalX": 5,
+        "goalY": 1,
+        "maxCommands": 13
+      },
+      "explanation": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Plan the route before moving. Use turns to face the next safe path."
+        }
+      ],
+      "narration": {
+        "text": "Guide the robot from (1, 5) to (5, 1) within 13 commands."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "width": 6,
+        "height": 6,
+        "startX": 1,
+        "startY": 5,
+        "goalX": 5,
+        "goalY": 1,
+        "startDirection": "north",
+        "obstacles": [
+          "1,3",
+          "3,4",
+          "4,2"
+        ],
+        "maxCommands": 13
+      }
+    },
+    {
+      "id": "c5_coding_maze_c5_code_5",
+      "legacyContentId": "c5_code_5",
+      "classNumber": 5,
+      "gameId": "coding_maze",
+      "topicId": "efficient_algorithms",
+      "subject": "coding",
+      "unitId": "c5_coding_ct",
+      "competencyId": "c5_ct_algorithm_efficiency",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_ct_algorithm_efficiency_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "simulation",
+      "difficulty": 3,
+      "prompt": "Guide the robot from (0, 5) to (6, 1) within 16 commands.",
+      "correctResponseRule": {
+        "type": "reachGridGoal",
+        "goalX": 6,
+        "goalY": 1,
+        "maxCommands": 16
+      },
+      "explanation": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Plan the route before moving. Use turns to face the next safe path."
+        }
+      ],
+      "narration": {
+        "text": "Guide the robot from (0, 5) to (6, 1) within 16 commands."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "width": 7,
+        "height": 6,
+        "startX": 0,
+        "startY": 5,
+        "goalX": 6,
+        "goalY": 1,
+        "startDirection": "east",
+        "obstacles": [
+          "2,5",
+          "2,4",
+          "4,3",
+          "5,2"
+        ],
+        "maxCommands": 16
+      }
+    },
+    {
+      "id": "c5_coding_maze_c5_code_6",
+      "legacyContentId": "c5_code_6",
+      "classNumber": 5,
+      "gameId": "coding_maze",
+      "topicId": "debugging_routes",
+      "subject": "coding",
+      "unitId": "c5_coding_ct",
+      "competencyId": "c5_ct_debugging",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_ct_debugging_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "simulation",
+      "difficulty": 3,
+      "prompt": "Guide the robot from (1, 6) to (6, 1) within 18 commands.",
+      "correctResponseRule": {
+        "type": "reachGridGoal",
+        "goalX": 6,
+        "goalY": 1,
+        "maxCommands": 18
+      },
+      "explanation": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Plan the route before moving. Use turns to face the next safe path."
+        }
+      ],
+      "narration": {
+        "text": "Guide the robot from (1, 6) to (6, 1) within 18 commands."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "width": 7,
+        "height": 7,
+        "startX": 1,
+        "startY": 6,
+        "goalX": 6,
+        "goalY": 1,
+        "startDirection": "north",
+        "obstacles": [
+          "1,4",
+          "2,4",
+          "4,5",
+          "4,3",
+          "5,2"
+        ],
+        "maxCommands": 18
+      }
+    },
+    {
+      "id": "c5_recycling_challenge_recycle5_1",
+      "legacyContentId": "recycle5_1",
+      "classNumber": 5,
+      "gameId": "recycling_challenge",
+      "topicId": "resource_sorting",
+      "subject": "evs",
+      "unitId": "c5_evs_world",
+      "competencyId": "c5_evs_waste_environment",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_evs_waste_environment_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Put Office paper in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Paper"
+      },
+      "explanation": "Office paper belongs in the Paper bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Organic",
+          "misconceptionId": "waste_material_confusion_2"
+        },
+        {
+          "value": "Plastic",
+          "misconceptionId": "waste_material_confusion_3"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Office paper in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Office paper",
+        "emoji": "📄",
+        "bin": "Paper"
+      }
+    },
+    {
+      "id": "c5_recycling_challenge_recycle5_2",
+      "legacyContentId": "recycle5_2",
+      "classNumber": 5,
+      "gameId": "recycling_challenge",
+      "topicId": "resource_sorting",
+      "subject": "evs",
+      "unitId": "c5_evs_world",
+      "competencyId": "c5_evs_waste_environment",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_evs_waste_environment_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Put Fruit peel in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Organic"
+      },
+      "explanation": "Fruit peel belongs in the Organic bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Paper",
+          "misconceptionId": "waste_material_confusion_1"
+        },
+        {
+          "value": "Plastic",
+          "misconceptionId": "waste_material_confusion_3"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Fruit peel in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Fruit peel",
+        "emoji": "🍊",
+        "bin": "Organic"
+      }
+    },
+    {
+      "id": "c5_recycling_challenge_recycle5_3",
+      "legacyContentId": "recycle5_3",
+      "classNumber": 5,
+      "gameId": "recycling_challenge",
+      "topicId": "resource_sorting",
+      "subject": "evs",
+      "unitId": "c5_evs_world",
+      "competencyId": "c5_evs_waste_environment",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_evs_waste_environment_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Put Clean plastic jar in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Plastic"
+      },
+      "explanation": "Clean plastic jar belongs in the Plastic bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Paper",
+          "misconceptionId": "waste_material_confusion_1"
+        },
+        {
+          "value": "Organic",
+          "misconceptionId": "waste_material_confusion_2"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Clean plastic jar in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Clean plastic jar",
+        "emoji": "🫙",
+        "bin": "Plastic"
+      }
+    },
+    {
+      "id": "c5_recycling_challenge_recycle5_4",
+      "legacyContentId": "recycle5_4",
+      "classNumber": 5,
+      "gameId": "recycling_challenge",
+      "topicId": "resource_conservation",
+      "subject": "evs",
+      "unitId": "c5_evs_world",
+      "competencyId": "c5_evs_resources_sustainability",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_evs_resources_sustainability_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Put Delivery carton in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Paper"
+      },
+      "explanation": "Delivery carton belongs in the Paper bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Organic",
+          "misconceptionId": "waste_material_confusion_2"
+        },
+        {
+          "value": "Plastic",
+          "misconceptionId": "waste_material_confusion_3"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Delivery carton in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Delivery carton",
+        "emoji": "📦",
+        "bin": "Paper"
+      }
+    },
+    {
+      "id": "c5_recycling_challenge_recycle5_5",
+      "legacyContentId": "recycle5_5",
+      "classNumber": 5,
+      "gameId": "recycling_challenge",
+      "topicId": "resource_conservation",
+      "subject": "evs",
+      "unitId": "c5_evs_world",
+      "competencyId": "c5_evs_resources_sustainability",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_evs_resources_sustainability_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Put Garden leaves in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Organic"
+      },
+      "explanation": "Garden leaves belongs in the Organic bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Paper",
+          "misconceptionId": "waste_material_confusion_1"
+        },
+        {
+          "value": "Plastic",
+          "misconceptionId": "waste_material_confusion_3"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Garden leaves in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Garden leaves",
+        "emoji": "🍂",
+        "bin": "Organic"
+      }
+    },
+    {
+      "id": "c5_recycling_challenge_recycle5_6",
+      "legacyContentId": "recycle5_6",
+      "classNumber": 5,
+      "gameId": "recycling_challenge",
+      "topicId": "resource_conservation",
+      "subject": "evs",
+      "unitId": "c5_evs_world",
+      "competencyId": "c5_evs_resources_sustainability",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_evs_resources_sustainability_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Put Clean detergent bottle in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Plastic"
+      },
+      "explanation": "Clean detergent bottle belongs in the Plastic bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Paper",
+          "misconceptionId": "waste_material_confusion_1"
+        },
+        {
+          "value": "Organic",
+          "misconceptionId": "waste_material_confusion_2"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Clean detergent bottle in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Clean detergent bottle",
+        "emoji": "🧴",
+        "bin": "Plastic"
+      }
+    },
+    {
+      "id": "c5_recycling_challenge_recycle5_7",
+      "legacyContentId": "recycle5_7",
+      "classNumber": 5,
+      "gameId": "recycling_challenge",
+      "topicId": "sustainability",
+      "subject": "evs",
+      "unitId": "c5_evs_world",
+      "competencyId": "c5_evs_responsible_action",
+      "relatedCompetencyIds": [
+        "c5_evs_resources_sustainability"
+      ],
+      "learningOutcomeId": "c5_evs_responsible_action_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_evs_resources_sustainability_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Put Notebook pages in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Paper"
+      },
+      "explanation": "Notebook pages belongs in the Paper bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Organic",
+          "misconceptionId": "waste_material_confusion_2"
+        },
+        {
+          "value": "Plastic",
+          "misconceptionId": "waste_material_confusion_3"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Notebook pages in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Notebook pages",
+        "emoji": "📑",
+        "bin": "Paper"
+      }
+    },
+    {
+      "id": "c5_recycling_challenge_recycle5_8",
+      "legacyContentId": "recycle5_8",
+      "classNumber": 5,
+      "gameId": "recycling_challenge",
+      "topicId": "sustainability",
+      "subject": "evs",
+      "unitId": "c5_evs_world",
+      "competencyId": "c5_evs_responsible_action",
+      "relatedCompetencyIds": [
+        "c5_evs_resources_sustainability"
+      ],
+      "learningOutcomeId": "c5_evs_responsible_action_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_evs_resources_sustainability_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Put Vegetable scraps in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Organic"
+      },
+      "explanation": "Vegetable scraps belongs in the Organic bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Paper",
+          "misconceptionId": "waste_material_confusion_1"
+        },
+        {
+          "value": "Plastic",
+          "misconceptionId": "waste_material_confusion_3"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Vegetable scraps in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Vegetable scraps",
+        "emoji": "🥬",
+        "bin": "Organic"
+      }
+    },
+    {
+      "id": "c5_recycling_challenge_recycle5_9",
+      "legacyContentId": "recycle5_9",
+      "classNumber": 5,
+      "gameId": "recycling_challenge",
+      "topicId": "sustainability",
+      "subject": "evs",
+      "unitId": "c5_evs_world",
+      "competencyId": "c5_evs_responsible_action",
+      "relatedCompetencyIds": [
+        "c5_evs_resources_sustainability"
+      ],
+      "learningOutcomeId": "c5_evs_responsible_action_lo1",
+      "relatedLearningOutcomeIds": [
+        "c5_evs_resources_sustainability_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Put Clean plastic container in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Plastic"
+      },
+      "explanation": "Clean plastic container belongs in the Plastic bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Paper",
+          "misconceptionId": "waste_material_confusion_1"
+        },
+        {
+          "value": "Organic",
+          "misconceptionId": "waste_material_confusion_2"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Clean plastic container in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Clean plastic container",
+        "emoji": "🥡",
+        "bin": "Plastic"
+      }
+    }
+  ]
+}

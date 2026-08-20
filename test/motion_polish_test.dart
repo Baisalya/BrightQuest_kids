@@ -1,8 +1,9 @@
-import 'package:brightquest_kids/app/brightquest_scope.dart';
 import 'package:brightquest_kids/core/state/game_controller.dart';
 import 'package:brightquest_kids/widgets/bright_motion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'support/app_fixture.dart';
 
 void main() {
   testWidgets('finite motion widgets settle without leaving scheduled frames',
@@ -10,7 +11,7 @@ void main() {
     final controller = GameController();
 
     await tester.pumpWidget(
-      BrightQuestScope(
+      buildTestScope(
         controller: controller,
         child: const MaterialApp(
           home: Scaffold(
@@ -42,7 +43,7 @@ void main() {
     final controller = GameController();
 
     await tester.pumpWidget(
-      BrightQuestScope(
+      buildTestScope(
         controller: controller,
         child: const MaterialApp(
           home: Scaffold(
@@ -71,7 +72,7 @@ void main() {
     controller.setReducedMotionEnabled(true);
 
     await tester.pumpWidget(
-      BrightQuestScope(
+      buildTestScope(
         controller: controller,
         child: const MaterialApp(
           home: Scaffold(

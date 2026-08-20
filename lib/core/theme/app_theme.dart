@@ -14,7 +14,10 @@ class AppTheme {
   static const Color surfaceBlue = Color(0xFFF3FAFF);
   static const Color surfaceLavender = Color(0xFFF7F3FF);
 
-  static ThemeData light({bool highContrast = false}) {
+  static ThemeData light({
+    bool highContrast = false,
+    bool dyslexiaFriendlySpacing = false,
+  }) {
     final scheme = ColorScheme.fromSeed(
       seedColor: highContrast ? const Color(0xFF4224BD) : purple,
       brightness: Brightness.light,
@@ -26,7 +29,8 @@ class AppTheme {
     final base = ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
-      scaffoldBackgroundColor: highContrast ? const Color(0xFFF7F7F7) : const Color(0xFFF4FAFF),
+      scaffoldBackgroundColor:
+          highContrast ? const Color(0xFFF7F7F7) : const Color(0xFFF4FAFF),
     );
 
     return base.copyWith(
@@ -34,24 +38,34 @@ class AppTheme {
         displaySmall: base.textTheme.displaySmall?.copyWith(
           color: navy,
           fontWeight: FontWeight.w900,
-          letterSpacing: -1.1,
+          letterSpacing: dyslexiaFriendlySpacing ? 0.4 : -1.1,
         ),
         headlineMedium: base.textTheme.headlineMedium?.copyWith(
           color: navy,
           fontWeight: FontWeight.w900,
-          letterSpacing: -0.6,
+          letterSpacing: dyslexiaFriendlySpacing ? 0.35 : -0.6,
         ),
         titleLarge: base.textTheme.titleLarge?.copyWith(
           color: navy,
           fontWeight: FontWeight.w900,
-          letterSpacing: -0.25,
+          letterSpacing: dyslexiaFriendlySpacing ? 0.3 : -0.25,
         ),
         titleMedium: base.textTheme.titleMedium?.copyWith(
           color: navy,
           fontWeight: FontWeight.w800,
+          letterSpacing: dyslexiaFriendlySpacing ? 0.25 : null,
+          height: dyslexiaFriendlySpacing ? 1.45 : null,
         ),
-        bodyLarge: base.textTheme.bodyLarge?.copyWith(color: navy, height: 1.35),
-        bodyMedium: base.textTheme.bodyMedium?.copyWith(color: navy, height: 1.35),
+        bodyLarge: base.textTheme.bodyLarge?.copyWith(
+          color: navy,
+          height: dyslexiaFriendlySpacing ? 1.65 : 1.35,
+          letterSpacing: dyslexiaFriendlySpacing ? 0.35 : null,
+        ),
+        bodyMedium: base.textTheme.bodyMedium?.copyWith(
+          color: navy,
+          height: dyslexiaFriendlySpacing ? 1.65 : 1.35,
+          letterSpacing: dyslexiaFriendlySpacing ? 0.35 : null,
+        ),
       ),
       cardTheme: CardThemeData(
         elevation: 0,
@@ -70,24 +84,31 @@ class AppTheme {
         style: FilledButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           textStyle: const TextStyle(fontWeight: FontWeight.w900),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
           textStyle: const TextStyle(fontWeight: FontWeight.w900),
-          side: BorderSide(color: scheme.primary.withValues(alpha: 0.28), width: 1.4),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          side: BorderSide(
+              color: scheme.primary.withValues(alpha: 0.28), width: 1.4),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         ),
       ),
       iconButtonTheme: IconButtonThemeData(
-        style: IconButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+        style: IconButton.styleFrom(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16))),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: Colors.white,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide.none),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(18),
+            borderSide: BorderSide.none),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
           borderSide: const BorderSide(color: Color(0x14000000)),
@@ -101,11 +122,15 @@ class AppTheme {
         elevation: 0,
         height: 72,
         backgroundColor: Colors.white,
-        indicatorColor: scheme.primary.withValues(alpha: highContrast ? 0.2 : 0.13),
+        indicatorColor:
+            scheme.primary.withValues(alpha: highContrast ? 0.2 : 0.13),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           return TextStyle(
-            color: states.contains(WidgetState.selected) ? purpleDeep : inkMuted,
-            fontWeight: states.contains(WidgetState.selected) ? FontWeight.w900 : FontWeight.w700,
+            color:
+                states.contains(WidgetState.selected) ? purpleDeep : inkMuted,
+            fontWeight: states.contains(WidgetState.selected)
+                ? FontWeight.w900
+                : FontWeight.w700,
             fontSize: 11,
           );
         }),
@@ -114,7 +139,8 @@ class AppTheme {
         color: purple,
         linearTrackColor: purple.withValues(alpha: 0.1),
       ),
-      dividerTheme: const DividerThemeData(color: Color(0x12000000), thickness: 1),
+      dividerTheme:
+          const DividerThemeData(color: Color(0x12000000), thickness: 1),
     );
   }
 }

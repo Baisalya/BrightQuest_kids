@@ -7,12 +7,17 @@ void main() {
     for (final classNumber in [3, 4, 5]) {
       final topics = topicsForClass(classNumber);
       expect(topics, isNotEmpty);
-      expect(topics.any((topic) => topic.subject == SubjectWorld.maths), isTrue);
-      expect(topics.any((topic) => topic.subject == SubjectWorld.english), isTrue);
-      expect(topics.any((topic) => topic.subject == SubjectWorld.science), isTrue);
+      expect(
+          topics.any((topic) => topic.subject == SubjectWorld.maths), isTrue);
+      expect(
+          topics.any((topic) => topic.subject == SubjectWorld.english), isTrue);
+      expect(
+          topics.any((topic) => topic.subject == SubjectWorld.science), isTrue);
       expect(topics.any((topic) => topic.subject == SubjectWorld.evs), isTrue);
-      expect(topics.any((topic) => topic.subject == SubjectWorld.social), isTrue);
-      expect(topics.any((topic) => topic.subject == SubjectWorld.coding), isTrue);
+      expect(
+          topics.any((topic) => topic.subject == SubjectWorld.social), isTrue);
+      expect(
+          topics.any((topic) => topic.subject == SubjectWorld.coding), isTrue);
     }
   });
 
@@ -21,7 +26,8 @@ void main() {
     for (final topic in curriculumTopics) {
       expect(topic.gameIds, isNotEmpty, reason: topic.id);
       for (final gameId in topic.gameIds) {
-        expect(gameIds.contains(gameId), isTrue, reason: '${topic.id} -> $gameId');
+        expect(gameIds.contains(gameId), isTrue,
+            reason: '${topic.id} -> $gameId');
       }
     }
   });
@@ -69,5 +75,4 @@ void main() {
       }
     }
   });
-
 }

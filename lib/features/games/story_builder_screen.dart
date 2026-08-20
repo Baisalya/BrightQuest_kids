@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app/brightquest_scope.dart';
 import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
+import '../../core/learning/game_evidence_adapter.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
 import '../../core/theme/app_theme.dart';
@@ -25,6 +26,8 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
   bool checked = false;
   bool? correct;
   bool hadMistake = false;
+  bool _hintUsed = false;
+  DateTime _itemStarted = DateTime.now();
   bool finished = false;
   MissionReward? missionReward;
   int _difficulty = 1;
@@ -72,14 +75,28 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
   void _check(StoryMission mission) {
     if (checked || selected.isEmpty) return;
     final isCorrect = selected.join(' ') == mission.words.join(' ');
-    BrightQuestScope.of(context).recordAnswer(
+    final controller = BrightQuestScope.of(context);
+    final activity = const GameEvidenceAdapter().resolve(
+      repository: BrightQuestScope.contentOf(context),
+      classNumber: _classNumber,
+      gameId: 'story_builder',
+      legacyContentId: mission.id,
+    );
+    controller.recordAnswer(
       gameId: 'story_builder',
       correct: isCorrect,
       topicId: mission.topicId,
       difficulty: mission.difficulty,
       masteryGain: 0.07,
+      itemId: activity?.id,
+      competencyId: activity?.competencyId,
+      evidenceKind: const GameEvidenceAdapter().kindFor(widget.learningLevel),
+      hintLevel: _hintUsed ? 1 : 0,
+      retries: hadMistake ? 1 : 0,
+      responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
+      misconceptionId: isCorrect ? null : 'sentence_order',
+      confidence: _hintUsed ? 0.55 : 0.82,
     );
-    final controller = BrightQuestScope.of(context);
     final chosenSentence = selected.join(' ');
     if (isCorrect) {
       FeedbackService.correct(
@@ -126,6 +143,8 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
       checked = false;
       correct = null;
       hadMistake = false;
+      _hintUsed = false;
+      _itemStarted = DateTime.now();
     });
   }
 
@@ -136,7 +155,10 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
           const SnackBar(content: Text('You need 3 coins for a hint.')));
       return;
     }
-    setState(() => hadMistake = true);
+    setState(() {
+      hadMistake = true;
+      _hintUsed = true;
+    });
     final nextIndex =
         selected.length.clamp(0, mission.words.length - 1).toInt();
     final nextWord = mission.words[nextIndex];
@@ -154,6 +176,8 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
       checked = false;
       correct = null;
       hadMistake = false;
+      _hintUsed = false;
+      _itemStarted = DateTime.now();
       finished = false;
       missionReward = null;
     });
@@ -162,8 +186,8 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
   @override
   Widget build(BuildContext context) {
     final classNumber = _classNumber;
-    final missions =
-        storyMissionsForClass(classNumber, difficulty: _difficulty);
+    final missions = BrightQuestScope.contentOf(context)
+        .storyMissionsForClass(classNumber, difficulty: _difficulty);
     final mission = missions[missionIndex];
     final remaining = _remainingWords(mission);
 

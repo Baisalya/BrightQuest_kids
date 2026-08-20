@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../core/content/content_repository.dart';
+import '../core/entitlements/entitlement_service.dart';
 import '../core/services/bright_audio_service.dart';
 import '../core/state/game_controller.dart';
 import '../core/theme/app_theme.dart';
@@ -14,24 +16,38 @@ import '../widgets/bright_design_system.dart';
 import 'brightquest_scope.dart';
 
 class BrightQuestApp extends StatelessWidget {
-  const BrightQuestApp({required this.controller, super.key});
+  BrightQuestApp({
+    required this.controller,
+    required this.contentRepository,
+    EntitlementService? entitlementService,
+    super.key,
+  }) : entitlementService = entitlementService ?? EntitlementService();
+
   final GameController controller;
+  final ContentRepository contentRepository;
+  final EntitlementService entitlementService;
 
   @override
   Widget build(BuildContext context) {
     return BrightQuestScope(
       controller: controller,
+      contentRepository: contentRepository,
+      entitlementService: entitlementService,
       child: AnimatedBuilder(
         animation: controller,
         builder: (context, _) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'BrightQuest Kids',
-            theme: AppTheme.light(highContrast: controller.highContrastEnabled),
+            theme: AppTheme.light(
+              highContrast: controller.highContrastEnabled,
+              dyslexiaFriendlySpacing: controller.dyslexiaFriendlySpacing,
+            ),
             builder: (context, child) {
               final media = MediaQuery.of(context);
               return MediaQuery(
-                data: media.copyWith(textScaler: TextScaler.linear(controller.textScale)),
+                data: media.copyWith(
+                    textScaler: TextScaler.linear(controller.textScale)),
                 child: child ?? const SizedBox.shrink(),
               );
             },
@@ -146,11 +162,15 @@ class _BrightSideNavigation extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
-        boxShadow: [BoxShadow(color: Color(0x240C3356), blurRadius: 24, offset: Offset(8, 0))],
+        boxShadow: [
+          BoxShadow(
+              color: Color(0x240C3356), blurRadius: 24, offset: Offset(8, 0))
+        ],
       ),
       child: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: expanded ? 14 : 9, vertical: 16),
+          padding:
+              EdgeInsets.symmetric(horizontal: expanded ? 14 : 9, vertical: 16),
           child: Column(
             children: [
               _BrandMark(expanded: expanded),
@@ -169,28 +189,39 @@ class _BrightSideNavigation extends StatelessWidget {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(20),
                       onTap: () {
-                        unawaited(BrightAudioService.instance.playSfx(BrightSfx.tap));
+                        unawaited(
+                            BrightAudioService.instance.playSfx(BrightSfx.tap));
                         onSelected(itemIndex);
                       },
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 180),
                         width: double.infinity,
-                        padding: EdgeInsets.symmetric(horizontal: expanded ? 13 : 0, vertical: 12),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: expanded ? 13 : 0, vertical: 12),
                         decoration: BoxDecoration(
-                          color: selected ? Colors.white : Colors.white.withValues(alpha: 0.08),
+                          color: selected
+                              ? Colors.white
+                              : Colors.white.withValues(alpha: 0.08),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
-                          mainAxisAlignment: expanded ? MainAxisAlignment.start : MainAxisAlignment.center,
+                          mainAxisAlignment: expanded
+                              ? MainAxisAlignment.start
+                              : MainAxisAlignment.center,
                           children: [
-                            Icon(item.icon, color: selected ? AppTheme.purpleDeep : Colors.white, size: 24),
+                            Icon(item.icon,
+                                color: selected
+                                    ? AppTheme.purpleDeep
+                                    : Colors.white,
+                                size: 24),
                             if (expanded) ...[
                               const SizedBox(width: 11),
                               Expanded(
                                 child: Text(
                                   item.label,
                                   style: TextStyle(
-                                    color: selected ? AppTheme.navy : Colors.white,
+                                    color:
+                                        selected ? AppTheme.navy : Colors.white,
                                     fontWeight: FontWeight.w900,
                                   ),
                                 ),
@@ -213,20 +244,32 @@ class _BrightSideNavigation extends StatelessWidget {
                 child: expanded
                     ? Row(
                         children: [
-                          Text(controller.activeProfileAvatar, style: const TextStyle(fontSize: 30)),
+                          Text(controller.activeProfileAvatar,
+                              style: const TextStyle(fontSize: 30)),
                           const SizedBox(width: 9),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(controller.activeProfileName, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900)),
-                                Text('Class ${controller.selectedClass}', style: TextStyle(color: Colors.white.withValues(alpha: 0.82), fontSize: 11)),
+                                Text(controller.activeProfileName,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w900)),
+                                Text('Class ${controller.selectedClass}',
+                                    style: TextStyle(
+                                        color: Colors.white
+                                            .withValues(alpha: 0.82),
+                                        fontSize: 11)),
                               ],
                             ),
                           ),
                         ],
                       )
-                    : Text(controller.activeProfileAvatar, textAlign: TextAlign.center, style: const TextStyle(fontSize: 30)),
+                    : Text(controller.activeProfileAvatar,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 30)),
               ),
             ],
           ),
@@ -242,7 +285,8 @@ class _BrandMark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
-        mainAxisAlignment: expanded ? MainAxisAlignment.start : MainAxisAlignment.center,
+        mainAxisAlignment:
+            expanded ? MainAxisAlignment.start : MainAxisAlignment.center,
         children: [
           Container(
             width: 46,
@@ -251,7 +295,12 @@ class _BrandMark extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(17),
-              boxShadow: const [BoxShadow(color: Color(0x28000000), blurRadius: 12, offset: Offset(0, 5))],
+              boxShadow: const [
+                BoxShadow(
+                    color: Color(0x28000000),
+                    blurRadius: 12,
+                    offset: Offset(0, 5))
+              ],
             ),
             child: const Text('🦁', style: TextStyle(fontSize: 28)),
           ),
@@ -261,8 +310,17 @@ class _BrandMark extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('BrightQuest', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 18)),
-                  Text('KIDS', style: TextStyle(color: Color(0xFFFFE36F), fontWeight: FontWeight.w900, letterSpacing: 2, fontSize: 10)),
+                  Text('BrightQuest',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 18)),
+                  Text('KIDS',
+                      style: TextStyle(
+                          color: Color(0xFFFFE36F),
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 2,
+                          fontSize: 10)),
                 ],
               ),
             ),
@@ -272,7 +330,8 @@ class _BrandMark extends StatelessWidget {
 }
 
 class _BrightBottomNavigation extends StatelessWidget {
-  const _BrightBottomNavigation({required this.selectedIndex, required this.onSelected});
+  const _BrightBottomNavigation(
+      {required this.selectedIndex, required this.onSelected});
   final int selectedIndex;
   final ValueChanged<int> onSelected;
 
@@ -285,7 +344,12 @@ class _BrightBottomNavigation extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(26),
-            boxShadow: const [BoxShadow(color: Color(0x220C3356), blurRadius: 24, offset: Offset(0, 8))],
+            boxShadow: const [
+              BoxShadow(
+                  color: Color(0x220C3356),
+                  blurRadius: 24,
+                  offset: Offset(0, 8))
+            ],
           ),
           child: Row(
             children: List.generate(_shellItems.length, (itemIndex) {
@@ -301,28 +365,38 @@ class _BrightBottomNavigation extends StatelessWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(20),
                     onTap: () {
-                      unawaited(BrightAudioService.instance.playSfx(BrightSfx.tap));
+                      unawaited(
+                          BrightAudioService.instance.playSfx(BrightSfx.tap));
                       onSelected(itemIndex);
                     },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 180),
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(
-                        color: selected ? AppTheme.purple.withValues(alpha: 0.11) : Colors.transparent,
+                        color: selected
+                            ? AppTheme.purple.withValues(alpha: 0.11)
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(item.icon, color: selected ? AppTheme.purpleDeep : AppTheme.inkMuted, size: 23),
+                          Icon(item.icon,
+                              color: selected
+                                  ? AppTheme.purpleDeep
+                                  : AppTheme.inkMuted,
+                              size: 23),
                           const SizedBox(height: 2),
                           Text(
                             item.label,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              color: selected ? AppTheme.purpleDeep : AppTheme.inkMuted,
-                              fontWeight: selected ? FontWeight.w900 : FontWeight.w700,
+                              color: selected
+                                  ? AppTheme.purpleDeep
+                                  : AppTheme.inkMuted,
+                              fontWeight:
+                                  selected ? FontWeight.w900 : FontWeight.w700,
                               fontSize: 10,
                             ),
                           ),

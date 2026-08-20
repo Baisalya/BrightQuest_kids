@@ -1,7 +1,8 @@
-import 'package:brightquest_kids/app/brightquest_app.dart';
 import 'package:brightquest_kids/core/state/game_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'support/app_fixture.dart';
 
 Future<void> _scrollHomeUntilVisible(
   WidgetTester tester,
@@ -44,7 +45,7 @@ Future<void> _scrollGameUntilVisible(
 void main() {
   testWidgets('app shell renders core navigation and daily quests',
       (tester) async {
-    await tester.pumpWidget(BrightQuestApp(controller: GameController()));
+    await tester.pumpWidget(buildTestApp(GameController()));
     await tester.pumpAndSettle();
 
     expect(find.text('Choose Your Adventure!'), findsOneWidget);
@@ -62,7 +63,7 @@ void main() {
   testWidgets(
       'Math Market opens from Quick Play and locks adaptive level for the run',
       (tester) async {
-    await tester.pumpWidget(BrightQuestApp(controller: GameController()));
+    await tester.pumpWidget(buildTestApp(GameController()));
     await tester.pumpAndSettle();
 
     final mathMarket = find.byKey(const Key('adventure_card_math_market'));
@@ -85,7 +86,7 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(800, 600));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    await tester.pumpWidget(BrightQuestApp(controller: GameController()));
+    await tester.pumpWidget(buildTestApp(GameController()));
     await tester.pumpAndSettle();
 
     final mathMarket = find.byKey(const Key('adventure_card_math_market'));
@@ -98,7 +99,7 @@ void main() {
   });
 
   testWidgets('Parents tab starts behind a PIN gate', (tester) async {
-    await tester.pumpWidget(BrightQuestApp(controller: GameController()));
+    await tester.pumpWidget(buildTestApp(GameController()));
     await tester.pumpAndSettle();
 
     await tester.tap(find.bySemanticsLabel('Parents'));
@@ -113,7 +114,7 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(390, 700));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    await tester.pumpWidget(BrightQuestApp(controller: GameController()));
+    await tester.pumpWidget(buildTestApp(GameController()));
     await tester.pumpAndSettle();
 
     final mathMarket = find.byKey(const Key('adventure_card_math_market'));
@@ -129,7 +130,7 @@ void main() {
     controller.addStudySeconds(300);
     controller.addStudySeconds(300);
 
-    await tester.pumpWidget(BrightQuestApp(controller: controller));
+    await tester.pumpWidget(buildTestApp(controller));
     await tester.pumpAndSettle();
 
     final mathMarket = find.byKey(const Key('adventure_card_math_market'));
@@ -153,7 +154,7 @@ void main() {
 
     for (final size in sizes) {
       await tester.binding.setSurfaceSize(size);
-      await tester.pumpWidget(BrightQuestApp(controller: GameController()));
+      await tester.pumpWidget(buildTestApp(GameController()));
       await tester.pumpAndSettle();
       expect(find.text('Choose Your Adventure!'), findsOneWidget);
       expect(tester.takeException(), isNull,
@@ -171,7 +172,7 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(1440, 900));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    await tester.pumpWidget(BrightQuestApp(controller: GameController()));
+    await tester.pumpWidget(buildTestApp(GameController()));
     await tester.pumpAndSettle();
     await tester.tap(find.bySemanticsLabel('Profile'));
     await tester.pumpAndSettle();

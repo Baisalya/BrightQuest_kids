@@ -8,7 +8,8 @@ import '../app/brightquest_scope.dart';
 bool brightReduceMotion(BuildContext context) {
   final controller = BrightQuestScope.maybeOf(context);
   final media = MediaQuery.maybeOf(context);
-  return (controller?.reducedMotionEnabled ?? false) || (media?.disableAnimations ?? false);
+  return (controller?.reducedMotionEnabled ?? false) ||
+      (media?.disableAnimations ?? false);
 }
 
 /// Windows Flutter's accessibility bridge is sensitive to semantics nodes whose
@@ -49,7 +50,8 @@ class BrightReveal extends StatelessWidget {
           opacity: opacityValue,
           alwaysIncludeSemantics: true,
           child: FractionalTranslation(
-            translation: Offset(offset.dx * (1 - value), offset.dy * (1 - value)),
+            translation:
+                Offset(offset.dx * (1 - value), offset.dy * (1 - value)),
             child: Transform.scale(
               scale: beginScale + ((1 - beginScale) * value),
               child: child,
@@ -133,7 +135,8 @@ class BrightGlint extends StatelessWidget {
     return IgnorePointer(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final width = constraints.maxWidth.isFinite ? constraints.maxWidth : 240.0;
+          final width =
+              constraints.maxWidth.isFinite ? constraints.maxWidth : 240.0;
           return TweenAnimationBuilder<double>(
             tween: Tween<double>(begin: -0.45, end: 1.25),
             duration: duration + delay,
@@ -231,7 +234,8 @@ class BrightValuePop extends StatelessWidget {
       switchOutCurve: Curves.easeIn,
       transitionBuilder: (child, animation) => ScaleTransition(
         scale: Tween<double>(begin: 0.72, end: 1).animate(animation),
-        child: FadeTransition(opacity: animation, alwaysIncludeSemantics: true, child: child),
+        child: FadeTransition(
+            opacity: animation, alwaysIncludeSemantics: true, child: child),
       ),
       child: KeyedSubtree(key: ValueKey<Object>(value), child: child),
     );
@@ -260,7 +264,8 @@ class BrightCelebrationBurst extends StatelessWidget {
         curve: Curves.easeOutCubic,
         builder: (context, progress, _) => CustomPaint(
           size: size,
-          painter: _CelebrationPainter(progress: progress, color: color, particleCount: particleCount),
+          painter: _CelebrationPainter(
+              progress: progress, color: color, particleCount: particleCount),
         ),
       ),
     );
@@ -268,7 +273,10 @@ class BrightCelebrationBurst extends StatelessWidget {
 }
 
 class _CelebrationPainter extends CustomPainter {
-  const _CelebrationPainter({required this.progress, required this.color, required this.particleCount});
+  const _CelebrationPainter(
+      {required this.progress,
+      required this.color,
+      required this.particleCount});
 
   final double progress;
   final Color color;
@@ -277,13 +285,20 @@ class _CelebrationPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height * 0.72);
-    final fade = (1 - ((progress - 0.58).clamp(0.0, 0.42) / 0.42)).clamp(0.0, 1.0).toDouble();
+    final fade = (1 - ((progress - 0.58).clamp(0.0, 0.42) / 0.42))
+        .clamp(0.0, 1.0)
+        .toDouble();
     for (var i = 0; i < particleCount; i++) {
-      final angle = (-math.pi * 0.88) + (math.pi * 0.76 * (i / math.max(1, particleCount - 1)));
-      final distance = (42.0 + (i % 4) * 13.0) * Curves.easeOutCubic.transform(progress);
-      final point = Offset(center.dx + math.cos(angle) * distance, center.dy + math.sin(angle) * distance);
+      final angle = (-math.pi * 0.88) +
+          (math.pi * 0.76 * (i / math.max(1, particleCount - 1)));
+      final distance =
+          (42.0 + (i % 4) * 13.0) * Curves.easeOutCubic.transform(progress);
+      final point = Offset(center.dx + math.cos(angle) * distance,
+          center.dy + math.sin(angle) * distance);
       final radius = 3.0 + (i % 3).toDouble();
-      final paint = Paint()..color = Color.lerp(color, const Color(0xFFFF7B42), (i % 4) / 4)!.withValues(alpha: fade);
+      final paint = Paint()
+        ..color = Color.lerp(color, const Color(0xFFFF7B42), (i % 4) / 4)!
+            .withValues(alpha: fade);
       if (i.isEven) {
         _drawStar(canvas, point, radius + 2, paint);
       } else {
@@ -291,7 +306,12 @@ class _CelebrationPainter extends CustomPainter {
         canvas.translate(point.dx, point.dy);
         canvas.rotate(angle + progress * 1.8);
         canvas.drawRRect(
-          RRect.fromRectAndRadius(Rect.fromCenter(center: Offset.zero, width: radius * 1.4, height: radius * 3.2), const Radius.circular(2)),
+          RRect.fromRectAndRadius(
+              Rect.fromCenter(
+                  center: Offset.zero,
+                  width: radius * 1.4,
+                  height: radius * 3.2),
+              const Radius.circular(2)),
           paint,
         );
         canvas.restore();
@@ -304,7 +324,8 @@ class _CelebrationPainter extends CustomPainter {
     for (var i = 0; i < 10; i++) {
       final angle = -math.pi / 2 + i * math.pi / 5;
       final r = i.isEven ? radius : radius * 0.46;
-      final point = Offset(center.dx + math.cos(angle) * r, center.dy + math.sin(angle) * r);
+      final point = Offset(
+          center.dx + math.cos(angle) * r, center.dy + math.sin(angle) * r);
       if (i == 0) {
         path.moveTo(point.dx, point.dy);
       } else {
@@ -317,6 +338,8 @@ class _CelebrationPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _CelebrationPainter oldDelegate) {
-    return oldDelegate.progress != progress || oldDelegate.color != color || oldDelegate.particleCount != particleCount;
+    return oldDelegate.progress != progress ||
+        oldDelegate.color != color ||
+        oldDelegate.particleCount != particleCount;
   }
 }

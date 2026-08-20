@@ -2,23 +2,24 @@
 
 BrightQuest Kids is an offline-first Flutter learning adventure for Classes 3–5. It targets Android phones/tablets/free-form windows and Windows desktop from one responsive codebase.
 
-Current version: **0.4.21+24**
+Current version: **0.6.0+26**
 
 ## Current product
 
 - six Learning Worlds and nine adventure/reward experiences;
-- separate Class 3, 4 and 5 content banks;
+- validated separate Class 3, 4 and 5 JSON content packs plus 111 competency learning blueprints;
 - 24 Practice → Challenge → Mastery path levels per class;
-- adaptive Quick Play and topic/game progress;
+- adaptive Quick Play, resumable Discovery Check diagnostic, competency evidence and Power Review;
 - first-try-aware scoring, achievements, stars, coins and rewards;
 - independent local child profiles and save migration;
-- parent PIN, learning goals, healthy-play time limits and weak-area summaries;
+- parent PIN, learning goals, healthy-play time limits, competency evidence reports and weak-area summaries;
 - responsive layouts for Android, Android free-form and Windows;
 - offline BGM/SFX plus smart prompt, choice and answer narration;
 - selectable installed voices with female-first selection and separate BGM/SFX/speech controls;
-- high contrast, text scaling, reduced motion and haptics preferences.
+- high contrast, text scaling, reduced motion, haptics, dyslexia-friendly spacing, reading focus and visible audio-caption preferences;
+- parent-only fail-closed ₹299 class entitlement foundation with free-sample boundaries; production store verification is intentionally not enabled yet.
 
-The current release is a strong technical prototype. It is not yet represented as a complete paid curriculum pack or as CBSE/NCERT certified. The implementation-ready path to a genuine ₹299-per-class product is in [PRODUCT_ROADMAP.md](PRODUCT_ROADMAP.md).
+The current release contains the technical learning-platform foundation through roadmap Phase 10, but it is **not commercially complete**: curriculum/content remains `needsReview`, production store verification is not configured, and teacher/pilot/real-device release gates are pending. It is not represented as CBSE/NCERT certified. See [PRODUCT_ROADMAP.md](PRODUCT_ROADMAP.md) for the exact technical-versus-external gate status.
 
 ## Learning model today
 
@@ -42,6 +43,8 @@ lib/
     content/
     curriculum/
     gameplay/
+    learning/
+    entitlements/
     models/
     persistence/
     services/
@@ -84,6 +87,9 @@ flutter analyze
 flutter test
 flutter build apk --debug
 flutter build windows
+dart run tool/content/validate_content.dart
+dart run tool/content/validate_learning_blueprints.dart
+dart run tool/release/readiness_report.dart
 dart run tool/windows_speech_smoke.dart
 ```
 

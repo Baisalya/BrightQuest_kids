@@ -31,31 +31,6 @@ String simplifiedFraction(int numerator, int denominator) {
   return '${numerator ~/ gcd}/${denominator ~/ gcd}';
 }
 
-ScienceReaction evaluateReaction(Set<String> ingredients) {
-  if (ingredients.contains('Baking Soda') && ingredients.contains('Vinegar')) {
-    return const ScienceReaction(
-      id: 'fizz',
-      title: 'Fizzing reaction',
-      explanation: 'Baking soda and vinegar release carbon dioxide gas bubbles.',
-      emoji: '🧪🫧✨',
-    );
-  }
-  if (ingredients.contains('Water') && ingredients.contains('Salt')) {
-    return const ScienceReaction(
-      id: 'dissolve',
-      title: 'Dissolving',
-      explanation: 'Salt spreads through the water to form a solution.',
-      emoji: '💧✨',
-    );
-  }
-  return const ScienceReaction(
-    id: 'none',
-    title: 'No target reaction yet',
-    explanation: 'Try a different safe virtual combination.',
-    emoji: '🔬',
-  );
-}
-
 CodingRunResult runCodingMission(
   CodingMission mission,
   List<CodingCommand> commands,
@@ -86,7 +61,10 @@ CodingRunResult runCodingMission(
       final (dx, dy) = direction.delta;
       final nextX = x + dx;
       final nextY = y + dy;
-      if (nextX < 0 || nextY < 0 || nextX >= mission.width || nextY >= mission.height) {
+      if (nextX < 0 ||
+          nextY < 0 ||
+          nextX >= mission.width ||
+          nextY >= mission.height) {
         valid = false;
         return;
       }

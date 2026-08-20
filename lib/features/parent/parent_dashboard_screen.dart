@@ -9,6 +9,8 @@ import '../../core/models/progress_models.dart';
 import '../../core/services/bright_audio_service.dart';
 import '../../core/state/game_controller.dart';
 import '../../widgets/bright_widgets.dart';
+import 'class_pack_screen.dart';
+import 'parent_learning_report_screen.dart';
 
 class ParentDashboardScreen extends StatelessWidget {
   const ParentDashboardScreen({super.key});
@@ -178,6 +180,88 @@ class ParentDashboardScreen extends StatelessWidget {
                             );
                           }).toList(),
                         ),
+                ),
+              ),
+              const SizedBox(height: 18),
+              const Text(
+                'Learning evidence & class packs',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+              ),
+              const SizedBox(height: 10),
+              Card(
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.insights_rounded),
+                      title: const Text('Learning evidence report'),
+                      subtitle: const Text(
+                        'See competency evidence, review due dates, misconceptions and supervised project evidence.',
+                      ),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const ParentLearningReportScreen(),
+                        ),
+                      ),
+                    ),
+                    const Divider(height: 1),
+                    ListTile(
+                      leading: const Icon(Icons.school_rounded),
+                      title: const Text('Class packs & restore'),
+                      subtitle: const Text(
+                        'Parent-only purchase area. Packs stay locked for sale until review and store verification are complete.',
+                      ),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const ClassPackScreen(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 18),
+              const Text(
+                'Reading & accessibility',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+              ),
+              const SizedBox(height: 10),
+              Card(
+                child: Column(
+                  children: [
+                    SwitchListTile(
+                      title: const Text('Dyslexia-friendly spacing'),
+                      subtitle: const Text(
+                        'Adds breathing room between letters and lines. This is a reading preference, not a medical treatment.',
+                      ),
+                      value: controller.dyslexiaFriendlySpacing,
+                      onChanged: controller.setDyslexiaFriendlySpacing,
+                    ),
+                    SwitchListTile(
+                      title: const Text('Reading focus'),
+                      subtitle: const Text(
+                        'Keeps reading support ready for passages and explanations.',
+                      ),
+                      value: controller.readingFocusEnabled,
+                      onChanged: controller.setReadingFocusEnabled,
+                    ),
+                    SwitchListTile(
+                      title: const Text('Captions / visible audio meaning'),
+                      subtitle: const Text(
+                        'Learning feedback remains visible even when audio is muted or unavailable.',
+                      ),
+                      value: controller.captionsEnabled,
+                      onChanged: controller.setCaptionsEnabled,
+                    ),
+                    const ListTile(
+                      title: Text('Learning language'),
+                      subtitle: Text(
+                        'English (India). Hindi remains unavailable until a reviewed translation pack exists; answers are never mixed across locales.',
+                      ),
+                      trailing: Text('en-IN'),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 18),

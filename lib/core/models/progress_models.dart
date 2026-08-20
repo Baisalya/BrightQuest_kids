@@ -1,3 +1,6 @@
+import '../entitlements/entitlement_models.dart';
+import '../learning/learning_models.dart';
+
 class TopicProgress {
   TopicProgress({
     this.attempts = 0,
@@ -149,7 +152,7 @@ class ChildProfileSnapshot {
     this.dailyTimeLimitMinutes = 60,
     this.timeLimitEnabled = false,
     this.soundEnabled = true,
-    this.remindersEnabled = true,
+    this.remindersEnabled = false,
     this.lastActivityDate,
     this.todayDate,
     this.answersToday = 0,
@@ -163,7 +166,9 @@ class ChildProfileSnapshot {
     Set<String>? completedMissionIds,
     Set<String>? claimedDailyChallengeIds,
     Set<String>? unlockedAchievementIds,
-  })  : gameProgress = gameProgress ?? <String, GameProgress>{},
+    LearningProfileState? learning,
+  })  : learning = learning ?? const LearningProfileState(),
+        gameProgress = gameProgress ?? <String, GameProgress>{},
         levelProgress = levelProgress ?? <String, LearningLevelProgress>{},
         unlockedRewards = unlockedRewards ?? <String>{},
         completedMissionIds = completedMissionIds ?? <String>{},
@@ -198,6 +203,7 @@ class ChildProfileSnapshot {
   Set<String> completedMissionIds;
   Set<String> claimedDailyChallengeIds;
   Set<String> unlockedAchievementIds;
+  LearningProfileState learning;
 
   Map<String, Object?> toJson() => <String, Object?>{
         'id': id,
@@ -232,6 +238,7 @@ class ChildProfileSnapshot {
         'completedMissionIds': completedMissionIds.toList()..sort(),
         'claimedDailyChallengeIds': claimedDailyChallengeIds.toList()..sort(),
         'unlockedAchievementIds': unlockedAchievementIds.toList()..sort(),
+        'learning': learning.toJson(),
       };
 
   factory ChildProfileSnapshot.fromJson(Map<String, Object?> json) {
@@ -271,10 +278,11 @@ class ChildProfileSnapshot {
       correctAnswers: (json['correctAnswers'] as num?)?.toInt() ?? 0,
       totalAnswers: (json['totalAnswers'] as num?)?.toInt() ?? 0,
       dailyMinutesGoal: (json['dailyMinutesGoal'] as num?)?.toInt() ?? 30,
-      dailyTimeLimitMinutes: (json['dailyTimeLimitMinutes'] as num?)?.toInt() ?? 60,
+      dailyTimeLimitMinutes:
+          (json['dailyTimeLimitMinutes'] as num?)?.toInt() ?? 60,
       timeLimitEnabled: json['timeLimitEnabled'] as bool? ?? false,
       soundEnabled: json['soundEnabled'] as bool? ?? true,
-      remindersEnabled: json['remindersEnabled'] as bool? ?? true,
+      remindersEnabled: json['remindersEnabled'] as bool? ?? false,
       lastActivityDate: json['lastActivityDate'] as String?,
       todayDate: json['todayDate'] as String?,
       answersToday: (json['answersToday'] as num?)?.toInt() ?? 0,
@@ -288,6 +296,11 @@ class ChildProfileSnapshot {
       completedMissionIds: _stringSet(json['completedMissionIds']),
       claimedDailyChallengeIds: _stringSet(json['claimedDailyChallengeIds']),
       unlockedAchievementIds: _stringSet(json['unlockedAchievementIds']),
+      learning: json['learning'] is Map
+          ? LearningProfileState.fromJson(
+              Map<String, Object?>.from(json['learning'] as Map),
+            )
+          : const LearningProfileState(),
     );
   }
 
@@ -307,15 +320,17 @@ class ChildProfileSnapshot {
 
 class PlayerSnapshot {
   PlayerSnapshot({
-    this.schemaVersion = 4,
+    this.schemaVersion = 5,
     this.activeProfileId = 'child-1',
     Map<String, ChildProfileSnapshot>? profiles,
+    Map<int, ClassEntitlement>? entitlementCache,
     this.parentPinCode,
     this.highContrastEnabled = false,
     this.reducedMotionEnabled = false,
     this.hapticsEnabled = true,
     this.textScale = 1.0,
-  }) : profiles = profiles ??
+  })  : entitlementCache = entitlementCache ?? <int, ClassEntitlement>{},
+        profiles = profiles ??
             <String, ChildProfileSnapshot>{
               'child-1': ChildProfileSnapshot(id: 'child-1', name: 'Explorer'),
             };
@@ -323,6 +338,7 @@ class PlayerSnapshot {
   int schemaVersion;
   String activeProfileId;
   Map<String, ChildProfileSnapshot> profiles;
+  Map<int, ClassEntitlement> entitlementCache;
   String? parentPinCode;
   bool highContrastEnabled;
   bool reducedMotionEnabled;
@@ -349,6 +365,10 @@ class PlayerSnapshot {
         'profiles': profiles.map(
           (key, value) => MapEntry<String, Object?>(key, value.toJson()),
         ),
+        'entitlementCache': entitlementCache.map(
+          (key, value) =>
+              MapEntry<String, Object?>(key.toString(), value.toJson()),
+        ),
         'parentPinCode': parentPinCode,
         'highContrastEnabled': highContrastEnabled,
         'reducedMotionEnabled': reducedMotionEnabled,
@@ -368,10 +388,23 @@ class PlayerSnapshot {
           profiles[entry.key as String] = profile;
         }
       }
+      final entitlements = <int, ClassEntitlement>{};
+      final rawEntitlements = json['entitlementCache'];
+      if (rawEntitlements is Map) {
+        for (final entry in rawEntitlements.entries) {
+          final classNumber = int.tryParse(entry.key.toString());
+          if (classNumber != null && entry.value is Map) {
+            entitlements[classNumber] = ClassEntitlement.fromJson(
+              Map<String, Object?>.from(entry.value as Map),
+            );
+          }
+        }
+      }
       final snapshot = PlayerSnapshot(
-        schemaVersion: 4,
+        schemaVersion: 5,
         activeProfileId: json['activeProfileId'] as String? ?? 'child-1',
         profiles: profiles,
+        entitlementCache: entitlements,
         parentPinCode: json['parentPinCode'] as String?,
         highContrastEnabled: json['highContrastEnabled'] as bool? ?? false,
         reducedMotionEnabled: json['reducedMotionEnabled'] as bool? ?? false,
@@ -387,7 +420,7 @@ class PlayerSnapshot {
     // Phase 2 migration: the root object was the single child's snapshot.
     final legacy = ChildProfileSnapshot.fromLegacyJson(json);
     return PlayerSnapshot(
-      schemaVersion: 4,
+      schemaVersion: 5,
       activeProfileId: legacy.id,
       profiles: <String, ChildProfileSnapshot>{legacy.id: legacy},
     );

@@ -153,7 +153,8 @@ void main() {
     await controller.load();
     final firstId = controller.activeProfileId;
 
-    final secondId = controller.createProfile(name: 'Mira', classNumber: 5, avatarEmoji: '👧');
+    final secondId = controller.createProfile(
+        name: 'Mira', classNumber: 5, avatarEmoji: '👧');
     expect(secondId, isNotEmpty);
     controller.recordAnswer(gameId: 'science_lab', correct: true);
     expect(controller.correctAnswers, 1);
@@ -183,7 +184,7 @@ void main() {
       'totalAnswers': 4,
     });
 
-    expect(migrated.schemaVersion, 4);
+    expect(migrated.schemaVersion, 5);
     expect(migrated.profiles.length, 1);
     expect(migrated.activeProfile.coins, 777);
     expect(migrated.activeProfile.selectedClass, 5);
@@ -254,7 +255,8 @@ void main() {
     expect(controller.dailyTimeLimitReached, isTrue);
   });
 
-  test('learning path starts with practice unlocked and later stages locked', () {
+  test('learning path starts with practice unlocked and later stages locked',
+      () {
     final controller = GameController();
     final track = levelsForGame(4, 'math_market');
 
@@ -305,13 +307,18 @@ void main() {
     expect(controller.statsFor('math_market').completedRuns, 1);
   });
 
-  test('learning level replay cannot reclaim first-clear rewards but can improve stars', () {
+  test(
+      'learning level replay cannot reclaim first-clear rewards but can improve stars',
+      () {
     final controller = GameController();
     final level = levelsForGame(4, 'math_market').first;
 
-    final first = controller.completeLearningLevel(level: level, score: 3, maxScore: 4);
-    final replay = controller.completeLearningLevel(level: level, score: 4, maxScore: 4);
-    final secondReplay = controller.completeLearningLevel(level: level, score: 4, maxScore: 4);
+    final first =
+        controller.completeLearningLevel(level: level, score: 3, maxScore: 4);
+    final replay =
+        controller.completeLearningLevel(level: level, score: 4, maxScore: 4);
+    final secondReplay =
+        controller.completeLearningLevel(level: level, score: 4, maxScore: 4);
 
     expect(first.firstCompletion, isTrue);
     expect(first.levelStars, 2);
@@ -337,7 +344,9 @@ void main() {
     expect(controller.levelStatsFor(firstLevel.id).completed, isTrue);
   });
 
-  test('schema 3 profile snapshot migrates to schema 4 without losing profile data', () {
+  test(
+      'schema 3 profile snapshot migrates to schema 5 without losing profile data',
+      () {
     final migrated = PlayerSnapshot.fromJson(<String, Object?>{
       'schemaVersion': 3,
       'activeProfileId': 'child_a',
@@ -354,7 +363,7 @@ void main() {
       },
     });
 
-    expect(migrated.schemaVersion, 4);
+    expect(migrated.schemaVersion, 5);
     expect(migrated.activeProfileId, 'child_a');
     expect(migrated.activeProfile.name, 'Aarav');
     expect(migrated.activeProfile.selectedClass, 5);
@@ -367,13 +376,14 @@ void main() {
     final controller = GameController();
     final level = levelsForGame(4, 'fraction_pizza').first;
 
-    final reward = controller.completeLearningLevel(level: level, score: 4, maxScore: 4);
-    final replay = controller.completeLearningLevel(level: level, score: 4, maxScore: 4);
+    final reward =
+        controller.completeLearningLevel(level: level, score: 4, maxScore: 4);
+    final replay =
+        controller.completeLearningLevel(level: level, score: 4, maxScore: 4);
 
     expect(reward.newAchievementIds, contains('first_steps'));
     expect(reward.newAchievementIds, contains('perfect_level'));
     expect(replay.newAchievementIds, isNot(contains('first_steps')));
     expect(replay.newAchievementIds, isNot(contains('perfect_level')));
   });
-
 }

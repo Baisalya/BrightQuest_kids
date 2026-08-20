@@ -27,7 +27,9 @@ class _ParentGateScreenState extends State<ParentGateScreen> {
   void _submit() {
     final controller = BrightQuestScope.of(context);
     final code = _pinController.text;
-    final ok = controller.hasParentPin ? controller.verifyParentPin(code) : controller.setParentPin(code);
+    final ok = controller.hasParentPin
+        ? controller.verifyParentPin(code)
+        : controller.setParentPin(code);
     setState(() {
       _error = ok ? null : 'Enter a valid 4-digit parent PIN.';
       if (ok) _pinController.clear();
@@ -37,7 +39,8 @@ class _ParentGateScreenState extends State<ParentGateScreen> {
   @override
   Widget build(BuildContext context) {
     final controller = BrightQuestScope.of(context);
-    if (controller.isParentSessionUnlocked) return const ParentDashboardScreen();
+    if (controller.isParentSessionUnlocked)
+      return const ParentDashboardScreen();
 
     return BrightPageBackground(
       primary: const Color(0xFFF3F7FA),
@@ -62,15 +65,22 @@ class _ParentGateScreenState extends State<ParentGateScreen> {
                           width: 76,
                           height: 76,
                           decoration: BoxDecoration(
-                            gradient: const LinearGradient(colors: [Color(0xFF415F8F), Color(0xFF6A7FA3)]),
+                            gradient: const LinearGradient(
+                                colors: [Color(0xFF415F8F), Color(0xFF6A7FA3)]),
                             borderRadius: BorderRadius.circular(24),
                           ),
-                          child: const Icon(Icons.admin_panel_settings_rounded, color: Colors.white, size: 38),
+                          child: const Icon(Icons.admin_panel_settings_rounded,
+                              color: Colors.white, size: 38),
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          controller.hasParentPin ? 'Parent area locked' : 'Create a parent PIN',
-                          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w900, color: AppTheme.navy),
+                          controller.hasParentPin
+                              ? 'Parent area locked'
+                              : 'Create a parent PIN',
+                          style: const TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w900,
+                              color: AppTheme.navy),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 8),
@@ -79,7 +89,8 @@ class _ParentGateScreenState extends State<ParentGateScreen> {
                               ? 'Enter the 4-digit PIN to manage child profiles, learning goals and healthy-play controls.'
                               : 'Set a 4-digit local gate before opening parent controls.',
                           textAlign: TextAlign.center,
-                          style: const TextStyle(color: AppTheme.inkMuted, height: 1.4),
+                          style: const TextStyle(
+                              color: AppTheme.inkMuted, height: 1.4),
                         ),
                         const SizedBox(height: 18),
                         TextField(
@@ -88,9 +99,18 @@ class _ParentGateScreenState extends State<ParentGateScreen> {
                           keyboardType: TextInputType.number,
                           maxLength: 4,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, letterSpacing: 8),
-                          inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(4)],
-                          decoration: InputDecoration(labelText: '4-digit PIN', errorText: _error, counterText: ''),
+                          style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 8),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(4)
+                          ],
+                          decoration: InputDecoration(
+                              labelText: '4-digit PIN',
+                              errorText: _error,
+                              counterText: ''),
                           onSubmitted: (_) => _submit(),
                         ),
                         const SizedBox(height: 12),
@@ -98,15 +118,22 @@ class _ParentGateScreenState extends State<ParentGateScreen> {
                           width: double.infinity,
                           child: FilledButton.icon(
                             onPressed: _submit,
-                            icon: Icon(controller.hasParentPin ? Icons.lock_open_rounded : Icons.shield_rounded),
-                            label: Text(controller.hasParentPin ? 'Unlock parent area' : 'Create parent PIN'),
+                            icon: Icon(controller.hasParentPin
+                                ? Icons.lock_open_rounded
+                                : Icons.shield_rounded),
+                            label: Text(controller.hasParentPin
+                                ? 'Unlock parent area'
+                                : 'Create parent PIN'),
                           ),
                         ),
                         const SizedBox(height: 12),
                         const Text(
                           'Parent mode uses a calmer interface. This PIN is a local child-facing gate, not a substitute for operating-system security.',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 11, color: AppTheme.inkMuted, height: 1.35),
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: AppTheme.inkMuted,
+                              height: 1.35),
                         ),
                       ],
                     ),

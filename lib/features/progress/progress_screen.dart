@@ -28,11 +28,16 @@ class ProgressScreen extends StatelessWidget {
               children: [
                 BrightResponsive(
                   padding: const EdgeInsets.fromLTRB(18, 18, 18, 10),
-                  builder: (context, _) => _ProgressHero(controller: controller, accuracy: accuracy),
+                  builder: (context, _) =>
+                      _ProgressHero(controller: controller, accuracy: accuracy),
                 ),
                 BrightResponsive(
                   padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
-                  builder: (context, _) => const BrightSectionTitle(title: 'World progress', subtitle: 'See which learning worlds are growing strongest.', icon: Icons.public_rounded),
+                  builder: (context, _) => const BrightSectionTitle(
+                      title: 'World progress',
+                      subtitle:
+                          'See which learning worlds are growing strongest.',
+                      icon: Icons.public_rounded),
                 ),
                 BrightResponsive(
                   padding: const EdgeInsets.fromLTRB(18, 0, 18, 10),
@@ -40,16 +45,21 @@ class ProgressScreen extends StatelessWidget {
                     spacing: 12,
                     runSpacing: 12,
                     children: learningWorlds.map((world) {
-                      final total = controller.totalLevelsForSubject(world.subject);
+                      final total =
+                          controller.totalLevelsForSubject(world.subject);
                       return SizedBox(
-                        width: breakpoint == BrightBreakpoint.compact ? double.infinity : 360,
+                        width: breakpoint == BrightBreakpoint.compact
+                            ? double.infinity
+                            : 360,
                         child: _WorldProgressCard(
                           emoji: world.emoji,
                           title: world.title,
-                          completed: controller.completedLevelsForSubject(world.subject),
+                          completed: controller
+                              .completedLevelsForSubject(world.subject),
                           total: total,
                           stars: controller.starsForSubject(world.subject),
-                          progress: controller.progressForSubject(world.subject),
+                          progress:
+                              controller.progressForSubject(world.subject),
                           color: paletteForSubject(world.subject).primary,
                         ),
                       );
@@ -58,20 +68,34 @@ class ProgressScreen extends StatelessWidget {
                 ),
                 BrightResponsive(
                   padding: const EdgeInsets.fromLTRB(18, 16, 18, 10),
-                  builder: (context, _) => const BrightSectionTitle(title: 'Adventure mastery', subtitle: 'Accuracy, hints and adaptive difficulty for each game.', icon: Icons.auto_graph_rounded),
+                  builder: (context, _) => const BrightSectionTitle(
+                      title: 'Adventure mastery',
+                      subtitle:
+                          'Accuracy, hints and adaptive difficulty for each game.',
+                      icon: Icons.auto_graph_rounded),
                 ),
                 BrightResponsive(
                   padding: const EdgeInsets.fromLTRB(18, 0, 18, 30),
                   builder: (context, breakpoint) => Wrap(
                     spacing: 12,
                     runSpacing: 12,
-                    children: games.where((game) => game.id != 'rewards_room').map((game) {
+                    children: games
+                        .where((game) => game.id != 'rewards_room')
+                        .map((game) {
                       final stats = controller.statsFor(game.id);
-                      final difficulty = controller.recommendedDifficulty(game.id);
-                      final weakTopics = stats.topicProgress.entries.toList()..sort((a, b) => a.value.accuracy.compareTo(b.value.accuracy));
-                      final weakest = weakTopics.where((entry) => entry.value.attempts >= 2).take(2).toList();
+                      final difficulty =
+                          controller.recommendedDifficulty(game.id);
+                      final weakTopics = stats.topicProgress.entries.toList()
+                        ..sort((a, b) =>
+                            a.value.accuracy.compareTo(b.value.accuracy));
+                      final weakest = weakTopics
+                          .where((entry) => entry.value.attempts >= 2)
+                          .take(2)
+                          .toList();
                       return SizedBox(
-                        width: breakpoint == BrightBreakpoint.compact ? double.infinity : 365,
+                        width: breakpoint == BrightBreakpoint.compact
+                            ? double.infinity
+                            : 365,
                         child: _MasteryCard(
                           game: game,
                           mastery: stats.mastery,
@@ -80,7 +104,9 @@ class ProgressScreen extends StatelessWidget {
                           attempts: stats.attempts,
                           hints: stats.hintsUsed,
                           difficulty: difficulty,
-                          weakest: weakest.map((entry) => _prettyTopic(entry.key)).toList(),
+                          weakest: weakest
+                              .map((entry) => _prettyTopic(entry.key))
+                              .toList(),
                         ),
                       );
                     }).toList(),
@@ -110,27 +136,64 @@ class _ProgressHero extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(colors: [Color(0xFF5D4CE7), Color(0xFF3EA4EA), Color(0xFF5ACB9A)]),
+          gradient: const LinearGradient(colors: [
+            Color(0xFF5D4CE7),
+            Color(0xFF3EA4EA),
+            Color(0xFF5ACB9A)
+          ]),
           borderRadius: BorderRadius.circular(30),
-          boxShadow: const [BoxShadow(color: Color(0x245D4CE7), blurRadius: 28, offset: Offset(0, 10))],
+          boxShadow: const [
+            BoxShadow(
+                color: Color(0x245D4CE7), blurRadius: 28, offset: Offset(0, 10))
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const BrightMascotBubble(message: 'Look how much you have learned!', compact: true),
+            const BrightMascotBubble(
+                message: 'Look how much you have learned!', compact: true),
             const SizedBox(height: 14),
-            Row(children: [Expanded(child: Text('Class ${controller.selectedClass} Adventure', style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w900))), Text('${(controller.learningPathProgress * 100).round()}%', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w900))]),
+            Row(children: [
+              Expanded(
+                  child: Text('Class ${controller.selectedClass} Adventure',
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w900))),
+              Text('${(controller.learningPathProgress * 100).round()}%',
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900))
+            ]),
             const SizedBox(height: 8),
-            LinearProgressIndicator(value: controller.learningPathProgress, minHeight: 10, borderRadius: BorderRadius.circular(99), backgroundColor: Colors.white.withValues(alpha: 0.24), valueColor: const AlwaysStoppedAnimation(Colors.white)),
+            LinearProgressIndicator(
+                value: controller.learningPathProgress,
+                minHeight: 10,
+                borderRadius: BorderRadius.circular(99),
+                backgroundColor: Colors.white.withValues(alpha: 0.24),
+                valueColor: const AlwaysStoppedAnimation(Colors.white)),
             const SizedBox(height: 14),
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: [
-                _HeroMetric(icon: Icons.bolt_rounded, value: '${controller.xp}', label: 'XP'),
-                _HeroMetric(icon: Icons.track_changes_rounded, value: '$accuracy%', label: 'Accuracy'),
-                _HeroMetric(icon: Icons.star_rounded, value: '${controller.learningPathStars}', label: 'Path stars'),
-                _HeroMetric(icon: Icons.schedule_rounded, value: '${controller.studyMinutesToday.floor()}m', label: 'Today'),
+                _HeroMetric(
+                    icon: Icons.bolt_rounded,
+                    value: '${controller.xp}',
+                    label: 'XP'),
+                _HeroMetric(
+                    icon: Icons.track_changes_rounded,
+                    value: '$accuracy%',
+                    label: 'Accuracy'),
+                _HeroMetric(
+                    icon: Icons.star_rounded,
+                    value: '${controller.learningPathStars}',
+                    label: 'Path stars'),
+                _HeroMetric(
+                    icon: Icons.schedule_rounded,
+                    value: '${controller.studyMinutesToday.floor()}m',
+                    label: 'Today'),
               ],
             ),
           ],
@@ -139,7 +202,8 @@ class _ProgressHero extends StatelessWidget {
 }
 
 class _HeroMetric extends StatelessWidget {
-  const _HeroMetric({required this.icon, required this.value, required this.label});
+  const _HeroMetric(
+      {required this.icon, required this.value, required this.label});
   final IconData icon;
   final String value;
   final String label;
@@ -147,13 +211,30 @@ class _HeroMetric extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-        decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.18), borderRadius: BorderRadius.circular(18)),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [Icon(icon, color: const Color(0xFFFFE36F), size: 18), const SizedBox(width: 5), Text('$value $label', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 11))]),
+        decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.18),
+            borderRadius: BorderRadius.circular(18)),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Icon(icon, color: const Color(0xFFFFE36F), size: 18),
+          const SizedBox(width: 5),
+          Text('$value $label',
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 11))
+        ]),
       );
 }
 
 class _WorldProgressCard extends StatelessWidget {
-  const _WorldProgressCard({required this.emoji, required this.title, required this.completed, required this.total, required this.stars, required this.progress, required this.color});
+  const _WorldProgressCard(
+      {required this.emoji,
+      required this.title,
+      required this.completed,
+      required this.total,
+      required this.stars,
+      required this.progress,
+      required this.color});
   final String emoji;
   final String title;
   final int completed;
@@ -166,17 +247,40 @@ class _WorldProgressCard extends StatelessWidget {
   Widget build(BuildContext context) => BrightSurface(
         child: Row(
           children: [
-            Container(width: 54, height: 54, alignment: Alignment.center, decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(18)), child: Text(emoji, style: const TextStyle(fontSize: 30))),
+            Container(
+                width: 54,
+                height: 54,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(18)),
+                child: Text(emoji, style: const TextStyle(fontSize: 30))),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(children: [Expanded(child: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w900))), Text('⭐ $stars/${total * 3}', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800))]),
+                  Row(children: [
+                    Expanded(
+                        child: Text(title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style:
+                                const TextStyle(fontWeight: FontWeight.w900))),
+                    Text('⭐ $stars/${total * 3}',
+                        style: const TextStyle(
+                            fontSize: 11, fontWeight: FontWeight.w800))
+                  ]),
                   const SizedBox(height: 7),
-                  LinearProgressIndicator(value: progress, minHeight: 7, borderRadius: BorderRadius.circular(99), color: color),
+                  LinearProgressIndicator(
+                      value: progress,
+                      minHeight: 7,
+                      borderRadius: BorderRadius.circular(99),
+                      color: color),
                   const SizedBox(height: 5),
-                  Text('$completed/$total levels cleared', style: const TextStyle(color: AppTheme.inkMuted, fontSize: 11)),
+                  Text('$completed/$total levels cleared',
+                      style: const TextStyle(
+                          color: AppTheme.inkMuted, fontSize: 11)),
                 ],
               ),
             ),
@@ -186,7 +290,15 @@ class _WorldProgressCard extends StatelessWidget {
 }
 
 class _MasteryCard extends StatelessWidget {
-  const _MasteryCard({required this.game, required this.mastery, required this.masteryStars, required this.correct, required this.attempts, required this.hints, required this.difficulty, required this.weakest});
+  const _MasteryCard(
+      {required this.game,
+      required this.mastery,
+      required this.masteryStars,
+      required this.correct,
+      required this.attempts,
+      required this.hints,
+      required this.difficulty,
+      required this.weakest});
   final AdventureGame game;
   final double mastery;
   final int masteryStars;
@@ -202,12 +314,42 @@ class _MasteryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(children: [Container(width: 44, height: 44, decoration: BoxDecoration(color: game.color.withValues(alpha: 0.11), borderRadius: BorderRadius.circular(15)), child: Icon(game.icon, color: game.color)), const SizedBox(width: 10), Expanded(child: Text(game.title, style: const TextStyle(fontWeight: FontWeight.w900))), Text('$masteryStars/4 ⭐', style: const TextStyle(fontWeight: FontWeight.w900))]),
+            Row(children: [
+              Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                      color: game.color.withValues(alpha: 0.11),
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Icon(game.icon, color: game.color)),
+              const SizedBox(width: 10),
+              Expanded(
+                  child: Text(game.title,
+                      style: const TextStyle(fontWeight: FontWeight.w900))),
+              Text('$masteryStars/4 ⭐',
+                  style: const TextStyle(fontWeight: FontWeight.w900))
+            ]),
             const SizedBox(height: 10),
-            LinearProgressIndicator(value: mastery, minHeight: 8, borderRadius: BorderRadius.circular(99), color: game.color),
+            LinearProgressIndicator(
+                value: mastery,
+                minHeight: 8,
+                borderRadius: BorderRadius.circular(99),
+                color: game.color),
             const SizedBox(height: 7),
-            Text('$correct/$attempts correct • Adaptive D$difficulty • $hints hints', style: const TextStyle(color: AppTheme.inkMuted, fontSize: 11, fontWeight: FontWeight.w700)),
-            if (weakest.isNotEmpty) ...[const SizedBox(height: 7), Text('Practice next: ${weakest.join(' • ')}', style: const TextStyle(color: Colors.deepOrange, fontSize: 11, fontWeight: FontWeight.w900))],
+            Text(
+                '$correct/$attempts correct • Adaptive D$difficulty • $hints hints',
+                style: const TextStyle(
+                    color: AppTheme.inkMuted,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700)),
+            if (weakest.isNotEmpty) ...[
+              const SizedBox(height: 7),
+              Text('Practice next: ${weakest.join(' • ')}',
+                  style: const TextStyle(
+                      color: Colors.deepOrange,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w900))
+            ],
           ],
         ),
       );

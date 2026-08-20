@@ -4,6 +4,7 @@ import '../../app/brightquest_scope.dart';
 import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
 import '../../core/gameplay/game_logic.dart';
+import '../../core/learning/game_evidence_adapter.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
 import '../../widgets/bright_widgets.dart';
@@ -23,6 +24,7 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
   final List<CodingCommand> commands = <CodingCommand>[];
   CodingRunResult? result;
   bool missionHadFailure = false;
+  DateTime _itemStarted = DateTime.now();
   bool finished = false;
   MissionReward? missionReward;
   int _difficulty = 1;
@@ -62,7 +64,14 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
   void _run(CodingMission mission) {
     if (commands.isEmpty || result != null) return;
     final runResult = runCodingMission(mission, commands);
-    BrightQuestScope.of(context).recordAnswer(
+    final controller = BrightQuestScope.of(context);
+    final activity = const GameEvidenceAdapter().resolve(
+      repository: BrightQuestScope.contentOf(context),
+      classNumber: _classNumber,
+      gameId: 'coding_maze',
+      legacyContentId: mission.id,
+    );
+    controller.recordAnswer(
       gameId: 'coding_maze',
       correct: runResult.success,
       topicId: mission.topicId,
@@ -70,8 +79,14 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
       masteryGain: 0.08,
       coinReward: 12,
       xpReward: 14,
+      itemId: activity?.id,
+      competencyId: activity?.competencyId,
+      evidenceKind: const GameEvidenceAdapter().kindFor(widget.learningLevel),
+      retries: missionHadFailure ? 1 : 0,
+      responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
+      misconceptionId: runResult.success ? null : 'algorithm_trace_or_turn',
+      confidence: missionHadFailure ? 0.58 : 0.86,
     );
-    final controller = BrightQuestScope.of(context);
     final spokenProgram = commands.map(_label).join(', ');
     if (runResult.success) {
       FeedbackService.correct(
@@ -116,6 +131,7 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
       commands.clear();
       result = null;
       missionHadFailure = false;
+      _itemStarted = DateTime.now();
     });
   }
 
@@ -134,6 +150,7 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
       commands.clear();
       result = null;
       missionHadFailure = false;
+      _itemStarted = DateTime.now();
       finished = false;
       missionReward = null;
     });
@@ -156,8 +173,8 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
   @override
   Widget build(BuildContext context) {
     final classNumber = _classNumber;
-    final missions =
-        codingMissionsForClass(classNumber, difficulty: _difficulty);
+    final missions = BrightQuestScope.contentOf(context)
+        .codingMissionsForClass(classNumber, difficulty: _difficulty);
     final mission = missions[missionIndex];
 
     return GameScaffold(

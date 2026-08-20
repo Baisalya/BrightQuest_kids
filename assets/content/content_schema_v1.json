@@ -1,0 +1,346 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "brightquest.content_schema_v1",
+  "title": "BrightQuest Kids Content Pack Schema v1",
+  "description": "Versioned bundled class-pack contract used by the Phase 1 ContentRepository.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "packId",
+    "packVersion",
+    "classNumber",
+    "locale",
+    "commercial",
+    "development",
+    "activities"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "packId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "packVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "classNumber": {
+      "enum": [
+        3,
+        4,
+        5
+      ]
+    },
+    "locale": {
+      "type": "string",
+      "minLength": 2
+    },
+    "commercial": {
+      "$ref": "#/$defs/commercial"
+    },
+    "development": {
+      "$ref": "#/$defs/development"
+    },
+    "activities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/activity"
+      }
+    }
+  },
+  "$defs": {
+    "commercial": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "priceInr",
+        "purchaseModel",
+        "paidEligibility"
+      ],
+      "properties": {
+        "priceInr": {
+          "const": 299
+        },
+        "purchaseModel": {
+          "const": "oneTimePerClass"
+        },
+        "paidEligibility": {
+          "type": "boolean"
+        },
+        "freeSampleUnitIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        }
+      }
+    },
+    "development": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lockable",
+        "defaultLocked"
+      ],
+      "properties": {
+        "lockable": {
+          "type": "boolean"
+        },
+        "defaultLocked": {
+          "type": "boolean"
+        }
+      }
+    },
+    "distractor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "misconceptionId"
+      ],
+      "properties": {
+        "value": {},
+        "misconceptionId": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "hint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "step",
+        "text"
+      ],
+      "properties": {
+        "step": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "activity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "legacyContentId",
+        "classNumber",
+        "gameId",
+        "topicId",
+        "subject",
+        "unitId",
+        "competencyId",
+        "relatedCompetencyIds",
+        "learningOutcomeId",
+        "relatedLearningOutcomeIds",
+        "activityType",
+        "difficulty",
+        "prompt",
+        "correctResponseRule",
+        "explanation",
+        "distractors",
+        "hints",
+        "narration",
+        "locale",
+        "author",
+        "reviewerOwnerId",
+        "status",
+        "revision",
+        "generation",
+        "payload"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^c[345]_[a-z0-9_]+$"
+        },
+        "legacyContentId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "classNumber": {
+          "enum": [
+            3,
+            4,
+            5
+          ]
+        },
+        "gameId": {
+          "enum": [
+            "math_market",
+            "fraction_pizza",
+            "science_lab",
+            "story_builder",
+            "grammar_puzzle",
+            "map_quest",
+            "coding_maze",
+            "recycling_challenge"
+          ]
+        },
+        "topicId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject": {
+          "enum": [
+            "maths",
+            "english",
+            "science",
+            "evs",
+            "social",
+            "coding"
+          ]
+        },
+        "unitId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "competencyId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relatedCompetencyIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "learningOutcomeId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relatedLearningOutcomeIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "activityType": {
+          "enum": [
+            "teach",
+            "guidedPractice",
+            "independentPractice",
+            "transfer",
+            "masteryCheck",
+            "experiment",
+            "story",
+            "simulation"
+          ]
+        },
+        "difficulty": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "correctResponseRule": {
+          "type": "object",
+          "minProperties": 1
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "distractors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/distractor"
+          }
+        },
+        "hints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/hint"
+          }
+        },
+        "narration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "text"
+          ],
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "locale": {
+          "type": "string",
+          "minLength": 2
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewerOwnerId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "needsReview",
+            "inReview",
+            "changesRequested",
+            "approved",
+            "retired"
+          ]
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "generation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "deterministicSeed"
+          ],
+          "properties": {
+            "mode": {
+              "enum": [
+                "authored",
+                "generated"
+              ]
+            },
+            "deterministicSeed": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "payload": {
+          "type": "object",
+          "minProperties": 1
+        }
+      }
+    }
+  }
+}

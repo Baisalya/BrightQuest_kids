@@ -1,0 +1,3719 @@
+{
+  "schemaVersion": 1,
+  "packId": "brightquest_class_3",
+  "packVersion": "1.0.0",
+  "classNumber": 3,
+  "locale": "en-IN",
+  "commercial": {
+    "priceInr": 299,
+    "purchaseModel": "oneTimePerClass",
+    "paidEligibility": false,
+    "freeSampleUnitIds": [
+      "c3_coding_ct",
+      "c3_english_language",
+      "c3_evs_world",
+      "c3_math_numbers",
+      "c3_science_inquiry",
+      "c3_social_maps"
+    ]
+  },
+  "development": {
+    "lockable": true,
+    "defaultLocked": false
+  },
+  "activities": [
+    {
+      "id": "c3_math_market_q01",
+      "legacyContentId": "q01",
+      "classNumber": 3,
+      "gameId": "math_market",
+      "topicId": "division",
+      "subject": "maths",
+      "unitId": "c3_math_numbers",
+      "competencyId": "c3_math_equal_sharing_division",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_equal_sharing_division_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "24 ÷ 6 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 4
+      },
+      "explanation": "Think: 6 × ? = 24. The correct value is 4.",
+      "distractors": [
+        {
+          "value": 3,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 5,
+          "misconceptionId": "arithmetic_error_3"
+        },
+        {
+          "value": 6,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think: 6 × ? = 24."
+        }
+      ],
+      "narration": {
+        "text": "24 ÷ 6 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 4,
+        "choices": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "hint": "Think: 6 × ? = 24."
+      }
+    },
+    {
+      "id": "c3_math_market_q02",
+      "legacyContentId": "q02",
+      "classNumber": 3,
+      "gameId": "math_market",
+      "topicId": "multiplication",
+      "subject": "maths",
+      "unitId": "c3_math_numbers",
+      "competencyId": "c3_math_multiplication_facts",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_multiplication_facts_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "7 × 6 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 42
+      },
+      "explanation": "Use the 7-times table. The correct value is 42.",
+      "distractors": [
+        {
+          "value": 36,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 40,
+          "misconceptionId": "arithmetic_error_2"
+        },
+        {
+          "value": 48,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Use the 7-times table."
+        }
+      ],
+      "narration": {
+        "text": "7 × 6 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 42,
+        "choices": [
+          36,
+          40,
+          42,
+          48
+        ],
+        "hint": "Use the 7-times table."
+      }
+    },
+    {
+      "id": "c3_math_market_q03",
+      "legacyContentId": "q03",
+      "classNumber": 3,
+      "gameId": "math_market",
+      "topicId": "subtraction",
+      "subject": "maths",
+      "unitId": "c3_math_numbers",
+      "competencyId": "c3_math_add_sub_3digit",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_add_sub_3digit_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "63 - 28 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 35
+      },
+      "explanation": "Subtract 20, then subtract 8. The correct value is 35.",
+      "distractors": [
+        {
+          "value": 25,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 41,
+          "misconceptionId": "arithmetic_error_3"
+        },
+        {
+          "value": 45,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Subtract 20, then subtract 8."
+        }
+      ],
+      "narration": {
+        "text": "63 - 28 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 35,
+        "choices": [
+          25,
+          35,
+          41,
+          45
+        ],
+        "hint": "Subtract 20, then subtract 8."
+      }
+    },
+    {
+      "id": "c3_math_market_q04",
+      "legacyContentId": "q04",
+      "classNumber": 3,
+      "gameId": "math_market",
+      "topicId": "addition",
+      "subject": "maths",
+      "unitId": "c3_math_numbers",
+      "competencyId": "c3_math_add_sub_3digit",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_add_sub_3digit_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "125 + 75 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 200
+      },
+      "explanation": "Make 125 + 25 first. The correct value is 200.",
+      "distractors": [
+        {
+          "value": 180,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 190,
+          "misconceptionId": "arithmetic_error_2"
+        },
+        {
+          "value": 210,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Make 125 + 25 first."
+        }
+      ],
+      "narration": {
+        "text": "125 + 75 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 200,
+        "choices": [
+          180,
+          190,
+          200,
+          210
+        ],
+        "hint": "Make 125 + 25 first."
+      }
+    },
+    {
+      "id": "c3_math_market_q05",
+      "legacyContentId": "q05",
+      "classNumber": 3,
+      "gameId": "math_market",
+      "topicId": "division",
+      "subject": "maths",
+      "unitId": "c3_math_numbers",
+      "competencyId": "c3_math_equal_sharing_division",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_equal_sharing_division_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "36 ÷ 4 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 9
+      },
+      "explanation": "Think: 4 × ? = 36. The correct value is 9.",
+      "distractors": [
+        {
+          "value": 6,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 8,
+          "misconceptionId": "arithmetic_error_2"
+        },
+        {
+          "value": 12,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think: 4 × ? = 36."
+        }
+      ],
+      "narration": {
+        "text": "36 ÷ 4 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 9,
+        "choices": [
+          6,
+          8,
+          9,
+          12
+        ],
+        "hint": "Think: 4 × ? = 36."
+      }
+    },
+    {
+      "id": "c3_math_market_q06",
+      "legacyContentId": "q06",
+      "classNumber": 3,
+      "gameId": "math_market",
+      "topicId": "multiplication",
+      "subject": "maths",
+      "unitId": "c3_math_numbers",
+      "competencyId": "c3_math_multiplication_facts",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_multiplication_facts_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "9 × 5 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 45
+      },
+      "explanation": "Five groups of nine make 45. The correct value is 45.",
+      "distractors": [
+        {
+          "value": 35,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 40,
+          "misconceptionId": "arithmetic_error_2"
+        },
+        {
+          "value": 50,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Five groups of nine make 45."
+        }
+      ],
+      "narration": {
+        "text": "9 × 5 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 45,
+        "choices": [
+          35,
+          40,
+          45,
+          50
+        ],
+        "hint": "Five groups of nine make 45."
+      }
+    },
+    {
+      "id": "c3_math_market_q07",
+      "legacyContentId": "q07",
+      "classNumber": 3,
+      "gameId": "math_market",
+      "topicId": "addition",
+      "subject": "maths",
+      "unitId": "c3_math_numbers",
+      "competencyId": "c3_math_add_sub_3digit",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_add_sub_3digit_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "208 + 167 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 375
+      },
+      "explanation": "Add hundreds, tens and ones. The correct value is 375.",
+      "distractors": [
+        {
+          "value": 365,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 385,
+          "misconceptionId": "arithmetic_error_3"
+        },
+        {
+          "value": 395,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Add hundreds, tens and ones."
+        }
+      ],
+      "narration": {
+        "text": "208 + 167 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 375,
+        "choices": [
+          365,
+          375,
+          385,
+          395
+        ],
+        "hint": "Add hundreds, tens and ones."
+      }
+    },
+    {
+      "id": "c3_math_market_q08",
+      "legacyContentId": "q08",
+      "classNumber": 3,
+      "gameId": "math_market",
+      "topicId": "subtraction",
+      "subject": "maths",
+      "unitId": "c3_math_numbers",
+      "competencyId": "c3_math_add_sub_3digit",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_add_sub_3digit_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "432 - 158 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 274
+      },
+      "explanation": "Regroup from hundreds to tens and ones. The correct value is 274.",
+      "distractors": [
+        {
+          "value": 264,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 284,
+          "misconceptionId": "arithmetic_error_3"
+        },
+        {
+          "value": 294,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Regroup from hundreds to tens and ones."
+        }
+      ],
+      "narration": {
+        "text": "432 - 158 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 274,
+        "choices": [
+          264,
+          274,
+          284,
+          294
+        ],
+        "hint": "Regroup from hundreds to tens and ones."
+      }
+    },
+    {
+      "id": "c3_math_market_q09",
+      "legacyContentId": "q09",
+      "classNumber": 3,
+      "gameId": "math_market",
+      "topicId": "subtraction",
+      "subject": "maths",
+      "unitId": "c3_math_numbers",
+      "competencyId": "c3_math_add_sub_3digit",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_add_sub_3digit_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "300 - 146 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 154
+      },
+      "explanation": "Regroup carefully. The correct value is 154.",
+      "distractors": [
+        {
+          "value": 144,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 164,
+          "misconceptionId": "arithmetic_error_3"
+        },
+        {
+          "value": 174,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Regroup carefully."
+        }
+      ],
+      "narration": {
+        "text": "300 - 146 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 154,
+        "choices": [
+          144,
+          154,
+          164,
+          174
+        ],
+        "hint": "Regroup carefully."
+      }
+    },
+    {
+      "id": "c3_math_market_q10",
+      "legacyContentId": "q10",
+      "classNumber": 3,
+      "gameId": "math_market",
+      "topicId": "mixed_operations",
+      "subject": "maths",
+      "unitId": "c3_math_numbers",
+      "competencyId": "c3_math_operation_choice",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_operation_choice_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "8 × 9 - 12 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 60
+      },
+      "explanation": "Multiply first, then subtract. The correct value is 60.",
+      "distractors": [
+        {
+          "value": 54,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 62,
+          "misconceptionId": "arithmetic_error_3"
+        },
+        {
+          "value": 72,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Multiply first, then subtract."
+        }
+      ],
+      "narration": {
+        "text": "8 × 9 - 12 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 60,
+        "choices": [
+          54,
+          60,
+          62,
+          72
+        ],
+        "hint": "Multiply first, then subtract."
+      }
+    },
+    {
+      "id": "c3_math_market_q11",
+      "legacyContentId": "q11",
+      "classNumber": 3,
+      "gameId": "math_market",
+      "topicId": "mixed_operations",
+      "subject": "maths",
+      "unitId": "c3_math_numbers",
+      "competencyId": "c3_math_operation_choice",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_operation_choice_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "6 × 7 + 18 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 60
+      },
+      "explanation": "Multiply first, then add. The correct value is 60.",
+      "distractors": [
+        {
+          "value": 52,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 58,
+          "misconceptionId": "arithmetic_error_2"
+        },
+        {
+          "value": 66,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Multiply first, then add."
+        }
+      ],
+      "narration": {
+        "text": "6 × 7 + 18 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 60,
+        "choices": [
+          52,
+          58,
+          60,
+          66
+        ],
+        "hint": "Multiply first, then add."
+      }
+    },
+    {
+      "id": "c3_math_market_q12",
+      "legacyContentId": "q12",
+      "classNumber": 3,
+      "gameId": "math_market",
+      "topicId": "division",
+      "subject": "maths",
+      "unitId": "c3_math_numbers",
+      "competencyId": "c3_math_equal_sharing_division",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_equal_sharing_division_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "144 ÷ 12 = ?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 12
+      },
+      "explanation": "Think: 12 × ? = 144. The correct value is 12.",
+      "distractors": [
+        {
+          "value": 10,
+          "misconceptionId": "arithmetic_error_1"
+        },
+        {
+          "value": 11,
+          "misconceptionId": "arithmetic_error_2"
+        },
+        {
+          "value": 14,
+          "misconceptionId": "arithmetic_error_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think: 12 × ? = 144."
+        }
+      ],
+      "narration": {
+        "text": "144 ÷ 12 = ?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 12,
+        "choices": [
+          10,
+          11,
+          12,
+          14
+        ],
+        "hint": "Think: 12 × ? = 144."
+      }
+    },
+    {
+      "id": "c3_fraction_pizza_f3_1",
+      "legacyContentId": "f3_1",
+      "classNumber": 3,
+      "gameId": "fraction_pizza",
+      "topicId": "unit_fractions",
+      "subject": "maths",
+      "unitId": "c3_math_fractions",
+      "competencyId": "c3_math_unit_fractions",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_unit_fractions_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Select slices to show 1/4 of a pizza with 8 equal slices.",
+      "correctResponseRule": {
+        "type": "selectedSlices",
+        "value": 2,
+        "totalSlices": 8
+      },
+      "explanation": "1/4 of 8 equal slices is 2 slices because 8 × 1 ÷ 4 = 2.",
+      "distractors": [
+        {
+          "value": 1,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 3,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 4,
+          "misconceptionId": "fraction_slice_count"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find how many slices make one denominator part, then multiply by the numerator."
+        }
+      ],
+      "narration": {
+        "text": "Select slices to show 1/4 of a pizza with 8 equal slices."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "totalSlices": 8,
+        "numerator": 1,
+        "denominator": 4
+      }
+    },
+    {
+      "id": "c3_fraction_pizza_f3_2",
+      "legacyContentId": "f3_2",
+      "classNumber": 3,
+      "gameId": "fraction_pizza",
+      "topicId": "unit_fractions",
+      "subject": "maths",
+      "unitId": "c3_math_fractions",
+      "competencyId": "c3_math_unit_fractions",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_unit_fractions_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Select slices to show 1/2 of a pizza with 6 equal slices.",
+      "correctResponseRule": {
+        "type": "selectedSlices",
+        "value": 3,
+        "totalSlices": 6
+      },
+      "explanation": "1/2 of 6 equal slices is 3 slices because 6 × 1 ÷ 2 = 3.",
+      "distractors": [
+        {
+          "value": 1,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 2,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 4,
+          "misconceptionId": "fraction_slice_count"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find how many slices make one denominator part, then multiply by the numerator."
+        }
+      ],
+      "narration": {
+        "text": "Select slices to show 1/2 of a pizza with 6 equal slices."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "totalSlices": 6,
+        "numerator": 1,
+        "denominator": 2
+      }
+    },
+    {
+      "id": "c3_fraction_pizza_f3_3",
+      "legacyContentId": "f3_3",
+      "classNumber": 3,
+      "gameId": "fraction_pizza",
+      "topicId": "fraction_models",
+      "subject": "maths",
+      "unitId": "c3_math_fractions",
+      "competencyId": "c3_math_unit_fractions",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_unit_fractions_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Select slices to show 3/4 of a pizza with 8 equal slices.",
+      "correctResponseRule": {
+        "type": "selectedSlices",
+        "value": 6,
+        "totalSlices": 8
+      },
+      "explanation": "3/4 of 8 equal slices is 6 slices because 8 × 3 ÷ 4 = 6.",
+      "distractors": [
+        {
+          "value": 3,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 4,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 5,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 7,
+          "misconceptionId": "fraction_slice_count"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find how many slices make one denominator part, then multiply by the numerator."
+        }
+      ],
+      "narration": {
+        "text": "Select slices to show 3/4 of a pizza with 8 equal slices."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "totalSlices": 8,
+        "numerator": 3,
+        "denominator": 4
+      }
+    },
+    {
+      "id": "c3_fraction_pizza_f3_4",
+      "legacyContentId": "f3_4",
+      "classNumber": 3,
+      "gameId": "fraction_pizza",
+      "topicId": "fraction_models",
+      "subject": "maths",
+      "unitId": "c3_math_fractions",
+      "competencyId": "c3_math_unit_fractions",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_unit_fractions_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Select slices to show 1/3 of a pizza with 9 equal slices.",
+      "correctResponseRule": {
+        "type": "selectedSlices",
+        "value": 3,
+        "totalSlices": 9
+      },
+      "explanation": "1/3 of 9 equal slices is 3 slices because 9 × 1 ÷ 3 = 3.",
+      "distractors": [
+        {
+          "value": 1,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 2,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 4,
+          "misconceptionId": "fraction_slice_count"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find how many slices make one denominator part, then multiply by the numerator."
+        }
+      ],
+      "narration": {
+        "text": "Select slices to show 1/3 of a pizza with 9 equal slices."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "totalSlices": 9,
+        "numerator": 1,
+        "denominator": 3
+      }
+    },
+    {
+      "id": "c3_fraction_pizza_f3_5",
+      "legacyContentId": "f3_5",
+      "classNumber": 3,
+      "gameId": "fraction_pizza",
+      "topicId": "equivalent_fractions",
+      "subject": "maths",
+      "unitId": "c3_math_fractions",
+      "competencyId": "c3_math_unit_fractions",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_unit_fractions_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Select slices to show 2/3 of a pizza with 12 equal slices.",
+      "correctResponseRule": {
+        "type": "selectedSlices",
+        "value": 8,
+        "totalSlices": 12
+      },
+      "explanation": "2/3 of 12 equal slices is 8 slices because 12 × 2 ÷ 3 = 8.",
+      "distractors": [
+        {
+          "value": 2,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 3,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 7,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 9,
+          "misconceptionId": "fraction_slice_count"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find how many slices make one denominator part, then multiply by the numerator."
+        }
+      ],
+      "narration": {
+        "text": "Select slices to show 2/3 of a pizza with 12 equal slices."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "totalSlices": 12,
+        "numerator": 2,
+        "denominator": 3
+      }
+    },
+    {
+      "id": "c3_fraction_pizza_f3_6",
+      "legacyContentId": "f3_6",
+      "classNumber": 3,
+      "gameId": "fraction_pizza",
+      "topicId": "equivalent_fractions",
+      "subject": "maths",
+      "unitId": "c3_math_fractions",
+      "competencyId": "c3_math_unit_fractions",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_math_unit_fractions_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Select slices to show 3/5 of a pizza with 10 equal slices.",
+      "correctResponseRule": {
+        "type": "selectedSlices",
+        "value": 6,
+        "totalSlices": 10
+      },
+      "explanation": "3/5 of 10 equal slices is 6 slices because 10 × 3 ÷ 5 = 6.",
+      "distractors": [
+        {
+          "value": 3,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 5,
+          "misconceptionId": "fraction_slice_count"
+        },
+        {
+          "value": 7,
+          "misconceptionId": "fraction_slice_count"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find how many slices make one denominator part, then multiply by the numerator."
+        }
+      ],
+      "narration": {
+        "text": "Select slices to show 3/5 of a pizza with 10 equal slices."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "totalSlices": 10,
+        "numerator": 3,
+        "denominator": 5
+      }
+    },
+    {
+      "id": "c3_science_lab_q01",
+      "legacyContentId": "q01",
+      "classNumber": 3,
+      "gameId": "science_lab",
+      "topicId": "plants",
+      "subject": "science",
+      "unitId": "c3_science_inquiry",
+      "competencyId": "c3_sci_plant_parts",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_sci_plant_parts_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Which part of a plant usually absorbs water from soil?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Roots"
+      },
+      "explanation": "Roots take in water and minerals from the soil.",
+      "distractors": [
+        {
+          "value": "Flower",
+          "misconceptionId": "science_concept_confusion_2"
+        },
+        {
+          "value": "Fruit",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "Seed",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "Which part of a plant usually absorbs water from soil?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Roots",
+        "choices": [
+          "Roots",
+          "Flower",
+          "Fruit",
+          "Seed"
+        ]
+      }
+    },
+    {
+      "id": "c3_science_lab_q02",
+      "legacyContentId": "q02",
+      "classNumber": 3,
+      "gameId": "science_lab",
+      "topicId": "materials",
+      "subject": "science",
+      "unitId": "c3_science_inquiry",
+      "competencyId": "c3_sci_material_properties",
+      "relatedCompetencyIds": [
+        "c3_sci_float_sink"
+      ],
+      "learningOutcomeId": "c3_sci_material_properties_lo1",
+      "relatedLearningOutcomeIds": [
+        "c3_sci_float_sink_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Which object is most likely to float in water?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Wood"
+      },
+      "explanation": "Many kinds of dry wood are less dense than water.",
+      "distractors": [
+        {
+          "value": "Rock",
+          "misconceptionId": "science_concept_confusion_2"
+        },
+        {
+          "value": "Coin",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "Steel Ball",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "Which object is most likely to float in water?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Wood",
+        "choices": [
+          "Wood",
+          "Rock",
+          "Coin",
+          "Steel Ball"
+        ]
+      }
+    },
+    {
+      "id": "c3_science_lab_q03",
+      "legacyContentId": "q03",
+      "classNumber": 3,
+      "gameId": "science_lab",
+      "topicId": "matter",
+      "subject": "science",
+      "unitId": "c3_science_inquiry",
+      "competencyId": "c3_sci_states_changes",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_sci_states_changes_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Which state of matter keeps its own shape?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Solid"
+      },
+      "explanation": "A solid keeps a definite shape under ordinary conditions.",
+      "distractors": [
+        {
+          "value": "Liquid",
+          "misconceptionId": "science_concept_confusion_2"
+        },
+        {
+          "value": "Gas",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "Steam",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "Which state of matter keeps its own shape?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Solid",
+        "choices": [
+          "Solid",
+          "Liquid",
+          "Gas",
+          "Steam"
+        ]
+      }
+    },
+    {
+      "id": "c3_science_lab_q04",
+      "legacyContentId": "q04",
+      "classNumber": 3,
+      "gameId": "science_lab",
+      "topicId": "plants",
+      "subject": "science",
+      "unitId": "c3_science_inquiry",
+      "competencyId": "c3_sci_plant_parts",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_sci_plant_parts_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Which part of a plant usually makes seeds?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Flower"
+      },
+      "explanation": "Flowers help many plants reproduce and form seeds.",
+      "distractors": [
+        {
+          "value": "Root",
+          "misconceptionId": "science_concept_confusion_2"
+        },
+        {
+          "value": "Stem",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "Soil",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "Which part of a plant usually makes seeds?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Flower",
+        "choices": [
+          "Flower",
+          "Root",
+          "Stem",
+          "Soil"
+        ]
+      }
+    },
+    {
+      "id": "c3_science_lab_q05",
+      "legacyContentId": "q05",
+      "classNumber": 3,
+      "gameId": "science_lab",
+      "topicId": "matter",
+      "subject": "science",
+      "unitId": "c3_science_inquiry",
+      "competencyId": "c3_sci_states_changes",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_sci_states_changes_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "What happens to ice when it gets warm enough?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "It melts into water"
+      },
+      "explanation": "Heating ice changes it from a solid to a liquid.",
+      "distractors": [
+        {
+          "value": "It becomes metal",
+          "misconceptionId": "science_concept_confusion_2"
+        },
+        {
+          "value": "It disappears forever",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "It becomes soil",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "What happens to ice when it gets warm enough?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "It melts into water",
+        "choices": [
+          "It melts into water",
+          "It becomes metal",
+          "It disappears forever",
+          "It becomes soil"
+        ]
+      }
+    },
+    {
+      "id": "c3_science_lab_q06",
+      "legacyContentId": "q06",
+      "classNumber": 3,
+      "gameId": "science_lab",
+      "topicId": "materials",
+      "subject": "science",
+      "unitId": "c3_science_inquiry",
+      "competencyId": "c3_sci_material_properties",
+      "relatedCompetencyIds": [
+        "c3_sci_float_sink"
+      ],
+      "learningOutcomeId": "c3_sci_material_properties_lo1",
+      "relatedLearningOutcomeIds": [
+        "c3_sci_float_sink_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Which material usually absorbs water best?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Cotton cloth"
+      },
+      "explanation": "Cotton has fibres that can take in water.",
+      "distractors": [
+        {
+          "value": "Glass",
+          "misconceptionId": "science_concept_confusion_2"
+        },
+        {
+          "value": "Plastic ruler",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "Metal spoon",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "Which material usually absorbs water best?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Cotton cloth",
+        "choices": [
+          "Cotton cloth",
+          "Glass",
+          "Plastic ruler",
+          "Metal spoon"
+        ]
+      }
+    },
+    {
+      "id": "c3_science_lab_q07",
+      "legacyContentId": "q07",
+      "classNumber": 3,
+      "gameId": "science_lab",
+      "topicId": "plants",
+      "subject": "science",
+      "unitId": "c3_science_inquiry",
+      "competencyId": "c3_sci_plant_parts",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_sci_plant_parts_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Why do green plants need sunlight?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "To help make food"
+      },
+      "explanation": "Plants use light energy during photosynthesis.",
+      "distractors": [
+        {
+          "value": "To make soil",
+          "misconceptionId": "science_concept_confusion_2"
+        },
+        {
+          "value": "To turn roots into flowers",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "To stop using water",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "Why do green plants need sunlight?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "To help make food",
+        "choices": [
+          "To help make food",
+          "To make soil",
+          "To turn roots into flowers",
+          "To stop using water"
+        ]
+      }
+    },
+    {
+      "id": "c3_science_lab_q08",
+      "legacyContentId": "q08",
+      "classNumber": 3,
+      "gameId": "science_lab",
+      "topicId": "matter",
+      "subject": "science",
+      "unitId": "c3_science_inquiry",
+      "competencyId": "c3_sci_states_changes",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_sci_states_changes_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Water vapour cooling into tiny drops is called…",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Condensation"
+      },
+      "explanation": "Cooling water vapour can form liquid droplets.",
+      "distractors": [
+        {
+          "value": "Melting",
+          "misconceptionId": "science_concept_confusion_2"
+        },
+        {
+          "value": "Freezing",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "Burning",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "Water vapour cooling into tiny drops is called…"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Condensation",
+        "choices": [
+          "Condensation",
+          "Melting",
+          "Freezing",
+          "Burning"
+        ]
+      }
+    },
+    {
+      "id": "c3_science_lab_q09",
+      "legacyContentId": "q09",
+      "classNumber": 3,
+      "gameId": "science_lab",
+      "topicId": "materials",
+      "subject": "science",
+      "unitId": "c3_science_inquiry",
+      "competencyId": "c3_sci_material_properties",
+      "relatedCompetencyIds": [
+        "c3_sci_float_sink"
+      ],
+      "learningOutcomeId": "c3_sci_material_properties_lo1",
+      "relatedLearningOutcomeIds": [
+        "c3_sci_float_sink_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Which property helps us choose glass for a window?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "It is transparent"
+      },
+      "explanation": "Transparent materials let light pass through.",
+      "distractors": [
+        {
+          "value": "It is magnetic",
+          "misconceptionId": "science_concept_confusion_2"
+        },
+        {
+          "value": "It is soft like cloth",
+          "misconceptionId": "science_concept_confusion_3"
+        },
+        {
+          "value": "It dissolves in water",
+          "misconceptionId": "science_concept_confusion_4"
+        }
+      ],
+      "hints": [],
+      "narration": {
+        "text": "Which property helps us choose glass for a window?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "It is transparent",
+        "choices": [
+          "It is transparent",
+          "It is magnetic",
+          "It is soft like cloth",
+          "It dissolves in water"
+        ]
+      }
+    },
+    {
+      "id": "c3_science_lab_reaction_fizz",
+      "legacyContentId": "reaction_fizz",
+      "classNumber": 3,
+      "gameId": "science_lab",
+      "topicId": "reactions",
+      "subject": "science",
+      "unitId": "c3_science_inquiry",
+      "competencyId": "c3_sci_safe_experiment",
+      "relatedCompetencyIds": [
+        "c3_sci_observe_compare"
+      ],
+      "learningOutcomeId": "c3_sci_safe_experiment_lo1",
+      "relatedLearningOutcomeIds": [
+        "c3_sci_observe_compare_lo1"
+      ],
+      "activityType": "experiment",
+      "difficulty": 1,
+      "prompt": "Mix safe virtual ingredients and observe what happens.",
+      "correctResponseRule": {
+        "type": "experimentOutcome",
+        "reactionId": "fizz"
+      },
+      "explanation": "Baking soda and vinegar release carbon dioxide gas bubbles.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Observe the selected virtual ingredients and compare the result."
+        }
+      ],
+      "narration": {
+        "text": "Mix safe virtual ingredients and observe what happens."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "reactionId": "fizz",
+        "title": "Fizzing reaction",
+        "emoji": "🧪🫧✨",
+        "requiredIngredients": [
+          "Baking Soda",
+          "Vinegar"
+        ],
+        "fallback": false
+      }
+    },
+    {
+      "id": "c3_science_lab_reaction_dissolve",
+      "legacyContentId": "reaction_dissolve",
+      "classNumber": 3,
+      "gameId": "science_lab",
+      "topicId": "reactions",
+      "subject": "science",
+      "unitId": "c3_science_inquiry",
+      "competencyId": "c3_sci_safe_experiment",
+      "relatedCompetencyIds": [
+        "c3_sci_observe_compare"
+      ],
+      "learningOutcomeId": "c3_sci_safe_experiment_lo1",
+      "relatedLearningOutcomeIds": [
+        "c3_sci_observe_compare_lo1"
+      ],
+      "activityType": "experiment",
+      "difficulty": 1,
+      "prompt": "Mix safe virtual ingredients and observe what happens.",
+      "correctResponseRule": {
+        "type": "experimentOutcome",
+        "reactionId": "dissolve"
+      },
+      "explanation": "Salt spreads through the water to form a solution.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Observe the selected virtual ingredients and compare the result."
+        }
+      ],
+      "narration": {
+        "text": "Mix safe virtual ingredients and observe what happens."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "reactionId": "dissolve",
+        "title": "Dissolving",
+        "emoji": "💧✨",
+        "requiredIngredients": [
+          "Water",
+          "Salt"
+        ],
+        "fallback": false
+      }
+    },
+    {
+      "id": "c3_science_lab_reaction_none",
+      "legacyContentId": "reaction_none",
+      "classNumber": 3,
+      "gameId": "science_lab",
+      "topicId": "reactions",
+      "subject": "science",
+      "unitId": "c3_science_inquiry",
+      "competencyId": "c3_sci_safe_experiment",
+      "relatedCompetencyIds": [
+        "c3_sci_observe_compare"
+      ],
+      "learningOutcomeId": "c3_sci_safe_experiment_lo1",
+      "relatedLearningOutcomeIds": [
+        "c3_sci_observe_compare_lo1"
+      ],
+      "activityType": "experiment",
+      "difficulty": 1,
+      "prompt": "Mix safe virtual ingredients and observe what happens.",
+      "correctResponseRule": {
+        "type": "experimentOutcome",
+        "reactionId": "none"
+      },
+      "explanation": "Try a different safe virtual combination.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Observe the selected virtual ingredients and compare the result."
+        }
+      ],
+      "narration": {
+        "text": "Mix safe virtual ingredients and observe what happens."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "reactionId": "none",
+        "title": "No target reaction yet",
+        "emoji": "🔬",
+        "requiredIngredients": [],
+        "fallback": true
+      }
+    },
+    {
+      "id": "c3_story_builder_story3_1",
+      "legacyContentId": "story3_1",
+      "classNumber": 3,
+      "gameId": "story_builder",
+      "topicId": "sentence_building",
+      "subject": "english",
+      "unitId": "c3_english_language",
+      "competencyId": "c3_eng_sentence_building",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_eng_sentence_building_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Ria found a red kite near the tree.",
+      "correctResponseRule": {
+        "type": "orderedWords",
+        "value": [
+          "Ria",
+          "found",
+          "a",
+          "red",
+          "kite",
+          "near",
+          "the",
+          "tree"
+        ]
+      },
+      "explanation": "Arrange the words in sentence order to rebuild: “Ria found a red kite near the tree.”",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Start with “Ria” and look for the word that naturally follows it."
+        }
+      ],
+      "narration": {
+        "text": "Ria found a red kite near the tree."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "words": [
+          "Ria",
+          "found",
+          "a",
+          "red",
+          "kite",
+          "near",
+          "the",
+          "tree"
+        ]
+      }
+    },
+    {
+      "id": "c3_story_builder_story3_2",
+      "legacyContentId": "story3_2",
+      "classNumber": 3,
+      "gameId": "story_builder",
+      "topicId": "sentence_building",
+      "subject": "english",
+      "unitId": "c3_english_language",
+      "competencyId": "c3_eng_sentence_building",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_eng_sentence_building_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "The small puppy ran across the garden.",
+      "correctResponseRule": {
+        "type": "orderedWords",
+        "value": [
+          "The",
+          "small",
+          "puppy",
+          "ran",
+          "across",
+          "the",
+          "garden"
+        ]
+      },
+      "explanation": "Arrange the words in sentence order to rebuild: “The small puppy ran across the garden.”",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Start with “The” and look for the word that naturally follows it."
+        }
+      ],
+      "narration": {
+        "text": "The small puppy ran across the garden."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "words": [
+          "The",
+          "small",
+          "puppy",
+          "ran",
+          "across",
+          "the",
+          "garden"
+        ]
+      }
+    },
+    {
+      "id": "c3_story_builder_story3_3",
+      "legacyContentId": "story3_3",
+      "classNumber": 3,
+      "gameId": "story_builder",
+      "topicId": "story_sequence",
+      "subject": "english",
+      "unitId": "c3_english_reading",
+      "competencyId": "c3_eng_sequence_events",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_eng_sequence_events_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "After lunch, Mina carefully packed her school bag.",
+      "correctResponseRule": {
+        "type": "orderedWords",
+        "value": [
+          "After",
+          "lunch",
+          "Mina",
+          "carefully",
+          "packed",
+          "her",
+          "school",
+          "bag"
+        ]
+      },
+      "explanation": "Arrange the words in sentence order to rebuild: “After lunch, Mina carefully packed her school bag.”",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Start with “After” and look for the word that naturally follows it."
+        }
+      ],
+      "narration": {
+        "text": "After lunch, Mina carefully packed her school bag."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "words": [
+          "After",
+          "lunch",
+          "Mina",
+          "carefully",
+          "packed",
+          "her",
+          "school",
+          "bag"
+        ]
+      }
+    },
+    {
+      "id": "c3_story_builder_story3_4",
+      "legacyContentId": "story3_4",
+      "classNumber": 3,
+      "gameId": "story_builder",
+      "topicId": "descriptive_language",
+      "subject": "english",
+      "unitId": "c3_english_language",
+      "competencyId": "c3_eng_adjectives_description",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_eng_adjectives_description_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "A bright rainbow appeared above the quiet village.",
+      "correctResponseRule": {
+        "type": "orderedWords",
+        "value": [
+          "A",
+          "bright",
+          "rainbow",
+          "appeared",
+          "above",
+          "the",
+          "quiet",
+          "village"
+        ]
+      },
+      "explanation": "Arrange the words in sentence order to rebuild: “A bright rainbow appeared above the quiet village.”",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Start with “A” and look for the word that naturally follows it."
+        }
+      ],
+      "narration": {
+        "text": "A bright rainbow appeared above the quiet village."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "words": [
+          "A",
+          "bright",
+          "rainbow",
+          "appeared",
+          "above",
+          "the",
+          "quiet",
+          "village"
+        ]
+      }
+    },
+    {
+      "id": "c3_story_builder_story3_5",
+      "legacyContentId": "story3_5",
+      "classNumber": 3,
+      "gameId": "story_builder",
+      "topicId": "story_sequence",
+      "subject": "english",
+      "unitId": "c3_english_reading",
+      "competencyId": "c3_eng_sequence_events",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_eng_sequence_events_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Before sunset, the friends returned home safely together.",
+      "correctResponseRule": {
+        "type": "orderedWords",
+        "value": [
+          "Before",
+          "sunset",
+          "the",
+          "friends",
+          "returned",
+          "home",
+          "safely",
+          "together"
+        ]
+      },
+      "explanation": "Arrange the words in sentence order to rebuild: “Before sunset, the friends returned home safely together.”",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Start with “Before” and look for the word that naturally follows it."
+        }
+      ],
+      "narration": {
+        "text": "Before sunset, the friends returned home safely together."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "words": [
+          "Before",
+          "sunset",
+          "the",
+          "friends",
+          "returned",
+          "home",
+          "safely",
+          "together"
+        ]
+      }
+    },
+    {
+      "id": "c3_story_builder_story3_6",
+      "legacyContentId": "story3_6",
+      "classNumber": 3,
+      "gameId": "story_builder",
+      "topicId": "descriptive_language",
+      "subject": "english",
+      "unitId": "c3_english_language",
+      "competencyId": "c3_eng_adjectives_description",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_eng_adjectives_description_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "The curious child gently opened the mysterious wooden box.",
+      "correctResponseRule": {
+        "type": "orderedWords",
+        "value": [
+          "The",
+          "curious",
+          "child",
+          "gently",
+          "opened",
+          "the",
+          "mysterious",
+          "wooden",
+          "box"
+        ]
+      },
+      "explanation": "Arrange the words in sentence order to rebuild: “The curious child gently opened the mysterious wooden box.”",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Start with “The” and look for the word that naturally follows it."
+        }
+      ],
+      "narration": {
+        "text": "The curious child gently opened the mysterious wooden box."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "words": [
+          "The",
+          "curious",
+          "child",
+          "gently",
+          "opened",
+          "the",
+          "mysterious",
+          "wooden",
+          "box"
+        ]
+      }
+    },
+    {
+      "id": "c3_grammar_puzzle_grammar3_1",
+      "legacyContentId": "grammar3_1",
+      "classNumber": 3,
+      "gameId": "grammar_puzzle",
+      "topicId": "parts_of_speech",
+      "subject": "english",
+      "unitId": "c3_english_language",
+      "competencyId": "c3_eng_nouns_pronouns",
+      "relatedCompetencyIds": [
+        "c3_eng_verbs_tense",
+        "c3_eng_adjectives_description"
+      ],
+      "learningOutcomeId": "c3_eng_nouns_pronouns_lo1",
+      "relatedLearningOutcomeIds": [
+        "c3_eng_verbs_tense_lo1",
+        "c3_eng_adjectives_description_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "The brave dog runs.",
+      "correctResponseRule": {
+        "type": "grammarParts",
+        "noun": "dog",
+        "verb": "runs",
+        "adjective": "brave"
+      },
+      "explanation": "In this sentence, “dog” is the noun, “runs” is the verb, and “brave” is the adjective.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find the naming word, then the action word, then the describing word."
+        }
+      ],
+      "narration": {
+        "text": "The brave dog runs."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "sentence": "The brave dog runs.",
+        "noun": "dog",
+        "verb": "runs",
+        "adjective": "brave"
+      }
+    },
+    {
+      "id": "c3_grammar_puzzle_grammar3_2",
+      "legacyContentId": "grammar3_2",
+      "classNumber": 3,
+      "gameId": "grammar_puzzle",
+      "topicId": "parts_of_speech",
+      "subject": "english",
+      "unitId": "c3_english_language",
+      "competencyId": "c3_eng_nouns_pronouns",
+      "relatedCompetencyIds": [
+        "c3_eng_verbs_tense",
+        "c3_eng_adjectives_description"
+      ],
+      "learningOutcomeId": "c3_eng_nouns_pronouns_lo1",
+      "relatedLearningOutcomeIds": [
+        "c3_eng_verbs_tense_lo1",
+        "c3_eng_adjectives_description_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "A bright star shines.",
+      "correctResponseRule": {
+        "type": "grammarParts",
+        "noun": "star",
+        "verb": "shines",
+        "adjective": "bright"
+      },
+      "explanation": "In this sentence, “star” is the noun, “shines” is the verb, and “bright” is the adjective.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find the naming word, then the action word, then the describing word."
+        }
+      ],
+      "narration": {
+        "text": "A bright star shines."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "sentence": "A bright star shines.",
+        "noun": "star",
+        "verb": "shines",
+        "adjective": "bright"
+      }
+    },
+    {
+      "id": "c3_grammar_puzzle_grammar3_3",
+      "legacyContentId": "grammar3_3",
+      "classNumber": 3,
+      "gameId": "grammar_puzzle",
+      "topicId": "parts_of_speech",
+      "subject": "english",
+      "unitId": "c3_english_language",
+      "competencyId": "c3_eng_nouns_pronouns",
+      "relatedCompetencyIds": [
+        "c3_eng_verbs_tense",
+        "c3_eng_adjectives_description"
+      ],
+      "learningOutcomeId": "c3_eng_nouns_pronouns_lo1",
+      "relatedLearningOutcomeIds": [
+        "c3_eng_verbs_tense_lo1",
+        "c3_eng_adjectives_description_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "The noisy train moves.",
+      "correctResponseRule": {
+        "type": "grammarParts",
+        "noun": "train",
+        "verb": "moves",
+        "adjective": "noisy"
+      },
+      "explanation": "In this sentence, “train” is the noun, “moves” is the verb, and “noisy” is the adjective.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find the naming word, then the action word, then the describing word."
+        }
+      ],
+      "narration": {
+        "text": "The noisy train moves."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "sentence": "The noisy train moves.",
+        "noun": "train",
+        "verb": "moves",
+        "adjective": "noisy"
+      }
+    },
+    {
+      "id": "c3_grammar_puzzle_grammar3_4",
+      "legacyContentId": "grammar3_4",
+      "classNumber": 3,
+      "gameId": "grammar_puzzle",
+      "topicId": "parts_of_speech",
+      "subject": "english",
+      "unitId": "c3_english_language",
+      "competencyId": "c3_eng_nouns_pronouns",
+      "relatedCompetencyIds": [
+        "c3_eng_verbs_tense",
+        "c3_eng_adjectives_description"
+      ],
+      "learningOutcomeId": "c3_eng_nouns_pronouns_lo1",
+      "relatedLearningOutcomeIds": [
+        "c3_eng_verbs_tense_lo1",
+        "c3_eng_adjectives_description_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "The clever fox jumps.",
+      "correctResponseRule": {
+        "type": "grammarParts",
+        "noun": "fox",
+        "verb": "jumps",
+        "adjective": "clever"
+      },
+      "explanation": "In this sentence, “fox” is the noun, “jumps” is the verb, and “clever” is the adjective.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find the naming word, then the action word, then the describing word."
+        }
+      ],
+      "narration": {
+        "text": "The clever fox jumps."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "sentence": "The clever fox jumps.",
+        "noun": "fox",
+        "verb": "jumps",
+        "adjective": "clever"
+      }
+    },
+    {
+      "id": "c3_grammar_puzzle_grammar3_5",
+      "legacyContentId": "grammar3_5",
+      "classNumber": 3,
+      "gameId": "grammar_puzzle",
+      "topicId": "parts_of_speech",
+      "subject": "english",
+      "unitId": "c3_english_language",
+      "competencyId": "c3_eng_nouns_pronouns",
+      "relatedCompetencyIds": [
+        "c3_eng_verbs_tense",
+        "c3_eng_adjectives_description"
+      ],
+      "learningOutcomeId": "c3_eng_nouns_pronouns_lo1",
+      "relatedLearningOutcomeIds": [
+        "c3_eng_verbs_tense_lo1",
+        "c3_eng_adjectives_description_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "A gentle breeze cools the room.",
+      "correctResponseRule": {
+        "type": "grammarParts",
+        "noun": "breeze",
+        "verb": "cools",
+        "adjective": "gentle"
+      },
+      "explanation": "In this sentence, “breeze” is the noun, “cools” is the verb, and “gentle” is the adjective.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find the naming word, then the action word, then the describing word."
+        }
+      ],
+      "narration": {
+        "text": "A gentle breeze cools the room."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "sentence": "A gentle breeze cools the room.",
+        "noun": "breeze",
+        "verb": "cools",
+        "adjective": "gentle"
+      }
+    },
+    {
+      "id": "c3_grammar_puzzle_grammar3_6",
+      "legacyContentId": "grammar3_6",
+      "classNumber": 3,
+      "gameId": "grammar_puzzle",
+      "topicId": "parts_of_speech",
+      "subject": "english",
+      "unitId": "c3_english_language",
+      "competencyId": "c3_eng_nouns_pronouns",
+      "relatedCompetencyIds": [
+        "c3_eng_verbs_tense",
+        "c3_eng_adjectives_description"
+      ],
+      "learningOutcomeId": "c3_eng_nouns_pronouns_lo1",
+      "relatedLearningOutcomeIds": [
+        "c3_eng_verbs_tense_lo1",
+        "c3_eng_adjectives_description_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "The colourful butterfly visits flowers.",
+      "correctResponseRule": {
+        "type": "grammarParts",
+        "noun": "butterfly",
+        "verb": "visits",
+        "adjective": "colourful"
+      },
+      "explanation": "In this sentence, “butterfly” is the noun, “visits” is the verb, and “colourful” is the adjective.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find the naming word, then the action word, then the describing word."
+        }
+      ],
+      "narration": {
+        "text": "The colourful butterfly visits flowers."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "sentence": "The colourful butterfly visits flowers.",
+        "noun": "butterfly",
+        "verb": "visits",
+        "adjective": "colourful"
+      }
+    },
+    {
+      "id": "c3_map_quest_map3_1",
+      "legacyContentId": "map3_1",
+      "classNumber": 3,
+      "gameId": "map_quest",
+      "topicId": "directions",
+      "subject": "social",
+      "unitId": "c3_social_maps",
+      "competencyId": "c3_soc_directions",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_soc_directions_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "The Sun rises in which direction?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "East"
+      },
+      "explanation": "Think about where morning sunlight appears. The correct answer is East.",
+      "distractors": [
+        {
+          "value": "West",
+          "misconceptionId": "map_concept_confusion_2"
+        },
+        {
+          "value": "North",
+          "misconceptionId": "map_concept_confusion_3"
+        },
+        {
+          "value": "South",
+          "misconceptionId": "map_concept_confusion_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about where morning sunlight appears."
+        }
+      ],
+      "narration": {
+        "text": "The Sun rises in which direction?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "East",
+        "choices": [
+          "East",
+          "West",
+          "North",
+          "South"
+        ],
+        "hint": "Think about where morning sunlight appears."
+      }
+    },
+    {
+      "id": "c3_map_quest_map3_2",
+      "legacyContentId": "map3_2",
+      "classNumber": 3,
+      "gameId": "map_quest",
+      "topicId": "directions",
+      "subject": "social",
+      "unitId": "c3_social_maps",
+      "competencyId": "c3_soc_directions",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_soc_directions_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "If the park is north of your school, which way do you travel to reach it?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "North"
+      },
+      "explanation": "Use the direction named in the question. The correct answer is North.",
+      "distractors": [
+        {
+          "value": "South",
+          "misconceptionId": "map_concept_confusion_2"
+        },
+        {
+          "value": "East",
+          "misconceptionId": "map_concept_confusion_3"
+        },
+        {
+          "value": "West",
+          "misconceptionId": "map_concept_confusion_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Use the direction named in the question."
+        }
+      ],
+      "narration": {
+        "text": "If the park is north of your school, which way do you travel to reach it?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "North",
+        "choices": [
+          "North",
+          "South",
+          "East",
+          "West"
+        ],
+        "hint": "Use the direction named in the question."
+      }
+    },
+    {
+      "id": "c3_map_quest_map3_3",
+      "legacyContentId": "map3_3",
+      "classNumber": 3,
+      "gameId": "map_quest",
+      "topicId": "community_places",
+      "subject": "social",
+      "unitId": "c3_social_maps",
+      "competencyId": "c3_soc_community_places_routes",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_soc_community_places_routes_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Which place would you use to borrow books?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Library"
+      },
+      "explanation": "Think of a place with shelves of books. The correct answer is Library.",
+      "distractors": [
+        {
+          "value": "Hospital",
+          "misconceptionId": "map_concept_confusion_2"
+        },
+        {
+          "value": "Bus stop",
+          "misconceptionId": "map_concept_confusion_3"
+        },
+        {
+          "value": "Farm",
+          "misconceptionId": "map_concept_confusion_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think of a place with shelves of books."
+        }
+      ],
+      "narration": {
+        "text": "Which place would you use to borrow books?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Library",
+        "choices": [
+          "Library",
+          "Hospital",
+          "Bus stop",
+          "Farm"
+        ],
+        "hint": "Think of a place with shelves of books."
+      }
+    },
+    {
+      "id": "c3_map_quest_map3_4",
+      "legacyContentId": "map3_4",
+      "classNumber": 3,
+      "gameId": "map_quest",
+      "topicId": "map_skills",
+      "subject": "social",
+      "unitId": "c3_social_maps",
+      "competencyId": "c3_soc_map_symbols",
+      "relatedCompetencyIds": [
+        "c3_soc_community_places_routes"
+      ],
+      "learningOutcomeId": "c3_soc_map_symbols_lo1",
+      "relatedLearningOutcomeIds": [
+        "c3_soc_community_places_routes_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "A map symbol is mainly used to…",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Represent a place or feature"
+      },
+      "explanation": "Symbols make maps easier to read. The correct answer is Represent a place or feature.",
+      "distractors": [
+        {
+          "value": "Measure temperature",
+          "misconceptionId": "map_concept_confusion_2"
+        },
+        {
+          "value": "Cook food",
+          "misconceptionId": "map_concept_confusion_3"
+        },
+        {
+          "value": "Play music",
+          "misconceptionId": "map_concept_confusion_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Symbols make maps easier to read."
+        }
+      ],
+      "narration": {
+        "text": "A map symbol is mainly used to…"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Represent a place or feature",
+        "choices": [
+          "Represent a place or feature",
+          "Measure temperature",
+          "Cook food",
+          "Play music"
+        ],
+        "hint": "Symbols make maps easier to read."
+      }
+    },
+    {
+      "id": "c3_map_quest_map3_5",
+      "legacyContentId": "map3_5",
+      "classNumber": 3,
+      "gameId": "map_quest",
+      "topicId": "directions",
+      "subject": "social",
+      "unitId": "c3_social_maps",
+      "competencyId": "c3_soc_directions",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_soc_directions_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "If you face north, which direction is on your right?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "East"
+      },
+      "explanation": "Picture a compass with north at the top. The correct answer is East.",
+      "distractors": [
+        {
+          "value": "West",
+          "misconceptionId": "map_concept_confusion_2"
+        },
+        {
+          "value": "South",
+          "misconceptionId": "map_concept_confusion_3"
+        },
+        {
+          "value": "North",
+          "misconceptionId": "map_concept_confusion_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Picture a compass with north at the top."
+        }
+      ],
+      "narration": {
+        "text": "If you face north, which direction is on your right?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "East",
+        "choices": [
+          "East",
+          "West",
+          "South",
+          "North"
+        ],
+        "hint": "Picture a compass with north at the top."
+      }
+    },
+    {
+      "id": "c3_map_quest_map3_6",
+      "legacyContentId": "map3_6",
+      "classNumber": 3,
+      "gameId": "map_quest",
+      "topicId": "map_skills",
+      "subject": "social",
+      "unitId": "c3_social_maps",
+      "competencyId": "c3_soc_map_symbols",
+      "relatedCompetencyIds": [
+        "c3_soc_community_places_routes"
+      ],
+      "learningOutcomeId": "c3_soc_map_symbols_lo1",
+      "relatedLearningOutcomeIds": [
+        "c3_soc_community_places_routes_lo1"
+      ],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Which map feature explains what symbols mean?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Legend or key"
+      },
+      "explanation": "A key explains map symbols. The correct answer is Legend or key.",
+      "distractors": [
+        {
+          "value": "Title only",
+          "misconceptionId": "map_concept_confusion_2"
+        },
+        {
+          "value": "Weather report",
+          "misconceptionId": "map_concept_confusion_3"
+        },
+        {
+          "value": "Ruler only",
+          "misconceptionId": "map_concept_confusion_4"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "A key explains map symbols."
+        }
+      ],
+      "narration": {
+        "text": "Which map feature explains what symbols mean?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Legend or key",
+        "choices": [
+          "Legend or key",
+          "Title only",
+          "Weather report",
+          "Ruler only"
+        ],
+        "hint": "A key explains map symbols."
+      }
+    },
+    {
+      "id": "c3_coding_maze_c3_code_1",
+      "legacyContentId": "c3_code_1",
+      "classNumber": 3,
+      "gameId": "coding_maze",
+      "topicId": "sequences",
+      "subject": "coding",
+      "unitId": "c3_coding_ct",
+      "competencyId": "c3_ct_sequences",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_ct_sequences_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "simulation",
+      "difficulty": 1,
+      "prompt": "Guide the robot from (0, 1) to (2, 1) within 2 commands.",
+      "correctResponseRule": {
+        "type": "reachGridGoal",
+        "goalX": 2,
+        "goalY": 1,
+        "maxCommands": 2
+      },
+      "explanation": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Plan the route before moving. Use turns to face the next safe path."
+        }
+      ],
+      "narration": {
+        "text": "Guide the robot from (0, 1) to (2, 1) within 2 commands."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "width": 4,
+        "height": 3,
+        "startX": 0,
+        "startY": 1,
+        "goalX": 2,
+        "goalY": 1,
+        "startDirection": "east",
+        "obstacles": [],
+        "maxCommands": 2
+      }
+    },
+    {
+      "id": "c3_coding_maze_c3_code_2",
+      "legacyContentId": "c3_code_2",
+      "classNumber": 3,
+      "gameId": "coding_maze",
+      "topicId": "turns",
+      "subject": "coding",
+      "unitId": "c3_coding_ct",
+      "competencyId": "c3_ct_grid_turns",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_ct_grid_turns_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "simulation",
+      "difficulty": 1,
+      "prompt": "Guide the robot from (0, 3) to (2, 2) within 4 commands.",
+      "correctResponseRule": {
+        "type": "reachGridGoal",
+        "goalX": 2,
+        "goalY": 2,
+        "maxCommands": 4
+      },
+      "explanation": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Plan the route before moving. Use turns to face the next safe path."
+        }
+      ],
+      "narration": {
+        "text": "Guide the robot from (0, 3) to (2, 2) within 4 commands."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "width": 4,
+        "height": 4,
+        "startX": 0,
+        "startY": 3,
+        "goalX": 2,
+        "goalY": 2,
+        "startDirection": "north",
+        "obstacles": [],
+        "maxCommands": 4
+      }
+    },
+    {
+      "id": "c3_coding_maze_c3_code_3",
+      "legacyContentId": "c3_code_3",
+      "classNumber": 3,
+      "gameId": "coding_maze",
+      "topicId": "route_planning",
+      "subject": "coding",
+      "unitId": "c3_coding_ct",
+      "competencyId": "c3_ct_decompose_routes",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_ct_decompose_routes_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "simulation",
+      "difficulty": 2,
+      "prompt": "Guide the robot from (0, 3) to (3, 1) within 7 commands.",
+      "correctResponseRule": {
+        "type": "reachGridGoal",
+        "goalX": 3,
+        "goalY": 1,
+        "maxCommands": 7
+      },
+      "explanation": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Plan the route before moving. Use turns to face the next safe path."
+        }
+      ],
+      "narration": {
+        "text": "Guide the robot from (0, 3) to (3, 1) within 7 commands."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "width": 5,
+        "height": 4,
+        "startX": 0,
+        "startY": 3,
+        "goalX": 3,
+        "goalY": 1,
+        "startDirection": "east",
+        "obstacles": [
+          "2,3"
+        ],
+        "maxCommands": 7
+      }
+    },
+    {
+      "id": "c3_coding_maze_c3_code_4",
+      "legacyContentId": "c3_code_4",
+      "classNumber": 3,
+      "gameId": "coding_maze",
+      "topicId": "route_planning",
+      "subject": "coding",
+      "unitId": "c3_coding_ct",
+      "competencyId": "c3_ct_decompose_routes",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_ct_decompose_routes_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "simulation",
+      "difficulty": 2,
+      "prompt": "Guide the robot from (1, 4) to (4, 2) within 8 commands.",
+      "correctResponseRule": {
+        "type": "reachGridGoal",
+        "goalX": 4,
+        "goalY": 2,
+        "maxCommands": 8
+      },
+      "explanation": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Plan the route before moving. Use turns to face the next safe path."
+        }
+      ],
+      "narration": {
+        "text": "Guide the robot from (1, 4) to (4, 2) within 8 commands."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "width": 5,
+        "height": 5,
+        "startX": 1,
+        "startY": 4,
+        "goalX": 4,
+        "goalY": 2,
+        "startDirection": "north",
+        "obstacles": [
+          "1,3",
+          "3,3"
+        ],
+        "maxCommands": 8
+      }
+    },
+    {
+      "id": "c3_coding_maze_c3_code_5",
+      "legacyContentId": "c3_code_5",
+      "classNumber": 3,
+      "gameId": "coding_maze",
+      "topicId": "repeat_patterns",
+      "subject": "coding",
+      "unitId": "c3_coding_ct",
+      "competencyId": "c3_ct_patterns_repeats",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_ct_patterns_repeats_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "simulation",
+      "difficulty": 3,
+      "prompt": "Guide the robot from (0, 4) to (4, 1) within 10 commands.",
+      "correctResponseRule": {
+        "type": "reachGridGoal",
+        "goalX": 4,
+        "goalY": 1,
+        "maxCommands": 10
+      },
+      "explanation": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Plan the route before moving. Use turns to face the next safe path."
+        }
+      ],
+      "narration": {
+        "text": "Guide the robot from (0, 4) to (4, 1) within 10 commands."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "width": 5,
+        "height": 5,
+        "startX": 0,
+        "startY": 4,
+        "goalX": 4,
+        "goalY": 1,
+        "startDirection": "east",
+        "obstacles": [
+          "2,4",
+          "2,2"
+        ],
+        "maxCommands": 10
+      }
+    },
+    {
+      "id": "c3_coding_maze_c3_code_6",
+      "legacyContentId": "c3_code_6",
+      "classNumber": 3,
+      "gameId": "coding_maze",
+      "topicId": "repeat_patterns",
+      "subject": "coding",
+      "unitId": "c3_coding_ct",
+      "competencyId": "c3_ct_patterns_repeats",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_ct_patterns_repeats_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "simulation",
+      "difficulty": 3,
+      "prompt": "Guide the robot from (1, 4) to (5, 1) within 11 commands.",
+      "correctResponseRule": {
+        "type": "reachGridGoal",
+        "goalX": 5,
+        "goalY": 1,
+        "maxCommands": 11
+      },
+      "explanation": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "distractors": [],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Plan the route before moving. Use turns to face the next safe path."
+        }
+      ],
+      "narration": {
+        "text": "Guide the robot from (1, 4) to (5, 1) within 11 commands."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "width": 6,
+        "height": 5,
+        "startX": 1,
+        "startY": 4,
+        "goalX": 5,
+        "goalY": 1,
+        "startDirection": "north",
+        "obstacles": [
+          "1,2",
+          "3,3"
+        ],
+        "maxCommands": 11
+      }
+    },
+    {
+      "id": "c3_recycling_challenge_recycle3_1",
+      "legacyContentId": "recycle3_1",
+      "classNumber": 3,
+      "gameId": "recycling_challenge",
+      "topicId": "sorting_basics",
+      "subject": "evs",
+      "unitId": "c3_evs_world",
+      "competencyId": "c3_evs_cleanliness_waste",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_evs_cleanliness_waste_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Put Newspaper in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Paper"
+      },
+      "explanation": "Newspaper belongs in the Paper bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Organic",
+          "misconceptionId": "waste_material_confusion_2"
+        },
+        {
+          "value": "Plastic",
+          "misconceptionId": "waste_material_confusion_3"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Newspaper in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Newspaper",
+        "emoji": "📰",
+        "bin": "Paper"
+      }
+    },
+    {
+      "id": "c3_recycling_challenge_recycle3_2",
+      "legacyContentId": "recycle3_2",
+      "classNumber": 3,
+      "gameId": "recycling_challenge",
+      "topicId": "sorting_basics",
+      "subject": "evs",
+      "unitId": "c3_evs_world",
+      "competencyId": "c3_evs_cleanliness_waste",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_evs_cleanliness_waste_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Put Banana peel in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Organic"
+      },
+      "explanation": "Banana peel belongs in the Organic bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Paper",
+          "misconceptionId": "waste_material_confusion_1"
+        },
+        {
+          "value": "Plastic",
+          "misconceptionId": "waste_material_confusion_3"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Banana peel in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Banana peel",
+        "emoji": "🍌",
+        "bin": "Organic"
+      }
+    },
+    {
+      "id": "c3_recycling_challenge_recycle3_3",
+      "legacyContentId": "recycle3_3",
+      "classNumber": 3,
+      "gameId": "recycling_challenge",
+      "topicId": "sorting_basics",
+      "subject": "evs",
+      "unitId": "c3_evs_world",
+      "competencyId": "c3_evs_cleanliness_waste",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_evs_cleanliness_waste_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 1,
+      "prompt": "Put Plastic bottle in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Plastic"
+      },
+      "explanation": "Plastic bottle belongs in the Plastic bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Paper",
+          "misconceptionId": "waste_material_confusion_1"
+        },
+        {
+          "value": "Organic",
+          "misconceptionId": "waste_material_confusion_2"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Plastic bottle in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Plastic bottle",
+        "emoji": "🧴",
+        "bin": "Plastic"
+      }
+    },
+    {
+      "id": "c3_recycling_challenge_recycle3_4",
+      "legacyContentId": "recycle3_4",
+      "classNumber": 3,
+      "gameId": "recycling_challenge",
+      "topicId": "clean_surroundings",
+      "subject": "evs",
+      "unitId": "c3_evs_world",
+      "competencyId": "c3_evs_cleanliness_waste",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_evs_cleanliness_waste_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Put Cardboard box in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Paper"
+      },
+      "explanation": "Cardboard box belongs in the Paper bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Organic",
+          "misconceptionId": "waste_material_confusion_2"
+        },
+        {
+          "value": "Plastic",
+          "misconceptionId": "waste_material_confusion_3"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Cardboard box in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Cardboard box",
+        "emoji": "📦",
+        "bin": "Paper"
+      }
+    },
+    {
+      "id": "c3_recycling_challenge_recycle3_5",
+      "legacyContentId": "recycle3_5",
+      "classNumber": 3,
+      "gameId": "recycling_challenge",
+      "topicId": "clean_surroundings",
+      "subject": "evs",
+      "unitId": "c3_evs_world",
+      "competencyId": "c3_evs_cleanliness_waste",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_evs_cleanliness_waste_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Put Vegetable peels in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Organic"
+      },
+      "explanation": "Vegetable peels belongs in the Organic bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Paper",
+          "misconceptionId": "waste_material_confusion_1"
+        },
+        {
+          "value": "Plastic",
+          "misconceptionId": "waste_material_confusion_3"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Vegetable peels in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Vegetable peels",
+        "emoji": "🥕",
+        "bin": "Organic"
+      }
+    },
+    {
+      "id": "c3_recycling_challenge_recycle3_6",
+      "legacyContentId": "recycle3_6",
+      "classNumber": 3,
+      "gameId": "recycling_challenge",
+      "topicId": "clean_surroundings",
+      "subject": "evs",
+      "unitId": "c3_evs_world",
+      "competencyId": "c3_evs_cleanliness_waste",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_evs_cleanliness_waste_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 2,
+      "prompt": "Put Clean shampoo bottle in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Plastic"
+      },
+      "explanation": "Clean shampoo bottle belongs in the Plastic bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Paper",
+          "misconceptionId": "waste_material_confusion_1"
+        },
+        {
+          "value": "Organic",
+          "misconceptionId": "waste_material_confusion_2"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Clean shampoo bottle in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Clean shampoo bottle",
+        "emoji": "🧴",
+        "bin": "Plastic"
+      }
+    },
+    {
+      "id": "c3_recycling_challenge_recycle3_7",
+      "legacyContentId": "recycle3_7",
+      "classNumber": 3,
+      "gameId": "recycling_challenge",
+      "topicId": "reuse_and_recycle",
+      "subject": "evs",
+      "unitId": "c3_evs_world",
+      "competencyId": "c3_evs_resource_care_safety",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_evs_resource_care_safety_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Put Old worksheet in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Paper"
+      },
+      "explanation": "Old worksheet belongs in the Paper bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Organic",
+          "misconceptionId": "waste_material_confusion_2"
+        },
+        {
+          "value": "Plastic",
+          "misconceptionId": "waste_material_confusion_3"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Old worksheet in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Old worksheet",
+        "emoji": "📄",
+        "bin": "Paper"
+      }
+    },
+    {
+      "id": "c3_recycling_challenge_recycle3_8",
+      "legacyContentId": "recycle3_8",
+      "classNumber": 3,
+      "gameId": "recycling_challenge",
+      "topicId": "reuse_and_recycle",
+      "subject": "evs",
+      "unitId": "c3_evs_world",
+      "competencyId": "c3_evs_resource_care_safety",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_evs_resource_care_safety_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Put Fruit scraps in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Organic"
+      },
+      "explanation": "Fruit scraps belongs in the Organic bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Paper",
+          "misconceptionId": "waste_material_confusion_1"
+        },
+        {
+          "value": "Plastic",
+          "misconceptionId": "waste_material_confusion_3"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Fruit scraps in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Fruit scraps",
+        "emoji": "🍎",
+        "bin": "Organic"
+      }
+    },
+    {
+      "id": "c3_recycling_challenge_recycle3_9",
+      "legacyContentId": "recycle3_9",
+      "classNumber": 3,
+      "gameId": "recycling_challenge",
+      "topicId": "reuse_and_recycle",
+      "subject": "evs",
+      "unitId": "c3_evs_world",
+      "competencyId": "c3_evs_resource_care_safety",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c3_evs_resource_care_safety_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 3,
+      "prompt": "Put Clean water bottle in the correct waste-sorting bin.",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Plastic"
+      },
+      "explanation": "Clean water bottle belongs in the Plastic bin in this BrightQuest sorting activity.",
+      "distractors": [
+        {
+          "value": "Paper",
+          "misconceptionId": "waste_material_confusion_1"
+        },
+        {
+          "value": "Organic",
+          "misconceptionId": "waste_material_confusion_2"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Think about the material the item is made from, or whether it is food or plant waste."
+        }
+      ],
+      "narration": {
+        "text": "Put Clean water bottle in the correct waste-sorting bin."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-legacy-migration",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "name": "Clean water bottle",
+        "emoji": "🧃",
+        "bin": "Plastic"
+      }
+    }
+  ]
+}

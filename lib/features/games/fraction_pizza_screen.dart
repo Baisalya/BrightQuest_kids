@@ -4,6 +4,7 @@ import '../../app/brightquest_scope.dart';
 import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
 import '../../core/gameplay/game_logic.dart';
+import '../../core/learning/game_evidence_adapter.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
 import '../../widgets/bright_widgets.dart';
@@ -29,6 +30,7 @@ class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
   int _difficulty = 1;
   int _classNumber = 4;
   bool _sessionConfigured = false;
+  DateTime _itemStarted = DateTime.now();
 
   @override
   void didChangeDependencies() {
@@ -59,14 +61,28 @@ class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
       targetNumerator: mission.numerator,
       targetDenominator: mission.denominator,
     );
-    BrightQuestScope.of(context).recordAnswer(
+    final controller = BrightQuestScope.of(context);
+    final repository = BrightQuestScope.contentOf(context);
+    const adapter = GameEvidenceAdapter();
+    final activity = adapter.resolve(
+      repository: repository,
+      classNumber: _classNumber,
+      gameId: 'fraction_pizza',
+      legacyContentId: mission.id,
+    );
+    controller.recordAnswer(
       gameId: 'fraction_pizza',
       correct: isCorrect,
       topicId: mission.topicId,
       difficulty: mission.difficulty,
       masteryGain: 0.07,
+      itemId: activity?.id,
+      competencyId: activity?.competencyId,
+      evidenceKind: adapter.kindFor(widget.learningLevel),
+      retries: hadMistake ? 1 : 0,
+      responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
+      misconceptionId: isCorrect ? null : 'fraction_equal_parts_or_equivalence',
     );
-    final controller = BrightQuestScope.of(context);
     final chosen = '$selectedSlices of ${mission.totalSlices} slices';
     final expected =
         '${mission.numerator} out of ${mission.denominator} equal parts';
@@ -117,6 +133,7 @@ class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
       checked = false;
       correct = null;
       hadMistake = false;
+      _itemStarted = DateTime.now();
     });
   }
 
@@ -130,14 +147,15 @@ class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
       hadMistake = false;
       finished = false;
       missionReward = null;
+      _itemStarted = DateTime.now();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final classNumber = _classNumber;
-    final missions =
-        fractionMissionsForClass(classNumber, difficulty: _difficulty);
+    final missions = BrightQuestScope.contentOf(context)
+        .fractionMissionsForClass(classNumber, difficulty: _difficulty);
     final mission = missions[missionIndex];
     final target = '${mission.numerator}/${mission.denominator}';
 

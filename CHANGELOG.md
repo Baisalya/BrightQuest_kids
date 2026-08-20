@@ -1,5 +1,41 @@
+## 0.6.0+26 — Phases 2–10 technical learning platform
+
+- Added schema-v5 per-profile learning state with backward loading from the accepted Phase 1 `.v3` preference key and legacy v2 fallback; existing game/topic/level progress, profiles, rewards and parent controls remain intact.
+- Added a resumable, non-ranking diagnostic engine that samples only scorable items and records correctness, hints, retries, response time, confidence and misconception evidence.
+- Added evidence-based skill states, recommendations, independent/transfer mastery rules, delayed-review scheduling and deterministic 1/3/7/14/30-day Power Review queues.
+- Added reusable teach → worked example → guided try → independent practice → transfer → exit/reteach/review lesson flows and accessible learning primitives for number lines, base-ten, fraction strips, ordering, evidence highlighting, diagram classification, predict-observe-explain, maps and code traces.
+- Added 111 Class 3–5 competency learning blueprints, explicitly kept `needsReview`; they are technical draft coverage and do not represent teacher approval or CBSE/NCERT certification.
+- Added three safe local multi-skill applied missions per major subject per class, with project/reflection evidence separated from secure mastery evidence.
+- Added parent learning-evidence reports with competency states, evidence counts, misconceptions, next-review dates, weekly summaries and project evidence; PDF/print export remains disabled until privacy/layout review.
+- Added English-first learning-language state, dyslexia-friendly spacing, reading-focus and captions/transcript support while keeping Hindi disabled until a reviewed translation pack exists.
+- Added stable ₹299 one-time class product IDs, parent-only class-pack UI and fail-closed entitlement services. Local cached ownership cannot unlock production content; real Google Play/Microsoft Store verification remains an external integration gate.
+- Added plain-language privacy/release/pilot/store/Windows-accessibility documentation and static release checks for AD_ID absence, free samples, review-gated paid eligibility, Windows narration isolation and the existing Windows semantics crash workaround.
+- Preserved the crash-isolated Windows `System.Speech` narration implementation; did not restore `flutter_tts_plugin.dll` or Windows Flutter semantics.
+- Added Phase 2–10 regression tests and learning/content/release validators.
+- Refactored learning evidence, mastery, recommendation and review transitions out of the oversized controller into a dedicated `LearningProgressEngine`; secure skills now complete their review task instead of being rescheduled forever.
+- Connected the 111 bundled competency blueprints to the runtime repository and lesson engine. Learning levels now choose content from their real class/game/difficulty boundary instead of comparing incompatible topic-ID systems and falling back to the first competency.
+- Replaced the arithmetic generator's unbounded distractor loop with a bounded deterministic algorithm; all supported class/difficulty/seed combinations now finish with four valid choices.
+- Centralised synchronous content/app fixtures for widget tests, removing the large-asset/fake-clock deadlock that previously froze the complete suite.
+- Verified `flutter analyze`, all 105 Flutter tests, both content validators, static release-safety checks, Android and Windows release builds, and a 12-second hidden Windows startup smoke run. Teacher review, child pilots, signed store verification and real-device/native Windows soak qualification remain pending.
+
+## 0.5.0+25 — Phase 1 scalable content packs
+
+- Phase 1 QA hotfix: explicitly bundle the curriculum/schema/audit and all three class-pack JSON files so `rootBundle` repository loading works reliably in Flutter widget tests and packaged Android/Windows builds.
+- Fixed the Phase 1 migration-parity test to use the existing `CurrentContentAuditSelector.key` contract and removed two analyzer-only unused imports.
+- Replaced runtime hard-coded class question banks with a validated, bundled `ContentRepository` backed by separate Class 3, Class 4 and Class 5 JSON packs.
+- Migrated all 189 currently reachable authored learning records into class packs while preserving existing game/topic/learning-level identities and schema-v4 save compatibility.
+- Added content-pack schema validation for competency/outcome references, class boundaries, explanations, review metadata, distractors, choice integrity, generated-content rules, science fallbacks and solvable coding routes.
+- Added deterministic arithmetic, fraction, grammar and map-direction generators plus command-line validation, duplicate reporting and curriculum-coverage tooling.
+- Added development-only class-pack locking for entitlement UX testing without adding billing or child-facing purchase flows.
+- Added Phase 1 regression tests for JSON packs, 189-record/88-selector migration parity, malformed content, deterministic generators, development locks, hard-coded-bank removal and legacy progress round-trips.
+- Kept all migrated activities `needsReview` and all class packs commercially ineligible until genuine reviewer approval; the ₹299 one-time-per-class model is metadata only in this phase.
+- Preserved the crash-isolated Windows `System.Speech` narration implementation and the existing Windows semantics safety workaround; no Windows TTS plugin or semantics restoration was introduced.
+
 ## Unreleased — ₹299 class-pack roadmap
 
+- Implemented the Phase 0 curriculum/data contract with 37 draft competencies per class, class-specific boundaries, observable learning outcomes, official-reference metadata, mastery-evidence targets and explicit reviewer/revision states.
+- Added exhaustive mapping/audit coverage for the currently reachable learning banks, a versioned content schema, duplicate/coverage tooling, and contract tests for IDs, class boundaries, invalid content and legacy save/level compatibility.
+- Kept all Phase 0 curriculum and commercial review states non-approved: each class remains blocked from paid eligibility until a real qualified primary reviewer approves the boundaries, objectives and free/paid split.
 - Added an implementation-ready roadmap covering curriculum mapping, diagnostic evidence, teach/practice/mastery flows, reviewed class content, spaced retention, deep missions, parent reporting, accessibility, one-time class entitlements, child safety and release qualification.
 - Defined a coding-agent execution protocol and a commercial-completeness checklist so future implementation can proceed phase by phase without treating more quiz questions as sufficient learning depth.
 - Consolidated current product, build, Windows safety and audio-origin documentation into `README.md`.

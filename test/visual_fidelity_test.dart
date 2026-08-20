@@ -1,15 +1,17 @@
-import 'package:brightquest_kids/app/brightquest_app.dart';
 import 'package:brightquest_kids/core/state/game_controller.dart';
 import 'package:brightquest_kids/widgets/bright_illustrations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'support/app_fixture.dart';
+
 void main() {
-  testWidgets('visual identity renders on compact Android-sized window', (tester) async {
+  testWidgets('visual identity renders on compact Android-sized window',
+      (tester) async {
     await tester.binding.setSurfaceSize(const Size(360, 700));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    await tester.pumpWidget(BrightQuestApp(controller: GameController()));
+    await tester.pumpWidget(buildTestApp(GameController()));
     await tester.pumpAndSettle();
 
     expect(find.byType(BrightQuestLogo), findsWidgets);
@@ -18,11 +20,12 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('visual identity renders on large Windows-sized window', (tester) async {
+  testWidgets('visual identity renders on large Windows-sized window',
+      (tester) async {
     await tester.binding.setSurfaceSize(const Size(1440, 900));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    await tester.pumpWidget(BrightQuestApp(controller: GameController()));
+    await tester.pumpWidget(buildTestApp(GameController()));
     await tester.pumpAndSettle();
 
     expect(find.byType(BrightQuestLogo), findsOneWidget);
@@ -31,7 +34,8 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('all illustrated game scenes render without layout exceptions', (tester) async {
+  testWidgets('all illustrated game scenes render without layout exceptions',
+      (tester) async {
     const ids = <String>[
       'math_market',
       'fraction_pizza',

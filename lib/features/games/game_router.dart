@@ -7,6 +7,7 @@ import '../../app/study_session_tracker.dart';
 import '../../core/curriculum/curriculum_models.dart';
 import '../../core/services/bright_audio_service.dart';
 import '../../core/state/game_controller.dart';
+import '../learning/lesson_flow_screen.dart';
 import 'coding_maze_screen.dart';
 import 'fraction_pizza_screen.dart';
 import 'grammar_puzzle_screen.dart';
@@ -23,15 +24,41 @@ void openGame(BuildContext context, String id) {
 
 void openLearningLevel(BuildContext context, LearningLevel level) {
   final controller = BrightQuestScope.of(context);
+  final content = BrightQuestScope.contentOf(context);
   if (!controller.isLevelUnlocked(level)) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Clear the previous level before starting this challenge.'),
+        content:
+            Text('Clear the previous level before starting this challenge.'),
       ),
     );
     return;
   }
-  _openGameInternal(context, level.gameId, learningLevel: level);
+  if (!content.canOpenLearningLevel(
+    classNumber: level.classNumber,
+    gameId: level.gameId,
+    difficulty: level.difficulty,
+  )) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => _DevelopmentPackLockedScreen(
+          classNumber: level.classNumber,
+        ),
+      ),
+    );
+    return;
+  }
+  Navigator.of(context)
+      .push<bool>(
+    MaterialPageRoute<bool>(
+      builder: (_) => LessonFlowScreen(level: level),
+    ),
+  )
+      .then((startPractice) {
+    if (startPractice == true && context.mounted) {
+      _openGameInternal(context, level.gameId, learningLevel: level);
+    }
+  });
 }
 
 void _openGameInternal(
@@ -40,6 +67,16 @@ void _openGameInternal(
   required LearningLevel? learningLevel,
 }) {
   final controller = BrightQuestScope.of(context);
+  final classNumber = learningLevel?.classNumber ?? controller.selectedClass;
+  final content = BrightQuestScope.contentOf(context);
+  if (id != 'rewards_room' && !content.canOpenGame(classNumber, id)) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => _DevelopmentPackLockedScreen(classNumber: classNumber),
+      ),
+    );
+    return;
+  }
   if (id != 'rewards_room' && controller.dailyTimeLimitReached) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
@@ -57,7 +94,8 @@ void _openGameInternal(
     'grammar_puzzle' => GrammarPuzzleScreen(learningLevel: learningLevel),
     'map_quest' => MapQuestScreen(learningLevel: learningLevel),
     'coding_maze' => CodingMazeScreen(learningLevel: learningLevel),
-    'recycling_challenge' => RecyclingChallengeScreen(learningLevel: learningLevel),
+    'recycling_challenge' =>
+      RecyclingChallengeScreen(learningLevel: learningLevel),
     'rewards_room' => const RewardsRoomScreen(),
     _ => MathMarketScreen(learningLevel: learningLevel),
   };
@@ -71,13 +109,12 @@ void _openGameInternal(
   Navigator.of(context)
       .push(MaterialPageRoute<void>(builder: (_) => routedScreen))
       .whenComplete(() {
-        unawaited(audio.stopVoice());
-        if (controller.soundEnabled) {
-          unawaited(audio.playMenuMusic(restart: true));
-        }
-      });
+    unawaited(audio.stopVoice());
+    if (controller.soundEnabled) {
+      unawaited(audio.playMenuMusic(restart: true));
+    }
+  });
 }
-
 
 Future<void> _startGameAudio(BrightAudioService audio, String gameId) async {
   await audio.playSfx(BrightSfx.levelStart);
@@ -86,7 +123,8 @@ Future<void> _startGameAudio(BrightAudioService audio, String gameId) async {
 }
 
 class _LearningSessionBoundary extends StatelessWidget {
-  const _LearningSessionBoundary({required this.controller, required this.child});
+  const _LearningSessionBoundary(
+      {required this.controller, required this.child});
 
   final GameController controller;
   final Widget child;
@@ -134,13 +172,15 @@ class _TimeLimitReachedScreen extends StatelessWidget {
                     const Text(
                       'Time for a break',
                       key: Key('time_limit_break_title'),
-                      style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900),
+                      style:
+                          TextStyle(fontSize: 26, fontWeight: FontWeight.w900),
                     ),
                     const SizedBox(height: 10),
                     Text(
                       '${controller.activeProfileName} has reached today’s ${controller.dailyTimeLimitMinutes}-minute learning limit.',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.black54, height: 1.4),
+                      style:
+                          const TextStyle(color: Colors.black54, height: 1.4),
                     ),
                     const SizedBox(height: 18),
                     FilledButton.icon(
@@ -153,6 +193,58 @@ class _TimeLimitReachedScreen extends StatelessWidget {
                       'A parent can change the daily limit from the locked Parents area.',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 12, color: Colors.black54),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DevelopmentPackLockedScreen extends StatelessWidget {
+  const _DevelopmentPackLockedScreen({required this.classNumber});
+
+  final int classNumber;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Development pack lock')),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 520),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(26),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.lock_outline_rounded, size: 58),
+                    const SizedBox(height: 14),
+                    Text(
+                      'Class $classNumber pack is locked for testing',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'This screen is enabled only by the development entitlement simulator. It does not start billing or show a child-facing purchase flow.',
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 18),
+                    FilledButton.icon(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(Icons.arrow_back_rounded),
+                      label: const Text('Back'),
                     ),
                   ],
                 ),

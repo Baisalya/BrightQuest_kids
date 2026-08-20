@@ -1,7 +1,7 @@
 # BrightQuest Kids — ₹299 Per-Class Product Roadmap
 
 - Status: approved implementation sequence
-- Current application: `0.4.21+24`
+- Current application: `0.6.0+26`
 - Targets: Android phone/tablet/free-form and Windows desktop
 - Commercial model: one-time purchase of ₹299 for each class pack
 
@@ -202,6 +202,13 @@ Exit gate:
 - no paid-pack claim is made for unreviewed content;
 - class boundaries and learning objectives are approved.
 
+Implementation status (2026-08-20):
+
+- **Technical Phase 0 implementation complete:** `curriculum_map.json` contains 37 draft competencies for each class; every currently reachable class/game/topic selector is mapped; content schema v1, reviewer metadata/states, current-content audit, coverage validator/report and Phase 0 tests are implemented.
+- **Backward compatibility preserved:** existing game/content banks, curriculum-topic IDs, 72 learning-level IDs, schema-v4 progress/profiles/rewards/parent-control saves, and Windows narration/semantics safety paths are unchanged by Phase 0.
+- **Commercial review remains blocked:** all new curriculum material is `needsReview`, class/free-sample boundaries are `pendingHumanReview`, and `paidEligibility` is `false` for every class pack.
+- **Human review is still pending:** a real qualified primary teacher/content reviewer has not yet been recorded as approving the Class 3–5 boundaries/objectives. The project owner explicitly authorised technical Phase 1 foundation work on 2026-08-20; that authorisation does not convert curriculum review status to approved or unlock paid eligibility.
+
 ### Phase 1 — Scalable content-pack foundation
 
 Goal: make content expandable and testable without editing game UI code.
@@ -231,6 +238,15 @@ Exit gate:
 - no game depends on a hard-coded class question bank;
 - content validation is part of the normal test gate.
 
+Implementation status (2026-08-20):
+
+- **Technical Phase 1 implementation complete:** all 189 current authored learning records are stored in separate Class 3/4/5 packs and loaded through `ContentRepository`; `game_content.dart` now contains models only and all eight learning-game screens resolve content through the repository.
+- **Validation foundation implemented:** schema/reference/class-boundary checks, explanation/distractor rules, coding-route solvability, deterministic arithmetic/fraction/grammar/map generators, duplicate reporting, coverage reporting and a standalone content-validation command are present.
+- **Compatibility preserved:** existing curriculum-topic IDs, all 72 learning-level IDs and schema-v4 progress/profile/reward/parent-control data remain unchanged; no save migration is required for this content-storage refactor.
+- **Development entitlement simulation only:** class-pack locks can be enabled with debug dart-defines; no billing SDK, child purchase prompt or production entitlement state was added in Phase 1.
+- **Commercial review remains blocked:** migrated content remains `needsReview` and all packs retain `paidEligibility: false` pending genuine reviewer approval.
+- **Runtime QA gate must be recorded from a Flutter-capable environment:** `dart format`, `flutter analyze`, `flutter test` and the content tools are required before Phase 1 is marked fully passed.
+
 ### Phase 2 — Diagnostic and evidence engine
 
 Goal: discover what a child knows and why an answer was wrong.
@@ -258,6 +274,13 @@ Exit gate:
 - parents can see “ready”, “learning” and “needs support” without ranking children;
 - migration and profile-isolation tests pass.
 
+
+Implementation status (2026-08-20):
+
+- **Technical engine implemented:** resumable class diagnostic, profile-isolated `AttemptEvidence`, misconception/hint/retry/response-time/confidence evidence, multi-evidence diagnostic bands, recommendations and schema-v5 learning state are present.
+- **Backward migration protected:** v5 storage reads the accepted Phase 1 `.v3` preference key before legacy `.v2`, while older profile/root snapshots migrate through `PlayerSnapshot.fromJson`.
+- **No one-answer weakness label:** support classification requires multiple evidence items; response time is stored only as supporting evidence.
+- **Runtime gate pending Codex/Flutter QA:** analyzer, full Flutter tests and device persistence tests still need to run in a Flutter-capable environment.
 ### Phase 3 — Teach, practise, explain and master
 
 Goal: turn each game from a quiz into a learning experience.
@@ -291,6 +314,13 @@ Exit gate:
 - wrong answers always produce actionable feedback;
 - a child cannot achieve secure mastery by repeated guessing.
 
+
+Implementation status (2026-08-20):
+
+- **Technical lesson engine implemented:** objective, explanation, worked example, guided try, independent practice, transfer, exit, reteach and review steps are generated per competency with two-level hints and “Show me why” support.
+- **Gameplay evidence wired:** existing games now record competency/item evidence, hint/retry independence and misconception metadata without changing legacy progress IDs.
+- **Accessible interaction primitives added:** number line, base-ten, fraction strip, keyboard-operable ordering, evidence highlighting, diagram classification, predict-observe-explain, map path and coding trace primitives are available for reviewed content.
+- **Commercial exit gate not claimed:** current curriculum/content remains `needsReview`; paid eligibility is false, and the non-MCQ/mastery-quality target must be verified after reviewed class content is authored.
 ### Phase 4A — Class 3 complete pack
 
 Goal: produce the first commercially complete vertical slice.
@@ -316,6 +346,11 @@ Exit gate:
 - teacher reviewer signs off the release matrix;
 - unseen pre/post pilot items show a positive learning trend; no public efficacy claim is made from a tiny pilot.
 
+
+Implementation status (2026-08-20):
+
+- **Technical Class 3 coverage scaffold implemented:** all 37 Class 3 competencies have structured teach/guided/independent/transfer/review blueprints and remain linked to the existing stable content repository.
+- **Not commercially complete:** blueprints are technical drafts, not teacher-reviewed authored lessons. Five-child usability sessions, reviewer sign-off, full 20+ hour/content-volume targets and pre/post pilot evidence remain pending.
 ### Phase 4B — Class 4 complete pack
 
 Goal: apply the proven Class 3 system to Class 4 without copying content upward.
@@ -334,6 +369,11 @@ Exit gate:
 - no Class 3 item is reused unless deliberately marked as prerequisite review;
 - diagnostic correctly routes prerequisite gaps to support lessons.
 
+
+Implementation status (2026-08-20):
+
+- **Technical Class 4 coverage scaffold implemented:** all 37 Class 4 competencies have separate class-bound teach/guided/independent/transfer/review blueprints; cross-class content boundaries remain validated.
+- **Not commercially complete:** independent teacher review, full authored content-volume targets, prerequisite-routing validation on real children and release sign-off remain pending.
 ### Phase 4C — Class 5 complete pack
 
 Goal: deliver the deepest pack and prepare children for the middle-stage transition.
@@ -351,6 +391,11 @@ Exit gate:
 - mastery checks include application and higher-order items similar in intent—not copied content—to SAFAL-style competency assessment;
 - transition-readiness report identifies prerequisite gaps without exam coaching language.
 
+
+Implementation status (2026-08-20):
+
+- **Technical Class 5 coverage scaffold implemented:** all 37 Class 5 competencies have separate teach/guided/independent/transfer/review blueprints and application-oriented mission support.
+- **Not commercially complete:** reviewed higher-order item authoring, transition-readiness content review, pilot evidence and reviewer sign-off remain pending. No SAFAL/CBSE/NCERT certification claim is made.
 ### Phase 5 — Spaced review and durable mastery
 
 Goal: help the child remember after the game session.
@@ -372,6 +417,11 @@ Exit gate:
 - a skill becomes `secure` only after delayed success;
 - clock/date edge cases have automated tests.
 
+
+Implementation status (2026-08-20):
+
+- **Technical review engine implemented:** deterministic 1/3/7/14/30-day scheduling, bounded due queues, restart/profile persistence through schema v5, Power Review UI and delayed-evidence secure mastery are present.
+- **No streak punishment:** missed review remains a due task rather than removing progress or rewards. Parent-controlled notification delivery remains a platform/release integration task.
 ### Phase 6 — Deeper game missions and projects
 
 Goal: make knowledge usable beyond isolated questions.
@@ -399,6 +449,12 @@ Exit gate:
 - project evidence appears in the parent report;
 - missions work offline and across all supported window sizes.
 
+
+Implementation status (2026-08-20):
+
+- **Technical mission catalog implemented:** each of the six major subject groupings receives three local multi-competency missions per class, with correctness/strategy/independence/explanation reflection dimensions.
+- **Safety boundary implemented:** mission input is local-only; child reflections are persisted as unverified project evidence and cannot independently create secure mastery.
+- **Content/reviewer gate pending:** these mission briefs are draft scaffolds requiring authored interactions, teacher review and responsive real-device QA before commercial completion.
 ### Phase 7 — Parent learning evidence
 
 Goal: make the ₹299 value visible without turning the app into surveillance.
@@ -419,6 +475,11 @@ Exit gate:
 - parent reports avoid misleading averages from tiny samples;
 - exported reports contain no hidden identifiers or purchase tokens.
 
+
+Implementation status (2026-08-20):
+
+- **Technical parent evidence report implemented:** competency state, evidence count, last practice, next review, plain-language misconception notes, weekly learning summary and project evidence are available behind the existing parent gate.
+- **Privacy-conservative export:** PDF/print export is deliberately disabled until layout/privacy review; no sibling ranking or leaderboard was added.
 ### Phase 8 — Language, accessibility and inclusive learning
 
 Goal: let more children learn independently.
@@ -441,6 +502,12 @@ Exit gate:
 - language packs cannot mix answers across locales;
 - Windows accessibility restoration passes native soak testing before release.
 
+
+Implementation status (2026-08-20):
+
+- **English-first accessibility foundation implemented:** captions/transcripts, dyslexia-friendly spacing, reading-focus preference, large-text/high-contrast/reduced-motion compatibility hooks and keyboard-friendly alternatives for new primitives are present.
+- **Hindi remains blocked pending reviewed translations:** locale state does not allow a mixed or unreviewed Hindi pack.
+- **Windows safety preserved:** Flutter Windows semantics remains disabled because of the known native crash path, and crash-isolated Windows narration remains in place. Native soak is mandatory before semantics restoration.
 ### Phase 9 — ₹299 class entitlements and store billing
 
 Goal: sell permanent class packs safely and restore ownership reliably.
@@ -486,6 +553,12 @@ Exit gate:
 - parent gate protects every transaction;
 - free sample remains playable without purchase.
 
+
+Implementation status (2026-08-20):
+
+- **Entitlement contract and parent UX implemented:** stable Class 3/4/5 product IDs, permanent-class entitlement models, purchase/restore gateway abstraction, pending/owned/revoked states, free-sample boundaries and parent-only class-pack controls are present.
+- **Fail-closed production security:** local persisted ownership is downgraded to cache-only and cannot unlock production content; only current store/backend verification can grant access.
+- **Production billing integration remains pending:** no Google Play/Microsoft Store entitlement is fabricated. Real product configuration, purchase acknowledgement/backend verification, refund/revocation and reinstall/restore testing require store credentials and closed-track/native integration.
 ### Phase 10 — Child safety, release quality and evidence pilot
 
 Goal: release a trustworthy children’s product, not only a technically working build.
@@ -513,6 +586,12 @@ Exit gate:
 - content reviewer signs the release pack;
 - no “improves marks” or “board certified” claim is published without sufficient evidence.
 
+
+Implementation status (2026-08-20):
+
+- **Technical release-safety foundation implemented:** no-AD_ID checks, privacy policy draft, Families/data-safety checklist, content/pilot protocol, store-billing integration notes, Windows accessibility-safety notes and a static readiness command are present.
+- **External release gates remain pending:** qualified reviewer sign-off, privacy/store review, supervised child usability/pilot evidence, Android release bundle, Windows release build, real-device Android QA and native Windows soak are not claimed as passed.
+- **Phase 10 cannot be truthfully closed by code alone:** these external gates must be completed before any class becomes commercially ready at ₹299.
 ## 8. Product metrics
 
 Measure these locally first. Add remote analytics only after a separate child-privacy review.

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app/brightquest_scope.dart';
 import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
+import '../../core/learning/game_evidence_adapter.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
 import '../../widgets/bright_widgets.dart';
@@ -22,6 +23,7 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
   int score = 0;
   String? selectedBin;
   bool? correct;
+  DateTime _itemStarted = DateTime.now();
   bool finished = false;
   MissionReward? missionReward;
   int _difficulty = 1;
@@ -43,14 +45,28 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
   void _choose(String bin, RecyclingItem item) {
     if (selectedBin != null || finished) return;
     final isCorrect = bin == item.bin;
-    BrightQuestScope.of(context).recordAnswer(
+    final controller = BrightQuestScope.of(context);
+    final adapter = const GameEvidenceAdapter();
+    final activity = adapter.resolve(
+      repository: BrightQuestScope.contentOf(context),
+      classNumber: _classNumber,
+      gameId: 'recycling_challenge',
+      legacyContentId: item.id,
+    );
+    controller.recordAnswer(
       gameId: 'recycling_challenge',
       correct: isCorrect,
       topicId: item.topicId,
       difficulty: item.difficulty,
       masteryGain: 0.05,
+      itemId: activity?.id,
+      competencyId: activity?.competencyId,
+      evidenceKind: adapter.kindFor(widget.learningLevel),
+      responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
+      misconceptionId:
+          isCorrect ? null : adapter.misconceptionFor(activity, bin),
+      confidence: 0.84,
     );
-    final controller = BrightQuestScope.of(context);
     final chosen = '${item.name} in the $bin bin';
     if (isCorrect) {
       FeedbackService.correct(controller, answer: chosen);
@@ -92,6 +108,7 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
       index += 1;
       selectedBin = null;
       correct = null;
+      _itemStarted = DateTime.now();
     });
   }
 
@@ -101,6 +118,7 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
       score = 0;
       selectedBin = null;
       correct = null;
+      _itemStarted = DateTime.now();
       finished = false;
       missionReward = null;
     });
@@ -109,7 +127,8 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
   @override
   Widget build(BuildContext context) {
     final classNumber = _classNumber;
-    final items = recyclingItemsForClass(classNumber, difficulty: _difficulty);
+    final items = BrightQuestScope.contentOf(context)
+        .recyclingItemsForClass(classNumber, difficulty: _difficulty);
     final item = items[index];
 
     return GameScaffold(
