@@ -12,6 +12,10 @@ import 'core/persistence/shared_preferences_progress_store.dart';
 import 'core/services/bright_audio_service.dart';
 import 'core/state/game_controller.dart';
 
+const bool _windowsSemanticsCanary = bool.fromEnvironment(
+  'BRIGHTQUEST_WINDOWS_SEMANTICS_CANARY',
+);
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final entitlementService = EntitlementService();
@@ -30,11 +34,14 @@ Future<void> main() async {
     entitlementService: entitlementService,
   );
 
-  // Current Flutter Windows builds can repeatedly submit invalid incremental
-  // AXTree updates for this dense, eager IndexedStack and eventually fault in
-  // flutter_windows.dll. Keep Android semantics fully enabled; on Windows use
-  // a stable empty Flutter subtree until the engine bridge is fixed.
-  runApp(Platform.isWindows ? ExcludeSemantics(child: app) : app);
+  // The shell now mounts only its active page, substantially reducing AXTree
+  // churn. Windows semantics still fail closed by default until the canary has
+  // passed Narrator + resize/sleep-resume testing on real machines.
+  runApp(
+    Platform.isWindows && !_windowsSemanticsCanary
+        ? ExcludeSemantics(child: app)
+        : app,
+  );
 
   // Let the first Windows frame and accessibility tree settle before touching
   // optional native audio/TTS backends. This also keeps app startup resilient:

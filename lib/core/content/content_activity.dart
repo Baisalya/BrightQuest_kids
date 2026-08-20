@@ -164,22 +164,23 @@ class ContentPackCommercial {
     required this.priceInr,
     required this.purchaseModel,
     required this.paidEligibility,
-    this.freeSampleUnitIds = const <String>[],
+    this.freeSampleActivityIds = const <String>[],
   });
 
   final int priceInr;
   final String purchaseModel;
   final bool paidEligibility;
-  final List<String> freeSampleUnitIds;
+  final List<String> freeSampleActivityIds;
 
-  bool isFreeSampleUnit(String unitId) => freeSampleUnitIds.contains(unitId);
+  bool isFreeSampleActivity(String activityId) =>
+      freeSampleActivityIds.contains(activityId);
 
   factory ContentPackCommercial.fromJson(Map<String, dynamic> json) =>
       ContentPackCommercial(
         priceInr: json['priceInr'] as int,
         purchaseModel: json['purchaseModel'] as String,
         paidEligibility: json['paidEligibility'] as bool,
-        freeSampleUnitIds: (json['freeSampleUnitIds'] as List?)
+        freeSampleActivityIds: (json['freeSampleActivityIds'] as List?)
                 ?.whereType<String>()
                 .toList() ??
             const <String>[],

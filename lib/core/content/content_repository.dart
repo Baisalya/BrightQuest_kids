@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../curriculum/content_contract.dart';
 import 'content_activity.dart';
+import 'content_generators.dart';
 import 'content_pack_validator.dart';
 import 'game_content.dart';
 import 'learning_blueprint.dart';
@@ -72,6 +73,10 @@ class ContentRepository {
   final Map<String, LearningBlueprint> _learningBlueprints;
   final DevelopmentPackAccessPolicy accessPolicy;
   final bool Function(int classNumber)? verifiedAccessResolver;
+
+  static const int generatedPracticeVariantsPerFamily = 12;
+  static const int generatedPracticeVariantCountPerClass =
+      generatedPracticeVariantsPerFamily * 4;
 
   static const List<String> bundledPackPaths = <String>[
     'assets/content/class_3/pack.json',
@@ -253,7 +258,7 @@ class ContentRepository {
 
   bool isFreeSampleActivity(ContentActivity activity) => packForClass(
         activity.classNumber,
-      ).commercial.isFreeSampleUnit(activity.unitId);
+      ).commercial.isFreeSampleActivity(activity.id);
 
   ContentActivity? activityById(String activityId) {
     for (final activity in allActivities) {
@@ -273,7 +278,12 @@ class ContentRepository {
         return activity;
       }
     }
-    return null;
+    if (!isClassPackUnlocked(classNumber)) return null;
+    return _generatedPracticeActivity(
+      classNumber: classNumber,
+      gameId: gameId,
+      legacyContentId: legacyContentId,
+    );
   }
 
   ContentActivity? activityForScienceReaction({
@@ -381,43 +391,75 @@ class ContentRepository {
   List<MathQuestion> mathQuestionsForClass(
     int classNumber, {
     int difficulty = 3,
-  }) =>
-      activitiesForGame(
-        classNumber,
-        'math_market',
-        difficulty: difficulty,
-      ).map((activity) {
-        final payload = activity.payload;
-        return MathQuestion(
-          activity.prompt,
-          payload['answer'] as int,
-          List<int>.from(payload['choices'] as List),
-          payload['hint'] as String,
-          id: activity.legacyContentId,
-          topicId: activity.topicId,
-          difficulty: activity.difficulty,
-        );
-      }).toList(growable: false);
+    bool includeGeneratedPractice = true,
+  }) {
+    final authored = activitiesForGame(
+      classNumber,
+      'math_market',
+      difficulty: difficulty,
+    ).map((activity) {
+      final payload = activity.payload;
+      return MathQuestion(
+        activity.prompt,
+        payload['answer'] as int,
+        List<int>.from(payload['choices'] as List),
+        payload['hint'] as String,
+        id: activity.legacyContentId,
+        topicId: activity.topicId,
+        difficulty: activity.difficulty,
+      );
+    }).toList(growable: false);
+    if (!includeGeneratedPractice || !isClassPackUnlocked(classNumber)) {
+      return authored;
+    }
+    return <MathQuestion>[
+      ...authored,
+      ..._generatedByDifficulty(
+        difficulty,
+        (tier, seed) => const DeterministicContentGenerators().arithmetic(
+          classNumber: classNumber,
+          difficulty: tier,
+          seed: seed,
+        ),
+      ),
+    ];
+  }
 
   List<FractionMission> fractionMissionsForClass(
     int classNumber, {
     int difficulty = 3,
-  }) =>
-      activitiesForGame(
-        classNumber,
-        'fraction_pizza',
-        difficulty: difficulty,
-      ).map((activity) {
-        final payload = activity.payload;
-        return FractionMission(
-          id: activity.legacyContentId,
-          totalSlices: payload['totalSlices'] as int,
-          numerator: payload['numerator'] as int,
-          denominator: payload['denominator'] as int,
-          topicId: activity.topicId,
-          difficulty: activity.difficulty,
-        );
-      }).toList(growable: false);
+    bool includeGeneratedPractice = true,
+  }) {
+    final authored = activitiesForGame(
+      classNumber,
+      'fraction_pizza',
+      difficulty: difficulty,
+    ).map((activity) {
+      final payload = activity.payload;
+      return FractionMission(
+        id: activity.legacyContentId,
+        totalSlices: payload['totalSlices'] as int,
+        numerator: payload['numerator'] as int,
+        denominator: payload['denominator'] as int,
+        topicId: activity.topicId,
+        difficulty: activity.difficulty,
+      );
+    }).toList(growable: false);
+    if (!includeGeneratedPractice || !isClassPackUnlocked(classNumber)) {
+      return authored;
+    }
+    return <FractionMission>[
+      ...authored,
+      ..._generatedByDifficulty(
+        difficulty,
+        (tier, seed) => const DeterministicContentGenerators().fraction(
+          classNumber: classNumber,
+          difficulty: tier,
+          seed: seed,
+        ),
+      ),
+    ];
+  }
 
   List<ScienceQuizQuestion> scienceQuestionsForClass(
     int classNumber, {
@@ -511,44 +553,76 @@ class ContentRepository {
   List<GrammarMission> grammarMissionsForClass(
     int classNumber, {
     int difficulty = 3,
-  }) =>
-      activitiesForGame(
-        classNumber,
-        'grammar_puzzle',
-        difficulty: difficulty,
-      ).map((activity) {
-        final payload = activity.payload;
-        return GrammarMission(
-          id: activity.legacyContentId,
-          sentence: payload['sentence'] as String,
-          noun: payload['noun'] as String,
-          verb: payload['verb'] as String,
-          adjective: payload['adjective'] as String,
-          topicId: activity.topicId,
-          difficulty: activity.difficulty,
-        );
-      }).toList(growable: false);
+    bool includeGeneratedPractice = true,
+  }) {
+    final authored = activitiesForGame(
+      classNumber,
+      'grammar_puzzle',
+      difficulty: difficulty,
+    ).map((activity) {
+      final payload = activity.payload;
+      return GrammarMission(
+        id: activity.legacyContentId,
+        sentence: payload['sentence'] as String,
+        noun: payload['noun'] as String,
+        verb: payload['verb'] as String,
+        adjective: payload['adjective'] as String,
+        topicId: activity.topicId,
+        difficulty: activity.difficulty,
+      );
+    }).toList(growable: false);
+    if (!includeGeneratedPractice || !isClassPackUnlocked(classNumber)) {
+      return authored;
+    }
+    return <GrammarMission>[
+      ...authored,
+      ..._generatedByDifficulty(
+        difficulty,
+        (tier, seed) => const DeterministicContentGenerators().grammar(
+          classNumber: classNumber,
+          difficulty: tier,
+          seed: seed,
+        ),
+      ),
+    ];
+  }
 
   List<MapQuestion> mapQuestionsForClass(
     int classNumber, {
     int difficulty = 3,
-  }) =>
-      activitiesForGame(
-        classNumber,
-        'map_quest',
-        difficulty: difficulty,
-      ).map((activity) {
-        final payload = activity.payload;
-        return MapQuestion(
-          activity.legacyContentId,
-          activity.prompt,
-          payload['answer'] as String,
-          List<String>.from(payload['choices'] as List),
-          payload['hint'] as String,
-          topicId: activity.topicId,
-          difficulty: activity.difficulty,
-        );
-      }).toList(growable: false);
+    bool includeGeneratedPractice = true,
+  }) {
+    final authored = activitiesForGame(
+      classNumber,
+      'map_quest',
+      difficulty: difficulty,
+    ).map((activity) {
+      final payload = activity.payload;
+      return MapQuestion(
+        activity.legacyContentId,
+        activity.prompt,
+        payload['answer'] as String,
+        List<String>.from(payload['choices'] as List),
+        payload['hint'] as String,
+        topicId: activity.topicId,
+        difficulty: activity.difficulty,
+      );
+    }).toList(growable: false);
+    if (!includeGeneratedPractice || !isClassPackUnlocked(classNumber)) {
+      return authored;
+    }
+    return <MapQuestion>[
+      ...authored,
+      ..._generatedByDifficulty(
+        difficulty,
+        (tier, seed) => const DeterministicContentGenerators().mapDirection(
+          classNumber: classNumber,
+          difficulty: tier,
+          seed: seed,
+        ),
+      ),
+    ];
+  }
 
   List<CodingMission> codingMissionsForClass(
     int classNumber, {
@@ -597,6 +671,218 @@ class ContentRepository {
           difficulty: activity.difficulty,
         );
       }).toList(growable: false);
+
+  List<T> _generatedByDifficulty<T>(
+    int requestedDifficulty,
+    T Function(int difficulty, int seed) build,
+  ) {
+    final safeDifficulty = requestedDifficulty.clamp(1, 3).toInt();
+    return List<T>.unmodifiable(<T>[
+      for (var difficulty = 1; difficulty <= safeDifficulty; difficulty += 1)
+        for (var seed = 0; seed < 4; seed += 1) build(difficulty, seed),
+    ]);
+  }
+
+  ContentActivity? _generatedPracticeActivity({
+    required int classNumber,
+    required String gameId,
+    required String legacyContentId,
+  }) {
+    final match = RegExp(
+      r'^gen_(math|fraction|grammar|map)_c([345])_d([123])_s([0-3])$',
+    ).firstMatch(legacyContentId);
+    if (match == null || int.parse(match.group(2)!) != classNumber) return null;
+    final family = match.group(1)!;
+    final expectedGameId = switch (family) {
+      'math' => 'math_market',
+      'fraction' => 'fraction_pizza',
+      'grammar' => 'grammar_puzzle',
+      'map' => 'map_quest',
+      _ => '',
+    };
+    if (expectedGameId != gameId) return null;
+    final difficulty = int.parse(match.group(3)!);
+    final seed = int.parse(match.group(4)!);
+    const generators = DeterministicContentGenerators();
+
+    late String prompt;
+    late String topicId;
+    late Map<String, dynamic> rule;
+    late Map<String, dynamic> payload;
+    late String explanation;
+    var distractors = const <ContentDistractor>[];
+    var hints = const <ContentHint>[];
+
+    switch (family) {
+      case 'math':
+        final item = generators.arithmetic(
+          classNumber: classNumber,
+          difficulty: difficulty,
+          seed: seed,
+        );
+        prompt = item.text;
+        topicId = item.topicId;
+        rule = <String, dynamic>{'type': 'exactNumber', 'value': item.answer};
+        payload = <String, dynamic>{
+          'answer': item.answer,
+          'choices': item.choices,
+          'hint': item.hint,
+        };
+        explanation = '${item.text.replaceFirst('?', '${item.answer}')} '
+            'Check the operation one place-value step at a time.';
+        distractors = <ContentDistractor>[
+          for (final choice
+              in item.choices.where((value) => value != item.answer))
+            ContentDistractor(
+              value: choice,
+              misconceptionId: 'generated_arithmetic_step',
+            ),
+        ];
+        hints = <ContentHint>[ContentHint(step: 1, text: item.hint)];
+        break;
+      case 'fraction':
+        final item = generators.fraction(
+          classNumber: classNumber,
+          difficulty: difficulty,
+          seed: seed,
+        );
+        final selected = item.totalSlices * item.numerator ~/ item.denominator;
+        prompt =
+            'Select the slices that show ${item.numerator}/${item.denominator} of ${item.totalSlices} equal slices.';
+        topicId = item.topicId;
+        rule = <String, dynamic>{
+          'type': 'selectedSlices',
+          'value': selected,
+          'totalSlices': item.totalSlices,
+        };
+        payload = <String, dynamic>{
+          'totalSlices': item.totalSlices,
+          'numerator': item.numerator,
+          'denominator': item.denominator,
+        };
+        explanation =
+            '${item.numerator}/${item.denominator} of ${item.totalSlices} equal slices is $selected slices.';
+        distractors = <ContentDistractor>[
+          for (final choice in <int>{
+            if (selected > 1) selected - 1,
+            if (selected < item.totalSlices) selected + 1,
+          })
+            ContentDistractor(
+              value: choice,
+              misconceptionId: 'fraction_slice_count',
+            ),
+        ];
+        hints = <ContentHint>[
+          const ContentHint(
+            step: 1,
+            text: 'Split the whole into equal denominator-sized groups.',
+          ),
+        ];
+        break;
+      case 'grammar':
+        final item = generators.grammar(
+          classNumber: classNumber,
+          difficulty: difficulty,
+          seed: seed,
+        );
+        prompt = 'Find the noun, verb and adjective in: ${item.sentence}';
+        topicId = item.topicId;
+        rule = <String, dynamic>{
+          'type': 'grammarParts',
+          'noun': item.noun,
+          'verb': item.verb,
+          'adjective': item.adjective,
+        };
+        payload = <String, dynamic>{
+          'sentence': item.sentence,
+          'noun': item.noun,
+          'verb': item.verb,
+          'adjective': item.adjective,
+        };
+        explanation =
+            '${item.noun} names something, ${item.verb} shows the action and ${item.adjective} describes the noun.';
+        hints = const <ContentHint>[
+          ContentHint(
+            step: 1,
+            text:
+                'Ask: who or what, what happens, and which word describes it?',
+          ),
+        ];
+        break;
+      case 'map':
+        final item = generators.mapDirection(
+          classNumber: classNumber,
+          difficulty: difficulty,
+          seed: seed,
+        );
+        prompt = item.question;
+        topicId = item.topicId;
+        rule = <String, dynamic>{'type': 'exactText', 'value': item.answer};
+        payload = <String, dynamic>{
+          'answer': item.answer,
+          'choices': item.choices,
+          'hint': item.hint,
+        };
+        explanation = '${item.answer} is correct. ${item.hint}';
+        distractors = <ContentDistractor>[
+          for (final choice
+              in item.choices.where((value) => value != item.answer))
+            ContentDistractor(
+              value: choice,
+              misconceptionId: 'direction_turn_confusion',
+            ),
+        ];
+        hints = <ContentHint>[ContentHint(step: 1, text: item.hint)];
+        break;
+    }
+
+    final candidates = packForClass(classNumber)
+        .activities
+        .where((activity) => activity.gameId == gameId)
+        .toList(growable: false);
+    ContentActivity? template;
+    for (final candidate in candidates) {
+      if (candidate.topicId == topicId && candidate.difficulty == difficulty) {
+        template = candidate;
+        break;
+      }
+    }
+    template ??= candidates.firstWhere(
+      (activity) => activity.difficulty == difficulty,
+      orElse: () => candidates.first,
+    );
+    return ContentActivity(
+      id: 'c${classNumber}_generated_${family}_d${difficulty}_s$seed',
+      legacyContentId: legacyContentId,
+      classNumber: classNumber,
+      gameId: gameId,
+      topicId: topicId,
+      subject: template.subject,
+      unitId: template.unitId,
+      competencyId: template.competencyId,
+      relatedCompetencyIds: template.relatedCompetencyIds,
+      learningOutcomeId: template.learningOutcomeId,
+      relatedLearningOutcomeIds: template.relatedLearningOutcomeIds,
+      activityType: 'independentPractice',
+      difficulty: difficulty,
+      prompt: prompt,
+      correctResponseRule: rule,
+      explanation: explanation,
+      distractors: distractors,
+      hints: hints,
+      narrationText: prompt,
+      locale: template.locale,
+      author: 'brightquest-deterministic-generator',
+      reviewerOwnerId: template.reviewerOwnerId,
+      status: 'needsReview',
+      revision: 1,
+      generation: ContentGeneration(
+        mode: 'generated',
+        deterministicSeed: legacyContentId,
+      ),
+      payload: payload,
+    );
+  }
 
   static FacingDirection _parseFacingDirection(String value) => switch (value) {
         'north' => FacingDirection.north,

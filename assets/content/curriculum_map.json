@@ -97,10 +97,15 @@
         "paidEligibilityReason": "Blocked until all claimed competencies, class boundaries and free/paid boundaries are approved by the qualified reviewer.",
         "freeSampleBoundary": {
           "state": "pendingHumanReview",
-          "candidateUnitIds": [
-            "c3_math_numbers",
-            "c3_english_reading",
-            "c3_science_inquiry"
+          "candidateActivityIds": [
+            "c3_coding_maze_c3_code_1",
+            "c3_fraction_pizza_f3_1",
+            "c3_grammar_puzzle_grammar3_1",
+            "c3_map_quest_map3_1",
+            "c3_math_market_q01",
+            "c3_recycling_challenge_recycle3_1",
+            "c3_science_lab_q01",
+            "c3_story_builder_story3_1"
           ]
         }
       },
@@ -1979,10 +1984,15 @@
         "paidEligibilityReason": "Blocked until all claimed competencies, class boundaries and free/paid boundaries are approved by the qualified reviewer.",
         "freeSampleBoundary": {
           "state": "pendingHumanReview",
-          "candidateUnitIds": [
-            "c4_math_numbers",
-            "c4_english_reading",
-            "c4_science_inquiry"
+          "candidateActivityIds": [
+            "c4_coding_maze_c4_code_1",
+            "c4_fraction_pizza_f4_1",
+            "c4_grammar_puzzle_grammar4_1",
+            "c4_map_quest_map4_1",
+            "c4_math_market_q01",
+            "c4_recycling_challenge_recycle4_1",
+            "c4_science_lab_q01",
+            "c4_story_builder_story4_1"
           ]
         }
       },
@@ -3947,10 +3957,15 @@
         "paidEligibilityReason": "Blocked until all claimed competencies, class boundaries and free/paid boundaries are approved by the qualified reviewer.",
         "freeSampleBoundary": {
           "state": "pendingHumanReview",
-          "candidateUnitIds": [
-            "c5_math_numbers",
-            "c5_english_reading",
-            "c5_science_inquiry"
+          "candidateActivityIds": [
+            "c5_coding_maze_c5_code_1",
+            "c5_fraction_pizza_f5_1",
+            "c5_grammar_puzzle_grammar5_1",
+            "c5_map_quest_map5_1",
+            "c5_math_market_q01",
+            "c5_recycling_challenge_recycle5_1",
+            "c5_science_lab_q01",
+            "c5_story_builder_story5_1"
           ]
         }
       },

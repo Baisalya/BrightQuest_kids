@@ -89,6 +89,44 @@ void main() {
       expect(ids.length, 189);
     });
 
+    test('locked packs expose one beginner demo per game, not whole units', () {
+      final repository = _repository();
+      for (final pack in repository.packs) {
+        final samples = repository.freeSampleActivitiesForClass(
+          pack.classNumber,
+        );
+        expect(samples, hasLength(8));
+        expect(
+            samples.map((activity) => activity.gameId).toSet(), hasLength(8));
+        expect(
+          samples.every((activity) => activity.difficulty == 1),
+          isTrue,
+        );
+        expect(
+          pack.commercial.freeSampleActivityIds.toSet(),
+          samples.map((activity) => activity.id).toSet(),
+        );
+        expect(
+          repository.curriculum
+              .classPack(pack.classNumber)!
+              .commercial
+              .freeSampleCandidateActivityIds
+              .toSet(),
+          pack.commercial.freeSampleActivityIds.toSet(),
+        );
+        for (final unitId in samples.map((activity) => activity.unitId)) {
+          expect(
+            samples.where((activity) => activity.unitId == unitId).length,
+            lessThan(
+              pack.activities
+                  .where((activity) => activity.unitId == unitId)
+                  .length,
+            ),
+          );
+        }
+      }
+    });
+
     test('missing explanation is rejected', () {
       final packs = _packJson();
       final broken = _deepCopy(packs.first);
@@ -224,6 +262,52 @@ void main() {
             expect(map.choices.toSet().length, map.choices.length);
             expect(map.choices.where((value) => value == map.answer).length, 1);
           }
+        }
+      }
+    });
+
+    test('paid practice banks add 48 deterministic variants per class', () {
+      final repository = _repository();
+      for (final classNumber in const <int>[3, 4, 5]) {
+        final generatedIds = <String>{
+          ...repository
+              .mathQuestionsForClass(classNumber)
+              .map((item) => item.id)
+              .where((id) => id.startsWith('gen_')),
+          ...repository
+              .fractionMissionsForClass(classNumber)
+              .map((item) => item.id)
+              .where((id) => id.startsWith('gen_')),
+          ...repository
+              .grammarMissionsForClass(classNumber)
+              .map((item) => item.id)
+              .where((id) => id.startsWith('gen_')),
+          ...repository
+              .mapQuestionsForClass(classNumber)
+              .map((item) => item.id)
+              .where((id) => id.startsWith('gen_')),
+        };
+        expect(
+          generatedIds,
+          hasLength(ContentRepository.generatedPracticeVariantCountPerClass),
+        );
+        for (final id in generatedIds) {
+          final family = id.split('_')[1];
+          final gameId = switch (family) {
+            'math' => 'math_market',
+            'fraction' => 'fraction_pizza',
+            'grammar' => 'grammar_puzzle',
+            'map' => 'map_quest',
+            _ => throw StateError('Unexpected family $family'),
+          };
+          final activity = repository.activityForLegacyContent(
+            classNumber: classNumber,
+            gameId: gameId,
+            legacyContentId: id,
+          );
+          expect(activity, isNotNull, reason: id);
+          expect(activity!.generation.mode, 'generated');
+          expect(activity.status, 'needsReview');
         }
       }
     });

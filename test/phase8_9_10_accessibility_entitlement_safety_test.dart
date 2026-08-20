@@ -41,8 +41,11 @@ void main() {
       final registrant = File('windows/flutter/generated_plugin_registrant.cc')
           .readAsStringSync();
       final main = File('lib/main.dart').readAsStringSync();
+      final shell = File('lib/app/brightquest_app.dart').readAsStringSync();
       expect(registrant.toLowerCase(), isNot(contains('flutter_tts')));
       expect(main, contains('ExcludeSemantics'));
+      expect(main, contains('BRIGHTQUEST_WINDOWS_SEMANTICS_CANARY'));
+      expect(shell, isNot(contains('IndexedStack')));
     });
   });
 

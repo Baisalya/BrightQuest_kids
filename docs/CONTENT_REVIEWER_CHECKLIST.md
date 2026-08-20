@@ -27,7 +27,7 @@ For **each of Classes 3, 4 and 5**, review all of the following before changing 
 7. **Knowledge value** — reject mappings where the activity only tests repeated recall without supporting real understanding, explanation, application, transfer or later retention.
 8. **Correctness** — verify prompts, expected answers, explanations, hints, distractor misconceptions, map facts and scientific claims.
 9. **Mastery evidence** — approve or revise the Phase 0 evidence target: independent correctness, a transfer item, no final mastery hint, confidence evidence and delayed review.
-10. **Free/paid boundary** — explicitly approve which reviewed units form the free sample and which reviewed competencies may be claimed as part of the ₹299 permanent one-time class pack.
+10. **Free/paid boundary** — explicitly approve the eight activity-level demos (one per game) and which reviewed competencies may be claimed as part of the ₹299 permanent one-time class pack. Do not approve a broad unit-level sample that unlocks unrelated activities.
 
 ## Review-state rules
 

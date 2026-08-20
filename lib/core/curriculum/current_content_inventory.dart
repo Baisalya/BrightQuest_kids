@@ -36,7 +36,10 @@ List<CurrentContentRecord> currentContentInventory(
     ContentRepository repository) {
   final result = <CurrentContentRecord>[];
   for (final classNumber in const <int>[3, 4, 5]) {
-    final maths = repository.mathQuestionsForClass(classNumber);
+    final maths = repository.mathQuestionsForClass(
+      classNumber,
+      includeGeneratedPractice: false,
+    );
     for (var index = 0; index < maths.length; index += 1) {
       final item = maths[index];
       result.add(CurrentContentRecord(
@@ -51,7 +54,10 @@ List<CurrentContentRecord> currentContentInventory(
       ));
     }
 
-    final fractions = repository.fractionMissionsForClass(classNumber);
+    final fractions = repository.fractionMissionsForClass(
+      classNumber,
+      includeGeneratedPractice: false,
+    );
     for (final item in fractions) {
       result.add(CurrentContentRecord(
         id: 'legacy.c$classNumber.fraction_pizza.${item.id}',
@@ -109,7 +115,10 @@ List<CurrentContentRecord> currentContentInventory(
       ));
     }
 
-    final grammar = repository.grammarMissionsForClass(classNumber);
+    final grammar = repository.grammarMissionsForClass(
+      classNumber,
+      includeGeneratedPractice: false,
+    );
     for (final item in grammar) {
       result.add(CurrentContentRecord(
         id: 'legacy.c$classNumber.grammar_puzzle.${item.id}',
@@ -123,7 +132,10 @@ List<CurrentContentRecord> currentContentInventory(
       ));
     }
 
-    final maps = repository.mapQuestionsForClass(classNumber);
+    final maps = repository.mapQuestionsForClass(
+      classNumber,
+      includeGeneratedPractice: false,
+    );
     for (final item in maps) {
       result.add(CurrentContentRecord(
         id: 'legacy.c$classNumber.map_quest.${item.id}',

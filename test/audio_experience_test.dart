@@ -75,7 +75,8 @@ void main() {
     expect(androidTts, isNot(contains('supportedVariants:')));
     expect(windowsRegistrant, isNot(contains('FlutterTtsPlugin')));
     expect(service, contains('bool get voiceAvailable => !Platform.isWindows'));
-    expect(entryPoint, contains('Platform.isWindows ? ExcludeSemantics'));
+    expect(entryPoint, contains('BRIGHTQUEST_WINDOWS_SEMANTICS_CANARY'));
+    expect(entryPoint, contains('? ExcludeSemantics(child: app)'));
   });
 
   test('Windows narration uses an isolated System.Speech helper', () async {

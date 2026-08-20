@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
+import '../../core/content/content_activity.dart';
+import '../../core/content/content_repository.dart';
 import '../../core/curriculum/curriculum_models.dart';
+import '../../core/learning/activity_response_evaluator.dart';
 import '../../core/learning/lesson_engine.dart';
+import '../../core/learning/learning_models.dart';
+import '../../core/services/feedback_service.dart';
+import 'lesson_activity_interaction.dart';
 
 class LessonFlowScreen extends StatefulWidget {
   const LessonFlowScreen({
@@ -19,6 +25,7 @@ class LessonFlowScreen extends StatefulWidget {
 class _LessonFlowScreenState extends State<LessonFlowScreen> {
   int index = 0;
   final Set<int> _shownHints = <int>{};
+  final Set<String> _completedInteractiveSteps = <String>{};
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +35,16 @@ class _LessonFlowScreenState extends State<LessonFlowScreen> {
       level: widget.level,
     );
     final step = flow.steps[index.clamp(0, flow.steps.length - 1).toInt()];
+    final activity = step.activityId == null
+        ? null
+        : repository.activityById(step.activityId!);
+    final needsResponse = _needsResponse(step, activity);
+    final canContinue =
+        !needsResponse || _completedInteractiveSteps.contains(step.id);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.level.title),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Practice'),
-          ),
-        ],
       ),
       body: SafeArea(
         child: Center(
@@ -72,14 +79,18 @@ class _LessonFlowScreenState extends State<LessonFlowScreen> {
                         if (step.hints.isNotEmpty) ...[
                           const SizedBox(height: 18),
                           OutlinedButton.icon(
-                            onPressed: () {
-                              setState(() {
-                                final nextHint = _shownHints.length
-                                    .clamp(0, step.hints.length - 1)
-                                    .toInt();
-                                _shownHints.add(nextHint);
-                              });
-                            },
+                            onPressed: _shownHints.length >= step.hints.length
+                                ? null
+                                : () {
+                                    final nextHint = _shownHints.length;
+                                    setState(() {
+                                      _shownHints.add(nextHint);
+                                    });
+                                    FeedbackService.hint(
+                                      BrightQuestScope.of(context),
+                                      step.hints[nextHint],
+                                    );
+                                  },
                             icon: const Icon(Icons.lightbulb_outline_rounded),
                             label: Text(
                               _shownHints.isEmpty
@@ -108,6 +119,24 @@ class _LessonFlowScreenState extends State<LessonFlowScreen> {
                             label: const Text('Show me why'),
                           ),
                         ],
+                        if (needsResponse && activity != null) ...[
+                          const SizedBox(height: 16),
+                          LessonActivityInteraction(
+                            key: ValueKey(step.id),
+                            activity: activity,
+                            experimentChoices:
+                                _experimentChoices(repository, activity),
+                            onAttempt: (evaluation, retries, responseTimeMs) =>
+                                _recordAttempt(
+                              context: context,
+                              step: step,
+                              activity: activity,
+                              evaluation: evaluation,
+                              retries: retries,
+                              responseTimeMs: responseTimeMs,
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -126,16 +155,20 @@ class _LessonFlowScreenState extends State<LessonFlowScreen> {
                     ),
                     const Spacer(),
                     FilledButton(
-                      onPressed: index == flow.steps.length - 1
-                          ? () => Navigator.of(context).pop(true)
-                          : () => setState(() {
-                                index += 1;
-                                _shownHints.clear();
-                              }),
+                      onPressed: !canContinue
+                          ? null
+                          : index == flow.steps.length - 1
+                              ? () => Navigator.of(context).pop(true)
+                              : () => setState(() {
+                                    index += 1;
+                                    _shownHints.clear();
+                                  }),
                       child: Text(
-                        index == flow.steps.length - 1
-                            ? 'Start practice'
-                            : 'Continue',
+                        !canContinue
+                            ? 'Answer to continue'
+                            : index == flow.steps.length - 1
+                                ? 'Start practice'
+                                : 'Continue',
                       ),
                     ),
                   ],
@@ -154,6 +187,84 @@ class _LessonFlowScreenState extends State<LessonFlowScreen> {
         ),
       ),
     );
+  }
+
+  bool _needsResponse(LessonStep step, ContentActivity? activity) =>
+      activity != null &&
+      (step.kind == LessonStepKind.guidedTry ||
+          step.kind == LessonStepKind.independentPractice ||
+          step.kind == LessonStepKind.transfer ||
+          step.kind == LessonStepKind.exitTicket);
+
+  List<String> _experimentChoices(
+    ContentRepository repository,
+    ContentActivity activity,
+  ) {
+    if (activity.correctResponseRule['type'] != 'experimentOutcome') {
+      return const <String>[];
+    }
+    final choices = <String>{};
+    for (final candidate
+        in repository.packForClass(activity.classNumber).activities) {
+      if (candidate.gameId != 'science_lab') continue;
+      final required = candidate.payload['requiredIngredients'];
+      if (required is List) choices.addAll(required.whereType<String>());
+    }
+    return choices.toList()..sort();
+  }
+
+  void _recordAttempt({
+    required BuildContext context,
+    required LessonStep step,
+    required ContentActivity activity,
+    required ActivityEvaluation evaluation,
+    required int retries,
+    required int responseTimeMs,
+  }) {
+    final controller = BrightQuestScope.of(context);
+    final now = DateTime.now();
+    final kind = switch (step.kind) {
+      LessonStepKind.guidedTry => LearningAttemptKind.guided,
+      LessonStepKind.transfer => LearningAttemptKind.transfer,
+      _ => LearningAttemptKind.independent,
+    };
+    controller.recordLearningEvidence(
+      AttemptEvidence(
+        id: 'lesson:${controller.activeProfileId}:${now.microsecondsSinceEpoch}',
+        profileId: controller.activeProfileId,
+        classNumber: activity.classNumber,
+        competencyId: activity.competencyId,
+        itemId: activity.id,
+        kind: kind,
+        correct: evaluation.correct,
+        hintLevel: _shownHints.length.clamp(0, 2).toInt(),
+        retries: retries.clamp(0, 99).toInt(),
+        responseTimeMs: responseTimeMs.clamp(0, 3600000).toInt(),
+        confidence: evaluation.correct ? (retries == 0 ? 0.88 : 0.68) : 0.45,
+        recordedAtIso: now.toIso8601String(),
+        misconceptionId: evaluation.misconceptionId,
+        sourceGameId: activity.gameId,
+      ),
+    );
+    const evaluator = ActivityResponseEvaluator();
+    if (evaluation.correct) {
+      FeedbackService.correct(
+        controller,
+        answer: evaluator.responseLabel(evaluation.response),
+        detail: activity.explanation,
+      );
+      setState(() => _completedInteractiveSteps.add(step.id));
+    } else {
+      FeedbackService.wrong(
+        controller,
+        answer: evaluator.responseLabel(evaluation.response),
+        guidance: const LessonEngine().feedbackFor(
+          activity: activity,
+          correct: false,
+          selectedAnswer: evaluation.response,
+        ),
+      );
+    }
   }
 
   void _showWhy(BuildContext context, String text) {

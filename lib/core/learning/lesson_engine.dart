@@ -117,7 +117,10 @@ class LessonEngine {
     final activities = repository
         .activitiesForClass(classNumber)
         .where(
-          (activity) => activity.allCompetencyIds.contains(competencyId),
+          (activity) =>
+              activity.allCompetencyIds.contains(competencyId) &&
+              !(activity.correctResponseRule['type'] == 'experimentOutcome' &&
+                  activity.payload['fallback'] == true),
         )
         .toList()
       ..sort((a, b) {
@@ -138,6 +141,14 @@ class LessonEngine {
             ? null
             : activities[activities.length ~/ 2];
     final transfer = activities.length < 2 ? independent : activities.last;
+    ContentActivity? exitTicket;
+    for (final candidate in activities.reversed) {
+      if (candidate.id != independent?.id && candidate.id != transfer?.id) {
+        exitTicket = candidate;
+        break;
+      }
+    }
+    exitTicket ??= independent ?? transfer ?? example;
     final objective = blueprint?.objective ?? competency.objective;
     final conceptualHint = blueprint?.guidedHints.firstOrNull ??
         _conceptualHint(objective, example);
@@ -199,8 +210,8 @@ class LessonEngine {
         id: '$competencyId:exit',
         kind: LessonStepKind.exitTicket,
         title: 'Show what you know',
-        body:
-            'Finish one independent check and say the key idea you would teach to a friend.',
+        body: 'Finish one independent check without a clue.',
+        activityId: exitTicket?.id,
         requiresIndependentResponse: true,
       ),
       LessonStep(

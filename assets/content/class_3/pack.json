@@ -8,13 +8,15 @@
     "priceInr": 299,
     "purchaseModel": "oneTimePerClass",
     "paidEligibility": false,
-    "freeSampleUnitIds": [
-      "c3_coding_ct",
-      "c3_english_language",
-      "c3_evs_world",
-      "c3_math_numbers",
-      "c3_science_inquiry",
-      "c3_social_maps"
+    "freeSampleActivityIds": [
+      "c3_coding_maze_c3_code_1",
+      "c3_fraction_pizza_f3_1",
+      "c3_grammar_puzzle_grammar3_1",
+      "c3_map_quest_map3_1",
+      "c3_math_market_q01",
+      "c3_recycling_challenge_recycle3_1",
+      "c3_science_lab_q01",
+      "c3_story_builder_story3_1"
     ]
   },
   "development": {

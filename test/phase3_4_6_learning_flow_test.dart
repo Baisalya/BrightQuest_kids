@@ -56,6 +56,16 @@ void main() {
             (step) => step.kind == LessonStepKind.transfer,
           );
           expect(transfer.requiresIndependentResponse, isTrue);
+          final exit = flow.steps.firstWhere(
+            (step) => step.kind == LessonStepKind.exitTicket,
+          );
+          expect(exit.requiresIndependentResponse, isTrue);
+          if (guided.activityId != null) {
+            expect(exit.activityId, isNotNull, reason: flow.competencyId);
+          } else {
+            expect(exit.activityId, isNull, reason: flow.competencyId);
+            expect(flow.reviewStatus, 'needsReview');
+          }
         }
       }
     });

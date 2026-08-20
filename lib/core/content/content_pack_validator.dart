@@ -151,6 +151,7 @@ class ContentPackValidator {
       error('pack.locale', 'Pack locale is required.');
     }
 
+    List<String>? freeSampleActivityIds;
     final commercial = json['commercial'];
     if (commercial is! Map) {
       error('pack.commercial', 'Pack commercial metadata is required.');
@@ -168,6 +169,32 @@ class ContentPackValidator {
           'pack.paid_eligibility',
           'Pack paidEligibility must match the curriculum review contract.',
         );
+      }
+      final rawSamples = commercial['freeSampleActivityIds'];
+      if (rawSamples is! List || rawSamples.any((value) => value is! String)) {
+        error(
+          'pack.free_samples',
+          'Pack must declare explicit freeSampleActivityIds.',
+        );
+      } else {
+        freeSampleActivityIds = rawSamples.cast<String>();
+        if (freeSampleActivityIds.length != 8 ||
+            freeSampleActivityIds.toSet().length != 8) {
+          error(
+            'pack.free_sample_count',
+            'Class $classNumber must expose exactly 8 unique demo activities.',
+          );
+        }
+        final contractSamples =
+            classContract.commercial.freeSampleCandidateActivityIds.toSet();
+        final packSamples = freeSampleActivityIds.toSet();
+        if (packSamples.length != contractSamples.length ||
+            !packSamples.containsAll(contractSamples)) {
+          error(
+            'pack.free_sample_contract',
+            'Class $classNumber free demos must match the pending curriculum review boundary.',
+          );
+        }
       }
     }
 
@@ -508,6 +535,44 @@ class ContentPackValidator {
       }
     }
 
+    if (freeSampleActivityIds != null) {
+      final activityById = <String, Map<String, dynamic>>{
+        for (final raw in activities.whereType<Map>())
+          if (raw['id'] is String)
+            raw['id'] as String: Map<String, dynamic>.from(raw),
+      };
+      final sampleGames = <String>{};
+      for (final sampleId in freeSampleActivityIds) {
+        final sample = activityById[sampleId];
+        if (sample == null) {
+          error(
+            'pack.free_sample_missing',
+            'Free demo activity $sampleId does not exist in Class $classNumber.',
+          );
+          continue;
+        }
+        if (sample['difficulty'] != 1) {
+          error(
+            'pack.free_sample_difficulty',
+            'Free demo activity $sampleId must be difficulty 1.',
+          );
+        }
+        final gameId = sample['gameId'];
+        if (gameId is! String || !sampleGames.add(gameId)) {
+          error(
+            'pack.free_sample_game',
+            'Free demos must contain exactly one activity from each game.',
+          );
+        }
+      }
+      if (!sampleGames.containsAll(_games) || sampleGames.length != 8) {
+        error(
+          'pack.free_sample_coverage',
+          'Class $classNumber free demos must cover all 8 games exactly once.',
+        );
+      }
+    }
+
     if (fallbackReactionCount != 1) {
       error(
         'pack.reaction_fallback',
@@ -519,6 +584,25 @@ class ContentPackValidator {
       warning(
         'pack.activity_count',
         'Class $classNumber currently contains only ${activities.length} migrated activities.',
+      );
+    }
+
+    final coveredCompetencies = <String>{};
+    for (final raw in activities.whereType<Map>()) {
+      final primary = raw['competencyId'];
+      if (primary is String) coveredCompetencies.add(primary);
+      final related = raw['relatedCompetencyIds'];
+      if (related is List)
+        coveredCompetencies.addAll(related.whereType<String>());
+    }
+    final missingCompetencies = classContract.competencies
+        .where((value) => !coveredCompetencies.contains(value.id))
+        .toList(growable: false);
+    if (missingCompetencies.isNotEmpty) {
+      warning(
+        'pack.competency_activity_gap',
+        'Class $classNumber has ${missingCompetencies.length} competencies without an authored scorable activity: '
+            '${missingCompetencies.map((value) => value.id).join(', ')}.',
       );
     }
 

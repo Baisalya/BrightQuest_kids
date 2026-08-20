@@ -52,14 +52,28 @@ void main(List<String> args) {
   );
   stdout.writeln('');
   for (final value in coverage) {
+    final pack = repository.packForClass(value.classNumber);
     stdout.writeln(
       'Class ${value.classNumber}: '
       '${value.totalCompetencies} competencies | '
       '${value.mappedCompetencies} touched by current content | '
       '${value.missingCompetencies} missing from current content | '
       '${value.unreviewedCompetencies} unreviewed | '
-      '${value.currentContentRecords} current records',
+      '${pack.activities.length} authored/migrated + '
+      '${ContentRepository.generatedPracticeVariantCountPerClass} deterministic practice variants | '
+      '${pack.commercial.freeSampleActivityIds.length} free demos',
     );
+    final coveredIds = <String>{
+      for (final activity in pack.activities) ...activity.allCompetencyIds,
+    };
+    final classContract = contract.classPack(value.classNumber)!;
+    for (final competency in classContract.competencies.where(
+      (competency) => !coveredIds.contains(competency.id),
+    )) {
+      stdout.writeln(
+        '  NEEDS AUTHORING: ${competency.id} — ${competency.objective}',
+      );
+    }
   }
   stdout.writeln('');
   stdout.writeln(

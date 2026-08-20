@@ -59,7 +59,8 @@
       "required": [
         "priceInr",
         "purchaseModel",
-        "paidEligibility"
+        "paidEligibility",
+        "freeSampleActivityIds"
       ],
       "properties": {
         "priceInr": {
@@ -71,14 +72,15 @@
         "paidEligibility": {
           "type": "boolean"
         },
-        "freeSampleUnitIds": {
+        "freeSampleActivityIds": {
           "type": "array",
           "items": {
             "type": "string",
             "minLength": 1
           },
           "uniqueItems": true,
-          "minItems": 1
+          "minItems": 8,
+          "maxItems": 8
         }
       }
     },

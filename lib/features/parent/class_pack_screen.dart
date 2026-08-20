@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
+import '../../core/content/content_repository.dart';
 import '../../core/entitlements/entitlement_models.dart';
 
 class ClassPackScreen extends StatefulWidget {
@@ -56,7 +57,11 @@ class _ClassPackScreenState extends State<ClassPackScreen> {
                           '₹${pack.commercial.priceInr} • permanent one-time class entitlement',
                         ),
                         Text(
-                          '${pack.commercial.freeSampleUnitIds.length} free sample units configured for development review',
+                          '${pack.commercial.freeSampleActivityIds.length} free demo activities (one per game)',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        Text(
+                          '${pack.activities.length} authored/migrated activities + ${ContentRepository.generatedPracticeVariantCountPerClass} deterministic practice variants',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         const SizedBox(height: 10),

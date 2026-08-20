@@ -70,13 +70,19 @@ class _MainShellState extends State<MainShell> {
   int index = 0;
   bool? _lastAudioEnabled;
 
-  static const pages = <Widget>[
-    HomeScreen(),
-    AdventuresScreen(),
-    ProgressScreen(),
-    ParentGateScreen(),
-    ProfileScreen(),
-  ];
+  final Map<int, Widget> _mountedPages = <int, Widget>{};
+
+  Widget _pageFor(int pageIndex) => _mountedPages.putIfAbsent(
+        pageIndex,
+        () => switch (pageIndex) {
+          0 => const HomeScreen(),
+          1 => const AdventuresScreen(),
+          2 => const ProgressScreen(),
+          3 => const ParentGateScreen(),
+          4 => const ProfileScreen(),
+          _ => const HomeScreen(),
+        },
+      );
 
   @override
   void didChangeDependencies() {
@@ -107,14 +113,14 @@ class _MainShellState extends State<MainShell> {
                   expanded: expandedSideNav,
                   onSelected: (value) => setState(() => index = value),
                 ),
-                Expanded(child: IndexedStack(index: index, children: pages)),
+                Expanded(child: _pageFor(index)),
               ],
             ),
           );
         }
 
         return Scaffold(
-          body: IndexedStack(index: index, children: pages),
+          body: _pageFor(index),
           bottomNavigationBar: _BrightBottomNavigation(
             selectedIndex: index,
             onSelected: (value) => setState(() => index = value),

@@ -214,7 +214,7 @@ class ClassCommercialContract {
     required this.paidEligibility,
     required this.paidEligibilityReason,
     required this.freeSampleState,
-    required this.freeSampleCandidateUnitIds,
+    required this.freeSampleCandidateActivityIds,
   });
 
   final int permanentOneTimePriceInr;
@@ -222,7 +222,7 @@ class ClassCommercialContract {
   final bool paidEligibility;
   final String paidEligibilityReason;
   final String freeSampleState;
-  final List<String> freeSampleCandidateUnitIds;
+  final List<String> freeSampleCandidateActivityIds;
 
   factory ClassCommercialContract.fromJson(Map<String, dynamic> json) {
     final freeSample =
@@ -233,8 +233,8 @@ class ClassCommercialContract {
       paidEligibility: json['paidEligibility'] as bool,
       paidEligibilityReason: json['paidEligibilityReason'] as String,
       freeSampleState: freeSample['state'] as String,
-      freeSampleCandidateUnitIds:
-          List<String>.from(freeSample['candidateUnitIds'] as List),
+      freeSampleCandidateActivityIds:
+          List<String>.from(freeSample['candidateActivityIds'] as List),
     );
   }
 }
