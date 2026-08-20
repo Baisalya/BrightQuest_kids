@@ -1,0 +1,282 @@
+import 'package:flutter/material.dart';
+
+import '../../app/brightquest_scope.dart';
+import '../../core/content/game_content.dart';
+import '../../core/curriculum/curriculum_models.dart';
+import '../../core/gameplay/game_logic.dart';
+import '../../core/models/progress_models.dart';
+import '../../core/services/feedback_service.dart';
+import '../../widgets/bright_widgets.dart';
+
+class FractionPizzaScreen extends StatefulWidget {
+  const FractionPizzaScreen({this.learningLevel, super.key});
+
+  final LearningLevel? learningLevel;
+
+  @override
+  State<FractionPizzaScreen> createState() => _FractionPizzaScreenState();
+}
+
+class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
+  int missionIndex = 0;
+  int selectedSlices = 0;
+  int score = 0;
+  bool checked = false;
+  bool? correct;
+  bool hadMistake = false;
+  bool finished = false;
+  MissionReward? missionReward;
+  int _difficulty = 1;
+  int _classNumber = 4;
+  bool _sessionConfigured = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_sessionConfigured) return;
+    final controller = BrightQuestScope.of(context);
+    _classNumber =
+        widget.learningLevel?.classNumber ?? controller.selectedClass;
+    _difficulty = widget.learningLevel?.difficulty ??
+        controller.recommendedDifficulty('fraction_pizza');
+    _sessionConfigured = true;
+  }
+
+  void _select(int count) {
+    if (finished || correct == true) return;
+    setState(() {
+      selectedSlices = count;
+      checked = false;
+      correct = null;
+    });
+  }
+
+  void _check(FractionMission mission) {
+    if (checked || selectedSlices == 0) return;
+    final isCorrect = fractionMatches(
+      selectedSlices: selectedSlices,
+      totalSlices: mission.totalSlices,
+      targetNumerator: mission.numerator,
+      targetDenominator: mission.denominator,
+    );
+    BrightQuestScope.of(context).recordAnswer(
+      gameId: 'fraction_pizza',
+      correct: isCorrect,
+      topicId: mission.topicId,
+      difficulty: mission.difficulty,
+      masteryGain: 0.07,
+    );
+    final controller = BrightQuestScope.of(context);
+    final chosen = '$selectedSlices of ${mission.totalSlices} slices';
+    final expected =
+        '${mission.numerator} out of ${mission.denominator} equal parts';
+    if (isCorrect) {
+      FeedbackService.correct(
+        controller,
+        answer: chosen,
+        detail: 'That matches $expected.',
+      );
+    } else {
+      FeedbackService.wrong(
+        controller,
+        answer: chosen,
+        correctAnswer: expected,
+        guidance: 'Adjust the slices and try again.',
+      );
+    }
+    setState(() {
+      checked = true;
+      correct = isCorrect;
+      if (isCorrect && !hadMistake) score += 1;
+      if (!isCorrect) hadMistake = true;
+    });
+  }
+
+  void _next(List<FractionMission> missions, int classNumber) {
+    if (correct != true) return;
+    if (missionIndex == missions.length - 1) {
+      final controller = BrightQuestScope.of(context);
+      final reward = controller.completeRun(
+        gameId: 'fraction_pizza',
+        fallbackMissionId:
+            'fraction_pizza:c$classNumber:d$_difficulty:core_run',
+        learningLevel: widget.learningLevel,
+        score: score,
+        maxScore: missions.length,
+      );
+      FeedbackService.complete(controller, reward: reward);
+      setState(() {
+        finished = true;
+        missionReward = reward;
+      });
+      return;
+    }
+    setState(() {
+      missionIndex += 1;
+      selectedSlices = 0;
+      checked = false;
+      correct = null;
+      hadMistake = false;
+    });
+  }
+
+  void _restart() {
+    setState(() {
+      missionIndex = 0;
+      selectedSlices = 0;
+      score = 0;
+      checked = false;
+      correct = null;
+      hadMistake = false;
+      finished = false;
+      missionReward = null;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final classNumber = _classNumber;
+    final missions =
+        fractionMissionsForClass(classNumber, difficulty: _difficulty);
+    final mission = missions[missionIndex];
+    final target = '${mission.numerator}/${mission.denominator}';
+
+    return GameScaffold(
+      title: 'Fraction Pizza',
+      subtitle: widget.learningLevel == null
+          ? 'Class $classNumber • Adaptive level $_difficulty • Slice & Solve'
+          : 'Class $classNumber • ${widget.learningLevel!.typeLabel} • ${widget.learningLevel!.title}',
+      color: const Color(0xFFFF9A35),
+      voicePrompt:
+          'Select ${mission.numerator} out of ${mission.denominator} equal parts from this ${mission.totalSlices}-slice pizza.',
+      child: ListView(
+        padding: const EdgeInsets.all(18),
+        children: [
+          GameProgressStrip(
+            current: missionIndex + 1,
+            total: missions.length,
+            score: score,
+          ),
+          const SizedBox(height: 12),
+          const GameSceneBanner(
+              gameId: 'fraction_pizza',
+              caption:
+                  'Slice the pizza, compare fractions, and build fraction sense.',
+              accent: Color(0xFFFF9A35)),
+          const SizedBox(height: 18),
+          Text(
+            'Select $target of this ${mission.totalSlices}-slice pizza.',
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 18),
+          Center(
+            child: Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              alignment: WrapAlignment.center,
+              children: List.generate(mission.totalSlices, (index) {
+                final active = index < selectedSlices;
+                return InkWell(
+                  borderRadius: BorderRadius.circular(18),
+                  onTap: () => _select(index + 1),
+                  child: Container(
+                    width: 76,
+                    height: 76,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: active ? const Color(0xFFFFC56E) : Colors.white,
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(
+                        color: const Color(0xFFFF9A35),
+                        width: 2,
+                      ),
+                    ),
+                    child: Text(
+                      active ? '🍕' : '${index + 1}',
+                      style: const TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ),
+          const SizedBox(height: 18),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(18),
+              child: Row(
+                children: [
+                  const Icon(Icons.calculate_rounded, color: Color(0xFFFF9A35)),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      selectedSlices == 0
+                          ? 'Tap a slice number to choose how many pieces.'
+                          : 'Selected $selectedSlices/${mission.totalSlices} = ${simplifiedFraction(selectedSlices, mission.totalSlices)}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 17,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (checked) ...[
+            const SizedBox(height: 12),
+            correct == true
+                ? SuccessBanner(
+                    text:
+                        'Correct! $selectedSlices/${mission.totalSlices} is equal to $target.',
+                  )
+                : ErrorBanner(
+                    text:
+                        'That fraction is not equal to $target. Change the number of slices and try again.',
+                  ),
+          ],
+          const SizedBox(height: 18),
+          if (finished)
+            MissionSummaryCard(
+              score: score,
+              maxScore: missions.length,
+              reward: missionReward,
+              onReplay: _restart,
+            )
+          else
+            Row(
+              children: [
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: checked || selectedSlices == 0
+                        ? null
+                        : () => _check(mission),
+                    icon: const Icon(Icons.check_rounded),
+                    label: const Text('Check Fraction'),
+                  ),
+                ),
+                if (correct == true) ...[
+                  const SizedBox(width: 10),
+                  FilledButton.icon(
+                    onPressed: () => _next(missions, classNumber),
+                    icon: Icon(
+                      missionIndex == missions.length - 1
+                          ? Icons.flag_rounded
+                          : Icons.arrow_forward_rounded,
+                    ),
+                    label: Text(
+                      missionIndex == missions.length - 1 ? 'Finish' : 'Next',
+                    ),
+                  ),
+                ],
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+}

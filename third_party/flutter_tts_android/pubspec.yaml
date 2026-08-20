@@ -1,0 +1,21 @@
+name: flutter_tts
+description: BrightQuest Android-only fork of flutter_tts; the unsafe native Windows registration is intentionally omitted.
+version: 4.2.5+brightquest.1
+publish_to: none
+homepage: https://github.com/dlutton/flutter_tts
+
+dependencies:
+  flutter:
+    sdk: flutter
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.eyedeadevelopment.fluttertts
+        pluginClass: FlutterTtsPlugin
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=1.22.0"
+dev_dependencies:
+  lints: ^3.0.0

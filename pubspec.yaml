@@ -1,0 +1,34 @@
+name: brightquest_kids
+description: BrightQuest Kids - offline-first educational adventure app for Classes 3 to 5.
+publish_to: 'none'
+version: 0.4.21+24
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.3.0
+  audioplayers: 6.7.1
+  flutter_tts: 4.2.5
+
+dependency_overrides:
+  audioplayers_windows:
+    path: third_party/audioplayers_windows_stub
+  # flutter_tts 4.2.5's native Windows DLL crashes with an access violation on
+  # current Flutter/Windows. Keep its Android plugin, but do not register the
+  # unsafe Windows implementation. Windows narration runs in a separate,
+  # crash-isolated System.Speech helper process instead.
+  flutter_tts:
+    path: third_party/flutter_tts_android
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/audio/bgm/
+    - assets/audio/sfx/

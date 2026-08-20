@@ -1,0 +1,20 @@
+name: audioplayers_windows
+description: BrightQuest Windows compatibility shim. The app uses its own MCI backend on Windows.
+version: 4.3.1+brightquest.2
+publish_to: none
+
+environment:
+  sdk: '>=3.6.0 <4.0.0'
+  flutter: '>=3.13.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  audioplayers_platform_interface: ^7.1.1
+
+flutter:
+  plugin:
+    implements: audioplayers
+    platforms:
+      windows:
+        pluginClass: AudioplayersWindowsPlugin
