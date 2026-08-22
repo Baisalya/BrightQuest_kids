@@ -116,6 +116,43 @@ class ParentLearningReportScreen extends StatelessWidget {
                 ),
               ),
           ],
+          if (repository.nurseryPack case final nursery?) ...[
+            const SizedBox(height: 18),
+            Text(
+              'Nursery Learning Garden',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Nursery evidence is kept separate from the selected Class 3–5 record. Passive teaching screens and tracing do not establish mastery.',
+            ),
+            const SizedBox(height: 8),
+            for (final domain in nursery.domains) ...[
+              Text(
+                domain.title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w900,
+                    ),
+              ),
+              const SizedBox(height: 6),
+              for (final skill in nursery.skillsForDomain(domain.id))
+                Builder(
+                  builder: (context) {
+                    final mastery = controller.nurseryMasteryFor(skill.id);
+                    return Card(
+                      child: ListTile(
+                        leading: Icon(_stateIcon(mastery.state)),
+                        title: Text(skill.title),
+                        subtitle: Text(
+                          '${_stateLabel(mastery.state)} • ${mastery.scorableEvidenceCount} scorable evidence item${mastery.scorableEvidenceCount == 1 ? '' : 's'} • ${mastery.cleanIndependentCorrectCount}/2 clean independent • ${mastery.cleanTransferCorrectCount}/1 transfer${mastery.nextReviewIso == null ? '' : ' • review ${_date(mastery.nextReviewIso!)}'}',
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              const SizedBox(height: 10),
+            ],
+          ],
           const SizedBox(height: 12),
           const Card(
             child: Padding(

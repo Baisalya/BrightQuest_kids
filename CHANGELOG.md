@@ -1,3 +1,18 @@
+## Unreleased — Nursery learning pack implementation
+
+- Added a separate backward-compatible `brightquest_nursery` learning pack without forcing Nursery into the integer Class 3–5 model.
+- Added 32 Nursery skills, 132 authored activities, deterministic generated review, Nursery evidence/mastery/review state, parent reporting and additive save-schema v6 migration.
+- Added A–Z uppercase/lowercase learning with 208 bundled picture-word discovery cards (eight examples per letter), replayable narration, another-word/next-letter exploration and sound-practice eligibility guards.
+- Added early maths 0–20, counting, quantity matching, sequences, comparison and bounded object-first addition, plus colours, shapes, patterns, matching/sorting, familiar knowledge, observation and listening activities.
+- Added touch/mouse tracing as non-mastery guide-path practice; no handwriting-correctness claim is made.
+- Phase B Letters & Sounds separates the 208-card discovery library from a stricter 157-example simple-phonics evidence pool; irregular vowels, Q/X patterns, SH, and initial consonant clusters remain discoverable but cannot silently enter simple phonics mastery.
+- Added an independent Phase B phonics reference/auditor, deterministic 157-example generator-coverage checks, skill-accurate alphabet game portal labels, and phone/tablet/Windows alphabet UI regressions.
+- Replaced 13 misleading generic emoji picture cards (including Igloo, Vacuum, Ukulele, Vulture and Yak) with dedicated bundled illustrations and safe text fallbacks.
+- Added finite reduced-motion-aware teaching/feedback animations and static fallbacks; no repeating Nursery animation loop was introduced.
+- Preserved the crash-isolated Windows `System.Speech` narration backend and fail-closed Windows semantics default.
+- Nursery remains `paidEligibility: false`; teacher review, supervised child pilots, production billing and Android/Windows real-device qualification remain external gates.
+- This source snapshot has not been re-versioned or marked released because Flutter/Dart build verification is still required in a Flutter-equipped environment.
+
 ## 0.6.0+26 — Phases 2–10 technical learning platform
 
 - Added schema-v5 per-profile learning state with backward loading from the accepted Phase 1 `.v3` preference key and legacy v2 fallback; existing game/topic/level progress, profiles, rewards and parent controls remain intact.

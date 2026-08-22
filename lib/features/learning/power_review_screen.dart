@@ -166,5 +166,7 @@ class _PowerReviewScreenState extends State<PowerReviewScreen> {
   }
 
   bool _supportsChoice(ContentActivity? activity) =>
-      activity != null && activity.payload['choices'] is List;
+      activity != null &&
+      activity.payload['masteryEligible'] != false &&
+      activity.payload['choices'] is List;
 }

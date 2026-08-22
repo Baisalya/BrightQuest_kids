@@ -1,5 +1,6 @@
 import '../entitlements/entitlement_models.dart';
 import '../learning/learning_models.dart';
+import '../nursery/nursery_learning_models.dart';
 
 class TopicProgress {
   TopicProgress({
@@ -167,7 +168,9 @@ class ChildProfileSnapshot {
     Set<String>? claimedDailyChallengeIds,
     Set<String>? unlockedAchievementIds,
     LearningProfileState? learning,
+    NurseryLearningState? nurseryLearning,
   })  : learning = learning ?? const LearningProfileState(),
+        nurseryLearning = nurseryLearning ?? const NurseryLearningState(),
         gameProgress = gameProgress ?? <String, GameProgress>{},
         levelProgress = levelProgress ?? <String, LearningLevelProgress>{},
         unlockedRewards = unlockedRewards ?? <String>{},
@@ -204,6 +207,7 @@ class ChildProfileSnapshot {
   Set<String> claimedDailyChallengeIds;
   Set<String> unlockedAchievementIds;
   LearningProfileState learning;
+  NurseryLearningState nurseryLearning;
 
   Map<String, Object?> toJson() => <String, Object?>{
         'id': id,
@@ -239,6 +243,7 @@ class ChildProfileSnapshot {
         'claimedDailyChallengeIds': claimedDailyChallengeIds.toList()..sort(),
         'unlockedAchievementIds': unlockedAchievementIds.toList()..sort(),
         'learning': learning.toJson(),
+        'nurseryLearning': nurseryLearning.toJson(),
       };
 
   factory ChildProfileSnapshot.fromJson(Map<String, Object?> json) {
@@ -301,6 +306,11 @@ class ChildProfileSnapshot {
               Map<String, Object?>.from(json['learning'] as Map),
             )
           : const LearningProfileState(),
+      nurseryLearning: json['nurseryLearning'] is Map
+          ? NurseryLearningState.fromJson(
+              Map<String, Object?>.from(json['nurseryLearning'] as Map),
+            )
+          : const NurseryLearningState(),
     );
   }
 
@@ -320,7 +330,7 @@ class ChildProfileSnapshot {
 
 class PlayerSnapshot {
   PlayerSnapshot({
-    this.schemaVersion = 5,
+    this.schemaVersion = 6,
     this.activeProfileId = 'child-1',
     Map<String, ChildProfileSnapshot>? profiles,
     Map<int, ClassEntitlement>? entitlementCache,
@@ -401,7 +411,7 @@ class PlayerSnapshot {
         }
       }
       final snapshot = PlayerSnapshot(
-        schemaVersion: 5,
+        schemaVersion: 6,
         activeProfileId: json['activeProfileId'] as String? ?? 'child-1',
         profiles: profiles,
         entitlementCache: entitlements,
@@ -420,7 +430,7 @@ class PlayerSnapshot {
     // Phase 2 migration: the root object was the single child's snapshot.
     final legacy = ChildProfileSnapshot.fromLegacyJson(json);
     return PlayerSnapshot(
-      schemaVersion: 5,
+      schemaVersion: 6,
       activeProfileId: legacy.id,
       profiles: <String, ChildProfileSnapshot>{legacy.id: legacy},
     );

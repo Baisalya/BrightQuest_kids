@@ -4,6 +4,8 @@ BrightQuest Kids is an offline-first Flutter learning adventure for Classes 3–
 
 Current version: **0.6.0+26**
 
+Nursery implementation status: a separate draft Nursery learning pack is present in source with interactive teaching, scorable evidence/review, 208 offline A–Z picture-word cards, a stricter 157-example simple-phonics evidence pool, and fail-closed commercial eligibility. Phase B Letters & Sounds includes an independent phonics audit and skill-accurate Alphabet game-board regressions. It is not a production/commercial approval claim; qualified teacher review, child pilots, store configuration, device qualification and release builds remain required.
+
 ## Current product
 
 - six Learning Worlds and nine adventure/reward experiences;

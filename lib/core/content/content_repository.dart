@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import '../curriculum/content_contract.dart';
+import '../nursery/nursery_content.dart';
 import 'content_activity.dart';
 import 'content_generators.dart';
 import 'content_pack_validator.dart';
@@ -64,6 +65,7 @@ class ContentRepository {
     required Map<String, LearningBlueprint> learningBlueprints,
     required this.accessPolicy,
     this.verifiedAccessResolver,
+    this.nurseryPack,
   })  : _packs = Map<int, ContentPack>.unmodifiable(packs),
         _learningBlueprints =
             Map<String, LearningBlueprint>.unmodifiable(learningBlueprints);
@@ -73,6 +75,7 @@ class ContentRepository {
   final Map<String, LearningBlueprint> _learningBlueprints;
   final DevelopmentPackAccessPolicy accessPolicy;
   final bool Function(int classNumber)? verifiedAccessResolver;
+  final NurseryContentPack? nurseryPack;
 
   static const int generatedPracticeVariantsPerFamily = 12;
   static const int generatedPracticeVariantCountPerClass =
@@ -83,6 +86,9 @@ class ContentRepository {
     'assets/content/class_4/pack.json',
     'assets/content/class_5/pack.json',
   ];
+
+  static const String bundledNurseryPackPath =
+      'assets/content/nursery/pack_v1.json';
 
   static const List<String> bundledBlueprintPaths = <String>[
     'assets/content/class_3/learning_blueprints.json',
@@ -110,11 +116,15 @@ class ContentRepository {
     for (final path in bundledBlueprintPaths) {
       blueprints.add(_decodeMap(await loadAssetString(path)));
     }
+    final nurseryJson = _decodeMap(
+      await loadAssetString(bundledNurseryPackPath),
+    );
     return ContentRepository.fromJsonPacks(
       curriculumJson: curriculumJson,
       schemaJson: schemaJson,
       packJson: packs,
       blueprintJson: blueprints,
+      nurseryJson: nurseryJson,
       accessPolicy: accessPolicy,
       verifiedAccessResolver: verifiedAccessResolver,
     );
@@ -125,6 +135,7 @@ class ContentRepository {
     required List<Map<String, dynamic>> packJson,
     List<Map<String, dynamic>> blueprintJson = const <Map<String, dynamic>>[],
     Map<String, dynamic>? schemaJson,
+    Map<String, dynamic>? nurseryJson,
     DevelopmentPackAccessPolicy accessPolicy =
         DevelopmentPackAccessPolicy.disabled,
     bool Function(int classNumber)? verifiedAccessResolver,
@@ -156,6 +167,8 @@ class ContentRepository {
       curriculum: curriculum,
       packs: packs,
       learningBlueprints: learningBlueprints,
+      nurseryPack:
+          nurseryJson == null ? null : NurseryContentPack.fromJson(nurseryJson),
       accessPolicy: accessPolicy,
       verifiedAccessResolver: verifiedAccessResolver,
     );
@@ -236,6 +249,17 @@ class ContentRepository {
 
   LearningBlueprint? learningBlueprintForCompetency(String competencyId) =>
       _learningBlueprints[competencyId];
+
+  bool nurseryActivityAccessible(String activityId) {
+    final pack = nurseryPack;
+    if (pack == null) return false;
+    // While Nursery is a review-only, paid-ineligible pack, reviewers may
+    // exercise the full pack. If paid eligibility is ever enabled, this
+    // repository fails closed to the four declared samples until a separate
+    // verified Nursery entitlement resolver is implemented.
+    if (!pack.commercial.paidEligibility) return true;
+    return pack.isFreeSampleActivity(activityId);
+  }
 
   ContentPack packForClass(int classNumber) {
     final pack = _packs[classNumber];

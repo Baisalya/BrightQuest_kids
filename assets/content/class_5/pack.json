@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "packId": "brightquest_class_5",
-  "packVersion": "1.0.0",
+  "packVersion": "1.1.0",
   "classNumber": 5,
   "locale": "en-IN",
   "commercial": {
@@ -2328,14 +2328,14 @@
       ],
       "activityType": "independentPractice",
       "difficulty": 2,
-      "prompt": "The ancient monument attracts visitors.",
+      "prompt": "The ancient monument stands.",
       "correctResponseRule": {
         "type": "grammarParts",
         "noun": "monument",
-        "verb": "attracts",
+        "verb": "stands",
         "adjective": "ancient"
       },
-      "explanation": "In this sentence, “monument” is the noun, “attracts” is the verb, and “ancient” is the adjective.",
+      "explanation": "In this sentence, “monument” is the noun, “stands” is the verb, and “ancient” is the adjective.",
       "distractors": [],
       "hints": [
         {
@@ -2344,21 +2344,21 @@
         }
       ],
       "narration": {
-        "text": "The ancient monument attracts visitors."
+        "text": "The ancient monument stands."
       },
       "locale": "en-IN",
-      "author": "brightquest-legacy-migration",
+      "author": "brightquest-phase-e-technical-hardening",
       "reviewerOwnerId": "primary_teacher_reviewer",
       "status": "needsReview",
-      "revision": 1,
+      "revision": 2,
       "generation": {
         "mode": "authored",
         "deterministicSeed": null
       },
       "payload": {
-        "sentence": "The ancient monument attracts visitors.",
+        "sentence": "The ancient monument stands.",
         "noun": "monument",
-        "verb": "attracts",
+        "verb": "stands",
         "adjective": "ancient"
       }
     },
@@ -2380,14 +2380,14 @@
       ],
       "activityType": "independentPractice",
       "difficulty": 2,
-      "prompt": "The careful scientist records results.",
+      "prompt": "The careful scientist observes.",
       "correctResponseRule": {
         "type": "grammarParts",
         "noun": "scientist",
-        "verb": "records",
+        "verb": "observes",
         "adjective": "careful"
       },
-      "explanation": "In this sentence, “scientist” is the noun, “records” is the verb, and “careful” is the adjective.",
+      "explanation": "In this sentence, “scientist” is the noun, “observes” is the verb, and “careful” is the adjective.",
       "distractors": [],
       "hints": [
         {
@@ -2396,21 +2396,21 @@
         }
       ],
       "narration": {
-        "text": "The careful scientist records results."
+        "text": "The careful scientist observes."
       },
       "locale": "en-IN",
-      "author": "brightquest-legacy-migration",
+      "author": "brightquest-phase-e-technical-hardening",
       "reviewerOwnerId": "primary_teacher_reviewer",
       "status": "needsReview",
-      "revision": 1,
+      "revision": 2,
       "generation": {
         "mode": "authored",
         "deterministicSeed": null
       },
       "payload": {
-        "sentence": "The careful scientist records results.",
+        "sentence": "The careful scientist observes.",
         "noun": "scientist",
-        "verb": "records",
+        "verb": "observes",
         "adjective": "careful"
       }
     },
@@ -2432,14 +2432,14 @@
       ],
       "activityType": "independentPractice",
       "difficulty": 3,
-      "prompt": "The enormous telescope reveals distant planets.",
+      "prompt": "The enormous telescope rotates.",
       "correctResponseRule": {
         "type": "grammarParts",
         "noun": "telescope",
-        "verb": "reveals",
+        "verb": "rotates",
         "adjective": "enormous"
       },
-      "explanation": "In this sentence, “telescope” is the noun, “reveals” is the verb, and “enormous” is the adjective.",
+      "explanation": "In this sentence, “telescope” is the noun, “rotates” is the verb, and “enormous” is the adjective.",
       "distractors": [],
       "hints": [
         {
@@ -2448,21 +2448,21 @@
         }
       ],
       "narration": {
-        "text": "The enormous telescope reveals distant planets."
+        "text": "The enormous telescope rotates."
       },
       "locale": "en-IN",
-      "author": "brightquest-legacy-migration",
+      "author": "brightquest-phase-e-technical-hardening",
       "reviewerOwnerId": "primary_teacher_reviewer",
       "status": "needsReview",
-      "revision": 1,
+      "revision": 2,
       "generation": {
         "mode": "authored",
         "deterministicSeed": null
       },
       "payload": {
-        "sentence": "The enormous telescope reveals distant planets.",
+        "sentence": "The enormous telescope rotates.",
         "noun": "telescope",
-        "verb": "reveals",
+        "verb": "rotates",
         "adjective": "enormous"
       }
     },
@@ -2484,14 +2484,14 @@
       ],
       "activityType": "independentPractice",
       "difficulty": 3,
-      "prompt": "A determined athlete completes the difficult race.",
+      "prompt": "A determined athlete trains.",
       "correctResponseRule": {
         "type": "grammarParts",
         "noun": "athlete",
-        "verb": "completes",
+        "verb": "trains",
         "adjective": "determined"
       },
-      "explanation": "In this sentence, “athlete” is the noun, “completes” is the verb, and “determined” is the adjective.",
+      "explanation": "In this sentence, “athlete” is the noun, “trains” is the verb, and “determined” is the adjective.",
       "distractors": [],
       "hints": [
         {
@@ -2500,21 +2500,21 @@
         }
       ],
       "narration": {
-        "text": "A determined athlete completes the difficult race."
+        "text": "A determined athlete trains."
       },
       "locale": "en-IN",
-      "author": "brightquest-legacy-migration",
+      "author": "brightquest-phase-e-technical-hardening",
       "reviewerOwnerId": "primary_teacher_reviewer",
       "status": "needsReview",
-      "revision": 1,
+      "revision": 2,
       "generation": {
         "mode": "authored",
         "deterministicSeed": null
       },
       "payload": {
-        "sentence": "A determined athlete completes the difficult race.",
+        "sentence": "A determined athlete trains.",
         "noun": "athlete",
-        "verb": "completes",
+        "verb": "trains",
         "adjective": "determined"
       }
     },
@@ -3277,7 +3277,7 @@
         "type": "exactText",
         "value": "Paper"
       },
-      "explanation": "Office paper belongs in the Paper bin in this BrightQuest sorting activity.",
+      "explanation": "In this BrightQuest material-sorting practice, Office paper goes in the Paper group. Real local recycling rules can differ.",
       "distractors": [
         {
           "value": "Organic",
@@ -3298,10 +3298,10 @@
         "text": "Put Office paper in the correct waste-sorting bin."
       },
       "locale": "en-IN",
-      "author": "brightquest-legacy-migration",
+      "author": "brightquest-phase-e-technical-hardening",
       "reviewerOwnerId": "primary_teacher_reviewer",
       "status": "needsReview",
-      "revision": 1,
+      "revision": 2,
       "generation": {
         "mode": "authored",
         "deterministicSeed": null
@@ -3331,7 +3331,7 @@
         "type": "exactText",
         "value": "Organic"
       },
-      "explanation": "Fruit peel belongs in the Organic bin in this BrightQuest sorting activity.",
+      "explanation": "In this BrightQuest material-sorting practice, Fruit peel goes in the Organic group. Real local recycling rules can differ.",
       "distractors": [
         {
           "value": "Paper",
@@ -3352,10 +3352,10 @@
         "text": "Put Fruit peel in the correct waste-sorting bin."
       },
       "locale": "en-IN",
-      "author": "brightquest-legacy-migration",
+      "author": "brightquest-phase-e-technical-hardening",
       "reviewerOwnerId": "primary_teacher_reviewer",
       "status": "needsReview",
-      "revision": 1,
+      "revision": 2,
       "generation": {
         "mode": "authored",
         "deterministicSeed": null
@@ -3385,7 +3385,7 @@
         "type": "exactText",
         "value": "Plastic"
       },
-      "explanation": "Clean plastic jar belongs in the Plastic bin in this BrightQuest sorting activity.",
+      "explanation": "In this BrightQuest material-sorting practice, Clean plastic jar goes in the Plastic group. Real local recycling rules can differ.",
       "distractors": [
         {
           "value": "Paper",
@@ -3406,10 +3406,10 @@
         "text": "Put Clean plastic jar in the correct waste-sorting bin."
       },
       "locale": "en-IN",
-      "author": "brightquest-legacy-migration",
+      "author": "brightquest-phase-e-technical-hardening",
       "reviewerOwnerId": "primary_teacher_reviewer",
       "status": "needsReview",
-      "revision": 1,
+      "revision": 2,
       "generation": {
         "mode": "authored",
         "deterministicSeed": null
@@ -3439,7 +3439,7 @@
         "type": "exactText",
         "value": "Paper"
       },
-      "explanation": "Delivery carton belongs in the Paper bin in this BrightQuest sorting activity.",
+      "explanation": "In this BrightQuest material-sorting practice, Delivery carton goes in the Paper group. Real local recycling rules can differ.",
       "distractors": [
         {
           "value": "Organic",
@@ -3460,10 +3460,10 @@
         "text": "Put Delivery carton in the correct waste-sorting bin."
       },
       "locale": "en-IN",
-      "author": "brightquest-legacy-migration",
+      "author": "brightquest-phase-e-technical-hardening",
       "reviewerOwnerId": "primary_teacher_reviewer",
       "status": "needsReview",
-      "revision": 1,
+      "revision": 2,
       "generation": {
         "mode": "authored",
         "deterministicSeed": null
@@ -3493,7 +3493,7 @@
         "type": "exactText",
         "value": "Organic"
       },
-      "explanation": "Garden leaves belongs in the Organic bin in this BrightQuest sorting activity.",
+      "explanation": "In this BrightQuest material-sorting practice, Garden leaves goes in the Organic group. Real local recycling rules can differ.",
       "distractors": [
         {
           "value": "Paper",
@@ -3514,10 +3514,10 @@
         "text": "Put Garden leaves in the correct waste-sorting bin."
       },
       "locale": "en-IN",
-      "author": "brightquest-legacy-migration",
+      "author": "brightquest-phase-e-technical-hardening",
       "reviewerOwnerId": "primary_teacher_reviewer",
       "status": "needsReview",
-      "revision": 1,
+      "revision": 2,
       "generation": {
         "mode": "authored",
         "deterministicSeed": null
@@ -3547,7 +3547,7 @@
         "type": "exactText",
         "value": "Plastic"
       },
-      "explanation": "Clean detergent bottle belongs in the Plastic bin in this BrightQuest sorting activity.",
+      "explanation": "In this BrightQuest material-sorting practice, Clean detergent bottle goes in the Plastic group. Real local recycling rules can differ.",
       "distractors": [
         {
           "value": "Paper",
@@ -3568,10 +3568,10 @@
         "text": "Put Clean detergent bottle in the correct waste-sorting bin."
       },
       "locale": "en-IN",
-      "author": "brightquest-legacy-migration",
+      "author": "brightquest-phase-e-technical-hardening",
       "reviewerOwnerId": "primary_teacher_reviewer",
       "status": "needsReview",
-      "revision": 1,
+      "revision": 2,
       "generation": {
         "mode": "authored",
         "deterministicSeed": null
@@ -3605,7 +3605,7 @@
         "type": "exactText",
         "value": "Paper"
       },
-      "explanation": "Notebook pages belongs in the Paper bin in this BrightQuest sorting activity.",
+      "explanation": "In this BrightQuest material-sorting practice, Notebook pages goes in the Paper group. Real local recycling rules can differ.",
       "distractors": [
         {
           "value": "Organic",
@@ -3626,10 +3626,10 @@
         "text": "Put Notebook pages in the correct waste-sorting bin."
       },
       "locale": "en-IN",
-      "author": "brightquest-legacy-migration",
+      "author": "brightquest-phase-e-technical-hardening",
       "reviewerOwnerId": "primary_teacher_reviewer",
       "status": "needsReview",
-      "revision": 1,
+      "revision": 2,
       "generation": {
         "mode": "authored",
         "deterministicSeed": null
@@ -3663,7 +3663,7 @@
         "type": "exactText",
         "value": "Organic"
       },
-      "explanation": "Vegetable scraps belongs in the Organic bin in this BrightQuest sorting activity.",
+      "explanation": "In this BrightQuest material-sorting practice, Vegetable scraps goes in the Organic group. Real local recycling rules can differ.",
       "distractors": [
         {
           "value": "Paper",
@@ -3684,10 +3684,10 @@
         "text": "Put Vegetable scraps in the correct waste-sorting bin."
       },
       "locale": "en-IN",
-      "author": "brightquest-legacy-migration",
+      "author": "brightquest-phase-e-technical-hardening",
       "reviewerOwnerId": "primary_teacher_reviewer",
       "status": "needsReview",
-      "revision": 1,
+      "revision": 2,
       "generation": {
         "mode": "authored",
         "deterministicSeed": null
@@ -3721,7 +3721,7 @@
         "type": "exactText",
         "value": "Plastic"
       },
-      "explanation": "Clean plastic container belongs in the Plastic bin in this BrightQuest sorting activity.",
+      "explanation": "In this BrightQuest material-sorting practice, Clean plastic container goes in the Plastic group. Real local recycling rules can differ.",
       "distractors": [
         {
           "value": "Paper",
@@ -3742,10 +3742,10 @@
         "text": "Put Clean plastic container in the correct waste-sorting bin."
       },
       "locale": "en-IN",
-      "author": "brightquest-legacy-migration",
+      "author": "brightquest-phase-e-technical-hardening",
       "reviewerOwnerId": "primary_teacher_reviewer",
       "status": "needsReview",
-      "revision": 1,
+      "revision": 2,
       "generation": {
         "mode": "authored",
         "deterministicSeed": null
@@ -3754,6 +3754,3126 @@
         "name": "Clean plastic container",
         "emoji": "🥡",
         "bin": "Plastic"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_large_numbers_100000_g1",
+      "legacyContentId": "pe_math_large_numbers_100000_g1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_large_numbers_100000",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_large_numbers_100000",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_large_numbers_100000_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "guidedPractice",
+      "difficulty": 4,
+      "prompt": "In 74,215, what value does the digit 7 represent?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 70000
+      },
+      "explanation": "The 7 is in the ten-thousands place, so its value is 70,000.",
+      "distractors": [
+        {
+          "value": 700,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 7000,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 74215,
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Name the place of the leftmost digit."
+        }
+      ],
+      "narration": {
+        "text": "In 74,215, what value does the digit 7 represent?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 70000,
+        "choices": [
+          700,
+          7000,
+          70000,
+          74215
+        ],
+        "hint": "Name the place of the leftmost digit.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_large_numbers_100000_i1",
+      "legacyContentId": "pe_math_large_numbers_100000_i1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_large_numbers_100000",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_large_numbers_100000",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_large_numbers_100000_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 4,
+      "prompt": "Which number is 60,000 + 4,000 + 300 + 20 + 5?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 64325
+      },
+      "explanation": "60,000 + 4,000 + 300 + 20 + 5 = 64,325.",
+      "distractors": [
+        {
+          "value": 60425,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 64025,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 64352,
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Combine each place value."
+        }
+      ],
+      "narration": {
+        "text": "Which number is 60,000 + 4,000 + 300 + 20 + 5?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 64325,
+        "choices": [
+          60425,
+          64025,
+          64325,
+          64352
+        ],
+        "hint": "Combine each place value.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_large_numbers_100000_m1",
+      "legacyContentId": "pe_math_large_numbers_100000_m1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_large_numbers_100000",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_large_numbers_100000",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_large_numbers_100000_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "masteryCheck",
+      "difficulty": 5,
+      "prompt": "Which number is greater: 58,907 or 58,790?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 58907
+      },
+      "explanation": "Both start with 58 thousand; 9 hundreds is greater than 7 hundreds, so 58,907 is greater.",
+      "distractors": [
+        {
+          "value": 58790,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 58097,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 58970,
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Compare from left to right until digits differ."
+        }
+      ],
+      "narration": {
+        "text": "Which number is greater: 58,907 or 58,790?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 58907,
+        "choices": [
+          58790,
+          58907,
+          58097,
+          58970
+        ],
+        "hint": "Compare from left to right until digits differ.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_large_numbers_100000_t1",
+      "legacyContentId": "pe_math_large_numbers_100000_t1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_large_numbers_100000",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_large_numbers_100000",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_large_numbers_100000_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "transfer",
+      "difficulty": 5,
+      "prompt": "A town recorded 96,405 visitors and another recorded 96,450. Which is larger?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 96450
+      },
+      "explanation": "96,450 is larger because the first differing place is the tens: 5 tens is greater than 0 tens.",
+      "distractors": [
+        {
+          "value": 96405,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 96045,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 96950,
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Compare the first differing digit."
+        }
+      ],
+      "narration": {
+        "text": "A town recorded 96,405 visitors and another recorded 96,450. Which is larger?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 96450,
+        "choices": [
+          96405,
+          96450,
+          96045,
+          96950
+        ],
+        "hint": "Compare the first differing digit.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_estimation_g1",
+      "legacyContentId": "pe_math_estimation_g1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_estimation",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_estimation",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_estimation_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "guidedPractice",
+      "difficulty": 4,
+      "prompt": "Estimate 398 + 205 by rounding each number to the nearest hundred.",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 600
+      },
+      "explanation": "398 rounds to 400 and 205 rounds to 200, so the estimate is 600.",
+      "distractors": [
+        {
+          "value": 500,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 700,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 800,
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Round each addend to the nearest hundred."
+        }
+      ],
+      "narration": {
+        "text": "Estimate 398 + 205 by rounding each number to the nearest hundred."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 600,
+        "choices": [
+          500,
+          600,
+          700,
+          800
+        ],
+        "hint": "Round each addend to the nearest hundred.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_estimation_i1",
+      "legacyContentId": "pe_math_estimation_i1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_estimation",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_estimation",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_estimation_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 4,
+      "prompt": "Which is the best estimate for 1,982 − 1,010?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 1000
+      },
+      "explanation": "1,982 is about 2,000 and 1,010 is about 1,000, giving an estimate of about 1,000.",
+      "distractors": [
+        {
+          "value": 100,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 500,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 2000,
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Round to convenient thousands."
+        }
+      ],
+      "narration": {
+        "text": "Which is the best estimate for 1,982 − 1,010?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 1000,
+        "choices": [
+          100,
+          500,
+          1000,
+          2000
+        ],
+        "hint": "Round to convenient thousands.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_estimation_m1",
+      "legacyContentId": "pe_math_estimation_m1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_estimation",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_estimation",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_estimation_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "masteryCheck",
+      "difficulty": 5,
+      "prompt": "A calculation says 49 × 21 = 10,290. Which statement is best?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "The answer is unreasonable; 50 × 20 is about 1,000"
+      },
+      "explanation": "49 × 21 is close to 50 × 20 = 1,000, so 10,290 is far too large.",
+      "distractors": [
+        {
+          "value": "The answer is reasonable because it is above 10,000",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "No estimate can help",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "49 × 21 must be below 100",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Compare with nearby easy numbers."
+        }
+      ],
+      "narration": {
+        "text": "A calculation says 49 × 21 = 10,290. Which statement is best?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "The answer is unreasonable; 50 × 20 is about 1,000",
+        "choices": [
+          "The answer is unreasonable; 50 × 20 is about 1,000",
+          "The answer is reasonable because it is above 10,000",
+          "No estimate can help",
+          "49 × 21 must be below 100"
+        ],
+        "hint": "Compare with nearby easy numbers.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_estimation_t1",
+      "legacyContentId": "pe_math_estimation_t1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_estimation",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_estimation",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_estimation_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "transfer",
+      "difficulty": 5,
+      "prompt": "Estimate 612 ÷ 6 using a nearby compatible number.",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 100
+      },
+      "explanation": "612 is close to 600, and 600 ÷ 6 = 100.",
+      "distractors": [
+        {
+          "value": 10,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 60,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 600,
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Choose a nearby number that divides easily by 6."
+        }
+      ],
+      "narration": {
+        "text": "Estimate 612 ÷ 6 using a nearby compatible number."
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 100,
+        "choices": [
+          10,
+          60,
+          100,
+          600
+        ],
+        "hint": "Choose a nearby number that divides easily by 6.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_factors_multiples_g1",
+      "legacyContentId": "pe_math_factors_multiples_g1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_factors_multiples",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_factors_multiples",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_factors_multiples_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "guidedPractice",
+      "difficulty": 4,
+      "prompt": "Which number is a factor of 24?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 6
+      },
+      "explanation": "24 ÷ 6 = 4 with no remainder, so 6 is a factor of 24.",
+      "distractors": [
+        {
+          "value": 5,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 7,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 9,
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Test which choice divides 24 exactly."
+        }
+      ],
+      "narration": {
+        "text": "Which number is a factor of 24?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 6,
+        "choices": [
+          5,
+          6,
+          7,
+          9
+        ],
+        "hint": "Test which choice divides 24 exactly.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_factors_multiples_i1",
+      "legacyContentId": "pe_math_factors_multiples_i1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_factors_multiples",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_factors_multiples",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_factors_multiples_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 4,
+      "prompt": "Which number is a multiple of 8?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 40
+      },
+      "explanation": "40 = 8 × 5, so 40 is a multiple of 8.",
+      "distractors": [
+        {
+          "value": 18,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 24,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 54,
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Look for a number in the 8-times table."
+        }
+      ],
+      "narration": {
+        "text": "Which number is a multiple of 8?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 40,
+        "choices": [
+          18,
+          24,
+          40,
+          54
+        ],
+        "hint": "Look for a number in the 8-times table.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_factors_multiples_m1",
+      "legacyContentId": "pe_math_factors_multiples_m1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_factors_multiples",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_factors_multiples",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_factors_multiples_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "masteryCheck",
+      "difficulty": 5,
+      "prompt": "What is the smallest common multiple of 4 and 6?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 12
+      },
+      "explanation": "Multiples of 4 include 4, 8, 12; multiples of 6 include 6, 12. The smallest common multiple is 12.",
+      "distractors": [
+        {
+          "value": 8,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 10,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 24,
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "List a few multiples of both numbers."
+        }
+      ],
+      "narration": {
+        "text": "What is the smallest common multiple of 4 and 6?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 12,
+        "choices": [
+          8,
+          10,
+          12,
+          24
+        ],
+        "hint": "List a few multiples of both numbers.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_factors_multiples_t1",
+      "legacyContentId": "pe_math_factors_multiples_t1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_factors_multiples",
+      "subject": "maths",
+      "unitId": "c5_math_numbers",
+      "competencyId": "c5_math_factors_multiples",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_factors_multiples_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "transfer",
+      "difficulty": 5,
+      "prompt": "Which pair are both factors of 36?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "4 and 9"
+      },
+      "explanation": "36 ÷ 4 = 9 and 36 ÷ 9 = 4, so both 4 and 9 are factors of 36.",
+      "distractors": [
+        {
+          "value": "5 and 8",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "7 and 10",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "8 and 12",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Check each number divides 36 exactly."
+        }
+      ],
+      "narration": {
+        "text": "Which pair are both factors of 36?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "4 and 9",
+        "choices": [
+          "4 and 9",
+          "5 and 8",
+          "7 and 10",
+          "8 and 12"
+        ],
+        "hint": "Check each number divides 36 exactly.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_geometry_angles_symmetry_g1",
+      "legacyContentId": "pe_math_geometry_angles_symmetry_g1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_geometry_angles_symmetry",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_geometry_angles_symmetry",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_geometry_angles_symmetry_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "guidedPractice",
+      "difficulty": 4,
+      "prompt": "Which angle is acute?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "45°"
+      },
+      "explanation": "45° is less than 90°, so it is an acute angle.",
+      "distractors": [
+        {
+          "value": "90°",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "120°",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "180°",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Acute angles are smaller than a right angle."
+        }
+      ],
+      "narration": {
+        "text": "Which angle is acute?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "45°",
+        "choices": [
+          "45°",
+          "90°",
+          "120°",
+          "180°"
+        ],
+        "hint": "Acute angles are smaller than a right angle.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_geometry_angles_symmetry_i1",
+      "legacyContentId": "pe_math_geometry_angles_symmetry_i1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_geometry_angles_symmetry",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_geometry_angles_symmetry",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_geometry_angles_symmetry_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 4,
+      "prompt": "Which angle is obtuse?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "120°"
+      },
+      "explanation": "120° is greater than 90° and less than 180°, so it is obtuse.",
+      "distractors": [
+        {
+          "value": "30°",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "60°",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "90°",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Compare with a right angle and a straight angle."
+        }
+      ],
+      "narration": {
+        "text": "Which angle is obtuse?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "120°",
+        "choices": [
+          "30°",
+          "60°",
+          "90°",
+          "120°"
+        ],
+        "hint": "Compare with a right angle and a straight angle.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_geometry_angles_symmetry_m1",
+      "legacyContentId": "pe_math_geometry_angles_symmetry_m1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_geometry_angles_symmetry",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_geometry_angles_symmetry",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_geometry_angles_symmetry_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "masteryCheck",
+      "difficulty": 5,
+      "prompt": "How many lines of symmetry does a square have?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 4
+      },
+      "explanation": "A square has 4 lines of symmetry: vertical, horizontal and two diagonals.",
+      "distractors": [
+        {
+          "value": 1,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 2,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 3,
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Imagine folds that make matching halves."
+        }
+      ],
+      "narration": {
+        "text": "How many lines of symmetry does a square have?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 4,
+        "choices": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "hint": "Imagine folds that make matching halves.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_geometry_angles_symmetry_t1",
+      "legacyContentId": "pe_math_geometry_angles_symmetry_t1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_geometry_angles_symmetry",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_geometry_angles_symmetry",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_geometry_angles_symmetry_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "transfer",
+      "difficulty": 5,
+      "prompt": "A shape is turned a quarter-turn around a point. What transformation is this?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Rotation"
+      },
+      "explanation": "Turning a shape around a fixed point is a rotation.",
+      "distractors": [
+        {
+          "value": "Reflection",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Translation",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Measurement",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Look for the action “turned around a point”."
+        }
+      ],
+      "narration": {
+        "text": "A shape is turned a quarter-turn around a point. What transformation is this?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Rotation",
+        "choices": [
+          "Rotation",
+          "Reflection",
+          "Translation",
+          "Measurement"
+        ],
+        "hint": "Look for the action “turned around a point”.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_measure_conversion_volume_g1",
+      "legacyContentId": "pe_math_measure_conversion_volume_g1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_measure_conversion_volume",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_measure_conversion_volume",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_measure_conversion_volume_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "guidedPractice",
+      "difficulty": 4,
+      "prompt": "How many millilitres are in 3 litres?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 3000
+      },
+      "explanation": "1 litre is 1,000 mL, so 3 litres is 3,000 mL.",
+      "distractors": [
+        {
+          "value": 300,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 30000,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 30,
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Multiply 1,000 by 3."
+        }
+      ],
+      "narration": {
+        "text": "How many millilitres are in 3 litres?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 3000,
+        "choices": [
+          300,
+          3000,
+          30000,
+          30
+        ],
+        "hint": "Multiply 1,000 by 3.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_measure_conversion_volume_i1",
+      "legacyContentId": "pe_math_measure_conversion_volume_i1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_measure_conversion_volume",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_measure_conversion_volume",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_measure_conversion_volume_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 4,
+      "prompt": "A rectangle is 8 cm long and 5 cm wide. What is its area in square centimetres?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 40
+      },
+      "explanation": "Area of a rectangle = length × width, so 8 × 5 = 40 cm².",
+      "distractors": [
+        {
+          "value": 13,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 26,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 80,
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Multiply length by width."
+        }
+      ],
+      "narration": {
+        "text": "A rectangle is 8 cm long and 5 cm wide. What is its area in square centimetres?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 40,
+        "choices": [
+          13,
+          26,
+          40,
+          80
+        ],
+        "hint": "Multiply length by width.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_measure_conversion_volume_m1",
+      "legacyContentId": "pe_math_measure_conversion_volume_m1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_measure_conversion_volume",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_measure_conversion_volume",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_measure_conversion_volume_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "masteryCheck",
+      "difficulty": 5,
+      "prompt": "A box holds 24 one-centimetre cubes arranged with no gaps. What is its volume?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 24
+      },
+      "explanation": "Each unit cube has volume 1 cm³, so 24 cubes fill 24 cm³.",
+      "distractors": [
+        {
+          "value": 6,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 12,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 48,
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Count the unit cubes."
+        }
+      ],
+      "narration": {
+        "text": "A box holds 24 one-centimetre cubes arranged with no gaps. What is its volume?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 24,
+        "choices": [
+          6,
+          12,
+          24,
+          48
+        ],
+        "hint": "Count the unit cubes.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_measure_conversion_volume_t1",
+      "legacyContentId": "pe_math_measure_conversion_volume_t1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_measure_conversion_volume",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_measure_conversion_volume",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_measure_conversion_volume_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "transfer",
+      "difficulty": 5,
+      "prompt": "A bottle holds 2 litres. How many 250 mL cups can it fill?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 8
+      },
+      "explanation": "2 litres is 2,000 mL, and 2,000 ÷ 250 = 8 cups.",
+      "distractors": [
+        {
+          "value": 4,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 6,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 10,
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Convert litres to millilitres, then divide."
+        }
+      ],
+      "narration": {
+        "text": "A bottle holds 2 litres. How many 250 mL cups can it fill?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 8,
+        "choices": [
+          4,
+          6,
+          8,
+          10
+        ],
+        "hint": "Convert litres to millilitres, then divide.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_data_g1",
+      "legacyContentId": "pe_math_data_g1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_data",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_data",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_data_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "guidedPractice",
+      "difficulty": 4,
+      "prompt": "A table shows Team A: 18 points, Team B: 24, Team C: 21. Which team has the most points?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Team B"
+      },
+      "explanation": "Team B has 24 points, which is greater than 21 and 18.",
+      "distractors": [
+        {
+          "value": "Team A",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Team C",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "They are equal",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Compare all three values."
+        }
+      ],
+      "narration": {
+        "text": "A table shows Team A: 18 points, Team B: 24, Team C: 21. Which team has the most points?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Team B",
+        "choices": [
+          "Team A",
+          "Team B",
+          "Team C",
+          "They are equal"
+        ],
+        "hint": "Compare all three values.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_data_i1",
+      "legacyContentId": "pe_math_data_i1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_data",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_data",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_data_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 4,
+      "prompt": "A chart shows 12 books in June and 19 in July. How many more books were read in July?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 7
+      },
+      "explanation": "19 − 12 = 7, so 7 more books were read in July.",
+      "distractors": [
+        {
+          "value": 5,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 12,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 31,
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Subtract the smaller month value from the larger."
+        }
+      ],
+      "narration": {
+        "text": "A chart shows 12 books in June and 19 in July. How many more books were read in July?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 7,
+        "choices": [
+          5,
+          7,
+          12,
+          31
+        ],
+        "hint": "Subtract the smaller month value from the larger.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_data_m1",
+      "legacyContentId": "pe_math_data_m1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_data",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_data",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_data_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "masteryCheck",
+      "difficulty": 5,
+      "prompt": "A table lists Red: 9, Blue: 14, Green: 11. What is the total?",
+      "correctResponseRule": {
+        "type": "exactNumber",
+        "value": 34
+      },
+      "explanation": "9 + 14 + 11 = 34.",
+      "distractors": [
+        {
+          "value": 25,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 32,
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": 44,
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Add the three table values."
+        }
+      ],
+      "narration": {
+        "text": "A table lists Red: 9, Blue: 14, Green: 11. What is the total?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": 34,
+        "choices": [
+          25,
+          32,
+          34,
+          44
+        ],
+        "hint": "Add the three table values.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_math_data_t1",
+      "legacyContentId": "pe_math_data_t1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_math_data",
+      "subject": "maths",
+      "unitId": "c5_math_fractions",
+      "competencyId": "c5_math_data",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_math_data_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "transfer",
+      "difficulty": 5,
+      "prompt": "A chart shows Plant A grew 6 cm and Plant B grew 9 cm. Which statement is supported?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Plant B grew 3 cm more than Plant A"
+      },
+      "explanation": "9 − 6 = 3, so Plant B grew 3 cm more.",
+      "distractors": [
+        {
+          "value": "Plant A grew 3 cm more than Plant B",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Both grew the same amount",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Plant B grew 15 cm more",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Compare the two measured values."
+        }
+      ],
+      "narration": {
+        "text": "A chart shows Plant A grew 6 cm and Plant B grew 9 cm. Which statement is supported?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Plant B grew 3 cm more than Plant A",
+        "choices": [
+          "Plant B grew 3 cm more than Plant A",
+          "Plant A grew 3 cm more than Plant B",
+          "Both grew the same amount",
+          "Plant B grew 15 cm more"
+        ],
+        "hint": "Compare the two measured values.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_comprehend_infer_evidence_g1",
+      "legacyContentId": "pe_eng_comprehend_infer_evidence_g1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_comprehend_infer_evidence",
+      "subject": "english",
+      "unitId": "c5_english_reading",
+      "competencyId": "c5_eng_comprehend_infer_evidence",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_comprehend_infer_evidence_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "guidedPractice",
+      "difficulty": 4,
+      "prompt": "Nikhil checked the forecast, packed a raincoat and covered his books in a waterproof bag. What can you infer?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "He expects wet weather"
+      },
+      "explanation": "The raincoat and waterproof bag are evidence that Nikhil expects wet weather.",
+      "distractors": [
+        {
+          "value": "He plans to swim indoors",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "He thinks books cannot get wet",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "He is preparing for snow only",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Point to two details that support the inference."
+        }
+      ],
+      "narration": {
+        "text": "Nikhil checked the forecast, packed a raincoat and covered his books in a waterproof bag. What can you infer?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "He expects wet weather",
+        "choices": [
+          "He expects wet weather",
+          "He plans to swim indoors",
+          "He thinks books cannot get wet",
+          "He is preparing for snow only"
+        ],
+        "hint": "Point to two details that support the inference.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_comprehend_infer_evidence_i1",
+      "legacyContentId": "pe_eng_comprehend_infer_evidence_i1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_comprehend_infer_evidence",
+      "subject": "english",
+      "unitId": "c5_english_reading",
+      "competencyId": "c5_eng_comprehend_infer_evidence",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_comprehend_infer_evidence_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 4,
+      "prompt": "The lights were off, the door was locked and a sign said “Back at 2:00”. What is the best inference?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "The shop is temporarily closed"
+      },
+      "explanation": "The locked door, lights off and return-time sign support the inference that the shop is temporarily closed.",
+      "distractors": [
+        {
+          "value": "The shop is crowded",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "The shop is open all night",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "The sign gives no clue",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Use all three details together."
+        }
+      ],
+      "narration": {
+        "text": "The lights were off, the door was locked and a sign said “Back at 2:00”. What is the best inference?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "The shop is temporarily closed",
+        "choices": [
+          "The shop is temporarily closed",
+          "The shop is crowded",
+          "The shop is open all night",
+          "The sign gives no clue"
+        ],
+        "hint": "Use all three details together.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_comprehend_infer_evidence_m1",
+      "legacyContentId": "pe_eng_comprehend_infer_evidence_m1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_comprehend_infer_evidence",
+      "subject": "english",
+      "unitId": "c5_english_reading",
+      "competencyId": "c5_eng_comprehend_infer_evidence",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_comprehend_infer_evidence_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "masteryCheck",
+      "difficulty": 5,
+      "prompt": "Priya reread the instructions, corrected one measurement and then the model fit properly. Which detail best supports that checking helped?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "After she corrected the measurement, the model fit properly"
+      },
+      "explanation": "The improved result after correcting the measurement directly supports the inference that checking helped.",
+      "distractors": [
+        {
+          "value": "She reread the instructions",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "The model was colourful",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "She worked in the morning",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Choose the detail that links the action to the result."
+        }
+      ],
+      "narration": {
+        "text": "Priya reread the instructions, corrected one measurement and then the model fit properly. Which detail best supports that checking helped?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "After she corrected the measurement, the model fit properly",
+        "choices": [
+          "She reread the instructions",
+          "The model was colourful",
+          "After she corrected the measurement, the model fit properly",
+          "She worked in the morning"
+        ],
+        "hint": "Choose the detail that links the action to the result.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_comprehend_infer_evidence_t1",
+      "legacyContentId": "pe_eng_comprehend_infer_evidence_t1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_comprehend_infer_evidence",
+      "subject": "english",
+      "unitId": "c5_english_reading",
+      "competencyId": "c5_eng_comprehend_infer_evidence",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_comprehend_infer_evidence_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "transfer",
+      "difficulty": 5,
+      "prompt": "A trail had fresh footprints and bent grass, but no animal was visible. Which inference is best supported?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "An animal may have passed recently"
+      },
+      "explanation": "Fresh footprints and bent grass are evidence that an animal may have passed recently.",
+      "distractors": [
+        {
+          "value": "No animal has ever been there",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "The grass cannot bend",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "The footprints were made next year",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Infer only what the evidence makes reasonable."
+        }
+      ],
+      "narration": {
+        "text": "A trail had fresh footprints and bent grass, but no animal was visible. Which inference is best supported?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "An animal may have passed recently",
+        "choices": [
+          "An animal may have passed recently",
+          "No animal has ever been there",
+          "The grass cannot bend",
+          "The footprints were made next year"
+        ],
+        "hint": "Infer only what the evidence makes reasonable.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_main_summary_g1",
+      "legacyContentId": "pe_eng_main_summary_g1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_main_summary",
+      "subject": "english",
+      "unitId": "c5_english_reading",
+      "competencyId": "c5_eng_main_summary",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_main_summary_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "guidedPractice",
+      "difficulty": 4,
+      "prompt": "Text: “The class tested three paper-bridge designs. After comparing how much weight each held, they strengthened the best design.” Which is the best summary?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "The class tested bridge designs and improved the strongest one"
+      },
+      "explanation": "The best summary gives the central action—testing designs—and the important result—improving the strongest one.",
+      "distractors": [
+        {
+          "value": "Three pieces of paper were on a table",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "The class likes bridges because bridges are long",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Every tiny step of the test must be listed",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Keep the main action and result, not every detail."
+        }
+      ],
+      "narration": {
+        "text": "Text: “The class tested three paper-bridge designs. After comparing how much weight each held, they strengthened the best design.” Which is the best summary?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "The class tested bridge designs and improved the strongest one",
+        "choices": [
+          "The class tested bridge designs and improved the strongest one",
+          "Three pieces of paper were on a table",
+          "The class likes bridges because bridges are long",
+          "Every tiny step of the test must be listed"
+        ],
+        "hint": "Keep the main action and result, not every detail.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_main_summary_i1",
+      "legacyContentId": "pe_eng_main_summary_i1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_main_summary",
+      "subject": "english",
+      "unitId": "c5_english_reading",
+      "competencyId": "c5_eng_main_summary",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_main_summary_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 4,
+      "prompt": "Text: “Meera planted native flowers. Soon more bees visited the garden, so she added another flower bed.” What is the main idea?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Planting native flowers attracted bees and encouraged Meera to plant more"
+      },
+      "explanation": "The main idea connects the planting, increased bee visits and Meera’s decision to plant more.",
+      "distractors": [
+        {
+          "value": "Meera bought a new bicycle",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Bees never visit flowers",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "The garden had no plants",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Connect the cause and result across the whole text."
+        }
+      ],
+      "narration": {
+        "text": "Text: “Meera planted native flowers. Soon more bees visited the garden, so she added another flower bed.” What is the main idea?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Planting native flowers attracted bees and encouraged Meera to plant more",
+        "choices": [
+          "Planting native flowers attracted bees and encouraged Meera to plant more",
+          "Meera bought a new bicycle",
+          "Bees never visit flowers",
+          "The garden had no plants"
+        ],
+        "hint": "Connect the cause and result across the whole text.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_main_summary_m1",
+      "legacyContentId": "pe_eng_main_summary_m1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_main_summary",
+      "subject": "english",
+      "unitId": "c5_english_reading",
+      "competencyId": "c5_eng_main_summary",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_main_summary_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "masteryCheck",
+      "difficulty": 5,
+      "prompt": "Which summary is most concise for a passage about students measuring rainfall each day and comparing the weekly totals?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Students recorded daily rainfall and compared weekly totals"
+      },
+      "explanation": "The concise summary keeps the main actions: recording rainfall and comparing totals.",
+      "distractors": [
+        {
+          "value": "Students used a blue ruler on Monday, a pencil on Tuesday, and many other tiny details",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Rain is water and weeks have days",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Students did nothing with measurements",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Remove minor details that do not change the main idea."
+        }
+      ],
+      "narration": {
+        "text": "Which summary is most concise for a passage about students measuring rainfall each day and comparing the weekly totals?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Students recorded daily rainfall and compared weekly totals",
+        "choices": [
+          "Students recorded daily rainfall and compared weekly totals",
+          "Students used a blue ruler on Monday, a pencil on Tuesday, and many other tiny details",
+          "Rain is water and weeks have days",
+          "Students did nothing with measurements"
+        ],
+        "hint": "Remove minor details that do not change the main idea.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_main_summary_t1",
+      "legacyContentId": "pe_eng_main_summary_t1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_main_summary",
+      "subject": "english",
+      "unitId": "c5_english_reading",
+      "competencyId": "c5_eng_main_summary",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_main_summary_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "transfer",
+      "difficulty": 5,
+      "prompt": "A passage explains that a village repaired leaks, collected rainwater and used less water during dry months. Which summary fits best?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "The village used several methods to conserve water"
+      },
+      "explanation": "Repairing leaks, collecting rainwater and reducing use are all methods of water conservation.",
+      "distractors": [
+        {
+          "value": "The village wanted to waste more water",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Only one person saw a cloud",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "The passage is mainly about road traffic",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Find one idea that covers all three actions."
+        }
+      ],
+      "narration": {
+        "text": "A passage explains that a village repaired leaks, collected rainwater and used less water during dry months. Which summary fits best?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "The village used several methods to conserve water",
+        "choices": [
+          "The village used several methods to conserve water",
+          "The village wanted to waste more water",
+          "Only one person saw a cloud",
+          "The passage is mainly about road traffic"
+        ],
+        "hint": "Find one idea that covers all three actions.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_vocab_morphology_context_g1",
+      "legacyContentId": "pe_eng_vocab_morphology_context_g1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_vocab_morphology_context",
+      "subject": "english",
+      "unitId": "c5_english_reading",
+      "competencyId": "c5_eng_vocab_morphology_context",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_vocab_morphology_context_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "guidedPractice",
+      "difficulty": 4,
+      "prompt": "In “The glass was reusable, so we washed it and used it again,” what does reusable mean?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "able to be used again"
+      },
+      "explanation": "The suffix “-able” suggests “able to”, and the sentence says the glass was used again.",
+      "distractors": [
+        {
+          "value": "impossible to clean",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "made only of paper",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "used only once",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Combine the word part with the context clue."
+        }
+      ],
+      "narration": {
+        "text": "In “The glass was reusable, so we washed it and used it again,” what does reusable mean?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "able to be used again",
+        "choices": [
+          "able to be used again",
+          "impossible to clean",
+          "made only of paper",
+          "used only once"
+        ],
+        "hint": "Combine the word part with the context clue.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_vocab_morphology_context_i1",
+      "legacyContentId": "pe_eng_vocab_morphology_context_i1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_vocab_morphology_context",
+      "subject": "english",
+      "unitId": "c5_english_reading",
+      "competencyId": "c5_eng_vocab_morphology_context",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_vocab_morphology_context_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 4,
+      "prompt": "In “Maya reread the note because she missed one line,” what does the prefix re- mean in reread?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "again"
+      },
+      "explanation": "The prefix re- means again; Maya read the note another time.",
+      "distractors": [
+        {
+          "value": "before",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "without",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "under",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Look at the action described after “because”."
+        }
+      ],
+      "narration": {
+        "text": "In “Maya reread the note because she missed one line,” what does the prefix re- mean in reread?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "again",
+        "choices": [
+          "again",
+          "before",
+          "without",
+          "under"
+        ],
+        "hint": "Look at the action described after “because”.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_vocab_morphology_context_m1",
+      "legacyContentId": "pe_eng_vocab_morphology_context_m1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_vocab_morphology_context",
+      "subject": "english",
+      "unitId": "c5_english_reading",
+      "competencyId": "c5_eng_vocab_morphology_context",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_vocab_morphology_context_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "masteryCheck",
+      "difficulty": 5,
+      "prompt": "In “The path was uneven, with bumps and dips,” what does uneven mean?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "not level or smooth"
+      },
+      "explanation": "The prefix un- means “not”, and bumps and dips show that the path is not level or smooth.",
+      "distractors": [
+        {
+          "value": "perfectly flat",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "very bright",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "full of water",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Use both the prefix and the examples."
+        }
+      ],
+      "narration": {
+        "text": "In “The path was uneven, with bumps and dips,” what does uneven mean?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "not level or smooth",
+        "choices": [
+          "not level or smooth",
+          "perfectly flat",
+          "very bright",
+          "full of water"
+        ],
+        "hint": "Use both the prefix and the examples.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_vocab_morphology_context_t1",
+      "legacyContentId": "pe_eng_vocab_morphology_context_t1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_vocab_morphology_context",
+      "subject": "english",
+      "unitId": "c5_english_reading",
+      "competencyId": "c5_eng_vocab_morphology_context",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_vocab_morphology_context_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "transfer",
+      "difficulty": 5,
+      "prompt": "Which sentence uses “careless” correctly?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Ravi made a careless mistake because he did not check his work."
+      },
+      "explanation": "“-less” can mean “without”; a mistake made without enough care fits the word careless.",
+      "distractors": [
+        {
+          "value": "The careful pilot was careless because every check was completed",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "A triangle is careless because it has three sides",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "The water was careless because it froze",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Use the base word “care” and suffix “-less”."
+        }
+      ],
+      "narration": {
+        "text": "Which sentence uses “careless” correctly?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Ravi made a careless mistake because he did not check his work.",
+        "choices": [
+          "Ravi made a careless mistake because he did not check his work.",
+          "The careful pilot was careless because every check was completed",
+          "A triangle is careless because it has three sides",
+          "The water was careless because it froze"
+        ],
+        "hint": "Use the base word “care” and suffix “-less”.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_punctuation_editing_g1",
+      "legacyContentId": "pe_eng_punctuation_editing_g1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_punctuation_editing",
+      "subject": "english",
+      "unitId": "c5_english_language",
+      "competencyId": "c5_eng_punctuation_editing",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_punctuation_editing_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "guidedPractice",
+      "difficulty": 4,
+      "prompt": "Which edited sentence is correct?",
+      "correctResponseRule": {
+        "type": "exactTextCaseSensitive",
+        "value": "After the rain stopped, we walked to the park."
+      },
+      "explanation": "The sentence begins with a capital, uses a comma after the introductory clause and ends with a full stop.",
+      "distractors": [
+        {
+          "value": "after the rain stopped we walked to the park",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "After the rain stopped? we walked to the park.",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "After the rain stopped, We walked to the park.",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Check the beginning, comma and end mark."
+        }
+      ],
+      "narration": {
+        "text": "Which edited sentence is correct?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "After the rain stopped, we walked to the park.",
+        "choices": [
+          "after the rain stopped we walked to the park",
+          "After the rain stopped, we walked to the park.",
+          "After the rain stopped? we walked to the park.",
+          "After the rain stopped, We walked to the park."
+        ],
+        "hint": "Check the beginning, comma and end mark.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_punctuation_editing_i1",
+      "legacyContentId": "pe_eng_punctuation_editing_i1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_punctuation_editing",
+      "subject": "english",
+      "unitId": "c5_english_language",
+      "competencyId": "c5_eng_punctuation_editing",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_punctuation_editing_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 4,
+      "prompt": "Which sentence uses the apostrophe correctly?",
+      "correctResponseRule": {
+        "type": "exactTextCaseSensitive",
+        "value": "The children’s books are on the shelf."
+      },
+      "explanation": "“Children” is already plural, so “children’s” uses ’s to show possession.",
+      "distractors": [
+        {
+          "value": "The childrens books are on the shelf.",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "The childrens’ books are on the shelf.",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "The children,s books are on the shelf.",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "The plural word is “children”, not “childrens”."
+        }
+      ],
+      "narration": {
+        "text": "Which sentence uses the apostrophe correctly?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "The children’s books are on the shelf.",
+        "choices": [
+          "The childrens books are on the shelf.",
+          "The children’s books are on the shelf.",
+          "The childrens’ books are on the shelf.",
+          "The children,s books are on the shelf."
+        ],
+        "hint": "The plural word is “children”, not “childrens”.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_punctuation_editing_m1",
+      "legacyContentId": "pe_eng_punctuation_editing_m1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_punctuation_editing",
+      "subject": "english",
+      "unitId": "c5_english_language",
+      "competencyId": "c5_eng_punctuation_editing",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_punctuation_editing_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "masteryCheck",
+      "difficulty": 5,
+      "prompt": "Which sentence is edited correctly?",
+      "correctResponseRule": {
+        "type": "exactTextCaseSensitive",
+        "value": "Ravi and Meena are preparing their project."
+      },
+      "explanation": "The compound subject takes “are”, both names are capitalised and “their” correctly shows possession.",
+      "distractors": [
+        {
+          "value": "Ravi and Meena is preparing their project.",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "ravi and Meena are preparing their project",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Ravi and Meena are preparing there project.",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Check agreement, capitals and the word their."
+        }
+      ],
+      "narration": {
+        "text": "Which sentence is edited correctly?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Ravi and Meena are preparing their project.",
+        "choices": [
+          "Ravi and Meena is preparing their project.",
+          "ravi and Meena are preparing their project",
+          "Ravi and Meena are preparing their project.",
+          "Ravi and Meena are preparing there project."
+        ],
+        "hint": "Check agreement, capitals and the word their.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_punctuation_editing_t1",
+      "legacyContentId": "pe_eng_punctuation_editing_t1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_punctuation_editing",
+      "subject": "english",
+      "unitId": "c5_english_language",
+      "competencyId": "c5_eng_punctuation_editing",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_punctuation_editing_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "transfer",
+      "difficulty": 5,
+      "prompt": "Which sentence is punctuated correctly?",
+      "correctResponseRule": {
+        "type": "exactTextCaseSensitive",
+        "value": "“Please close the gate,” said Arjun."
+      },
+      "explanation": "The spoken words begin with a capital and the comma is placed inside the closing quotation mark before “said Arjun”.",
+      "distractors": [
+        {
+          "value": "“Please close the gate” said Arjun.",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "“please close the gate,” said Arjun.",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Please close the gate,” said Arjun.",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Check the quotation marks, capital and comma."
+        }
+      ],
+      "narration": {
+        "text": "Which sentence is punctuated correctly?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "“Please close the gate,” said Arjun.",
+        "choices": [
+          "“Please close the gate” said Arjun.",
+          "“Please close the gate,” said Arjun.",
+          "“please close the gate,” said Arjun.",
+          "Please close the gate,” said Arjun."
+        ],
+        "hint": "Check the quotation marks, capital and comma.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_explain_justify_g1",
+      "legacyContentId": "pe_eng_explain_justify_g1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_explain_justify",
+      "subject": "english",
+      "unitId": "c5_english_language",
+      "competencyId": "c5_eng_explain_justify",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_explain_justify_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "guidedPractice",
+      "difficulty": 4,
+      "prompt": "Which response best justifies the idea “The class should keep a reading corner”?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Yes, because easy access to books gives students more chances to read."
+      },
+      "explanation": "The response states the idea and gives a relevant reason connected to reading opportunities.",
+      "distractors": [
+        {
+          "value": "Yes, because I said yes.",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Books have pages.",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "The class has walls.",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Look for a reason that directly supports the idea."
+        }
+      ],
+      "narration": {
+        "text": "Which response best justifies the idea “The class should keep a reading corner”?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Yes, because easy access to books gives students more chances to read.",
+        "choices": [
+          "Yes, because easy access to books gives students more chances to read.",
+          "Yes, because I said yes.",
+          "Books have pages.",
+          "The class has walls."
+        ],
+        "hint": "Look for a reason that directly supports the idea.",
+        "masteryEligible": false,
+        "evidenceScope": "practiceOnlyConstructedResponsePending"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_explain_justify_i1",
+      "legacyContentId": "pe_eng_explain_justify_i1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_explain_justify",
+      "subject": "english",
+      "unitId": "c5_english_language",
+      "competencyId": "c5_eng_explain_justify",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_explain_justify_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 4,
+      "prompt": "Which explanation is strongest for “We should repair the leaking tap”?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Repairing it prevents unnecessary water loss."
+      },
+      "explanation": "Preventing unnecessary water loss is a relevant reason for repairing a leak.",
+      "distractors": [
+        {
+          "value": "The tap is near a wall.",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Water is wet.",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "I like blue taps.",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Choose a reason linked to the problem."
+        }
+      ],
+      "narration": {
+        "text": "Which explanation is strongest for “We should repair the leaking tap”?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Repairing it prevents unnecessary water loss.",
+        "choices": [
+          "Repairing it prevents unnecessary water loss.",
+          "The tap is near a wall.",
+          "Water is wet.",
+          "I like blue taps."
+        ],
+        "hint": "Choose a reason linked to the problem.",
+        "masteryEligible": false,
+        "evidenceScope": "practiceOnlyConstructedResponsePending"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_explain_justify_m1",
+      "legacyContentId": "pe_eng_explain_justify_m1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_explain_justify",
+      "subject": "english",
+      "unitId": "c5_english_language",
+      "competencyId": "c5_eng_explain_justify",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_explain_justify_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "masteryCheck",
+      "difficulty": 5,
+      "prompt": "Which answer includes both a claim and evidence?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "The plant grew better in sunlight because it gained 4 cm compared with 1 cm in shade."
+      },
+      "explanation": "The sentence makes a claim and supports it with measured evidence from the comparison.",
+      "distractors": [
+        {
+          "value": "Plants are interesting.",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Sunlight is bright.",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "The ruler was green.",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Look for both an idea and a supporting measurement."
+        }
+      ],
+      "narration": {
+        "text": "Which answer includes both a claim and evidence?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "The plant grew better in sunlight because it gained 4 cm compared with 1 cm in shade.",
+        "choices": [
+          "The plant grew better in sunlight because it gained 4 cm compared with 1 cm in shade.",
+          "Plants are interesting.",
+          "Sunlight is bright.",
+          "The ruler was green."
+        ],
+        "hint": "Look for both an idea and a supporting measurement.",
+        "masteryEligible": false,
+        "evidenceScope": "practiceOnlyConstructedResponsePending"
+      }
+    },
+    {
+      "id": "c5_skill_studio_eng_explain_justify_t1",
+      "legacyContentId": "pe_eng_explain_justify_t1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_eng_explain_justify",
+      "subject": "english",
+      "unitId": "c5_english_language",
+      "competencyId": "c5_eng_explain_justify",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_eng_explain_justify_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "transfer",
+      "difficulty": 5,
+      "prompt": "Which justification is most relevant to choosing the shorter safe route?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Route B is better because it is safe and is 200 metres shorter."
+      },
+      "explanation": "Safety plus the measured shorter distance directly supports the choice of Route B.",
+      "distractors": [
+        {
+          "value": "Route B has a nice name.",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "I chose it without looking at the map.",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Routes can be drawn with lines.",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Use evidence that matches the decision."
+        }
+      ],
+      "narration": {
+        "text": "Which justification is most relevant to choosing the shorter safe route?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Route B is better because it is safe and is 200 metres shorter.",
+        "choices": [
+          "Route B is better because it is safe and is 200 metres shorter.",
+          "Route B has a nice name.",
+          "I chose it without looking at the map.",
+          "Routes can be drawn with lines."
+        ],
+        "hint": "Use evidence that matches the decision.",
+        "masteryEligible": false,
+        "evidenceScope": "practiceOnlyConstructedResponsePending"
+      }
+    },
+    {
+      "id": "c5_skill_studio_evs_food_water_community_g1",
+      "legacyContentId": "pe_evs_food_water_community_g1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_evs_food_water_community",
+      "subject": "evs",
+      "unitId": "c5_evs_world",
+      "competencyId": "c5_evs_food_water_community",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_evs_food_water_community_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "guidedPractice",
+      "difficulty": 4,
+      "prompt": "A farming area has very little irrigation water. Which effect is most directly possible?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Crop production may decrease"
+      },
+      "explanation": "Less irrigation water can reduce the water available to crops, which may decrease production.",
+      "distractors": [
+        {
+          "value": "Road signs disappear",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "All houses become taller",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "The day becomes longer",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Trace the resource to the activity that depends on it."
+        }
+      ],
+      "narration": {
+        "text": "A farming area has very little irrigation water. Which effect is most directly possible?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Crop production may decrease",
+        "choices": [
+          "Crop production may decrease",
+          "Road signs disappear",
+          "All houses become taller",
+          "The day becomes longer"
+        ],
+        "hint": "Trace the resource to the activity that depends on it.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_evs_food_water_community_i1",
+      "legacyContentId": "pe_evs_food_water_community_i1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_evs_food_water_community",
+      "subject": "evs",
+      "unitId": "c5_evs_world",
+      "competencyId": "c5_evs_food_water_community",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_evs_food_water_community_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "independentPractice",
+      "difficulty": 4,
+      "prompt": "Why can a clean local water supply support community wellbeing?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "It supports drinking, hygiene and daily activities"
+      },
+      "explanation": "Reliable clean water supports essential daily needs such as drinking and hygiene.",
+      "distractors": [
+        {
+          "value": "It makes all people do the same job",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "It removes the need for food",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "It guarantees there will never be drought",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Connect the resource to everyday needs."
+        }
+      ],
+      "narration": {
+        "text": "Why can a clean local water supply support community wellbeing?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "It supports drinking, hygiene and daily activities",
+        "choices": [
+          "It supports drinking, hygiene and daily activities",
+          "It makes all people do the same job",
+          "It removes the need for food",
+          "It guarantees there will never be drought"
+        ],
+        "hint": "Connect the resource to everyday needs.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_evs_food_water_community_m1",
+      "legacyContentId": "pe_evs_food_water_community_m1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_evs_food_water_community",
+      "subject": "evs",
+      "unitId": "c5_evs_world",
+      "competencyId": "c5_evs_food_water_community",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_evs_food_water_community_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "masteryCheck",
+      "difficulty": 5,
+      "prompt": "Farmers grow vegetables, drivers transport them and vendors sell them. What does this show?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Food systems connect several livelihoods"
+      },
+      "explanation": "Production, transport and selling are linked livelihoods within a food system.",
+      "distractors": [
+        {
+          "value": "Only farmers are part of food systems",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Transport has no role in food access",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Vendors grow every crop they sell",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Follow the food from production to people."
+        }
+      ],
+      "narration": {
+        "text": "Farmers grow vegetables, drivers transport them and vendors sell them. What does this show?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Food systems connect several livelihoods",
+        "choices": [
+          "Food systems connect several livelihoods",
+          "Only farmers are part of food systems",
+          "Transport has no role in food access",
+          "Vendors grow every crop they sell"
+        ],
+        "hint": "Follow the food from production to people.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
+      }
+    },
+    {
+      "id": "c5_skill_studio_evs_food_water_community_t1",
+      "legacyContentId": "pe_evs_food_water_community_t1",
+      "classNumber": 5,
+      "gameId": "skill_studio",
+      "topicId": "phase_e_evs_food_water_community",
+      "subject": "evs",
+      "unitId": "c5_evs_world",
+      "competencyId": "c5_evs_food_water_community",
+      "relatedCompetencyIds": [],
+      "learningOutcomeId": "c5_evs_food_water_community_lo1",
+      "relatedLearningOutcomeIds": [],
+      "activityType": "transfer",
+      "difficulty": 5,
+      "prompt": "Which community action best protects a shared water source?",
+      "correctResponseRule": {
+        "type": "exactText",
+        "value": "Keep waste out of it and report pollution"
+      },
+      "explanation": "Keeping waste out and reporting pollution helps protect water quality for the community.",
+      "distractors": [
+        {
+          "value": "Dump rubbish beside it",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Leave leaks unrepaired",
+          "misconceptionId": "phase_e_choice_distractor"
+        },
+        {
+          "value": "Use it as a waste bin",
+          "misconceptionId": "phase_e_choice_distractor"
+        }
+      ],
+      "hints": [
+        {
+          "step": 1,
+          "text": "Choose the action that reduces contamination."
+        }
+      ],
+      "narration": {
+        "text": "Which community action best protects a shared water source?"
+      },
+      "locale": "en-IN",
+      "author": "brightquest-phase-e-technical-hardening",
+      "reviewerOwnerId": "primary_teacher_reviewer",
+      "status": "needsReview",
+      "revision": 1,
+      "generation": {
+        "mode": "authored",
+        "deterministicSeed": null
+      },
+      "payload": {
+        "answer": "Keep waste out of it and report pollution",
+        "choices": [
+          "Keep waste out of it and report pollution",
+          "Dump rubbish beside it",
+          "Leave leaks unrepaired",
+          "Use it as a waste bin"
+        ],
+        "hint": "Choose the action that reduces contamination.",
+        "masteryEligible": true,
+        "evidenceScope": "full"
       }
     }
   ]

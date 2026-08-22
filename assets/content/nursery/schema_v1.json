@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "contractId": "brightquest_nursery_content_v1",
+  "packId": "brightquest_nursery",
+  "requiredTopLevel": [
+    "schemaVersion",
+    "packId",
+    "displayName",
+    "contentVersion",
+    "locale",
+    "review",
+    "commercial",
+    "domains",
+    "letterAssociations",
+    "skills",
+    "activities"
+  ],
+  "supportedInteractions": [
+    "choice",
+    "pairMatch",
+    "sortBuckets",
+    "trace"
+  ],
+  "supportedRuleTypes": [
+    "choice",
+    "pairMatch",
+    "sortBuckets",
+    "traceCheckpoints"
+  ],
+  "masteryPhases": [
+    "independent",
+    "transfer",
+    "review"
+  ],
+  "notes": [
+    "Tracing is non-mastery motor practice and does not claim handwriting correctness.",
+    "Paid eligibility must remain false until external release gates are recorded.",
+    "Letter discovery uses short one-shot motion with a static reduced-motion fallback.",
+    "Multiple picture words per letter are authored content; deterministic review may select among them."
+  ],
+  "letterAssociationContract": {
+    "requiredExamplesPerLetter": 8,
+    "requiredExampleFields": [
+      "word",
+      "picture",
+      "assetPath",
+      "soundCue",
+      "soundPracticeEligible",
+      "beginningSoundEligible",
+      "displayPhrase"
+    ],
+    "assetPathPrefix": "assets/nursery/letter_cards/",
+    "notes": [
+      "Each A-Z letter keeps at least eight authored discovery examples in the current v1 pack.",
+      "The v1 Nursery pack must contain at least 200 unique local picture-card assets in total.",
+      "Picture-card assets are bundled locally; picture text remains a fallback.",
+      "Beginning-sound generators only use examples explicitly marked eligible.",
+      "Discovery browsing is teaching-only and never contributes mastery evidence.",
+      "soundPracticeEligible and beginningSoundEligible are evidence gates, not automatic consequences of spelling.",
+      "Irregular vowels, advanced Q/X patterns, SH, and initial consonant clusters may remain discovery cards while being excluded from simple Nursery phonics mastery."
+    ],
+    "requiredTotalPictureCards": 200
+  }
+}

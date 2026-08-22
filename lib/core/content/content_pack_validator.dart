@@ -35,7 +35,7 @@ class ContentPackValidator {
   const ContentPackValidator();
 
   static const _classes = <int>{3, 4, 5};
-  static const _games = <String>{
+  static const _coreGames = <String>{
     'math_market',
     'fraction_pizza',
     'science_lab',
@@ -45,6 +45,7 @@ class ContentPackValidator {
     'coding_maze',
     'recycling_challenge',
   };
+  static const _allowedGames = <String>{..._coreGames, 'skill_studio'};
   static const _reviewStates = <String>{
     'draft',
     'needsReview',
@@ -277,7 +278,7 @@ class ContentPackValidator {
 
       final gameId = activity['gameId'];
       final topicId = activity['topicId'];
-      if (gameId is! String || !_games.contains(gameId)) {
+      if (gameId is! String || !_allowedGames.contains(gameId)) {
         error('activity.game_id', '$label has unsupported gameId $gameId.');
       }
       if (topicId is! String || topicId.trim().isEmpty) {
@@ -565,7 +566,7 @@ class ContentPackValidator {
           );
         }
       }
-      if (!sampleGames.containsAll(_games) || sampleGames.length != 8) {
+      if (!sampleGames.containsAll(_coreGames) || sampleGames.length != 8) {
         error(
           'pack.free_sample_coverage',
           'Class $classNumber free demos must cover all 8 games exactly once.',
@@ -589,11 +590,14 @@ class ContentPackValidator {
 
     final coveredCompetencies = <String>{};
     for (final raw in activities.whereType<Map>()) {
+      final payload = raw['payload'];
+      if (payload is Map && payload['masteryEligible'] == false) continue;
       final primary = raw['competencyId'];
       if (primary is String) coveredCompetencies.add(primary);
       final related = raw['relatedCompetencyIds'];
-      if (related is List)
+      if (related is List) {
         coveredCompetencies.addAll(related.whereType<String>());
+      }
     }
     final missingCompetencies = classContract.competencies
         .where((value) => !coveredCompetencies.contains(value.id))
@@ -788,13 +792,34 @@ class ContentPackValidator {
               'payload.recycling', '$label has an invalid recycling payload.');
         }
         break;
+      case 'skill_studio':
+        if (!nonEmptyList('choices') ||
+            !payload.containsKey('answer') ||
+            payload['hint'] is! String ||
+            payload['masteryEligible'] is! bool ||
+            payload['evidenceScope'] is! String ||
+            (payload['evidenceScope'] as String).trim().isEmpty) {
+          error(
+            'payload.skill_studio',
+            '$label has an invalid Class Skill Studio payload.',
+          );
+          return;
+        }
+        _validateChoicePayload(
+          label,
+          payload['choices'] as List,
+          payload['answer'],
+          error,
+        );
+        break;
     }
 
     if (rule['type'] == 'exactNumber' && rule['value'] != payload['answer']) {
       error('payload.rule_drift',
           '$label correct-response rule differs from its payload answer.');
     }
-    if (rule['type'] == 'exactText' &&
+    if ((rule['type'] == 'exactText' ||
+            rule['type'] == 'exactTextCaseSensitive') &&
         payload.containsKey('answer') &&
         rule['value'] != payload['answer']) {
       error('payload.rule_drift',

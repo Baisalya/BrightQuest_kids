@@ -106,22 +106,26 @@ void main() {
       );
     });
 
-    test('schema v5 store still reads the accepted Phase 1 v3 preference key',
-        () {
+    test('schema v6 store reads v5 and accepted legacy preference keys', () {
       final source = File(
         'lib/core/persistence/shared_preferences_progress_store.dart',
       ).readAsStringSync();
+      expect(source, contains("brightquest.player_snapshot.v6"));
       expect(source, contains("brightquest.player_snapshot.v5"));
       expect(source, contains("brightquest.player_snapshot.v3"));
       expect(source, contains("brightquest.player_snapshot.v2"));
       expect(
-        source.indexOf("_decodeKey(_keyV5)"),
+        source.indexOf("_decodeKey(_keyV6)"),
+        lessThan(source.indexOf("_decodeKey(_legacyKeyV5)")),
+      );
+      expect(
+        source.indexOf("_decodeKey(_legacyKeyV5)"),
         lessThan(source.indexOf("_decodeKey(_legacyKeyV3)")),
       );
     });
 
     test(
-        'schema v5 keeps learning evidence profile-isolated and migrates older profile maps',
+        'schema v6 keeps learning evidence profile-isolated and migrates older profile maps',
         () {
       final snapshot = PlayerSnapshot(
         activeProfileId: 'child-a',
@@ -136,7 +140,7 @@ void main() {
       );
       final json = snapshot.toJson()..['schemaVersion'] = 4;
       final restored = PlayerSnapshot.fromJson(json);
-      expect(restored.schemaVersion, 5);
+      expect(restored.schemaVersion, 6);
       expect(restored.profiles['child-a']!.learning.attemptEvidence.length, 1);
       expect(restored.profiles['child-b']!.learning.attemptEvidence, isEmpty);
     });

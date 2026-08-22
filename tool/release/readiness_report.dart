@@ -92,6 +92,8 @@ void main() {
 
     final coveredCompetencies = <String>{};
     for (final activity in activities.whereType<Map>()) {
+      final payload = activity['payload'];
+      if (payload is Map && payload['masteryEligible'] == false) continue;
       if (activity['competencyId'] is String) {
         coveredCompetencies.add(activity['competencyId'] as String);
       }
@@ -123,6 +125,70 @@ void main() {
             .length;
   }
 
+  final nursery = _json('assets/content/nursery/pack_v1.json');
+  final nurseryCommercial =
+      Map<String, dynamic>.from(nursery['commercial'] as Map? ?? const {});
+  final nurseryGates =
+      Map<String, dynamic>.from(nursery['releaseGates'] as Map? ?? const {});
+  final nurseryReview =
+      Map<String, dynamic>.from(nursery['review'] as Map? ?? const {});
+  final nurseryActivities = (nursery['activities'] as List?) ?? const [];
+  final nurserySkills = (nursery['skills'] as List?) ?? const [];
+  final nurseryLetters = (nursery['letterAssociations'] as List?) ?? const [];
+  final nurseryLetterAssets = <String>{};
+  for (final rawLetter in nurseryLetters.whereType<Map>()) {
+    final examples = (rawLetter['examples'] as List?) ?? const [];
+    if (examples.length < 8) {
+      failures.add(
+        'Nursery letter ${rawLetter['uppercase']} has fewer than eight discovery examples.',
+      );
+    }
+    for (final rawExample in examples.whereType<Map>()) {
+      final assetPath = rawExample['assetPath'];
+      if (assetPath is! String ||
+          !assetPath.startsWith('assets/nursery/letter_cards/') ||
+          !File(assetPath).existsSync()) {
+        failures.add(
+          'Nursery letter asset is missing or invalid: $assetPath.',
+        );
+      } else if (!nurseryLetterAssets.add(assetPath)) {
+        failures.add('Nursery letter asset path is duplicated: $assetPath.');
+      }
+    }
+  }
+  if (nurseryLetterAssets.length < 200) {
+    failures
+        .add('Nursery must bundle at least 200 unique A–Z discovery cards.');
+  }
+  if (!_contains('pubspec.yaml', 'assets/nursery/letter_cards/')) {
+    failures.add(
+        'Nursery letter-card asset directory is not registered in pubspec.yaml.');
+  }
+  if (nurseryCommercial['permanentOneTimePriceInr'] != 299) {
+    failures.add('Nursery planned permanent price drifted from ₹299.');
+  }
+  if (nurseryCommercial['paidEligibility'] == true) {
+    failures.add(
+        'Nursery paid eligibility must remain fail-closed in this source.');
+  }
+  if (nurseryReview['status'] == 'approved') {
+    failures.add('Nursery pack was marked approved without external evidence.');
+  }
+  if (nurseryGates.values.any((value) => value == true)) {
+    failures.add('Nursery external release gate was pre-approved in source.');
+  }
+  if (nurserySkills.length != 32 || nurseryActivities.length != 132) {
+    failures.add(
+        'Nursery authored coverage must remain 32 skills / 132 activities.');
+  }
+  if (nurseryActivities.whereType<Map>().any(
+        (activity) =>
+            activity['interaction'] == 'trace' &&
+            activity['masteryEligible'] == true,
+      )) {
+    failures.add('Nursery tracing may not be mastery eligible.');
+  }
+
   if (failures.isNotEmpty) {
     stderr.writeln('BrightQuest release safety checks FAILED:');
     for (final failure in failures) stderr.writeln('  - $failure');
@@ -133,7 +199,7 @@ void main() {
   stdout.writeln('BrightQuest static release-safety checks: PASS');
   stdout.writeln('Commercial shipping eligibility: BLOCKED');
   stdout.writeln(
-    '  - $missingCompetencyCount competencies still need authored scorable activities',
+    '  - $missingCompetencyCount competencies still need constructed-response or otherwise authored scorable evidence',
   );
   stdout.writeln(
     '  - $unreviewedActivityCount activities and $unreviewedBlueprintCount blueprints still need qualified review',
@@ -144,6 +210,9 @@ void main() {
   stdout.writeln(
     '  - Windows semantics remain off by default pending canary qualification',
   );
+  stdout.writeln('Nursery commercial shipping eligibility: BLOCKED');
+  stdout.writeln(
+      '  - teacher review, supervised child pilot, production billing, and Android/Windows qualification remain unrecorded');
   stdout.writeln('External release gates still PENDING:');
   stdout.writeln('  - qualified teacher/content sign-off');
   stdout.writeln('  - supervised child usability sessions and evidence pilot');

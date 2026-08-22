@@ -25,6 +25,7 @@ ContentRepository buildContentRepository({
         readProjectJson('assets/content/class_4/learning_blueprints.json'),
         readProjectJson('assets/content/class_5/learning_blueprints.json'),
       ],
+      nurseryJson: readProjectJson('assets/content/nursery/pack_v1.json'),
       accessPolicy: accessPolicy,
       verifiedAccessResolver: verifiedAccessResolver,
     );

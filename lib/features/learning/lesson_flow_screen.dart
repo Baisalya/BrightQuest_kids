@@ -14,9 +14,23 @@ class LessonFlowScreen extends StatefulWidget {
   const LessonFlowScreen({
     required this.level,
     super.key,
-  });
+  })  : classNumber = null,
+        competencyId = null,
+        title = null;
 
-  final LearningLevel level;
+  const LessonFlowScreen.forCompetency({
+    required this.classNumber,
+    required this.competencyId,
+    required this.title,
+    super.key,
+  }) : level = null;
+
+  final LearningLevel? level;
+  final int? classNumber;
+  final String? competencyId;
+  final String? title;
+
+  bool get isDirectCompetency => level == null;
 
   @override
   State<LessonFlowScreen> createState() => _LessonFlowScreenState();
@@ -30,10 +44,17 @@ class _LessonFlowScreenState extends State<LessonFlowScreen> {
   @override
   Widget build(BuildContext context) {
     final repository = BrightQuestScope.contentOf(context);
-    final flow = const LessonEngine().buildForLevel(
-      repository: repository,
-      level: widget.level,
-    );
+    final level = widget.level;
+    final flow = level != null
+        ? const LessonEngine().buildForLevel(
+            repository: repository,
+            level: level,
+          )
+        : const LessonEngine().buildForCompetency(
+            repository: repository,
+            classNumber: widget.classNumber!,
+            competencyId: widget.competencyId!,
+          );
     final step = flow.steps[index.clamp(0, flow.steps.length - 1).toInt()];
     final activity = step.activityId == null
         ? null
@@ -44,7 +65,7 @@ class _LessonFlowScreenState extends State<LessonFlowScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.level.title),
+        title: Text(widget.title ?? level!.title),
       ),
       body: SafeArea(
         child: Center(
@@ -120,6 +141,34 @@ class _LessonFlowScreenState extends State<LessonFlowScreen> {
                           ),
                         ],
                         if (needsResponse && activity != null) ...[
+                          if (activity.payload['masteryEligible'] == false) ...[
+                            const SizedBox(height: 16),
+                            Semantics(
+                              label:
+                                  'Practice only. Secure mastery needs an adult-reviewed constructed response.',
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Icon(Icons.edit_note_rounded),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(
+                                          'Practice only — this activity builds the skill, but it does not award secure mastery. A constructed response still needs adult review.',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                           const SizedBox(height: 16),
                           LessonActivityInteraction(
                             key: ValueKey(step.id),
@@ -167,7 +216,9 @@ class _LessonFlowScreenState extends State<LessonFlowScreen> {
                         !canContinue
                             ? 'Answer to continue'
                             : index == flow.steps.length - 1
-                                ? 'Start practice'
+                                ? widget.isDirectCompetency
+                                    ? 'Finish lesson'
+                                    : 'Start practice'
                                 : 'Continue',
                       ),
                     ),
@@ -228,24 +279,27 @@ class _LessonFlowScreenState extends State<LessonFlowScreen> {
       LessonStepKind.transfer => LearningAttemptKind.transfer,
       _ => LearningAttemptKind.independent,
     };
-    controller.recordLearningEvidence(
-      AttemptEvidence(
-        id: 'lesson:${controller.activeProfileId}:${now.microsecondsSinceEpoch}',
-        profileId: controller.activeProfileId,
-        classNumber: activity.classNumber,
-        competencyId: activity.competencyId,
-        itemId: activity.id,
-        kind: kind,
-        correct: evaluation.correct,
-        hintLevel: _shownHints.length.clamp(0, 2).toInt(),
-        retries: retries.clamp(0, 99).toInt(),
-        responseTimeMs: responseTimeMs.clamp(0, 3600000).toInt(),
-        confidence: evaluation.correct ? (retries == 0 ? 0.88 : 0.68) : 0.45,
-        recordedAtIso: now.toIso8601String(),
-        misconceptionId: evaluation.misconceptionId,
-        sourceGameId: activity.gameId,
-      ),
-    );
+    final masteryEligible = activity.payload['masteryEligible'] != false;
+    if (masteryEligible) {
+      controller.recordLearningEvidence(
+        AttemptEvidence(
+          id: 'lesson:${controller.activeProfileId}:${now.microsecondsSinceEpoch}',
+          profileId: controller.activeProfileId,
+          classNumber: activity.classNumber,
+          competencyId: activity.competencyId,
+          itemId: activity.id,
+          kind: kind,
+          correct: evaluation.correct,
+          hintLevel: _shownHints.length.clamp(0, 2).toInt(),
+          retries: retries.clamp(0, 99).toInt(),
+          responseTimeMs: responseTimeMs.clamp(0, 3600000).toInt(),
+          confidence: evaluation.correct ? (retries == 0 ? 0.88 : 0.68) : 0.45,
+          recordedAtIso: now.toIso8601String(),
+          misconceptionId: evaluation.misconceptionId,
+          sourceGameId: activity.gameId,
+        ),
+      );
+    }
     const evaluator = ActivityResponseEvaluator();
     if (evaluation.correct) {
       FeedbackService.correct(

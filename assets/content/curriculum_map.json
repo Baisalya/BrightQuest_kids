@@ -1971,6 +1971,210 @@
             "reviewerOwnerId": "primary_teacher_reviewer",
             "reviewedAt": null
           }
+        },
+        {
+          "id": "c3_phase_e_map_01",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_math_place_value_999",
+          "competencyIds": [
+            "c3_math_place_value_999"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c3_phase_e_map_02",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_math_money_bills",
+          "competencyIds": [
+            "c3_math_money_bills"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c3_phase_e_map_03",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_math_measurement",
+          "competencyIds": [
+            "c3_math_measurement"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c3_phase_e_map_04",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_math_time_calendar",
+          "competencyIds": [
+            "c3_math_time_calendar"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c3_phase_e_map_05",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_math_shapes_patterns_data",
+          "competencyIds": [
+            "c3_math_shapes_patterns_data"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c3_phase_e_map_06",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_eng_literal_comprehension",
+          "competencyIds": [
+            "c3_eng_literal_comprehension"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c3_phase_e_map_07",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_eng_main_idea_details",
+          "competencyIds": [
+            "c3_eng_main_idea_details"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c3_phase_e_map_08",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_eng_vocab_context",
+          "competencyIds": [
+            "c3_eng_vocab_context"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c3_phase_e_map_09",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_eng_punctuation_capitals",
+          "competencyIds": [
+            "c3_eng_punctuation_capitals"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c3_phase_e_map_10",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_eng_short_composition",
+          "competencyIds": [
+            "c3_eng_short_composition"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c3_phase_e_map_11",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_evs_family_community",
+          "competencyIds": [
+            "c3_evs_family_community"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c3_phase_e_map_12",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_evs_food_water_shelter",
+          "competencyIds": [
+            "c3_evs_food_water_shelter"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
         }
       ]
     },
@@ -3944,6 +4148,210 @@
             "reviewerOwnerId": "primary_teacher_reviewer",
             "reviewedAt": null
           }
+        },
+        {
+          "id": "c4_phase_e_map_01",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_math_place_value_10000",
+          "competencyIds": [
+            "c4_math_place_value_10000"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c4_phase_e_map_02",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_math_measure_perimeter",
+          "competencyIds": [
+            "c4_math_measure_perimeter"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c4_phase_e_map_03",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_math_time_money",
+          "competencyIds": [
+            "c4_math_time_money"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c4_phase_e_map_04",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_math_geometry_symmetry",
+          "competencyIds": [
+            "c4_math_geometry_symmetry"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c4_phase_e_map_05",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_math_data_patterns",
+          "competencyIds": [
+            "c4_math_data_patterns"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c4_phase_e_map_06",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_eng_comprehend_main_infer",
+          "competencyIds": [
+            "c4_eng_comprehend_main_infer"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c4_phase_e_map_07",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_eng_vocab_context",
+          "competencyIds": [
+            "c4_eng_vocab_context"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c4_phase_e_map_08",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_eng_read_compare",
+          "competencyIds": [
+            "c4_eng_read_compare"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c4_phase_e_map_09",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_eng_punctuation",
+          "competencyIds": [
+            "c4_eng_punctuation"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c4_phase_e_map_10",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_evs_food_water",
+          "competencyIds": [
+            "c4_evs_food_water"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c4_phase_e_map_11",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_evs_community_interdependence",
+          "competencyIds": [
+            "c4_evs_community_interdependence"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c4_phase_e_map_12",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_ct_visual_abstraction",
+          "competencyIds": [
+            "c4_ct_visual_abstraction"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
         }
       ]
     },
@@ -5913,6 +6321,210 @@
             "status": "needsReview",
             "revision": 1,
             "author": "brightquest-phase0-draft",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c5_phase_e_map_01",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_math_large_numbers_100000",
+          "competencyIds": [
+            "c5_math_large_numbers_100000"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c5_phase_e_map_02",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_math_estimation",
+          "competencyIds": [
+            "c5_math_estimation"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c5_phase_e_map_03",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_math_factors_multiples",
+          "competencyIds": [
+            "c5_math_factors_multiples"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c5_phase_e_map_04",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_math_geometry_angles_symmetry",
+          "competencyIds": [
+            "c5_math_geometry_angles_symmetry"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c5_phase_e_map_05",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_math_measure_conversion_volume",
+          "competencyIds": [
+            "c5_math_measure_conversion_volume"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c5_phase_e_map_06",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_math_data",
+          "competencyIds": [
+            "c5_math_data"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c5_phase_e_map_07",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_eng_comprehend_infer_evidence",
+          "competencyIds": [
+            "c5_eng_comprehend_infer_evidence"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c5_phase_e_map_08",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_eng_main_summary",
+          "competencyIds": [
+            "c5_eng_main_summary"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c5_phase_e_map_09",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_eng_vocab_morphology_context",
+          "competencyIds": [
+            "c5_eng_vocab_morphology_context"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c5_phase_e_map_10",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_eng_punctuation_editing",
+          "competencyIds": [
+            "c5_eng_punctuation_editing"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c5_phase_e_map_11",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_eng_explain_justify",
+          "competencyIds": [
+            "c5_eng_explain_justify"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
+            "reviewerOwnerId": "primary_teacher_reviewer",
+            "reviewedAt": null
+          }
+        },
+        {
+          "id": "c5_phase_e_map_12",
+          "gameId": "skill_studio",
+          "topicId": "phase_e_evs_food_water_community",
+          "competencyIds": [
+            "c5_evs_food_water_community"
+          ],
+          "disposition": "mapped",
+          "boundaryStatus": "pendingHumanReview",
+          "review": {
+            "status": "needsReview",
+            "revision": 1,
+            "author": "brightquest-phase-e-technical-hardening",
             "reviewerOwnerId": "primary_teacher_reviewer",
             "reviewedAt": null
           }

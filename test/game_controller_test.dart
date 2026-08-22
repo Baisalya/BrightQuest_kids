@@ -184,7 +184,7 @@ void main() {
       'totalAnswers': 4,
     });
 
-    expect(migrated.schemaVersion, 5);
+    expect(migrated.schemaVersion, 6);
     expect(migrated.profiles.length, 1);
     expect(migrated.activeProfile.coins, 777);
     expect(migrated.activeProfile.selectedClass, 5);
@@ -363,7 +363,7 @@ void main() {
       },
     });
 
-    expect(migrated.schemaVersion, 5);
+    expect(migrated.schemaVersion, 6);
     expect(migrated.activeProfileId, 'child_a');
     expect(migrated.activeProfile.name, 'Aarav');
     expect(migrated.activeProfile.selectedClass, 5);

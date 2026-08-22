@@ -42,3 +42,6 @@ flutter:
     - assets/content/class_4/learning_blueprints.json
     - assets/content/class_5/learning_blueprints.json
     - assets/content/shared/audio_transcripts.json
+    - assets/content/nursery/schema_v1.json
+    - assets/content/nursery/pack_v1.json
+    - assets/nursery/letter_cards/

@@ -1,0 +1,35 @@
+Phase E modified/new files relative to verified Phase-D baseline
+
+assets/content/class_3/learning_blueprints.json
+assets/content/class_3/pack.json
+assets/content/class_4/learning_blueprints.json
+assets/content/class_4/pack.json
+assets/content/class_5/learning_blueprints.json
+assets/content/class_5/pack.json
+assets/content/content_schema_v1.json
+assets/content/curriculum_map.json
+docs/PHASE_E_AUTOMATED_AUDIT_REPORT.md
+docs/PHASE_E_CLASS_3_5_CURRICULUM_HARDENING.md
+docs/PHASE_E_TEACHER_REVIEW_CHECKLIST.md
+lib/core/content/content_pack_validator.dart
+lib/core/learning/activity_response_evaluator.dart
+lib/core/learning/diagnostic_engine.dart
+lib/core/qa/class_curriculum_hardening_audit.dart
+lib/core/qa/phase_e_legacy_reference.dart
+lib/core/qa/phase_e_skill_reference.dart
+lib/features/games/recycling_challenge_screen.dart
+lib/features/home/home_screen.dart
+lib/features/learning/class_skill_studio_screen.dart
+lib/features/learning/lesson_flow_screen.dart
+lib/features/learning/power_review_screen.dart
+test/phase1_content_pack_test.dart
+test/phase_e_curriculum_hardening_test.dart
+test/phase_e_skill_studio_ui_test.dart
+tool/content/author_phase_e_skill_studio.py
+tool/content/validate_content.dart
+tool/qa/phase_e_curriculum_hardening_audit.dart
+tool/qa/run_phase_e.ps1
+tool/qa/run_phase_e.sh
+tool/release/readiness_report.dart
+
+Deleted files: none

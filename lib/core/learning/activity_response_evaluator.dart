@@ -27,6 +27,8 @@ class ActivityResponseEvaluator {
     final correct = switch (type) {
       'exactNumber' => _sameNumber(response, rule['value']),
       'exactText' => _sameText(response, rule['value']),
+      'exactTextCaseSensitive' =>
+        _sameTextCaseSensitive(response, rule['value']),
       'selectedSlices' => _sameNumber(response, rule['value']),
       'orderedWords' => _sameList(response, rule['value']),
       'grammarParts' => _sameGrammar(response, rule),
@@ -46,7 +48,8 @@ class ActivityResponseEvaluator {
     if (payloadChoices is List && payloadChoices.isNotEmpty) {
       return List<Object?>.unmodifiable(payloadChoices);
     }
-    if (activity.correctResponseRule['type'] == 'exactText') {
+    if (activity.correctResponseRule['type'] == 'exactText' ||
+        activity.correctResponseRule['type'] == 'exactTextCaseSensitive') {
       return _rotate(
         <Object?>[
           activity.correctResponseRule['value'],
@@ -101,6 +104,9 @@ class ActivityResponseEvaluator {
       left is String &&
       right is String &&
       left.trim().toLowerCase() == right.trim().toLowerCase();
+
+  bool _sameTextCaseSensitive(Object? left, Object? right) =>
+      left is String && right is String && left.trim() == right.trim();
 
   bool _sameList(Object? response, Object? answer) {
     if (response is! List ||

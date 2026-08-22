@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "classNumber": 5,
-  "status": "technicalDraftPendingTeacherReview",
+  "status": "needsReview",
   "purpose": "Teach/guided/independent/mastery/review blueprint coverage. This is not reviewer approval or a commercial-readiness claim.",
   "competencyCount": 37,
   "blueprints": [
@@ -12,30 +12,33 @@
       "unitId": "c5_math_numbers",
       "title": "Large numbers to 100,000",
       "objective": "Reads, compares and uses whole numbers up to 100,000 within age-appropriate contexts.",
-      "teach": "Learn the idea in small steps: Reads, compares and uses whole numbers up to 100,000 within age-appropriate contexts.",
-      "workedExample": "Learn the idea in small steps: Reads, compares and uses whole numbers up to 100,000 within age-appropriate contexts.",
+      "teach": "Read and compare whole numbers by place value from ten-thousands to ones. Decompose a number to show the value of each digit.",
+      "workedExample": "In 74,215, what value does the digit 7 represent? The 7 is in the ten-thousands place, so its value is 70,000.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Reads, compares and uses whole numbers up to 100,000 within age-appropriate contexts.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Reads, compares and uses whole numbers up to 100,000 within age-appropriate contexts."
+        "prompt": "In 74,215, what value does the digit 7 represent?",
+        "hintLevel1": "Name the place of the leftmost digit.",
+        "hintLevel2": "The 7 is in the ten-thousands place, so its value is 70,000."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Reads, compares and uses whole numbers up to 100,000 within age-appropriate contexts."
+        "sourceActivityIds": [
+          "c5_skill_studio_math_large_numbers_100000_i1",
+          "c5_skill_studio_math_large_numbers_100000_m1"
+        ],
+        "fallbackPrompt": "Which number is 60,000 + 4,000 + 300 + 20 + 5?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Reads, compares and uses whole numbers up to 100,000 within age-appropriate contexts."
+        "prompt": "A town recorded 96,405 visitors and another recorded 96,450. Which is larger?"
       },
-      "reviewPrompt": "Remember and explain one example of: Large numbers to 100,000.",
+      "reviewPrompt": "Later, try a fresh large numbers to 100,000 task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Learn the idea in small steps: Reads, compares and uses whole numbers up to 100,000 within age-appropriate contexts.",
+      "narrationText": "Read and compare whole numbers by place value from ten-thousands to ones. Decompose a number to show the value of each digit.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -65,16 +68,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Uses efficient written or mental strategies for the four operations and checks reasonableness."
+        "prompt": "Solve a fresh four operations situation, then check the result with a second method, model or estimate."
       },
-      "reviewPrompt": "Remember and explain one example of: Four operations.",
+      "reviewPrompt": "Later, solve a different four operations task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
       "narrationText": "Think: 12 × ? = 144. The correct value is 12.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -86,30 +89,33 @@
       "unitId": "c5_math_numbers",
       "title": "Estimation and reasonableness",
       "objective": "Estimates before calculating and uses the estimate to detect unreasonable answers.",
-      "teach": "Learn the idea in small steps: Estimates before calculating and uses the estimate to detect unreasonable answers.",
-      "workedExample": "Learn the idea in small steps: Estimates before calculating and uses the estimate to detect unreasonable answers.",
+      "teach": "Estimate by rounding to a useful place before exact calculation. Use the estimate to reject answers that are far too large or too small.",
+      "workedExample": "Estimate 398 + 205 by rounding each number to the nearest hundred. 398 rounds to 400 and 205 rounds to 200, so the estimate is 600.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Estimates before calculating and uses the estimate to detect unreasonable answers.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Estimates before calculating and uses the estimate to detect unreasonable answers."
+        "prompt": "Estimate 398 + 205 by rounding each number to the nearest hundred.",
+        "hintLevel1": "Round each addend to the nearest hundred.",
+        "hintLevel2": "398 rounds to 400 and 205 rounds to 200, so the estimate is 600."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Estimates before calculating and uses the estimate to detect unreasonable answers."
+        "sourceActivityIds": [
+          "c5_skill_studio_math_estimation_i1",
+          "c5_skill_studio_math_estimation_m1"
+        ],
+        "fallbackPrompt": "Which is the best estimate for 1,982 − 1,010?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Estimates before calculating and uses the estimate to detect unreasonable answers."
+        "prompt": "Estimate 612 ÷ 6 using a nearby compatible number."
       },
-      "reviewPrompt": "Remember and explain one example of: Estimation and reasonableness.",
+      "reviewPrompt": "Later, try a fresh estimation and reasonableness task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Learn the idea in small steps: Estimates before calculating and uses the estimate to detect unreasonable answers.",
+      "narrationText": "Estimate by rounding to a useful place before exact calculation. Use the estimate to reject answers that are far too large or too small.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -121,30 +127,33 @@
       "unitId": "c5_math_numbers",
       "title": "Factors and multiples",
       "objective": "Identifies simple factors and multiples and applies them to number relationships.",
-      "teach": "Learn the idea in small steps: Identifies simple factors and multiples and applies them to number relationships.",
-      "workedExample": "Learn the idea in small steps: Identifies simple factors and multiples and applies them to number relationships.",
+      "teach": "A factor divides a number exactly. A multiple is made by multiplying that number by a whole number.",
+      "workedExample": "Which number is a factor of 24? 24 ÷ 6 = 4 with no remainder, so 6 is a factor of 24.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Identifies simple factors and multiples and applies them to number relationships.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Identifies simple factors and multiples and applies them to number relationships."
+        "prompt": "Which number is a factor of 24?",
+        "hintLevel1": "Test which choice divides 24 exactly.",
+        "hintLevel2": "24 ÷ 6 = 4 with no remainder, so 6 is a factor of 24."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Identifies simple factors and multiples and applies them to number relationships."
+        "sourceActivityIds": [
+          "c5_skill_studio_math_factors_multiples_i1",
+          "c5_skill_studio_math_factors_multiples_m1"
+        ],
+        "fallbackPrompt": "Which number is a multiple of 8?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Identifies simple factors and multiples and applies them to number relationships."
+        "prompt": "Which pair are both factors of 36?"
       },
-      "reviewPrompt": "Remember and explain one example of: Factors and multiples.",
+      "reviewPrompt": "Later, try a fresh factors and multiples task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Learn the idea in small steps: Identifies simple factors and multiples and applies them to number relationships.",
+      "narrationText": "A factor divides a number exactly. A multiple is made by multiplying that number by a whole number.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -174,16 +183,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Generates or recognises equivalent fractions and explains the relationship using a model or rule."
+        "prompt": "Solve a fresh fraction equivalence situation, then check the result with a second method, model or estimate."
       },
-      "reviewPrompt": "Remember and explain one example of: Fraction equivalence.",
+      "reviewPrompt": "Later, solve a different fraction equivalence task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
       "narrationText": "5/6 of 12 equal slices is 10 slices because 12 × 5 ÷ 6 = 10.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -212,16 +221,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Compares common fractions and simple decimal representations in familiar contexts."
+        "prompt": "Solve a fresh compare fractions and decimals situation, then check the result with a second method, model or estimate."
       },
-      "reviewPrompt": "Remember and explain one example of: Compare fractions and decimals.",
+      "reviewPrompt": "Later, solve a different compare fractions and decimals task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
       "narrationText": "7/12 of 24 equal slices is 14 slices because 24 × 7 ÷ 12 = 14.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -233,30 +242,33 @@
       "unitId": "c5_math_fractions",
       "title": "Angles, shapes and symmetry",
       "objective": "Reasons about angles, shape properties, symmetry and simple spatial transformations.",
-      "teach": "Learn the idea in small steps: Reasons about angles, shape properties, symmetry and simple spatial transformations.",
-      "workedExample": "Learn the idea in small steps: Reasons about angles, shape properties, symmetry and simple spatial transformations.",
+      "teach": "Classify angles by size, use defining shape properties, and reason about symmetry or simple transformations.",
+      "workedExample": "Which angle is acute? 45° is less than 90°, so it is an acute angle.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Reasons about angles, shape properties, symmetry and simple spatial transformations.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Reasons about angles, shape properties, symmetry and simple spatial transformations."
+        "prompt": "Which angle is acute?",
+        "hintLevel1": "Acute angles are smaller than a right angle.",
+        "hintLevel2": "45° is less than 90°, so it is an acute angle."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Reasons about angles, shape properties, symmetry and simple spatial transformations."
+        "sourceActivityIds": [
+          "c5_skill_studio_math_geometry_angles_symmetry_i1",
+          "c5_skill_studio_math_geometry_angles_symmetry_m1"
+        ],
+        "fallbackPrompt": "Which angle is obtuse?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Reasons about angles, shape properties, symmetry and simple spatial transformations."
+        "prompt": "A shape is turned a quarter-turn around a point. What transformation is this?"
       },
-      "reviewPrompt": "Remember and explain one example of: Angles, shapes and symmetry.",
+      "reviewPrompt": "Later, try a fresh angles, shapes and symmetry task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Learn the idea in small steps: Reasons about angles, shape properties, symmetry and simple spatial transformations.",
+      "narrationText": "Classify angles by size, use defining shape properties, and reason about symmetry or simple transformations.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -268,30 +280,33 @@
       "unitId": "c5_math_fractions",
       "title": "Measurement and volume",
       "objective": "Uses familiar unit conversions and reasons about area, volume or capacity in practical tasks.",
-      "teach": "Learn the idea in small steps: Uses familiar unit conversions and reasons about area, volume or capacity in practical tasks.",
-      "workedExample": "Learn the idea in small steps: Uses familiar unit conversions and reasons about area, volume or capacity in practical tasks.",
+      "teach": "Keep units consistent before calculating. Capacity and volume describe how much space or liquid is contained; area measures a surface.",
+      "workedExample": "How many millilitres are in 3 litres? 1 litre is 1,000 mL, so 3 litres is 3,000 mL.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Uses familiar unit conversions and reasons about area, volume or capacity in practical tasks.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Uses familiar unit conversions and reasons about area, volume or capacity in practical tasks."
+        "prompt": "How many millilitres are in 3 litres?",
+        "hintLevel1": "Multiply 1,000 by 3.",
+        "hintLevel2": "1 litre is 1,000 mL, so 3 litres is 3,000 mL."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Uses familiar unit conversions and reasons about area, volume or capacity in practical tasks."
+        "sourceActivityIds": [
+          "c5_skill_studio_math_measure_conversion_volume_i1",
+          "c5_skill_studio_math_measure_conversion_volume_m1"
+        ],
+        "fallbackPrompt": "A rectangle is 8 cm long and 5 cm wide. What is its area in square centimetres?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Uses familiar unit conversions and reasons about area, volume or capacity in practical tasks."
+        "prompt": "A bottle holds 2 litres. How many 250 mL cups can it fill?"
       },
-      "reviewPrompt": "Remember and explain one example of: Measurement and volume.",
+      "reviewPrompt": "Later, try a fresh measurement and volume task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Learn the idea in small steps: Uses familiar unit conversions and reasons about area, volume or capacity in practical tasks.",
+      "narrationText": "Keep units consistent before calculating. Capacity and volume describe how much space or liquid is contained; area measures a surface.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -303,30 +318,33 @@
       "unitId": "c5_math_fractions",
       "title": "Interpret data",
       "objective": "Reads and interprets tables or charts and answers comparison questions from represented data.",
-      "teach": "Learn the idea in small steps: Reads and interprets tables or charts and answers comparison questions from represented data.",
-      "workedExample": "Learn the idea in small steps: Reads and interprets tables or charts and answers comparison questions from represented data.",
+      "teach": "Read labels, scales and values before calculating comparisons. Use only the data shown, not assumptions.",
+      "workedExample": "A table shows Team A: 18 points, Team B: 24, Team C: 21. Which team has the most points? Team B has 24 points, which is greater than 21 and 18.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Reads and interprets tables or charts and answers comparison questions from represented data.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Reads and interprets tables or charts and answers comparison questions from represented data."
+        "prompt": "A table shows Team A: 18 points, Team B: 24, Team C: 21. Which team has the most points?",
+        "hintLevel1": "Compare all three values.",
+        "hintLevel2": "Team B has 24 points, which is greater than 21 and 18."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Reads and interprets tables or charts and answers comparison questions from represented data."
+        "sourceActivityIds": [
+          "c5_skill_studio_math_data_i1",
+          "c5_skill_studio_math_data_m1"
+        ],
+        "fallbackPrompt": "A chart shows 12 books in June and 19 in July. How many more books were read in July?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Reads and interprets tables or charts and answers comparison questions from represented data."
+        "prompt": "A chart shows Plant A grew 6 cm and Plant B grew 9 cm. Which statement is supported?"
       },
-      "reviewPrompt": "Remember and explain one example of: Interpret data.",
+      "reviewPrompt": "Later, try a fresh interpret data task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Learn the idea in small steps: Reads and interprets tables or charts and answers comparison questions from represented data.",
+      "narrationText": "Read labels, scales and values before calculating comparisons. Use only the data shown, not assumptions.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -354,16 +372,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Models a multi-step real-world problem, selects operations and explains the solution path."
+        "prompt": "Solve a fresh multi-step application situation, then check the result with a second method, model or estimate."
       },
-      "reviewPrompt": "Remember and explain one example of: Multi-step application.",
+      "reviewPrompt": "Later, solve a different multi-step application task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
       "narrationText": "Multiply first: 36 × 18 = 648. The correct value is 500.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -375,30 +393,33 @@
       "unitId": "c5_english_reading",
       "title": "Inference with evidence",
       "objective": "Makes an inference and cites relevant textual details that support it.",
-      "teach": "Learn the idea in small steps: Makes an inference and cites relevant textual details that support it.",
-      "workedExample": "Learn the idea in small steps: Makes an inference and cites relevant textual details that support it.",
+      "teach": "An inference combines a reasonable idea with evidence from the text. Choose the inference only when a specific detail supports it.",
+      "workedExample": "Nikhil checked the forecast, packed a raincoat and covered his books in a waterproof bag. What can you infer? The raincoat and waterproof bag are evidence that Nikhil expects wet weather.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Makes an inference and cites relevant textual details that support it.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Makes an inference and cites relevant textual details that support it."
+        "prompt": "Nikhil checked the forecast, packed a raincoat and covered his books in a waterproof bag. What can you infer?",
+        "hintLevel1": "Point to two details that support the inference.",
+        "hintLevel2": "The raincoat and waterproof bag are evidence that Nikhil expects wet weather."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Makes an inference and cites relevant textual details that support it."
+        "sourceActivityIds": [
+          "c5_skill_studio_eng_comprehend_infer_evidence_i1",
+          "c5_skill_studio_eng_comprehend_infer_evidence_m1"
+        ],
+        "fallbackPrompt": "The lights were off, the door was locked and a sign said “Back at 2:00”. What is the best inference?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Makes an inference and cites relevant textual details that support it."
+        "prompt": "A trail had fresh footprints and bent grass, but no animal was visible. Which inference is best supported?"
       },
-      "reviewPrompt": "Remember and explain one example of: Inference with evidence.",
+      "reviewPrompt": "Later, try a fresh inference with evidence task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Learn the idea in small steps: Makes an inference and cites relevant textual details that support it.",
+      "narrationText": "An inference combines a reasonable idea with evidence from the text. Choose the inference only when a specific detail supports it.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -410,30 +431,33 @@
       "unitId": "c5_english_reading",
       "title": "Main idea and summary",
       "objective": "Identifies central ideas and produces a concise summary without copying every detail.",
-      "teach": "Learn the idea in small steps: Identifies central ideas and produces a concise summary without copying every detail.",
-      "workedExample": "Learn the idea in small steps: Identifies central ideas and produces a concise summary without copying every detail.",
+      "teach": "A good summary states the central idea and only the most important supporting information. It does not copy every small detail.",
+      "workedExample": "Text: “The class tested three paper-bridge designs. After comparing how much weight each held, they strengthened the best design.” Which is the best summary? The best summary gives the central action—testing designs—and the important result—improving the strongest one.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Identifies central ideas and produces a concise summary without copying every detail.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Identifies central ideas and produces a concise summary without copying every detail."
+        "prompt": "Text: “The class tested three paper-bridge designs. After comparing how much weight each held, they strengthened the best design.” Which is the best summary?",
+        "hintLevel1": "Keep the main action and result, not every detail.",
+        "hintLevel2": "The best summary gives the central action—testing designs—and the important result—improving the strongest one."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Identifies central ideas and produces a concise summary without copying every detail."
+        "sourceActivityIds": [
+          "c5_skill_studio_eng_main_summary_i1",
+          "c5_skill_studio_eng_main_summary_m1"
+        ],
+        "fallbackPrompt": "Text: “Meera planted native flowers. Soon more bees visited the garden, so she added another flower bed.” What is the main idea?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Identifies central ideas and produces a concise summary without copying every detail."
+        "prompt": "A passage explains that a village repaired leaks, collected rainwater and used less water during dry months. Which summary fits best?"
       },
-      "reviewPrompt": "Remember and explain one example of: Main idea and summary.",
+      "reviewPrompt": "Later, try a fresh main idea and summary task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Learn the idea in small steps: Identifies central ideas and produces a concise summary without copying every detail.",
+      "narrationText": "A good summary states the central idea and only the most important supporting information. It does not copy every small detail.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -463,16 +487,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Explains how sequence and cause-effect shape events, explanations or instructions."
+        "prompt": "Use sequence and cause-effect in a fresh text or sentence and point to the words that support your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Sequence and cause-effect.",
+      "reviewPrompt": "Later, solve a different sequence and cause-effect task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
       "narrationText": "Arrange the words in sentence order to rebuild: “Arjun recorded the first clue in his notebook.”",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -484,30 +508,33 @@
       "unitId": "c5_english_reading",
       "title": "Vocabulary strategies",
       "objective": "Uses context and familiar word parts to infer meaning and test the interpretation.",
-      "teach": "Learn the idea in small steps: Uses context and familiar word parts to infer meaning and test the interpretation.",
-      "workedExample": "Learn the idea in small steps: Uses context and familiar word parts to infer meaning and test the interpretation.",
+      "teach": "Use context together with familiar prefixes, roots or suffixes. Check that the inferred meaning fits the whole sentence.",
+      "workedExample": "In “The glass was reusable, so we washed it and used it again,” what does reusable mean? The suffix “-able” suggests “able to”, and the sentence says the glass was used again.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Uses context and familiar word parts to infer meaning and test the interpretation.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Uses context and familiar word parts to infer meaning and test the interpretation."
+        "prompt": "In “The glass was reusable, so we washed it and used it again,” what does reusable mean?",
+        "hintLevel1": "Combine the word part with the context clue.",
+        "hintLevel2": "The suffix “-able” suggests “able to”, and the sentence says the glass was used again."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Uses context and familiar word parts to infer meaning and test the interpretation."
+        "sourceActivityIds": [
+          "c5_skill_studio_eng_vocab_morphology_context_i1",
+          "c5_skill_studio_eng_vocab_morphology_context_m1"
+        ],
+        "fallbackPrompt": "In “Maya reread the note because she missed one line,” what does the prefix re- mean in reread?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Uses context and familiar word parts to infer meaning and test the interpretation."
+        "prompt": "Which sentence uses “careless” correctly?"
       },
-      "reviewPrompt": "Remember and explain one example of: Vocabulary strategies.",
+      "reviewPrompt": "Later, try a fresh vocabulary strategies task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Learn the idea in small steps: Uses context and familiar word parts to infer meaning and test the interpretation.",
+      "narrationText": "Use context together with familiar prefixes, roots or suffixes. Check that the inferred meaning fits the whole sentence.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -535,16 +562,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Combines ideas with age-appropriate conjunctions to create clear expanded sentences."
+        "prompt": "Use expanded and complex sentences in a fresh text or sentence and point to the words that support your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Expanded and complex sentences.",
+      "reviewPrompt": "Later, solve a different expanded and complex sentences task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
       "narrationText": "Arrange the words in sentence order to rebuild: “Although the path was steep, the team continued bravely.”",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -574,16 +601,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Identifies and applies common parts of speech by their function in a sentence."
+        "prompt": "Use grammar in context in a fresh text or sentence and point to the words that support your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Grammar in context.",
+      "reviewPrompt": "Later, solve a different grammar in context task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
       "narrationText": "In this sentence, “student” is the noun, “observes” is the verb, and “curious” is the adjective.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -613,16 +640,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Maintains tense and subject-verb agreement across a short passage."
+        "prompt": "Use tense and agreement in a fresh text or sentence and point to the words that support your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Tense and agreement.",
+      "reviewPrompt": "Later, solve a different tense and agreement task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
       "narrationText": "In this sentence, “student” is the noun, “observes” is the verb, and “curious” is the adjective.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -634,30 +661,33 @@
       "unitId": "c5_english_language",
       "title": "Punctuation and editing",
       "objective": "Edits a short passage for capitals, common punctuation and obvious grammar errors.",
-      "teach": "Learn the idea in small steps: Edits a short passage for capitals, common punctuation and obvious grammar errors.",
-      "workedExample": "Learn the idea in small steps: Edits a short passage for capitals, common punctuation and obvious grammar errors.",
+      "teach": "Edit a sentence by checking capitals, end marks, commas, apostrophes and obvious agreement. Change only what is needed for meaning and correctness.",
+      "workedExample": "Which edited sentence is correct? The sentence begins with a capital, uses a comma after the introductory clause and ends with a full stop.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Edits a short passage for capitals, common punctuation and obvious grammar errors.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Edits a short passage for capitals, common punctuation and obvious grammar errors."
+        "prompt": "Which edited sentence is correct?",
+        "hintLevel1": "Check the beginning, comma and end mark.",
+        "hintLevel2": "The sentence begins with a capital, uses a comma after the introductory clause and ends with a full stop."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Edits a short passage for capitals, common punctuation and obvious grammar errors."
+        "sourceActivityIds": [
+          "c5_skill_studio_eng_punctuation_editing_i1",
+          "c5_skill_studio_eng_punctuation_editing_m1"
+        ],
+        "fallbackPrompt": "Which sentence uses the apostrophe correctly?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Edits a short passage for capitals, common punctuation and obvious grammar errors."
+        "prompt": "Which sentence is punctuated correctly?"
       },
-      "reviewPrompt": "Remember and explain one example of: Punctuation and editing.",
+      "reviewPrompt": "Later, try a fresh punctuation and editing task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Learn the idea in small steps: Edits a short passage for capitals, common punctuation and obvious grammar errors.",
+      "narrationText": "Edit a sentence by checking capitals, end marks, commas, apostrophes and obvious agreement. Change only what is needed for meaning and correctness.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -686,16 +716,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Writes an organised paragraph or short narrative with relevant details and logical order."
+        "prompt": "Use organised composition in a fresh text or sentence and point to the words that support your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Organised composition.",
+      "reviewPrompt": "Later, solve a different organised composition task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
       "narrationText": "Arrange the words in sentence order to rebuild: “The patient explorer waited beside the ancient gate.”",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -707,30 +737,33 @@
       "unitId": "c5_english_language",
       "title": "Explain and justify",
       "objective": "Gives a short written explanation or opinion supported by a reason or example.",
-      "teach": "Learn the idea in small steps: Gives a short written explanation or opinion supported by a reason or example.",
-      "workedExample": "Learn the idea in small steps: Gives a short written explanation or opinion supported by a reason or example.",
+      "teach": "A strong explanation states a clear idea and supports it with a relevant reason or evidence. Check that the reason actually supports the claim.",
+      "workedExample": "Which response best justifies the idea “The class should keep a reading corner”? The response states the idea and gives a relevant reason connected to reading opportunities.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Gives a short written explanation or opinion supported by a reason or example.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Gives a short written explanation or opinion supported by a reason or example."
+        "prompt": "Which response best justifies the idea “The class should keep a reading corner”?",
+        "hintLevel1": "Look for a reason that directly supports the idea.",
+        "hintLevel2": "The response states the idea and gives a relevant reason connected to reading opportunities."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Gives a short written explanation or opinion supported by a reason or example."
+        "sourceActivityIds": [
+          "c5_skill_studio_eng_explain_justify_i1",
+          "c5_skill_studio_eng_explain_justify_m1"
+        ],
+        "fallbackPrompt": "Which explanation is strongest for “We should repair the leaking tap”?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Gives a short written explanation or opinion supported by a reason or example."
+        "prompt": "Which justification is most relevant to choosing the shorter safe route?"
       },
-      "reviewPrompt": "Remember and explain one example of: Explain and justify.",
+      "reviewPrompt": "Later, try a fresh explain and justify task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Learn the idea in small steps: Gives a short written explanation or opinion supported by a reason or example.",
+      "narrationText": "A strong explanation states a clear idea and supports it with a relevant reason or evidence. Check that the reason actually supports the claim.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -759,16 +792,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Relates selected organs to basic functions such as circulation or breathing."
+        "prompt": "Apply human body systems to a new observation and identify the evidence that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Human body systems.",
+      "reviewPrompt": "Later, solve a different human body systems task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
       "narrationText": "The heart pumps blood through blood vessels.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -796,16 +829,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Explains selected plant needs and processes using evidence from familiar observations."
+        "prompt": "Apply plant processes to a new observation and identify the evidence that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Plant processes.",
+      "reviewPrompt": "Later, solve a different plant processes task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
       "narrationText": "Plants use carbon dioxide, water and light to make food.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -835,16 +868,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Distinguishes states of matter and identifies selected reversible and irreversible changes."
+        "prompt": "Apply states and reversible changes to a new observation and identify the evidence that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: States and reversible changes.",
+      "reviewPrompt": "Later, solve a different states and reversible changes task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
       "narrationText": "A gas spreads out and fills available space.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -872,16 +905,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Uses observable properties, including magnetic response, to compare and classify materials."
+        "prompt": "Apply materials and magnetism to a new observation and identify the evidence that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Materials and magnetism.",
+      "reviewPrompt": "Later, solve a different materials and magnetism task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
       "narrationText": "Iron is a magnetic material.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -909,16 +942,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Uses simple evidence to predict how pushes, pulls or gravity can affect motion."
+        "prompt": "Apply forces and motion to a new observation and identify the evidence that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Forces and motion.",
+      "reviewPrompt": "Later, solve a different forces and motion task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
       "narrationText": "A pulley changes the direction of a pulling force.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -948,16 +981,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Explains simple light/shadow observations and designs or evaluates a basic fair investigation."
+        "prompt": "Apply light and scientific inquiry to a new observation and identify the evidence that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Light and scientific inquiry.",
+      "reviewPrompt": "Later, solve a different light and scientific inquiry task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
       "narrationText": "The angle of incoming sunlight changes as Earth rotates.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -987,16 +1020,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Connects consumption choices to conservation of materials, water or energy."
+        "prompt": "Apply resources and sustainability to a new everyday situation and explain the responsible or evidence-based choice."
       },
-      "reviewPrompt": "Remember and explain one example of: Resources and sustainability.",
+      "reviewPrompt": "Later, solve a different resources and sustainability task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "diagramClassifier/localScenario",
       "narrationText": "Delivery carton belongs in the Paper bin in this BrightQuest sorting activity.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1026,16 +1059,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Classifies waste and compares reduce, reuse and recycle actions by likely impact."
+        "prompt": "Apply waste and environment to a new everyday situation and explain the responsible or evidence-based choice."
       },
-      "reviewPrompt": "Remember and explain one example of: Waste and environment.",
+      "reviewPrompt": "Later, solve a different waste and environment task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "diagramClassifier/localScenario",
       "narrationText": "Office paper belongs in the Paper bin in this BrightQuest sorting activity.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1047,30 +1080,33 @@
       "unitId": "c5_evs_world",
       "title": "Food, water and community systems",
       "objective": "Explains selected links between resources, livelihoods and community wellbeing.",
-      "teach": "Learn the idea in small steps: Explains selected links between resources, livelihoods and community wellbeing.",
-      "workedExample": "Learn the idea in small steps: Explains selected links between resources, livelihoods and community wellbeing.",
+      "teach": "Food and water systems connect natural resources, livelihoods, transport, public services and community wellbeing. Responsible decisions consider those links.",
+      "workedExample": "A farming area has very little irrigation water. Which effect is most directly possible? Less irrigation water can reduce the water available to crops, which may decrease production.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Explains selected links between resources, livelihoods and community wellbeing.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Explains selected links between resources, livelihoods and community wellbeing."
+        "prompt": "A farming area has very little irrigation water. Which effect is most directly possible?",
+        "hintLevel1": "Trace the resource to the activity that depends on it.",
+        "hintLevel2": "Less irrigation water can reduce the water available to crops, which may decrease production."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Explains selected links between resources, livelihoods and community wellbeing."
+        "sourceActivityIds": [
+          "c5_skill_studio_evs_food_water_community_i1",
+          "c5_skill_studio_evs_food_water_community_m1"
+        ],
+        "fallbackPrompt": "Why can a clean local water supply support community wellbeing?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Explains selected links between resources, livelihoods and community wellbeing."
+        "prompt": "Which community action best protects a shared water source?"
       },
-      "reviewPrompt": "Remember and explain one example of: Food, water and community systems.",
+      "reviewPrompt": "Later, try a fresh food, water and community systems task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "diagramClassifier/localScenario",
-      "narrationText": "Learn the idea in small steps: Explains selected links between resources, livelihoods and community wellbeing.",
+      "narrationText": "Food and water systems connect natural resources, livelihoods, transport, public services and community wellbeing. Responsible decisions consider those links.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1100,16 +1136,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Chooses and justifies a realistic child-safe action that reduces waste or protects a shared resource."
+        "prompt": "Apply responsible action to a new everyday situation and explain the responsible or evidence-based choice."
       },
-      "reviewPrompt": "Remember and explain one example of: Responsible action.",
+      "reviewPrompt": "Later, solve a different responsible action task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "diagramClassifier/localScenario",
       "narrationText": "Notebook pages belongs in the Paper bin in this BrightQuest sorting activity.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1139,16 +1175,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Locates selected major physical regions and describes broad spatial relationships."
+        "prompt": "Apply india physical geography to a new map or community example and identify the clue that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: India physical geography.",
+      "reviewPrompt": "Later, solve a different india physical geography task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "mapPath/evidenceHighlighter",
       "narrationText": "It includes many of the world’s highest peaks. The correct answer is Himalayas.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1177,16 +1213,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Uses direction, symbols and simple distance/scale ideas to interpret or plan a route."
+        "prompt": "Apply map reasoning to a new map or community example and identify the clue that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Map reasoning.",
+      "reviewPrompt": "Later, solve a different map reasoning task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "mapPath/evidenceHighlighter",
       "narrationText": "Kolkata lies east of Mumbai. The correct answer is East.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1216,16 +1252,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Relates selected states, rivers and physical features using an age-appropriate map."
+        "prompt": "Apply states, rivers and features to a new map or community example and identify the clue that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: States, rivers and features.",
+      "reviewPrompt": "Later, solve a different states, rivers and features task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "mapPath/evidenceHighlighter",
       "narrationText": "It includes many of the world’s highest peaks. The correct answer is Himalayas.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1254,16 +1290,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Filters irrelevant details and recognises patterns that can simplify a route solution."
+        "prompt": "Use abstraction and patterns on a new route or problem, then trace the steps to check that the solution works."
       },
-      "reviewPrompt": "Remember and explain one example of: Abstraction and patterns.",
+      "reviewPrompt": "Later, solve a different abstraction and patterns task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
       "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1293,16 +1329,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Splits a larger route or logic problem into ordered sub-problems with clear goals."
+        "prompt": "Use decomposition on a new route or problem, then trace the steps to check that the solution works."
       },
-      "reviewPrompt": "Remember and explain one example of: Decomposition.",
+      "reviewPrompt": "Later, solve a different decomposition task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
       "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1330,16 +1366,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Compares two working instruction sequences and identifies a simpler or more efficient one."
+        "prompt": "Use algorithm efficiency on a new route or problem, then trace the steps to check that the solution works."
       },
-      "reviewPrompt": "Remember and explain one example of: Algorithm efficiency.",
+      "reviewPrompt": "Later, solve a different algorithm efficiency task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
       "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1367,16 +1403,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Finds the first failing step in an algorithm, changes it and retests the route."
+        "prompt": "Use debugging on a new route or problem, then trace the steps to check that the solution works."
       },
-      "reviewPrompt": "Remember and explain one example of: Debugging.",
+      "reviewPrompt": "Later, solve a different debugging task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
       "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }

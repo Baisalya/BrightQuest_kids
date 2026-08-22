@@ -9,6 +9,8 @@ import '../curriculum/curriculum_catalog.dart';
 import '../curriculum/curriculum_models.dart';
 import '../models/game_models.dart';
 import '../models/progress_models.dart';
+import '../nursery/nursery_learning_models.dart';
+import '../nursery/nursery_progress_engine.dart';
 import '../persistence/progress_store.dart';
 
 class GameController extends ChangeNotifier {
@@ -24,6 +26,7 @@ class GameController extends ChangeNotifier {
 
   static const LearningProgressEngine _learningProgress =
       LearningProgressEngine();
+  static const NurseryProgressEngine _nurseryProgress = NurseryProgressEngine();
 
   ChildProfileSnapshot get _profile => _snapshot.activeProfile;
 
@@ -82,6 +85,15 @@ class GameController extends ChangeNotifier {
   bool get dyslexiaFriendlySpacing => _profile.learning.dyslexiaFriendlySpacing;
   bool get readingFocusEnabled => _profile.learning.readingFocusEnabled;
   bool get captionsEnabled => _profile.learning.captionsEnabled;
+  NurseryLearningState get nurseryLearningState => _profile.nurseryLearning;
+  Map<String, NurserySkillMastery> get nurserySkillMastery =>
+      Map<String, NurserySkillMastery>.unmodifiable(
+        _profile.nurseryLearning.skillMastery,
+      );
+  List<NurseryAttemptEvidence> get nurseryAttemptEvidence =>
+      List<NurseryAttemptEvidence>.unmodifiable(
+        _profile.nurseryLearning.attemptEvidence,
+      );
   Map<int, ClassEntitlement> get entitlementCache =>
       Map<int, ClassEntitlement>.unmodifiable(_snapshot.entitlementCache);
   bool get dailyTimeLimitReached =>
@@ -140,10 +152,14 @@ class GameController extends ChangeNotifier {
     if (raw != null) {
       _snapshot = PlayerSnapshot.fromJson(raw);
     }
-    _snapshot.schemaVersion = 5;
+    _snapshot.schemaVersion = 6;
     _normalizeToday();
     _profile.learning = _learningProgress.refreshReviewStates(
         _profile.learning, DateTime.now());
+    _profile.nurseryLearning = _nurseryProgress.refreshReviewStates(
+      _profile.nurseryLearning,
+      DateTime.now(),
+    );
     _loaded = true;
     notifyListeners();
   }
@@ -394,6 +410,38 @@ class GameController extends ChangeNotifier {
     );
     _changed();
   }
+
+  void recordNurseryEvidence(NurseryAttemptEvidence evidence) {
+    if (evidence.profileId != activeProfileId ||
+        evidence.packId != 'brightquest_nursery') {
+      return;
+    }
+    _profile.nurseryLearning = _nurseryProgress.record(
+      _profile.nurseryLearning,
+      evidence,
+    );
+    _changed();
+  }
+
+  List<NurseryReviewTask> dueNurseryReviewTasks({
+    DateTime? now,
+    int limit = 10,
+  }) {
+    final timestamp = now ?? DateTime.now();
+    _profile.nurseryLearning = _nurseryProgress.refreshReviewStates(
+      _profile.nurseryLearning,
+      timestamp,
+    );
+    return _nurseryProgress.dueTasks(
+      _profile.nurseryLearning,
+      now: timestamp,
+      limit: limit,
+    );
+  }
+
+  NurserySkillMastery nurseryMasteryFor(String skillId) =>
+      _profile.nurseryLearning.skillMastery[skillId] ??
+      NurserySkillMastery(skillId: skillId);
 
   void setLearningLocale(String localeCode) {
     if (localeCode != 'en-IN') return;

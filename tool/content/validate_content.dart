@@ -38,6 +38,7 @@ void main(List<String> args) {
         _readJson('assets/content/class_4/learning_blueprints.json'),
         _readJson('assets/content/class_5/learning_blueprints.json'),
       ],
+      nurseryJson: _readJson('assets/content/nursery/pack_v1.json'),
     );
   } on ContentPackFormatException catch (error) {
     stderr.writeln('BrightQuest content-pack validation FAILED:');
@@ -78,8 +79,12 @@ void main(List<String> args) {
 
   final duplicates = findDuplicateContentGroups(repository.allActivities);
   stdout.writeln('BrightQuest Kids content validation: PASS');
-  stdout.writeln('Class packs: 3');
-  stdout.writeln('Migrated activities: ${repository.allActivities.length}');
+  stdout.writeln('Class packs: 3 + Nursery review pack');
+  stdout.writeln(
+      'Nursery authored activities: ${repository.nurseryPack?.activities.length ?? 0}');
+  stdout.writeln('Legacy migrated activities: ${inventory.length}');
+  stdout.writeln(
+      'Authored Class 3–5 activities: ${repository.allActivities.length}');
   stdout.writeln('Legacy selectors preserved: ${audit.selectors.length}');
   stdout.writeln(
       'Exact duplicate prompt/answer groups reported: ${duplicates.length}');

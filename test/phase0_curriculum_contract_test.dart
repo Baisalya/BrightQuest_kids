@@ -277,9 +277,9 @@ void main() {
       );
 
       final snapshot = PlayerSnapshot();
-      expect(snapshot.schemaVersion, 5);
+      expect(snapshot.schemaVersion, 6);
       final roundTrip = PlayerSnapshot.fromJson(snapshot.toJson());
-      expect(roundTrip.schemaVersion, 5);
+      expect(roundTrip.schemaVersion, 6);
       expect(roundTrip.activeProfileId, snapshot.activeProfileId);
       expect(roundTrip.profiles.keys, snapshot.profiles.keys);
     });

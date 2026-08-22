@@ -16,8 +16,10 @@ import '../../widgets/bright_widgets.dart';
 import '../adventures/learning_world_screen.dart';
 import '../games/game_router.dart';
 import '../learning/applied_missions_screen.dart';
+import '../learning/class_skill_studio_screen.dart';
 import '../learning/diagnostic_screen.dart';
 import '../learning/power_review_screen.dart';
+import '../nursery/nursery_home_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -201,6 +203,16 @@ class _LearningToolsPanel extends StatelessWidget {
               spacing: 10,
               runSpacing: 10,
               children: [
+                if (BrightQuestScope.contentOf(context).nurseryPack != null)
+                  FilledButton.tonalIcon(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const NurseryHomeScreen(),
+                      ),
+                    ),
+                    icon: const Icon(Icons.spa_rounded),
+                    label: const Text('Nursery Learning Garden'),
+                  ),
                 FilledButton.tonalIcon(
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
@@ -208,6 +220,15 @@ class _LearningToolsPanel extends StatelessWidget {
                   ),
                   icon: const Icon(Icons.explore_rounded),
                   label: Text(diagnosticLabel),
+                ),
+                FilledButton.tonalIcon(
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const ClassSkillStudioScreen(),
+                    ),
+                  ),
+                  icon: const Icon(Icons.school_rounded),
+                  label: const Text('Class Skill Studio'),
                 ),
                 FilledButton.tonalIcon(
                   onPressed: () => Navigator.of(context).push(

@@ -126,3 +126,12 @@ const classPackProductIds = <int, String>{
   4: 'brightquest_class_4',
   5: 'brightquest_class_5',
 };
+
+/// Stable product identifier reserved for the Nursery pack.
+///
+/// This constant does not grant entitlement. Nursery remains paid-ineligible
+/// until teacher review, child pilots, store setup, and device qualification
+/// are recorded in its versioned content contract.
+abstract final class NurseryProductIds {
+  static const String nursery = 'brightquest_nursery';
+}

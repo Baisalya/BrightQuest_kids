@@ -34,6 +34,48 @@ class _ClassPackScreenState extends State<ClassPackScreen> {
             ),
           ),
           const SizedBox(height: 14),
+          if (repository.nurseryPack case final nursery?) ...[
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Nursery Learning Garden',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '₹${nursery.commercial.permanentOneTimePriceInr} • planned permanent one-time Nursery pack',
+                    ),
+                    Text(
+                      '${nursery.commercial.freeSampleActivityIds.length} intentionally small activity-based samples • ${nursery.activities.length} authored activities',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      nursery.commercial.paidEligibility
+                          ? 'Paid eligibility is declared, but no Nursery production entitlement verifier is configured in this release; access therefore remains fail closed beyond samples.'
+                          : 'Purchasing is locked. Teacher review, supervised child pilots, production billing, and real Android/Windows qualification are not yet recorded.',
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Planned product ID: ${nursery.commercial.plannedProductId}. Draft content remains ${nursery.review.status.name}; this is not an approval or certification claim.',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    const SizedBox(height: 12),
+                    const FilledButton(
+                      onPressed: null,
+                      child: Text('Nursery purchase unavailable'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+          ],
           for (final classNumber in const <int>[3, 4, 5])
             Builder(
               builder: (context) {

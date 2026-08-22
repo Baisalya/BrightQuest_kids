@@ -41,8 +41,8 @@ void main() {
       final repository = _repository();
       expect(repository.packs.map((pack) => pack.classNumber), <int>[3, 4, 5]);
       expect(repository.packs.map((pack) => pack.activities.length),
-          everyElement(63));
-      expect(repository.allActivities.length, 189);
+          everyElement(111));
+      expect(repository.allActivities.length, 333);
 
       final inventory = currentContentInventory(repository);
       expect(inventory.length, 189);
@@ -86,7 +86,7 @@ void main() {
           expect(activity.reviewerOwnerId, 'primary_teacher_reviewer');
         }
       }
-      expect(ids.length, 189);
+      expect(ids.length, 333);
     });
 
     test('locked packs expose one beginner demo per game, not whole units', () {
@@ -344,7 +344,7 @@ void main() {
       );
 
       final restored = PlayerSnapshot.fromJson(snapshot.toJson());
-      expect(restored.schemaVersion, 5);
+      expect(restored.schemaVersion, 6);
       expect(restored.activeProfile.gameProgress['math_market']!.attempts, 7);
       expect(
         restored.activeProfile.gameProgress['math_market']!
@@ -365,7 +365,7 @@ void main() {
       expect(repository.isClassPackUnlocked(3), isTrue);
       expect(repository.isClassPackUnlocked(4), isFalse);
       expect(repository.isClassPackUnlocked(5), isTrue);
-      expect(repository.packForClass(4).activities.length, 63);
+      expect(repository.packForClass(4).activities.length, 111);
       expect(
         () => repository.mathQuestionsForClass(4),
         throwsA(isA<StateError>()),

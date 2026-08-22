@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "classNumber": 4,
-  "status": "technicalDraftPendingTeacherReview",
+  "status": "needsReview",
   "purpose": "Teach/guided/independent/mastery/review blueprint coverage. This is not reviewer approval or a commercial-readiness claim.",
   "competencyCount": 37,
   "blueprints": [
@@ -11,31 +11,34 @@
       "subject": "maths",
       "unitId": "c4_math_numbers",
       "title": "Place value to 10,000",
-      "objective": "Reads, writes, compares and decomposes whole numbers within the draft Class 4 range.",
-      "teach": "Learn the idea in small steps: Reads, writes, compares and decomposes whole numbers within the draft Class 4 range.",
-      "workedExample": "Learn the idea in small steps: Reads, writes, compares and decomposes whole numbers within the draft Class 4 range.",
+      "objective": "Reads, writes, compares and decomposes whole numbers up to 10,000.",
+      "teach": "Read multi-digit numbers from the greatest place value. Decompose them into thousands, hundreds, tens and ones before comparing.",
+      "workedExample": "In 5,482, what value does the digit 5 represent? The 5 is in the thousands place, so its value is 5,000.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Reads, writes, compares and decomposes whole numbers within the draft Class 4 range.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Reads, writes, compares and decomposes whole numbers within the draft Class 4 range."
+        "prompt": "In 5,482, what value does the digit 5 represent?",
+        "hintLevel1": "Name the place of the digit 5.",
+        "hintLevel2": "The 5 is in the thousands place, so its value is 5,000."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Reads, writes, compares and decomposes whole numbers within the draft Class 4 range."
+        "sourceActivityIds": [
+          "c4_skill_studio_math_place_value_10000_i1",
+          "c4_skill_studio_math_place_value_10000_m1"
+        ],
+        "fallbackPrompt": "Which number is 7,000 + 300 + 20 + 9?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Reads, writes, compares and decomposes whole numbers within the draft Class 4 range."
+        "prompt": "A stadium count is 9,408 and another is 9,480. Which count is larger?"
       },
-      "reviewPrompt": "Remember and explain one example of: Place value to 10,000.",
+      "reviewPrompt": "Later, try a fresh place value to 10,000 task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Learn the idea in small steps: Reads, writes, compares and decomposes whole numbers within the draft Class 4 range.",
+      "narrationText": "Read multi-digit numbers from the greatest place value. Decompose them into thousands, hundreds, tens and ones before comparing.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -65,16 +68,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Solves and checks multi-digit addition and subtraction in meaningful contexts."
+        "prompt": "Solve a fresh addition and subtraction situation, then check the result with a second method, model or estimate."
       },
-      "reviewPrompt": "Remember and explain one example of: Addition and subtraction.",
+      "reviewPrompt": "Later, solve a different addition and subtraction task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
       "narrationText": "45 + 20 = 65, then +7. The correct value is 72.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -104,16 +107,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Uses place-value and distributive strategies for increasingly complex multiplication."
+        "prompt": "Solve a fresh multiplication strategies situation, then check the result with a second method, model or estimate."
       },
-      "reviewPrompt": "Remember and explain one example of: Multiplication strategies.",
+      "reviewPrompt": "Later, solve a different multiplication strategies task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
       "narrationText": "Use 7 × 4 = 28, then double it. The correct value is 56.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -143,16 +146,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Uses grouping, sharing and inverse relationships to solve increasingly complex division."
+        "prompt": "Solve a fresh division strategies situation, then check the result with a second method, model or estimate."
       },
-      "reviewPrompt": "Remember and explain one example of: Division strategies.",
+      "reviewPrompt": "Later, solve a different division strategies task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
       "narrationText": "Think: 6 × ? = 24. The correct value is 4.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -180,16 +183,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Chooses and sequences operations for a two-step number problem and explains the choice."
+        "prompt": "Solve a fresh multi-step operation problems situation, then check the result with a second method, model or estimate."
       },
-      "reviewPrompt": "Remember and explain one example of: Multi-step operation problems.",
+      "reviewPrompt": "Later, solve a different multi-step operation problems task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
       "narrationText": "Multiply first, then add. The correct value is 150.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -219,16 +222,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Represents fractions with models and identifies simple equivalent fractions."
+        "prompt": "Solve a fresh fraction models and equivalence situation, then check the result with a second method, model or estimate."
       },
-      "reviewPrompt": "Remember and explain one example of: Fraction models and equivalence.",
+      "reviewPrompt": "Later, solve a different fraction models and equivalence task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
       "narrationText": "1/4 of 8 equal slices is 2 slices because 8 × 1 ÷ 4 = 2.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -240,30 +243,33 @@
       "unitId": "c4_math_fractions",
       "title": "Measurement and perimeter",
       "objective": "Measures, converts within familiar units and reasons about perimeter in simple contexts.",
-      "teach": "Learn the idea in small steps: Measures, converts within familiar units and reasons about perimeter in simple contexts.",
-      "workedExample": "Learn the idea in small steps: Measures, converts within familiar units and reasons about perimeter in simple contexts.",
+      "teach": "Perimeter is the distance around a shape. Use consistent units and add every side length once.",
+      "workedExample": "A rectangle is 6 cm long and 4 cm wide. What is its perimeter in centimetres? Perimeter = 6 + 4 + 6 + 4 = 20 cm.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Measures, converts within familiar units and reasons about perimeter in simple contexts.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Measures, converts within familiar units and reasons about perimeter in simple contexts."
+        "prompt": "A rectangle is 6 cm long and 4 cm wide. What is its perimeter in centimetres?",
+        "hintLevel1": "Add all four side lengths.",
+        "hintLevel2": "Perimeter = 6 + 4 + 6 + 4 = 20 cm."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Measures, converts within familiar units and reasons about perimeter in simple contexts."
+        "sourceActivityIds": [
+          "c4_skill_studio_math_measure_perimeter_i1",
+          "c4_skill_studio_math_measure_perimeter_m1"
+        ],
+        "fallbackPrompt": "How many centimetres are in 2 metres?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Measures, converts within familiar units and reasons about perimeter in simple contexts."
+        "prompt": "A triangular garden has sides 4 m, 5 m and 6 m. What is its perimeter?"
       },
-      "reviewPrompt": "Remember and explain one example of: Measurement and perimeter.",
+      "reviewPrompt": "Later, try a fresh measurement and perimeter task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Learn the idea in small steps: Measures, converts within familiar units and reasons about perimeter in simple contexts.",
+      "narrationText": "Perimeter is the distance around a shape. Use consistent units and add every side length once.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -275,30 +281,33 @@
       "unitId": "c4_math_fractions",
       "title": "Time and money problems",
       "objective": "Solves elapsed-time and money problems using appropriate representations.",
-      "teach": "Learn the idea in small steps: Solves elapsed-time and money problems using appropriate representations.",
-      "workedExample": "Learn the idea in small steps: Solves elapsed-time and money problems using appropriate representations.",
+      "teach": "For elapsed time, move forward in hours and minutes. For money, add costs or subtract from the amount paid and keep rupees consistent.",
+      "workedExample": "How many minutes pass from 2:15 to 3:00? From 2:15 to 3:00 is 45 minutes.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Solves elapsed-time and money problems using appropriate representations.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Solves elapsed-time and money problems using appropriate representations."
+        "prompt": "How many minutes pass from 2:15 to 3:00?",
+        "hintLevel1": "Count forward to the next hour.",
+        "hintLevel2": "From 2:15 to 3:00 is 45 minutes."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Solves elapsed-time and money problems using appropriate representations."
+        "sourceActivityIds": [
+          "c4_skill_studio_math_time_money_i1",
+          "c4_skill_studio_math_time_money_m1"
+        ],
+        "fallbackPrompt": "You pay ₹200 for an item costing ₹135. How much change should you get?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Solves elapsed-time and money problems using appropriate representations."
+        "prompt": "Three tickets cost ₹45 each. What is the total cost?"
       },
-      "reviewPrompt": "Remember and explain one example of: Time and money problems.",
+      "reviewPrompt": "Later, try a fresh time and money problems task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Learn the idea in small steps: Solves elapsed-time and money problems using appropriate representations.",
+      "narrationText": "For elapsed time, move forward in hours and minutes. For money, add costs or subtract from the amount paid and keep rupees consistent.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -310,30 +319,33 @@
       "unitId": "c4_math_fractions",
       "title": "Geometry and symmetry",
       "objective": "Classifies familiar shapes and recognises simple line symmetry and spatial relationships.",
-      "teach": "Learn the idea in small steps: Classifies familiar shapes and recognises simple line symmetry and spatial relationships.",
-      "workedExample": "Learn the idea in small steps: Classifies familiar shapes and recognises simple line symmetry and spatial relationships.",
+      "teach": "Classify shapes by defining properties. A line of symmetry divides a shape into matching mirror halves.",
+      "workedExample": "Which shape always has 4 equal sides and 4 right angles? A square has four equal sides and four right angles.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Classifies familiar shapes and recognises simple line symmetry and spatial relationships.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Classifies familiar shapes and recognises simple line symmetry and spatial relationships."
+        "prompt": "Which shape always has 4 equal sides and 4 right angles?",
+        "hintLevel1": "Check both side lengths and angles.",
+        "hintLevel2": "A square has four equal sides and four right angles."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Classifies familiar shapes and recognises simple line symmetry and spatial relationships."
+        "sourceActivityIds": [
+          "c4_skill_studio_math_geometry_symmetry_i1",
+          "c4_skill_studio_math_geometry_symmetry_m1"
+        ],
+        "fallbackPrompt": "How many lines of symmetry does a non-square rectangle have?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Classifies familiar shapes and recognises simple line symmetry and spatial relationships."
+        "prompt": "A shape matches itself after folding along one line. What does that line show?"
       },
-      "reviewPrompt": "Remember and explain one example of: Geometry and symmetry.",
+      "reviewPrompt": "Later, try a fresh geometry and symmetry task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Learn the idea in small steps: Classifies familiar shapes and recognises simple line symmetry and spatial relationships.",
+      "narrationText": "Classify shapes by defining properties. A line of symmetry divides a shape into matching mirror halves.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -345,30 +357,33 @@
       "unitId": "c4_math_fractions",
       "title": "Data and patterns",
       "objective": "Reads simple tables/charts and extends number or shape patterns with a stated rule.",
-      "teach": "Learn the idea in small steps: Reads simple tables/charts and extends number or shape patterns with a stated rule.",
-      "workedExample": "Learn the idea in small steps: Reads simple tables/charts and extends number or shape patterns with a stated rule.",
+      "teach": "Read the labels and values in a table or chart before comparing. For patterns, state the rule and apply it consistently.",
+      "workedExample": "Continue the pattern: 5, 10, 15, 20, __. The rule is add 5, so the next number is 25.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Reads simple tables/charts and extends number or shape patterns with a stated rule.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Reads simple tables/charts and extends number or shape patterns with a stated rule."
+        "prompt": "Continue the pattern: 5, 10, 15, 20, __.",
+        "hintLevel1": "Find the repeated change.",
+        "hintLevel2": "The rule is add 5, so the next number is 25."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Reads simple tables/charts and extends number or shape patterns with a stated rule."
+        "sourceActivityIds": [
+          "c4_skill_studio_math_data_patterns_i1",
+          "c4_skill_studio_math_data_patterns_m1"
+        ],
+        "fallbackPrompt": "A table shows Apples: 8, Bananas: 5, Oranges: 11. Which fruit has the greatest count?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Reads simple tables/charts and extends number or shape patterns with a stated rule."
+        "prompt": "The rule is “add 4”. What comes after 18?"
       },
-      "reviewPrompt": "Remember and explain one example of: Data and patterns.",
+      "reviewPrompt": "Later, try a fresh data and patterns task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Learn the idea in small steps: Reads simple tables/charts and extends number or shape patterns with a stated rule.",
+      "narrationText": "Read the labels and values in a table or chart before comparing. For patterns, state the rule and apply it consistently.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -380,30 +395,33 @@
       "unitId": "c4_english_reading",
       "title": "Main ideas and simple inference",
       "objective": "Identifies main ideas and makes a simple inference supported by details in a text.",
-      "teach": "Learn the idea in small steps: Identifies main ideas and makes a simple inference supported by details in a text.",
-      "workedExample": "Learn the idea in small steps: Identifies main ideas and makes a simple inference supported by details in a text.",
+      "teach": "Use the whole text for the main idea and point to a detail when making an inference. An inference must fit the evidence, not just a guess.",
+      "workedExample": "Leela carried a raincoat. Dark clouds covered the sky, and the wind grew cool. What can you infer? The raincoat, dark clouds and cool wind are details that support the inference that rain may be coming.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Identifies main ideas and makes a simple inference supported by details in a text.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Identifies main ideas and makes a simple inference supported by details in a text."
+        "prompt": "Leela carried a raincoat. Dark clouds covered the sky, and the wind grew cool. What can you infer?",
+        "hintLevel1": "Use more than one clue from the text.",
+        "hintLevel2": "The raincoat, dark clouds and cool wind are details that support the inference that rain may be coming."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Identifies main ideas and makes a simple inference supported by details in a text."
+        "sourceActivityIds": [
+          "c4_skill_studio_eng_comprehend_main_infer_i1",
+          "c4_skill_studio_eng_comprehend_main_infer_m1"
+        ],
+        "fallbackPrompt": "The class collected bottles, paper and cans for a clean-up drive. What is the main idea?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Identifies main ideas and makes a simple inference supported by details in a text."
+        "prompt": "Nila checked the soil, then watered only the dry pots. What does this suggest about Nila?"
       },
-      "reviewPrompt": "Remember and explain one example of: Main ideas and simple inference.",
+      "reviewPrompt": "Later, try a fresh main ideas and simple inference task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Learn the idea in small steps: Identifies main ideas and makes a simple inference supported by details in a text.",
+      "narrationText": "Use the whole text for the main idea and point to a detail when making an inference. An inference must fit the evidence, not just a guess.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -433,16 +451,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Explains event order and simple cause-and-effect relationships in a text."
+        "prompt": "Use sequence and cause in a fresh text or sentence and point to the words that support your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Sequence and cause.",
+      "reviewPrompt": "Later, solve a different sequence and cause task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
       "narrationText": "Arrange the words in sentence order to rebuild: “Together they opened the hidden treasure chest.”",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -454,30 +472,33 @@
       "unitId": "c4_english_reading",
       "title": "Vocabulary in context",
       "objective": "Infers word meaning from context and uses the word appropriately in a new sentence.",
-      "teach": "Learn the idea in small steps: Infers word meaning from context and uses the word appropriately in a new sentence.",
-      "workedExample": "Learn the idea in small steps: Infers word meaning from context and uses the word appropriately in a new sentence.",
+      "teach": "Infer a word from nearby clues, then test the meaning by using the word in another sentence where the same meaning fits.",
+      "workedExample": "The path was narrow, so only one person could walk along it at a time. What does narrow mean? The clue that only one person could fit shows that narrow means not wide.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Infers word meaning from context and uses the word appropriately in a new sentence.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Infers word meaning from context and uses the word appropriately in a new sentence."
+        "prompt": "The path was narrow, so only one person could walk along it at a time. What does narrow mean?",
+        "hintLevel1": "Use the space clue in the sentence.",
+        "hintLevel2": "The clue that only one person could fit shows that narrow means not wide."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Infers word meaning from context and uses the word appropriately in a new sentence."
+        "sourceActivityIds": [
+          "c4_skill_studio_eng_vocab_context_i1",
+          "c4_skill_studio_eng_vocab_context_m1"
+        ],
+        "fallbackPrompt": "Water was scarce, so the hikers shared the little they had. What does scarce mean?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Infers word meaning from context and uses the word appropriately in a new sentence."
+        "prompt": "Which sentence uses “scarce” correctly?"
       },
-      "reviewPrompt": "Remember and explain one example of: Vocabulary in context.",
+      "reviewPrompt": "Later, try a fresh vocabulary in context task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Learn the idea in small steps: Infers word meaning from context and uses the word appropriately in a new sentence.",
+      "narrationText": "Infer a word from nearby clues, then test the meaning by using the word in another sentence where the same meaning fits.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -489,30 +510,33 @@
       "unitId": "c4_english_reading",
       "title": "Compare text details",
       "objective": "Compares two characters, events, instructions or details using evidence from a short text.",
-      "teach": "Learn the idea in small steps: Compares two characters, events, instructions or details using evidence from a short text.",
-      "workedExample": "Learn the idea in small steps: Compares two characters, events, instructions or details using evidence from a short text.",
+      "teach": "When comparing, identify the same feature in both parts of a text and support the comparison with stated details.",
+      "workedExample": "Riya walks to school. Kabir rides a bicycle. How are their journeys different? The text states that Riya walks and Kabir rides a bicycle.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Compares two characters, events, instructions or details using evidence from a short text.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Compares two characters, events, instructions or details using evidence from a short text."
+        "prompt": "Riya walks to school. Kabir rides a bicycle. How are their journeys different?",
+        "hintLevel1": "Compare the travel method for each person.",
+        "hintLevel2": "The text states that Riya walks and Kabir rides a bicycle."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Compares two characters, events, instructions or details using evidence from a short text."
+        "sourceActivityIds": [
+          "c4_skill_studio_eng_read_compare_i1",
+          "c4_skill_studio_eng_read_compare_m1"
+        ],
+        "fallbackPrompt": "Mango trees need sunlight. Ferns in this passage grow best in shade. What contrast is stated?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Compares two characters, events, instructions or details using evidence from a short text."
+        "prompt": "Mina finished first but made two errors. Dev finished later with no errors. Which statement is supported?"
       },
-      "reviewPrompt": "Remember and explain one example of: Compare text details.",
+      "reviewPrompt": "Later, try a fresh compare text details task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Learn the idea in small steps: Compares two characters, events, instructions or details using evidence from a short text.",
+      "narrationText": "When comparing, identify the same feature in both parts of a text and support the comparison with stated details.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -541,16 +565,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Combines related complete sentences into a coherent short paragraph."
+        "prompt": "Use sentence to paragraph in a fresh text or sentence and point to the words that support your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Sentence to paragraph.",
+      "reviewPrompt": "Later, solve a different sentence to paragraph task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
       "narrationText": "Arrange the words in sentence order to rebuild: “Ria found a glowing map near the old tree.”",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -580,16 +604,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Identifies nouns, pronouns, verbs, adjectives and selected adverbs in meaningful sentences."
+        "prompt": "Use parts of speech in context in a fresh text or sentence and point to the words that support your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Parts of speech in context.",
+      "reviewPrompt": "Later, solve a different parts of speech in context task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
       "narrationText": "In this sentence, “dragon” is the noun, “flies” is the verb, and “brave” is the adjective.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -619,16 +643,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Uses simple tense consistently across connected sentences."
+        "prompt": "Use tense consistency in a fresh text or sentence and point to the words that support your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Tense consistency.",
+      "reviewPrompt": "Later, solve a different tense consistency task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
       "narrationText": "In this sentence, “dragon” is the noun, “flies” is the verb, and “brave” is the adjective.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -658,16 +682,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Uses basic subject-verb agreement and clear pronoun references."
+        "prompt": "Use agreement and pronouns in a fresh text or sentence and point to the words that support your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Agreement and pronouns.",
+      "reviewPrompt": "Later, solve a different agreement and pronouns task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
       "narrationText": "In this sentence, “dragon” is the noun, “flies” is the verb, and “brave” is the adjective.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -679,30 +703,33 @@
       "unitId": "c4_english_language",
       "title": "Punctuation for meaning",
       "objective": "Uses capitals, end marks, commas and apostrophes where appropriate in age-appropriate writing.",
-      "teach": "Learn the idea in small steps: Uses capitals, end marks, commas and apostrophes where appropriate in age-appropriate writing.",
-      "workedExample": "Learn the idea in small steps: Uses capitals, end marks, commas and apostrophes where appropriate in age-appropriate writing.",
+      "teach": "Punctuation helps readers understand sentence boundaries, lists and possession. Edit by checking capitals, end marks, commas and apostrophes.",
+      "workedExample": "Which sentence is punctuated correctly? The sentence begins with a capital, uses a comma to separate list items, and ends with a full stop.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Uses capitals, end marks, commas and apostrophes where appropriate in age-appropriate writing.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Uses capitals, end marks, commas and apostrophes where appropriate in age-appropriate writing."
+        "prompt": "Which sentence is punctuated correctly?",
+        "hintLevel1": "Check the list and the end mark.",
+        "hintLevel2": "The sentence begins with a capital, uses a comma to separate list items, and ends with a full stop."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Uses capitals, end marks, commas and apostrophes where appropriate in age-appropriate writing."
+        "sourceActivityIds": [
+          "c4_skill_studio_eng_punctuation_i1",
+          "c4_skill_studio_eng_punctuation_m1"
+        ],
+        "fallbackPrompt": "Which sentence shows possession correctly?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Uses capitals, end marks, commas and apostrophes where appropriate in age-appropriate writing."
+        "prompt": "Which is the correctly punctuated question?"
       },
-      "reviewPrompt": "Remember and explain one example of: Punctuation for meaning.",
+      "reviewPrompt": "Later, try a fresh punctuation for meaning task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Learn the idea in small steps: Uses capitals, end marks, commas and apostrophes where appropriate in age-appropriate writing.",
+      "narrationText": "Punctuation helps readers understand sentence boundaries, lists and possession. Edit by checking capitals, end marks, commas and apostrophes.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -730,16 +757,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Writes a short organised description or narrative using relevant details and vocabulary."
+        "prompt": "Use descriptive composition in a fresh text or sentence and point to the words that support your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Descriptive composition.",
+      "reviewPrompt": "Later, solve a different descriptive composition task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
       "narrationText": "Arrange the words in sentence order to rebuild: “A gentle breeze carried silver leaves across the path.”",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -769,16 +796,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Compares materials and distinguishes observable physical changes in familiar examples."
+        "prompt": "Apply materials and changes to a new observation and identify the evidence that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Materials and changes.",
+      "reviewPrompt": "Later, solve a different materials and changes task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
       "narrationText": "Many kinds of dry wood are less dense than water.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -808,16 +835,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Connects melting, freezing, evaporation and condensation to changes of state."
+        "prompt": "Apply states of water to a new observation and identify the evidence that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: States of water.",
+      "reviewPrompt": "Later, solve a different states of water task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
       "narrationText": "A solid keeps a definite shape under ordinary conditions.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -846,16 +873,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Explains selected needs and functions of plants or other living things using observations."
+        "prompt": "Apply plants and living systems to a new observation and identify the evidence that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Plants and living systems.",
+      "reviewPrompt": "Later, solve a different plants and living systems task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
       "narrationText": "Roots absorb water and minerals.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -883,16 +910,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Predicts and describes simple pushes, pulls and magnetic interactions."
+        "prompt": "Apply forces and magnets to a new observation and identify the evidence that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Forces and magnets.",
+      "reviewPrompt": "Later, solve a different forces and magnets task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
       "narrationText": "Magnetic force is strongest near the poles.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -920,16 +947,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Identifies what should change and what should stay the same in a simple fair test."
+        "prompt": "Apply fair testing to a new observation and identify the evidence that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Fair testing.",
+      "reviewPrompt": "Later, solve a different fair testing task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
       "narrationText": "A fair test changes one variable while controlling the others.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -959,16 +986,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Records observations, makes a prediction and revises an explanation when evidence differs."
+        "prompt": "Apply observe, predict, explain to a new observation and identify the evidence that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Observe, predict, explain.",
+      "reviewPrompt": "Later, solve a different observe, predict, explain task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
       "narrationText": "A fair test changes one variable while controlling the others.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -998,16 +1025,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Classifies everyday waste and connects material choices to resource use."
+        "prompt": "Apply resources and waste to a new everyday situation and explain the responsible or evidence-based choice."
       },
-      "reviewPrompt": "Remember and explain one example of: Resources and waste.",
+      "reviewPrompt": "Later, solve a different resources and waste task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "diagramClassifier/localScenario",
       "narrationText": "Newspaper belongs in the Paper bin in this BrightQuest sorting activity.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1019,30 +1046,33 @@
       "unitId": "c4_evs_world",
       "title": "Food and water systems",
       "objective": "Traces simple ways food or water reach people and identifies responsible-use choices.",
-      "teach": "Learn the idea in small steps: Traces simple ways food or water reach people and identifies responsible-use choices.",
-      "workedExample": "Learn the idea in small steps: Traces simple ways food or water reach people and identifies responsible-use choices.",
+      "teach": "Food and water pass through connected systems before reaching people. Responsible choices reduce waste and protect quality.",
+      "workedExample": "Which sequence best shows a simple food path from farm to home? A common simple path is from production at a farm, through a market, to a home.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Traces simple ways food or water reach people and identifies responsible-use choices.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Traces simple ways food or water reach people and identifies responsible-use choices."
+        "prompt": "Which sequence best shows a simple food path from farm to home?",
+        "hintLevel1": "Put production before selling and using.",
+        "hintLevel2": "A common simple path is from production at a farm, through a market, to a home."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Traces simple ways food or water reach people and identifies responsible-use choices."
+        "sourceActivityIds": [
+          "c4_skill_studio_evs_food_water_i1",
+          "c4_skill_studio_evs_food_water_m1"
+        ],
+        "fallbackPrompt": "Which action helps reduce food waste at home?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Traces simple ways food or water reach people and identifies responsible-use choices."
+        "prompt": "Which action uses water responsibly while washing vegetables?"
       },
-      "reviewPrompt": "Remember and explain one example of: Food and water systems.",
+      "reviewPrompt": "Later, try a fresh food and water systems task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "diagramClassifier/localScenario",
-      "narrationText": "Learn the idea in small steps: Traces simple ways food or water reach people and identifies responsible-use choices.",
+      "narrationText": "Food and water pass through connected systems before reaching people. Responsible choices reduce waste and protect quality.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1054,30 +1084,33 @@
       "unitId": "c4_evs_world",
       "title": "Community interdependence",
       "objective": "Explains how people and services depend on one another in a community.",
-      "teach": "Learn the idea in small steps: Explains how people and services depend on one another in a community.",
-      "workedExample": "Learn the idea in small steps: Explains how people and services depend on one another in a community.",
+      "teach": "Communities depend on connected roles and services. One service often relies on other people, supplies or infrastructure to work well.",
+      "workedExample": "A clinic needs medicines delivered from a supplier. What does this show? The clinic depends on a supplier and delivery service, showing community interdependence.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Explains how people and services depend on one another in a community.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Explains how people and services depend on one another in a community."
+        "prompt": "A clinic needs medicines delivered from a supplier. What does this show?",
+        "hintLevel1": "Look for one service relying on another.",
+        "hintLevel2": "The clinic depends on a supplier and delivery service, showing community interdependence."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Explains how people and services depend on one another in a community."
+        "sourceActivityIds": [
+          "c4_skill_studio_evs_community_interdependence_i1",
+          "c4_skill_studio_evs_community_interdependence_m1"
+        ],
+        "fallbackPrompt": "Farmers grow vegetables, drivers transport them and shopkeepers sell them. What connects these jobs?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Explains how people and services depend on one another in a community."
+        "prompt": "A bus service stops because fuel has not arrived. What idea does this illustrate?"
       },
-      "reviewPrompt": "Remember and explain one example of: Community interdependence.",
+      "reviewPrompt": "Later, try a fresh community interdependence task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "diagramClassifier/localScenario",
-      "narrationText": "Learn the idea in small steps: Explains how people and services depend on one another in a community.",
+      "narrationText": "Communities depend on connected roles and services. One service often relies on other people, supplies or infrastructure to work well.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1107,16 +1140,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Evaluates simple reduce/reuse/recycle choices by their likely environmental effect."
+        "prompt": "Apply sustainable everyday actions to a new everyday situation and explain the responsible or evidence-based choice."
       },
-      "reviewPrompt": "Remember and explain one example of: Sustainable everyday actions.",
+      "reviewPrompt": "Later, solve a different sustainable everyday actions task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "diagramClassifier/localScenario",
       "narrationText": "Old worksheet belongs in the Paper bin in this BrightQuest sorting activity.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1146,16 +1179,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Locates selected states, capitals and landmarks on an age-appropriate India map."
+        "prompt": "Apply india: states and landmarks to a new map or community example and identify the clue that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: India: states and landmarks.",
+      "reviewPrompt": "Later, solve a different india: states and landmarks task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "mapPath/evidenceHighlighter",
       "narrationText": "Look toward India’s eastern coast. The correct answer is Odisha.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1183,16 +1216,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Uses cardinal directions and relative position to reason about routes between places."
+        "prompt": "Apply directions and routes to a new map or community example and identify the clue that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Directions and routes.",
+      "reviewPrompt": "Later, solve a different directions and routes task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "mapPath/evidenceHighlighter",
       "narrationText": "Kolkata lies east of Mumbai. The correct answer is East.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1221,16 +1254,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Identifies selected major physical features and rivers and describes their broad location."
+        "prompt": "Apply physical features and rivers to a new map or community example and identify the clue that supports your answer."
       },
-      "reviewPrompt": "Remember and explain one example of: Physical features and rivers.",
+      "reviewPrompt": "Later, solve a different physical features and rivers task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "mapPath/evidenceHighlighter",
       "narrationText": "It is a major tributary of the Ganga. The correct answer is Yamuna.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1242,30 +1275,33 @@
       "unitId": "c4_coding_ct",
       "title": "Visual abstraction",
       "objective": "Represents a route or problem using only the details needed to solve it.",
-      "teach": "Learn the idea in small steps: Represents a route or problem using only the details needed to solve it.",
-      "workedExample": "Learn the idea in small steps: Represents a route or problem using only the details needed to solve it.",
+      "teach": "Abstraction keeps the details needed to solve a problem and leaves out details that do not affect the solution.",
+      "workedExample": "For a robot route map, which detail is essential? Obstacle locations affect whether the robot can travel safely, so they are essential route information.",
       "guidedTry": {
-        "prompt": "Use a new example to show that you can: Represents a route or problem using only the details needed to solve it.",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
-        "hintLevel2": "Learn the idea in small steps: Represents a route or problem using only the details needed to solve it."
+        "prompt": "For a robot route map, which detail is essential?",
+        "hintLevel1": "Keep details that change the route.",
+        "hintLevel2": "Obstacle locations affect whether the robot can travel safely, so they are essential route information."
       },
       "independentPractice": {
-        "sourceActivityIds": [],
-        "fallbackPrompt": "Use a new example to show that you can: Represents a route or problem using only the details needed to solve it."
+        "sourceActivityIds": [
+          "c4_skill_studio_ct_visual_abstraction_i1",
+          "c4_skill_studio_ct_visual_abstraction_m1"
+        ],
+        "fallbackPrompt": "Which simple representation best helps plan a route through a grid?"
       },
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Represents a route or problem using only the details needed to solve it."
+        "prompt": "Why is abstraction useful when solving a problem?"
       },
-      "reviewPrompt": "Remember and explain one example of: Visual abstraction.",
+      "reviewPrompt": "Later, try a fresh visual abstraction task and explain the clue, rule or evidence you used.",
       "interactionSuggested": "codingTrace/debuggingPanel",
-      "narrationText": "Learn the idea in small steps: Represents a route or problem using only the details needed to solve it.",
+      "narrationText": "Abstraction keeps the details needed to solve a problem and leaves out details that do not affect the solution.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1294,16 +1330,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Recognises repeated movement patterns and uses them to reduce unnecessary instructions."
+        "prompt": "Use pattern recognition on a new route or problem, then trace the steps to check that the solution works."
       },
-      "reviewPrompt": "Remember and explain one example of: Pattern recognition.",
+      "reviewPrompt": "Later, solve a different pattern recognition task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
       "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1332,16 +1368,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Breaks a maze or route task into smaller solvable segments."
+        "prompt": "Use problem decomposition on a new route or problem, then trace the steps to check that the solution works."
       },
-      "reviewPrompt": "Remember and explain one example of: Problem decomposition.",
+      "reviewPrompt": "Later, solve a different problem decomposition task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
       "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1371,16 +1407,16 @@
       "masteryTransfer": {
         "requireUnseenWording": true,
         "hintAllowed": false,
-        "prompt": "Apply this idea in a different situation: Creates, follows and checks an ordered algorithm for a route, revising it when it fails."
+        "prompt": "Use algorithms and route checking on a new route or problem, then trace the steps to check that the solution works."
       },
-      "reviewPrompt": "Remember and explain one example of: Algorithms and route checking.",
+      "reviewPrompt": "Later, solve a different algorithms and route checking task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
       "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 1,
-        "author": "brightquest-phase2-10-technical-draft",
+        "revision": 2,
+        "author": "brightquest-phase-e-technical-hardening",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }

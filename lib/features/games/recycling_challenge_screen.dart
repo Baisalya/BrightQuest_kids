@@ -75,7 +75,8 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
         controller,
         answer: chosen,
         correctAnswer: '${item.bin} bin',
-        guidance: 'Remember what the item is made from.',
+        guidance:
+            'For this practice, sort by the example material group. Real local recycling rules can differ.',
       );
     }
     setState(() {
@@ -137,7 +138,8 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
           ? 'Class $classNumber • Adaptive level $_difficulty • Sort It Right'
           : 'Class $classNumber • ${widget.learningLevel!.typeLabel} • ${widget.learningLevel!.title}',
       color: const Color(0xFF4BAF52),
-      voicePrompt: 'Which bin should ${item.name} go into?',
+      voicePrompt:
+          'For this material-sorting practice, which group should ${item.name} go into?',
       voiceChoices: const <String>['Paper', 'Plastic', 'Organic'],
       child: ListView(
         padding: const EdgeInsets.all(18),
@@ -151,14 +153,14 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
           const GameSceneBanner(
               gameId: 'recycling_challenge',
               caption:
-                  'Sort each item into the correct bin and protect Green Planet.',
+                  'Practice sorting clean example items by material. Real local recycling rules can differ.',
               accent: Color(0xFF4BAF52)),
           const SizedBox(height: 18),
           Center(child: Text(item.emoji, style: const TextStyle(fontSize: 92))),
           const SizedBox(height: 6),
           Center(
             child: Text(
-              'Where does ${item.name} go?',
+              'Which practice group matches ${item.name}?',
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
             ),
@@ -193,9 +195,11 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
             const SizedBox(height: 12),
             correct == true
                 ? SuccessBanner(
-                    text: 'Correct! ${item.name} belongs in ${item.bin}.')
+                    text:
+                        'Correct for this practice! ${item.name} goes in the ${item.bin} group.')
                 : ErrorBanner(
-                    text: '${item.name} belongs in the ${item.bin} bin.'),
+                    text:
+                        'For this practice, ${item.name} goes in the ${item.bin} group. Local recycling rules can differ.'),
           ],
           const SizedBox(height: 18),
           if (finished)

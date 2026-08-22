@@ -59,6 +59,7 @@ class DiagnosticEngine {
   }
 
   bool _supportsDiagnosticInteraction(ContentActivity activity) {
+    if (activity.payload['masteryEligible'] == false) return false;
     final choices = activity.payload['choices'];
     final answer =
         activity.correctResponseRule['value'] ?? activity.payload['answer'];
