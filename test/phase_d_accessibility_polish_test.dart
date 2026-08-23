@@ -83,7 +83,7 @@ void main() {
           ),
         );
         await tester.pump();
-        expect(find.text('Choose your adventure'), findsOneWidget);
+        expect(find.text('Let’s play!'), findsOneWidget);
         expect(find.text('Next'), findsNothing);
         expect(
           tester.takeException(),

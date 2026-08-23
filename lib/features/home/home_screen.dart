@@ -124,40 +124,27 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(18, 0, 18, 28),
-            sliver: SliverLayoutBuilder(
-              builder: (context, constraints) {
-                final compactCards = constraints.crossAxisExtent < 420;
-                return SliverGrid(
-                  gridDelegate: compactCards
-                      ? const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 1,
-                          mainAxisExtent: 224,
-                          mainAxisSpacing: 14,
-                        )
-                      : const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 300,
-                          mainAxisExtent: 224,
-                          crossAxisSpacing: 14,
-                          mainAxisSpacing: 14,
-                        ),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final game = games[index];
-                      return AdventureCard(
+          SliverToBoxAdapter(
+            child: BrightResponsive(
+              padding: const EdgeInsets.fromLTRB(18, 0, 18, 28),
+              builder: (context, _) => BrightAdaptiveGrid(
+                minChildWidth: 245,
+                maxColumns: 5,
+                children: [
+                  for (final game in games)
+                    SizedBox(
+                      height: 226,
+                      child: AdventureCard(
                         game: game,
                         progress: controller.progressFor(game.id),
                         badgeText: game.id == 'rewards_room'
                             ? 'Rewards'
                             : 'Adaptive D${controller.recommendedDifficulty(game.id)}',
                         onTap: () => openGame(context, game.id),
-                      );
-                    },
-                    childCount: games.length,
-                  ),
-                );
-              },
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
         ],
@@ -182,74 +169,192 @@ class _LearningToolsPanel extends StatelessWidget {
                 diagnostic.classNumber == controller.selectedClass
             ? 'Continue discovery check'
             : 'Discovery check';
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Learning tools',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w900,
-                  ),
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              'Short learning paths that diagnose, revisit and apply ideas without streak pressure.',
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: [
-                if (BrightQuestScope.contentOf(context).nurseryPack != null)
-                  FilledButton.tonalIcon(
-                    onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => const NurseryHomeScreen(),
-                      ),
+
+    final tools = <Widget>[
+      if (BrightQuestScope.contentOf(context).nurseryPack != null)
+        _LearningToolCard(
+          emoji: '🌱',
+          title: 'Nursery Garden',
+          subtitle: 'Picture-first early learning',
+          color: const Color(0xFF46B86B),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(builder: (_) => const NurseryHomeScreen()),
+          ),
+        ),
+      _LearningToolCard(
+        emoji: '🧭',
+        title: diagnosticLabel,
+        subtitle: 'Find the best starting trail',
+        color: const Color(0xFF4A9CEB),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(builder: (_) => const DiagnosticScreen()),
+        ),
+      ),
+      _LearningToolCard(
+        emoji: '🎓',
+        title: 'Class Skill Studio',
+        subtitle: 'Build one school skill at a time',
+        color: const Color(0xFF7A58E8),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+              builder: (_) => const ClassSkillStudioScreen()),
+        ),
+      ),
+      _LearningToolCard(
+        emoji: '⚡',
+        title: due == 0 ? 'Power Review' : 'Power Review · $due due',
+        subtitle: due == 0
+            ? 'Keep strong skills fresh'
+            : 'Quick wins waiting for you',
+        color: const Color(0xFFF29B32),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(builder: (_) => const PowerReviewScreen()),
+        ),
+      ),
+      _LearningToolCard(
+        emoji: '🚀',
+        title: 'Applied missions',
+        subtitle: 'Use ideas in mini challenges',
+        color: const Color(0xFFE85C9E),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+              builder: (_) => const AppliedMissionsScreen()),
+        ),
+      ),
+    ];
+
+    return BrightSurface(
+      padding: const EdgeInsets.all(16),
+      tint: AppTheme.sky,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const BrightSectionTitle(
+            title: 'Explorer shortcuts',
+            subtitle:
+                'Pick a focused learning path whenever you want a different kind of quest.',
+            icon: Icons.rocket_launch_rounded,
+            accent: AppTheme.sky,
+          ),
+          const SizedBox(height: 14),
+          BrightAdaptiveGrid(
+            minChildWidth: 190,
+            maxColumns: 5,
+            spacing: 10,
+            runSpacing: 10,
+            children: tools,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LearningToolCard extends StatefulWidget {
+  const _LearningToolCard({
+    required this.emoji,
+    required this.title,
+    required this.subtitle,
+    required this.color,
+    required this.onTap,
+  });
+
+  final String emoji;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  State<_LearningToolCard> createState() => _LearningToolCardState();
+}
+
+class _LearningToolCardState extends State<_LearningToolCard> {
+  bool hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => hovered = true),
+      onExit: (_) => setState(() => hovered = false),
+      child: BrightPressableScale(
+        hoverScale: 1.015,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            onTap: widget.onTap,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              constraints: const BoxConstraints(minHeight: 92),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    widget.color.withValues(alpha: hovered ? .18 : .12),
+                    widget.color.withValues(alpha: .045),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: widget.color.withValues(alpha: .14)),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 46,
+                    height: 46,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: widget.color.withValues(alpha: .13),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
-                    icon: const Icon(Icons.spa_rounded),
-                    label: const Text('Nursery Learning Garden'),
+                    child: Text(widget.emoji,
+                        style: const TextStyle(fontSize: 25)),
                   ),
-                FilledButton.tonalIcon(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                        builder: (_) => const DiagnosticScreen()),
-                  ),
-                  icon: const Icon(Icons.explore_rounded),
-                  label: Text(diagnosticLabel),
-                ),
-                FilledButton.tonalIcon(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const ClassSkillStudioScreen(),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: AppTheme.navy,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 12.5,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          widget.subtitle,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: AppTheme.inkMuted,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 10,
+                            height: 1.18,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  icon: const Icon(Icons.school_rounded),
-                  label: const Text('Class Skill Studio'),
-                ),
-                FilledButton.tonalIcon(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                        builder: (_) => const PowerReviewScreen()),
-                  ),
-                  icon: const Icon(Icons.restart_alt_rounded),
-                  label: Text(
-                      due == 0 ? 'Power Review' : 'Power Review · $due due'),
-                ),
-                FilledButton.tonalIcon(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                        builder: (_) => const AppliedMissionsScreen()),
-                  ),
-                  icon: const Icon(Icons.auto_awesome_rounded),
-                  label: const Text('Applied missions'),
-                ),
-              ],
+                  Icon(Icons.arrow_forward_rounded,
+                      size: 17, color: widget.color),
+                ],
+              ),
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -273,7 +378,6 @@ class _HeroMission extends StatelessWidget {
             .clamp(0.0, 1.0)
             .toDouble();
     final compact = breakpoint == BrightBreakpoint.compact;
-    final veryCompact = MediaQuery.sizeOf(context).width < 420;
 
     final continueCard = _ContinueAdventureCard(
       controller: controller,
@@ -284,75 +388,241 @@ class _HeroMission extends StatelessWidget {
     final streakCard = _StreakCard(controller: controller);
 
     return BrightAdventureLandscape(
-      child: Container(
-        constraints: BoxConstraints(minHeight: compact ? 440 : 390),
-        padding: EdgeInsets.fromLTRB(compact ? 15 : 22, compact ? 16 : 20,
-            compact ? 15 : 22, compact ? 18 : 22),
-        child: Column(
-          children: [
-            if (compact) ...[
-              if (veryCompact)
-                Column(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final desktopComposition = constraints.maxWidth >= 1040;
+          final narrowPhone = constraints.maxWidth < 390;
+          final padding = EdgeInsets.fromLTRB(
+            compact ? 14 : 22,
+            compact ? 15 : 20,
+            compact ? 14 : 22,
+            compact ? 18 : 22,
+          );
+
+          if (desktopComposition) {
+            return SizedBox(
+              height: 340,
+              child: Padding(
+                padding: padding,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(
-                      width: double.infinity,
-                      child: BrightWoodenSign(
-                        title: 'Choose Your Adventure!',
-                        subtitle: 'Learn • Play • Earn • Grow',
-                        compact: true,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: BrightLionMascot(size: 96),
-                    ),
-                  ],
-                )
-              else
-                const Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    SizedBox(width: 115, child: BrightLionMascot(size: 112)),
-                    SizedBox(width: 6),
                     Expanded(
-                      child: BrightWoodenSign(
-                        title: 'Choose Your Adventure!',
-                        subtitle: 'Learn • Play • Earn • Grow',
-                        compact: true,
+                      flex: 4,
+                      child: Stack(
+                        children: [
+                          const Positioned(
+                            left: 2,
+                            bottom: -4,
+                            child: BrightLionMascot(size: 178),
+                          ),
+                          Positioned(
+                            left: 132,
+                            right: 0,
+                            top: 10,
+                            child: const BrightWoodenSign(
+                              title: 'Choose Your Adventure!',
+                              subtitle: 'Learn • Play • Earn • Grow',
+                            ),
+                          ),
+                          Positioned(
+                            left: 145,
+                            right: 8,
+                            bottom: 18,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 9,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: .88),
+                                borderRadius: BorderRadius.circular(18),
+                                border: Border.all(color: Colors.white),
+                              ),
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('✨', style: TextStyle(fontSize: 18)),
+                                  SizedBox(width: 7),
+                                  Flexible(
+                                    child: Text(
+                                      'One small quest today can unlock a whole new world.',
+                                      style: TextStyle(
+                                        color: AppTheme.navy,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      flex: 5,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          continueCard,
+                          const SizedBox(height: 12),
+                          _HeroQuestRibbon(controller: controller),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    SizedBox(width: 164, child: streakCard),
                   ],
                 ),
-              const SizedBox(height: 14),
-              continueCard,
-              const SizedBox(height: 10),
-              streakCard,
-            ] else ...[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                      width: 170, child: BrightLionMascot(size: 166)),
-                  const SizedBox(width: 12),
-                  const Expanded(
-                      child: BrightWoodenSign(
+              ),
+            );
+          }
+
+          return Container(
+            constraints: BoxConstraints(minHeight: compact ? 450 : 390),
+            padding: padding,
+            child: Column(
+              children: [
+                if (compact) ...[
+                  if (narrowPhone)
+                    Column(
+                      children: [
+                        const SizedBox(
+                          width: double.infinity,
+                          child: BrightWoodenSign(
+                            title: 'Choose Your Adventure!',
+                            subtitle: 'Learn • Play • Earn • Grow',
+                            compact: true,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        const Align(
+                          alignment: Alignment.centerLeft,
+                          child: BrightLionMascot(size: 94),
+                        ),
+                      ],
+                    )
+                  else
+                    const Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                            width: 112, child: BrightLionMascot(size: 108)),
+                        SizedBox(width: 6),
+                        Expanded(
+                          child: BrightWoodenSign(
+                            title: 'Choose Your Adventure!',
+                            subtitle: 'Learn • Play • Earn • Grow',
+                            compact: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                  const SizedBox(height: 13),
+                  continueCard,
+                  const SizedBox(height: 10),
+                  _HeroQuestRibbon(controller: controller),
+                  const SizedBox(height: 10),
+                  streakCard,
+                ] else ...[
+                  const Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(width: 154, child: BrightLionMascot(size: 150)),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: BrightWoodenSign(
                           title: 'Choose Your Adventure!',
-                          subtitle: 'Learn • Play • Earn • Grow')),
+                          subtitle: 'Learn • Play • Earn • Grow',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(flex: 3, child: continueCard),
+                      const SizedBox(width: 12),
+                      Expanded(child: streakCard),
+                    ],
+                  ),
                 ],
-              ),
-              const SizedBox(height: 14),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(flex: 3, child: continueCard),
-                  const SizedBox(width: 12),
-                  Expanded(flex: 1, child: streakCard),
-                ],
-              ),
-            ],
-          ],
-        ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _HeroQuestRibbon extends StatelessWidget {
+  const _HeroQuestRibbon({required this.controller});
+
+  final GameController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final complete = controller.dailyChallenges
+        .where((challenge) => controller.isDailyChallengeClaimed(challenge.id))
+        .length;
+    final total = controller.dailyChallenges.length;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: .91),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white, width: 1.4),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 38,
+            height: 38,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFE8A6),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: const Text('🏁', style: TextStyle(fontSize: 21)),
+          ),
+          const SizedBox(width: 9),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Today’s quest trail',
+                  style: TextStyle(
+                    color: AppTheme.navy,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 12,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                BrightAnimatedProgress(
+                  value: total == 0 ? 0 : complete / total,
+                  minHeight: 7,
+                  color: const Color(0xFF58BF5F),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            '$complete/$total',
+            style: const TextStyle(
+              color: AppTheme.purpleDeep,
+              fontWeight: FontWeight.w900,
+              fontSize: 12,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -560,48 +830,99 @@ class _LearningPathSnapshot extends StatelessWidget {
   final GameController controller;
 
   @override
-  Widget build(BuildContext context) => BrightSurface(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            BrightSectionTitle(
-              title: 'Class adventure map',
-              subtitle:
-                  '${controller.completedLearningLevels}/${controller.totalLearningLevels} levels cleared',
-              icon: Icons.route_rounded,
-              trailing: Text(
-                  '${(controller.learningPathProgress * 100).round()}%',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w900, color: AppTheme.purple)),
+  Widget build(BuildContext context) {
+    final progress = controller.learningPathProgress.clamp(0.0, 1.0).toDouble();
+    return BrightSurface(
+      tint: AppTheme.purple,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BrightSectionTitle(
+            title: 'Class adventure map',
+            subtitle:
+                '${controller.completedLearningLevels}/${controller.totalLearningLevels} levels cleared',
+            icon: Icons.route_rounded,
+            trailing: BrightPill(
+              icon: Icons.flag_rounded,
+              label: '${(progress * 100).round()}% explored',
+              color: AppTheme.purple,
             ),
-            const SizedBox(height: 14),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(99),
-              child: BrightAnimatedProgress(
-                  value: controller.learningPathProgress,
-                  minHeight: 10,
-                  color: AppTheme.purple),
-            ),
-            const SizedBox(height: 9),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                BrightPill(
-                    icon: Icons.star_rounded,
-                    label:
-                        '${controller.learningPathStars}/${controller.totalLearningLevels * 3} stars',
-                    color: const Color(0xFFB97800),
-                    background: const Color(0xFFFFF2BD)),
-                BrightPill(
-                    icon: Icons.workspace_premium_rounded,
-                    label: '${controller.level} player level',
-                    color: AppTheme.purple),
-              ],
-            ),
-          ],
-        ),
-      );
+          ),
+          const SizedBox(height: 15),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Positioned(
+                left: 10,
+                right: 10,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(99),
+                  child: BrightAnimatedProgress(
+                    value: progress,
+                    minHeight: 9,
+                    color: AppTheme.purple,
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List<Widget>.generate(5, (index) {
+                  final reached = progress >= index / 4;
+                  return Container(
+                    width: 31,
+                    height: 31,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: reached ? const Color(0xFFFFE36F) : Colors.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: reached
+                            ? const Color(0xFFE5B922)
+                            : AppTheme.purple.withValues(alpha: .18),
+                        width: 2,
+                      ),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x170C3356),
+                          blurRadius: 8,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      reached ? Icons.star_rounded : Icons.circle,
+                      size: reached ? 18 : 7,
+                      color:
+                          reached ? const Color(0xFF8A6100) : AppTheme.purple,
+                    ),
+                  );
+                }),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              BrightPill(
+                icon: Icons.star_rounded,
+                label:
+                    '${controller.learningPathStars}/${controller.totalLearningLevels * 3} stars',
+                color: const Color(0xFFB97800),
+                background: const Color(0xFFFFF2BD),
+              ),
+              BrightPill(
+                icon: Icons.workspace_premium_rounded,
+                label: '${controller.level} player level',
+                color: AppTheme.purple,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _DailyQuestPanel extends StatelessWidget {
@@ -611,77 +932,111 @@ class _DailyQuestPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BrightSurface(
+      tint: AppTheme.orange,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const BrightSectionTitle(
-              title: 'Daily learning quests',
-              subtitle: 'Three small wins. No endless feed.',
-              icon: Icons.flag_circle_rounded),
+            title: 'Daily learning quests',
+            subtitle: 'Three small wins. No endless feed.',
+            icon: Icons.flag_circle_rounded,
+            accent: AppTheme.orange,
+          ),
           const SizedBox(height: 12),
           ...controller.dailyChallenges.map((challenge) {
             final value = controller.dailyChallengeValue(challenge);
             final ready = controller.isDailyChallengeReady(challenge);
             final claimed = controller.isDailyChallengeClaimed(challenge.id);
+            final ratio = (value / challenge.target).clamp(0.0, 1.0).toDouble();
             return Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Row(
-                children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                        color: claimed
-                            ? const Color(0xFFE2F7E5)
-                            : AppTheme.purple.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(11)),
-                    child: Icon(
-                        claimed ? Icons.check_rounded : Icons.bolt_rounded,
-                        color: claimed ? Colors.green : AppTheme.purple,
-                        size: 18),
+              padding: const EdgeInsets.only(bottom: 9),
+              child: Container(
+                padding: const EdgeInsets.all(9),
+                decoration: BoxDecoration(
+                  color: claimed
+                      ? const Color(0xFFEAF8EC)
+                      : const Color(0xFFF9F7FF),
+                  borderRadius: BorderRadius.circular(17),
+                  border: Border.all(
+                    color: claimed
+                        ? const Color(0xFFBEE5C4)
+                        : AppTheme.purple.withValues(alpha: .06),
                   ),
-                  const SizedBox(width: 9),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(challenge.title,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: claimed
+                            ? const Color(0xFFD9F2DE)
+                            : const Color(0xFFFFEAC2),
+                        borderRadius: BorderRadius.circular(13),
+                      ),
+                      child: Icon(
+                        claimed ? Icons.check_rounded : Icons.bolt_rounded,
+                        color: claimed ? Colors.green : const Color(0xFFB56A00),
+                        size: 19,
+                      ),
+                    ),
+                    const SizedBox(width: 9),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            challenge.title,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                                fontWeight: FontWeight.w900, fontSize: 12)),
-                        const SizedBox(height: 4),
-                        LinearProgressIndicator(
-                            value: (value / challenge.target)
-                                .clamp(0.0, 1.0)
-                                .toDouble(),
+                              fontWeight: FontWeight.w900,
+                              fontSize: 12,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          BrightAnimatedProgress(
+                            value: ratio,
                             minHeight: 6,
-                            borderRadius: BorderRadius.circular(99)),
-                      ],
+                            color: claimed ? AppTheme.green : AppTheme.orange,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  if (ready && !claimed)
-                    FilledButton.tonal(
-                      onPressed: () {
-                        final claimedNow =
-                            controller.claimDailyChallenge(challenge.id);
-                        if (claimedNow) {
-                          unawaited(BrightAudioService.instance
-                              .playSfx(BrightSfx.coin));
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(
-                                  '+${challenge.rewardCoins} coins earned!')));
-                        }
-                      },
-                      child: Text('+${challenge.rewardCoins}'),
-                    )
-                  else
-                    Text(
-                        '${value.clamp(0, challenge.target)}/${challenge.target}',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w900, fontSize: 11)),
-                ],
+                    const SizedBox(width: 8),
+                    if (ready && !claimed)
+                      FilledButton.tonal(
+                        onPressed: () {
+                          final claimedNow =
+                              controller.claimDailyChallenge(challenge.id);
+                          if (claimedNow) {
+                            unawaited(BrightAudioService.instance
+                                .playSfx(BrightSfx.coin));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  '+${challenge.rewardCoins} coins earned!',
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        child: Text('+${challenge.rewardCoins}'),
+                      )
+                    else
+                      Text(
+                        claimed
+                            ? 'Done!'
+                            : '${value.clamp(0, challenge.target)}/${challenge.target}',
+                        style: TextStyle(
+                          color:
+                              claimed ? Colors.green.shade700 : AppTheme.navy,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 11,
+                        ),
+                      ),
+                  ],
+                ),
               ),
             );
           }),

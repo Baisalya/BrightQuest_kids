@@ -46,18 +46,21 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 BrightResponsive(
                   padding: const EdgeInsets.fromLTRB(18, 0, 18, 10),
-                  builder: (context, _) => Wrap(
+                  builder: (context, _) => BrightAdaptiveGrid(
+                    minChildWidth: 190,
+                    maxColumns: 5,
                     spacing: 10,
                     runSpacing: 10,
-                    children: achievements.map((achievement) {
-                      final unlocked =
-                          controller.isAchievementUnlocked(achievement.id);
-                      return _AchievementBadge(
+                    children: [
+                      for (final achievement in achievements)
+                        _AchievementBadge(
                           title: achievement.title,
                           description: achievement.description,
                           emoji: achievement.emoji,
-                          unlocked: unlocked);
-                    }).toList(),
+                          unlocked:
+                              controller.isAchievementUnlocked(achievement.id),
+                        ),
+                    ],
                   ),
                 ),
                 BrightResponsive(
@@ -298,7 +301,7 @@ class _AchievementBadge extends StatelessWidget {
   Widget build(BuildContext context) => Tooltip(
         message: description,
         child: Container(
-          width: 178,
+          width: double.infinity,
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             gradient: unlocked

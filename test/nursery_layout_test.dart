@@ -43,11 +43,9 @@ void main() {
       ),
     );
     await tester.pump();
-    expect(find.text('Choose your adventure'), findsOneWidget);
-    expect(find.text('Discover Zone'), findsOneWidget);
-    await tester.tap(find.text('Discover Zone'));
-    await tester.pump();
-    await tester.tap(find.text('Show me'));
+    expect(find.text('Let’s play!'), findsOneWidget);
+    expect(find.text('Learn First'), findsOneWidget);
+    await tester.tap(find.text('Learn First'));
     await tester.pump(const Duration(milliseconds: 500));
     expect(find.text('Explore letter words'), findsOneWidget);
     expect(find.text('A for Apple'), findsWidgets);
@@ -79,10 +77,10 @@ void main() {
         ),
       );
       await tester.pump();
-      expect(find.text('Choose your adventure'), findsOneWidget);
-      expect(find.text('Discover Zone'), findsOneWidget);
-      expect(find.text('Number Hunt'), findsWidgets);
-      expect(find.text('Math Mission'), findsOneWidget);
+      expect(find.text('Let’s play!'), findsOneWidget);
+      expect(find.text('Learn First'), findsOneWidget);
+      expect(find.text('Play Now'), findsOneWidget);
+      expect(find.text('More games'), findsOneWidget);
       expect(find.text('Next'), findsNothing);
       expect(tester.takeException(), isNull, reason: 'Nursery lesson at $size');
       await tester.pumpWidget(const SizedBox.shrink());
@@ -101,9 +99,9 @@ void main() {
       ),
     );
     await tester.pump();
-    expect(find.text('Choose your adventure'), findsOneWidget);
-    expect(find.text('Picture Hunt'), findsWidgets);
-    expect(find.text('World Quest'), findsOneWidget);
+    expect(find.text('Let’s play!'), findsOneWidget);
+    expect(find.text('Play Now'), findsOneWidget);
+    expect(find.text('More games'), findsOneWidget);
 
     await tester.pumpWidget(
       _host(
@@ -112,9 +110,9 @@ void main() {
       ),
     );
     await tester.pump();
-    expect(find.text('Choose your adventure'), findsOneWidget);
-    expect(find.text('Puzzle Pop'), findsWidgets);
-    expect(find.text('Brain Boost'), findsOneWidget);
+    expect(find.text('Let’s play!'), findsOneWidget);
+    expect(find.text('Play Now'), findsOneWidget);
+    expect(find.text('More games'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

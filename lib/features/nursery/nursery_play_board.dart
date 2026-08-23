@@ -139,6 +139,60 @@ NurseryPlayPortalStyle nurseryPortalStyleFor(
   };
 }
 
+/// Picks the first unplayed activity so a Nursery child always has one obvious
+/// "Play Now" action. If everything is complete, replay starts from the first
+/// authored activity instead of inventing new content.
+NurseryActivity? nurseryRecommendedActivity(
+  List<NurseryActivity> activities,
+  Set<String> completedActivityIds,
+) {
+  if (activities.isEmpty) return null;
+  for (final activity in activities) {
+    if (!completedActivityIds.contains(activity.id)) return activity;
+  }
+  return activities.first;
+}
+
+/// Returns the next still-unplayed authored activity after [current].
+/// Completion state is read-only; this helper never mutates progress.
+NurseryActivity? nurseryNextUnplayedActivity(
+  List<NurseryActivity> activities,
+  Set<String> completedActivityIds,
+  NurseryActivity current,
+) {
+  if (activities.isEmpty) return null;
+  final completed = <String>{...completedActivityIds, current.id};
+  final currentIndex = activities.indexWhere((item) => item.id == current.id);
+  for (var offset = 1; offset <= activities.length; offset += 1) {
+    final index =
+        ((currentIndex < 0 ? -1 : currentIndex) + offset) % activities.length;
+    final candidate = activities[index];
+    if (!completed.contains(candidate.id)) return candidate;
+  }
+  return null;
+}
+
+String nurserySimpleGameLabel(
+  NurseryActivity activity,
+  int index,
+  int total,
+) {
+  if (activity.isTrace) return 'Trace';
+  if (activity.phase == 'transfer') return 'Star Game';
+  if (total <= 1) return 'Play';
+  return 'Game ${index + 1}';
+}
+
+String nurserySimpleGameHint(NurseryActivity activity) {
+  if (activity.isTrace) return 'Trace the dots';
+  return switch (activity.interaction) {
+    'pairMatch' => 'Find the pairs',
+    'sortBuckets' => 'Put each one in its group',
+    _ =>
+      activity.phase == 'guided' ? 'Let’s do one together' : 'Tap the answer',
+  };
+}
+
 class NurseryPlayBoard extends StatelessWidget {
   const NurseryPlayBoard({
     required this.skill,
@@ -162,304 +216,334 @@ class NurseryPlayBoard extends StatelessWidget {
     final completedCount = activities
         .where((activity) => completedActivityIds.contains(activity.id))
         .length;
+    final recommended =
+        nurseryRecommendedActivity(activities, completedActivityIds);
+    final allDone =
+        activities.isNotEmpty && completedCount == activities.length;
     final theme = Theme.of(context);
+
     return SafeArea(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final maxWidth = constraints.maxWidth;
-          final boardWidth = maxWidth > 1050 ? 1050.0 : maxWidth;
-          final columns = boardWidth >= 1000
-              ? 3
-              : boardWidth >= 620
-                  ? 2
-                  : 1;
-          final gap = 14.0;
-          final tileWidth = columns == 1
-              ? boardWidth
-              : (boardWidth - (gap * (columns - 1))) / columns;
-          return SingleChildScrollView(
-            padding: EdgeInsets.symmetric(
-              horizontal: maxWidth >= 760 ? 42 : 18,
-              vertical: 20,
-            ),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1050),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Semantics(
-                      header: true,
-                      child: Text(
-                        'Choose your adventure',
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      'Tap a game world. You can come back here and choose another one.',
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 14),
-                    _ProgressTrail(
-                      completed: completedCount,
-                      total: activities.length,
-                    ),
-                    const SizedBox(height: 18),
-                    Wrap(
-                      spacing: gap,
-                      runSpacing: gap,
-                      children: [
-                        SizedBox(
-                          width: tileWidth,
-                          child: _PortalCard(
-                            index: 0,
-                            reducedMotion: reducedMotion,
-                            completed: false,
-                            title: 'Discover Zone',
-                            subtitle: 'Tap, watch, listen and explore the idea',
-                            emoji: _domainEmoji(skill.domainId),
-                            icon: Icons.auto_awesome_rounded,
-                            semanticsLabel:
-                                'Discover ${skill.title}. Open discovery zone.',
-                            onTap: onDiscover,
-                          ),
-                        ),
-                        for (var index = 0;
-                            index < activities.length;
-                            index += 1)
-                          SizedBox(
-                            width: tileWidth,
-                            child: _activityPortal(
-                              activity: activities[index],
-                              index: index + 1,
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 18),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(14),
-                        child: Row(
-                          children: [
-                            const Text('🌟', style: TextStyle(fontSize: 30)),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                completedCount == activities.length &&
-                                        activities.isNotEmpty
-                                    ? 'You explored every game here. Later review will check what you remember.'
-                                    : 'No rush. Choose a game, play it, then come back to this board.',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _activityPortal({
-    required NurseryActivity activity,
-    required int index,
-  }) {
-    final style = nurseryPortalStyleFor(skill, activity);
-    final completed = completedActivityIds.contains(activity.id);
-    return _PortalCard(
-      index: index,
-      reducedMotion: reducedMotion,
-      completed: completed,
-      title: style.title,
-      subtitle: '${style.subtitle} • ${_phaseLabel(activity.phase)}',
-      emoji: style.emoji,
-      icon: style.icon,
-      semanticsLabel:
-          '${style.title}. ${nurserySpeakableText(activity.prompt)}. ${completed ? 'Completed.' : 'Ready to play.'}',
-      onTap: () => onActivity(activity),
-    );
-  }
-
-  static String _phaseLabel(String phase) => switch (phase) {
-        'guided' => 'with a hint',
-        'independent' => 'play by myself',
-        'transfer' => 'new challenge',
-        'practice' => 'practice',
-        _ => phase,
-      };
-
-  static String _domainEmoji(String domainId) => switch (domainId) {
-        'math' => '🎡',
-        'knowledge' => '🌍',
-        'thinking' => '🧠',
-        _ => '🎈',
-      };
-}
-
-class _ProgressTrail extends StatelessWidget {
-  const _ProgressTrail({required this.completed, required this.total});
-
-  final int completed;
-  final int total;
-
-  @override
-  Widget build(BuildContext context) {
-    final safeTotal = total <= 0 ? 1 : total;
-    final progress = (completed / safeTotal).clamp(0.0, 1.0).toDouble();
-    return Semantics(
-      label: '$completed of $total play activities completed',
-      child: Row(
-        children: [
-          const Text('🏁'),
-          const SizedBox(width: 8),
-          Expanded(
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 9,
-              borderRadius: BorderRadius.circular(30),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            '$completed/$total',
-            style: const TextStyle(fontWeight: FontWeight.w900),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PortalCard extends StatelessWidget {
-  const _PortalCard({
-    required this.index,
-    required this.reducedMotion,
-    required this.completed,
-    required this.title,
-    required this.subtitle,
-    required this.emoji,
-    required this.icon,
-    required this.semanticsLabel,
-    required this.onTap,
-  });
-
-  final int index;
-  final bool reducedMotion;
-  final bool completed;
-  final String title;
-  final String subtitle;
-  final String emoji;
-  final IconData icon;
-  final String semanticsLabel;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final child = Semantics(
-      button: true,
-      label: semanticsLabel,
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.sizeOf(context).width >= 760 ? 42 : 18,
+          vertical: 18,
+        ),
+        child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 155),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Container(
-                    width: 72,
-                    height: 72,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: completed
-                          ? scheme.primaryContainer
-                          : scheme.secondaryContainer,
-                      borderRadius: BorderRadius.circular(24),
+            constraints: const BoxConstraints(maxWidth: 860),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Semantics(
+                  header: true,
+                  child: Text(
+                    'Let’s play!',
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w900,
                     ),
-                    child: Text(emoji, style: const TextStyle(fontSize: 36)),
                   ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  skill.title,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 14),
+                _SimpleProgress(
+                    completed: completedCount, total: activities.length),
+                const SizedBox(height: 18),
+                _PlayNowCard(
+                  skill: skill,
+                  recommended: recommended,
+                  allDone: allDone,
+                  reducedMotion: reducedMotion,
+                  onPlay: recommended == null
+                      ? null
+                      : () => onActivity(recommended),
+                  onLearn: onDiscover,
+                ),
+                if (activities.length > 1) ...[
+                  const SizedBox(height: 14),
+                  Card(
+                    clipBehavior: Clip.antiAlias,
+                    child: ExpansionTile(
+                      key: const PageStorageKey<String>('nursery-more-games'),
+                      leading: const Icon(Icons.grid_view_rounded),
+                      title: const Text(
+                        'More games',
+                        style: TextStyle(fontWeight: FontWeight.w900),
+                      ),
+                      subtitle: const Text('Pick a different game'),
+                      childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
                       children: [
-                        Row(
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 10,
+                          runSpacing: 10,
                           children: [
-                            Icon(icon, size: 20),
-                            const SizedBox(width: 7),
-                            Expanded(
-                              child: Text(
-                                title,
-                                style: theme.textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
+                            for (var index = 0;
+                                index < activities.length;
+                                index += 1)
+                              _SmallGameButton(
+                                activity: activities[index],
+                                index: index,
+                                total: activities.length,
+                                completed: completedActivityIds.contains(
+                                  activities[index].id,
                                 ),
+                                onTap: () => onActivity(activities[index]),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 7),
-                        Text(subtitle),
-                        const SizedBox(height: 9),
-                        Row(
-                          children: [
-                            Icon(
-                              completed
-                                  ? Icons.check_circle_rounded
-                                  : Icons.play_circle_fill_rounded,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 6),
-                            Flexible(
-                              child: Text(
-                                completed ? 'Played' : 'Tap to play',
-                                softWrap: true,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                       ],
                     ),
                   ),
                 ],
-              ),
+              ],
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+class _PlayNowCard extends StatelessWidget {
+  const _PlayNowCard({
+    required this.skill,
+    required this.recommended,
+    required this.allDone,
+    required this.reducedMotion,
+    required this.onPlay,
+    required this.onLearn,
+  });
+
+  final NurserySkill skill;
+  final NurseryActivity? recommended;
+  final bool allDone;
+  final bool reducedMotion;
+  final VoidCallback? onPlay;
+  final VoidCallback onLearn;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = recommended == null
+        ? const NurseryPlayPortalStyle(
+            title: 'Play',
+            subtitle: 'Tap to play',
+            emoji: '⭐',
+            icon: Icons.play_circle_fill_rounded,
+          )
+        : nurseryPortalStyleFor(skill, recommended!);
+    final child = Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).colorScheme.primaryContainer,
+            Theme.of(context).colorScheme.secondaryContainer,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final wide = constraints.maxWidth >= 560;
+          final picture = Container(
+            width: 104,
+            height: 104,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Text(style.emoji, style: const TextStyle(fontSize: 54)),
+          );
+          final actions = Column(
+            crossAxisAlignment:
+                wide ? CrossAxisAlignment.start : CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                allDone ? 'Play it again!' : 'Ready?',
+                textAlign: wide ? TextAlign.left : TextAlign.center,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                    ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                recommended == null
+                    ? 'This game is not ready yet.'
+                    : nurserySimpleGameHint(recommended!),
+                textAlign: wide ? TextAlign.left : TextAlign.center,
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 14),
+              FilledButton.icon(
+                onPressed: onPlay,
+                icon: const Icon(Icons.play_arrow_rounded),
+                label: Text(allDone ? 'Play Again' : 'Play Now'),
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size(160, 56),
+                  textStyle: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              OutlinedButton.icon(
+                onPressed: onLearn,
+                icon: const Icon(Icons.visibility_rounded),
+                label: const Text('Learn First'),
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(160, 50),
+                ),
+              ),
+            ],
+          );
+
+          if (!wide) {
+            return Column(
+              children: [
+                picture,
+                const SizedBox(height: 14),
+                actions,
+              ],
+            );
+          }
+          return Row(
+            children: [
+              picture,
+              const SizedBox(width: 20),
+              Expanded(child: actions),
+            ],
+          );
+        },
+      ),
+    );
+
     if (reducedMotion) return child;
-    final begin = (0.92 + (index % 3) * 0.015).clamp(0.90, 0.98).toDouble();
     return TweenAnimationBuilder<double>(
-      tween: Tween<double>(begin: begin, end: 1),
-      duration: Duration(milliseconds: 300 + (index % 4) * 70),
+      tween: Tween<double>(begin: .96, end: 1),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeOutBack,
-      builder: (context, value, animatedChild) => Opacity(
-        opacity: value.clamp(0.0, 1.0).toDouble(),
-        child: Transform.scale(scale: value, child: animatedChild),
+      builder: (context, value, animatedChild) => Transform.scale(
+        scale: value,
+        child: animatedChild,
       ),
       child: child,
+    );
+  }
+}
+
+class _SmallGameButton extends StatelessWidget {
+  const _SmallGameButton({
+    required this.activity,
+    required this.index,
+    required this.total,
+    required this.completed,
+    required this.onTap,
+  });
+
+  final NurseryActivity activity;
+  final int index;
+  final int total;
+  final bool completed;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final label = nurserySimpleGameLabel(activity, index, total);
+    final style = activity.isTrace
+        ? const NurseryPlayPortalStyle(
+            title: 'Trace Trail',
+            subtitle: 'Trace the dots',
+            emoji: '✏️',
+            icon: Icons.gesture_rounded,
+          )
+        : switch (activity.interaction) {
+            'pairMatch' => const NurseryPlayPortalStyle(
+                title: 'Match Magic',
+                subtitle: 'Find the pairs',
+                emoji: '🪄',
+                icon: Icons.join_inner_rounded,
+              ),
+            'sortBuckets' => const NurseryPlayPortalStyle(
+                title: 'Sort Safari',
+                subtitle: 'Put each one in a group',
+                emoji: '🧺',
+                icon: Icons.category_rounded,
+              ),
+            _ => NurseryPlayPortalStyle(
+                title: label,
+                subtitle: nurserySimpleGameHint(activity),
+                emoji: activity.phase == 'transfer' ? '⭐' : '🎈',
+                icon: Icons.play_circle_fill_rounded,
+              ),
+          };
+    return Semantics(
+      button: true,
+      label:
+          '$label. ${nurserySpeakableText(activity.prompt)}. ${completed ? 'Played.' : 'Ready to play.'}',
+      child: SizedBox(
+        width: 180,
+        child: OutlinedButton(
+          onPressed: onTap,
+          style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 13),
+            minimumSize: const Size(160, 68),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(style.emoji, style: const TextStyle(fontSize: 24)),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  completed ? '$label ✓' : label,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontWeight: FontWeight.w900),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SimpleProgress extends StatelessWidget {
+  const _SimpleProgress({required this.completed, required this.total});
+
+  final int completed;
+  final int total;
+
+  @override
+  Widget build(BuildContext context) {
+    if (total <= 0) return const SizedBox.shrink();
+    return Semantics(
+      label: '$completed of $total games played',
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          for (var index = 0; index < total; index += 1)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 3),
+              child: Text(
+                index < completed ? '⭐' : '☆',
+                style: const TextStyle(fontSize: 24),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

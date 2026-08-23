@@ -1,13 +1,31 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
+import '../../core/accessibility/learning_audio_director.dart';
 import '../../core/content/content_activity.dart';
 import '../../core/content/content_repository.dart';
 import '../../core/curriculum/curriculum_models.dart';
+import '../../core/curriculum/world_mission_catalog.dart';
+import '../../core/curriculum/world_mission_models.dart';
 import '../../core/learning/activity_response_evaluator.dart';
-import '../../core/learning/lesson_engine.dart';
+import '../../core/learning/adaptive_difficulty_engine.dart';
+import '../../core/learning/adaptive_difficulty_models.dart';
+import '../../core/learning/contextual_feedback_engine.dart';
+import '../../core/learning/gameplay_activity_resolver.dart';
 import '../../core/learning/learning_models.dart';
+import '../../core/learning/lesson_engine.dart';
+import '../../core/learning/mission_session_engine.dart';
+import '../../core/learning/mission_session_models.dart';
 import '../../core/services/feedback_service.dart';
+import '../../core/theme/app_theme.dart';
+import '../../widgets/adaptive_difficulty_widgets.dart';
+import '../../widgets/bright_design_system.dart';
+import '../../widgets/learning_accessibility_widgets.dart';
+import '../../widgets/mission_session_widgets.dart';
+import '../../widgets/world_mission_widgets.dart';
+import 'gameplay/learning_game_guidance.dart';
 import 'lesson_activity_interaction.dart';
 
 class LessonFlowScreen extends StatefulWidget {
@@ -36,16 +54,85 @@ class LessonFlowScreen extends StatefulWidget {
   State<LessonFlowScreen> createState() => _LessonFlowScreenState();
 }
 
-class _LessonFlowScreenState extends State<LessonFlowScreen> {
+class _LessonFlowScreenState extends State<LessonFlowScreen>
+    with WidgetsBindingObserver {
   int index = 0;
   final Set<int> _shownHints = <int>{};
   final Set<String> _completedInteractiveSteps = <String>{};
+  int _attemptSerial = 0;
+  bool _attemptInFlight = false;
+  bool _sessionRestored = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!mounted || state == AppLifecycleState.resumed) return;
+    final controller = BrightQuestScope.of(context);
+    unawaited(controller.flush());
+    unawaited(controller.flushGameSession());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_sessionRestored || widget.level == null) return;
+    final controller = BrightQuestScope.of(context);
+    final repository = BrightQuestScope.contentOf(context);
+    final level = widget.level!;
+    final policy = const AdaptiveDifficultyEngine().forLevel(
+      level: level,
+      levelProgress: controller.levelStatsFor(level.id),
+      gameProgress: controller.statsFor(level.gameId),
+    );
+    final authoredFlow = const LessonEngine().buildForLevel(
+      repository: repository,
+      level: level,
+    );
+    final session = const MissionSessionEngine().build(
+      authoredFlow,
+      policy: policy,
+    );
+    final checkpoint = controller.beginLessonSession(
+      level: level,
+      totalSteps: session.steps.length,
+    );
+    index = checkpoint.cursor.clamp(0, session.steps.length - 1).toInt();
+    _shownHints
+      ..clear()
+      ..addAll(checkpoint.shownHintIndices);
+    _completedInteractiveSteps
+      ..clear()
+      ..addAll(checkpoint.completedInteractiveStepIds);
+    _attemptSerial = (checkpoint.data['attemptSerial'] as num?)?.toInt() ?? 0;
+    _sessionRestored = true;
+  }
 
   @override
   Widget build(BuildContext context) {
     final repository = BrightQuestScope.contentOf(context);
+    final controller = BrightQuestScope.of(context);
     final level = widget.level;
-    final flow = level != null
+    final adaptivePolicy = level == null
+        ? null
+        : const AdaptiveDifficultyEngine().forLevel(
+            level: level,
+            levelProgress: controller.levelStatsFor(level.id),
+            gameProgress: controller.statsFor(level.gameId),
+          );
+    final missionPlan =
+        level == null ? null : WorldMissionCatalog.planForLevel(level);
+    final authoredFlow = level != null
         ? const LessonEngine().buildForLevel(
             repository: repository,
             level: level,
@@ -55,184 +142,220 @@ class _LessonFlowScreenState extends State<LessonFlowScreen> {
             classNumber: widget.classNumber!,
             competencyId: widget.competencyId!,
           );
-    final step = flow.steps[index.clamp(0, flow.steps.length - 1).toInt()];
+    final session = const MissionSessionEngine().build(
+      authoredFlow,
+      policy: adaptivePolicy,
+    );
+    final safeIndex = index.clamp(0, session.steps.length - 1).toInt();
+    final sessionStep = session.stepAt(safeIndex);
+    final step = sessionStep.lessonStep;
     final activity = step.activityId == null
         ? null
         : repository.activityById(step.activityId!);
-    final needsResponse = _needsResponse(step, activity);
+    final activitySpec = activity == null
+        ? null
+        : const GameplayActivityResolver().resolve(activity);
+    final narrationCue = const LearningAudioDirector().forLessonStep(
+      sessionStep: sessionStep,
+      activity: activity,
+      activitySpec: activitySpec,
+    );
+    final needsResponse = sessionStep.isInteractive && activity != null;
     final canContinue =
         !needsResponse || _completedInteractiveSteps.contains(step.id);
+    final mediaSize = MediaQuery.sizeOf(context);
+    final shortWideInteractive =
+        needsResponse && mediaSize.width >= 600 && mediaSize.height < 820;
+    final palette = missionPlan == null
+        ? null
+        : paletteForSubject(missionPlan.identity.subject);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title ?? level!.title),
+        title: Text(
+          missionPlan?.identity.worldTitle ?? widget.title ?? level!.title,
+        ),
       ),
       body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 760),
-            child: ListView(
-              padding: const EdgeInsets.all(20),
-              children: [
-                LinearProgressIndicator(
-                  value: (index + 1) / flow.steps.length,
-                  minHeight: 8,
-                  borderRadius: BorderRadius.circular(99),
-                ),
-                const SizedBox(height: 18),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(22),
-                    child: Column(
+        child: BrightPageBackground(
+          primary: palette == null
+              ? const Color(0xFFF3F7FF)
+              : Color.lerp(palette.secondary, Colors.white, .72)!,
+          secondary: const Color(0xFFFFFAE9),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 980),
+              child: ListView(
+                padding: const EdgeInsets.all(20),
+                children: [
+                  if (missionPlan != null) ...[
+                    WorldMissionRibbon(plan: missionPlan),
+                    if (safeIndex == 0) ...[
+                      const SizedBox(height: 12),
+                      WorldMissionBriefingCard(plan: missionPlan),
+                    ],
+                    const SizedBox(height: 16),
+                  ],
+                  if (adaptivePolicy != null) ...[
+                    AdaptiveDifficultyBanner(policy: adaptivePolicy),
+                    const SizedBox(height: 12),
+                  ],
+                  if (shortWideInteractive)
+                    Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          step.title,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(
-                                fontWeight: FontWeight.w900,
-                              ),
+                        Expanded(
+                          flex: 3,
+                          child: MissionSessionProgress(
+                            step: sessionStep,
+                            session: session,
+                            plan: missionPlan,
+                          ),
                         ),
-                        const SizedBox(height: 12),
-                        Text(step.body, style: const TextStyle(height: 1.5)),
-                        if (step.hints.isNotEmpty) ...[
-                          const SizedBox(height: 18),
-                          OutlinedButton.icon(
-                            onPressed: _shownHints.length >= step.hints.length
-                                ? null
-                                : () {
-                                    final nextHint = _shownHints.length;
-                                    setState(() {
-                                      _shownHints.add(nextHint);
-                                    });
-                                    FeedbackService.hint(
-                                      BrightQuestScope.of(context),
-                                      step.hints[nextHint],
-                                    );
-                                  },
-                            icon: const Icon(Icons.lightbulb_outline_rounded),
-                            label: Text(
-                              _shownHints.isEmpty
-                                  ? 'Concept clue'
-                                  : 'Worked step',
+                        const SizedBox(width: 12),
+                        Expanded(
+                          flex: 2,
+                          child: LearningNarrationBar(
+                            key: ValueKey<String>(
+                              'lesson_audio:${narrationCue.id}',
                             ),
+                            cue: narrationCue,
+                            autoNarrate: true,
+                            compact: true,
+                            denseTranscript: true,
                           ),
-                          for (final hintIndex in _shownHints.toList()..sort())
-                            if (hintIndex < step.hints.length)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: Card(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12),
-                                    child: Text(step.hints[hintIndex]),
-                                  ),
-                                ),
-                              ),
-                        ],
-                        if (step.kind == LessonStepKind.explanation ||
-                            step.kind == LessonStepKind.workedExample) ...[
-                          const SizedBox(height: 14),
-                          TextButton.icon(
-                            onPressed: () => _showWhy(context, step.body),
-                            icon: const Icon(Icons.psychology_alt_rounded),
-                            label: const Text('Show me why'),
-                          ),
-                        ],
-                        if (needsResponse && activity != null) ...[
-                          if (activity.payload['masteryEligible'] == false) ...[
-                            const SizedBox(height: 16),
-                            Semantics(
-                              label:
-                                  'Practice only. Secure mastery needs an adult-reviewed constructed response.',
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Icon(Icons.edit_note_rounded),
-                                      const SizedBox(width: 10),
-                                      Expanded(
-                                        child: Text(
-                                          'Practice only — this activity builds the skill, but it does not award secure mastery. A constructed response still needs adult review.',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                          const SizedBox(height: 16),
-                          LessonActivityInteraction(
-                            key: ValueKey(step.id),
-                            activity: activity,
-                            experimentChoices:
-                                _experimentChoices(repository, activity),
-                            onAttempt: (evaluation, retries, responseTimeMs) =>
-                                _recordAttempt(
-                              context: context,
-                              step: step,
-                              activity: activity,
-                              evaluation: evaluation,
-                              retries: retries,
-                              responseTimeMs: responseTimeMs,
-                            ),
-                          ),
-                        ],
+                        ),
                       ],
+                    )
+                  else ...[
+                    MissionSessionProgress(
+                      step: sessionStep,
+                      session: session,
+                      plan: missionPlan,
                     ),
-                  ),
-                ),
-                const SizedBox(height: 18),
-                Row(
-                  children: [
-                    OutlinedButton(
-                      onPressed: index == 0
-                          ? null
-                          : () => setState(() {
-                                index -= 1;
-                                _shownHints.clear();
-                              }),
-                      child: const Text('Back'),
+                    const SizedBox(height: 12),
+                    LearningNarrationBar(
+                      key: ValueKey<String>('lesson_audio:${narrationCue.id}'),
+                      cue: narrationCue,
+                      autoNarrate: true,
                     ),
-                    const Spacer(),
-                    FilledButton(
-                      onPressed: !canContinue
-                          ? null
-                          : index == flow.steps.length - 1
-                              ? () => Navigator.of(context).pop(true)
-                              : () => setState(() {
-                                    index += 1;
-                                    _shownHints.clear();
-                                  }),
-                      child: Text(
-                        !canContinue
-                            ? 'Answer to continue'
-                            : index == flow.steps.length - 1
-                                ? widget.isDirectCompetency
-                                    ? 'Finish lesson'
-                                    : 'Start practice'
-                                : 'Continue',
+                  ],
+                  const SizedBox(height: 16),
+                  if (!needsResponse)
+                    MissionTeachingStage(
+                      sessionStep: sessionStep,
+                      lessonStep: step,
+                      activity: activity,
+                      plan: missionPlan,
+                      onShowWhy: step.kind == LessonStepKind.explanation ||
+                              step.kind == LessonStepKind.workedExample
+                          ? () => _showWhy(context, step.body)
+                          : null,
+                    )
+                  else ...[
+                    _MissionPlayBrief(
+                      sessionStep: sessionStep,
+                      step: step,
+                      activity: activity,
+                      plan: missionPlan,
+                    ),
+                    if (activity.payload['masteryEligible'] == false) ...[
+                      const SizedBox(height: 12),
+                      Semantics(
+                        label:
+                            'Practice only. Secure mastery needs an adult-reviewed constructed response.',
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFF7E8),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: const Color(0xFFE8C78D),
+                            ),
+                          ),
+                          child: const Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(Icons.edit_note_rounded),
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  'Practice only — this activity builds the skill, but it does not award secure mastery. A constructed response still needs adult review.',
+                                  style: TextStyle(
+                                    color: AppTheme.inkMuted,
+                                    fontWeight: FontWeight.w700,
+                                    height: 1.35,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 14),
+                    LessonActivityInteraction(
+                      key: ValueKey(step.id),
+                      activity: activity,
+                      experimentChoices:
+                          _experimentChoices(repository, activity),
+                      guidance: _guidanceFor(
+                        context: context,
+                        session: session,
+                        sessionStep: sessionStep,
+                        activity: activity,
+                        policy: adaptivePolicy,
+                      ),
+                      onAttempt: (evaluation, retries, responseTimeMs) =>
+                          _recordAttempt(
+                        context: context,
+                        sessionStep: sessionStep,
+                        activity: activity,
+                        evaluation: evaluation,
+                        retries: retries,
+                        responseTimeMs: responseTimeMs,
                       ),
                     ),
                   ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  flow.reviewStatus == 'approved'
-                      ? 'Content reviewed.'
-                      : 'Draft learning support — teacher review is still pending.',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ],
+                  if (session.isLastStep(safeIndex) &&
+                      canContinue &&
+                      session.reviewStep != null) ...[
+                    const SizedBox(height: 14),
+                    MissionFutureReviewNote(
+                      reviewText: session.reviewStep!.body,
+                      plan: missionPlan,
+                    ),
+                  ],
+                  const SizedBox(height: 18),
+                  _SessionNavigation(
+                    canContinue: canContinue,
+                    isFirst: safeIndex == 0,
+                    isLast: session.isLastStep(safeIndex),
+                    nextLabel: _nextLabel(
+                      session: session,
+                      currentIndex: safeIndex,
+                      missionPlan: missionPlan,
+                    ),
+                    finalIcon: missionPlan?.isBoss == true
+                        ? Icons.workspace_premium_rounded
+                        : Icons.sports_esports_rounded,
+                    onBack: safeIndex == 0 ? null : _goBack,
+                    onNext: !canContinue
+                        ? null
+                        : session.isLastStep(safeIndex)
+                            ? _finishLesson
+                            : _goNext,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    authoredFlow.reviewStatus == 'approved'
+                        ? 'Content reviewed.'
+                        : 'Draft learning support — teacher review is still pending.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -240,12 +363,68 @@ class _LessonFlowScreenState extends State<LessonFlowScreen> {
     );
   }
 
-  bool _needsResponse(LessonStep step, ContentActivity? activity) =>
-      activity != null &&
-      (step.kind == LessonStepKind.guidedTry ||
-          step.kind == LessonStepKind.independentPractice ||
-          step.kind == LessonStepKind.transfer ||
-          step.kind == LessonStepKind.exitTicket);
+  LearningGameGuidance _guidanceFor({
+    required BuildContext context,
+    required MissionSession session,
+    required MissionSessionStep sessionStep,
+    required ContentActivity activity,
+    required AdaptiveMissionPolicy? policy,
+  }) {
+    final step = sessionStep.lessonStep;
+    final mode = switch (sessionStep.supportMode) {
+      MissionSupportMode.coached => LearningGamePlayMode.coached,
+      MissionSupportMode.independent => LearningGamePlayMode.solo,
+      MissionSupportMode.transfer => LearningGamePlayMode.transfer,
+      MissionSupportMode.checkpoint => LearningGamePlayMode.checkpoint,
+      MissionSupportMode.challenge => LearningGamePlayMode.challenge,
+      MissionSupportMode.mastery => LearningGamePlayMode.mastery,
+      MissionSupportMode.observe => throw StateError(
+          'Observe-only session steps do not build gameplay guidance.',
+        ),
+    };
+    final authoredHints = <String>[];
+    for (final text in <String>[
+      ...step.hints,
+      ...activity.hints.toList(growable: false).map((hint) => hint.text),
+    ]) {
+      final normalized = text.trim();
+      if (normalized.isEmpty || authoredHints.contains(normalized)) continue;
+      authoredHints.add(normalized);
+    }
+    final hintsEnabled = policy?.hintsEnabled ?? true;
+    final rescueEnabled = policy?.rescueEnabled ?? true;
+    return LearningGameGuidance(
+      mode: mode,
+      hints: hintsEnabled
+          ? List<String>.unmodifiable(authoredHints)
+          : const <String>[],
+      rescueText: rescueEnabled ? session.reteachStep?.body : null,
+      allowPreAttemptHints:
+          policy?.allowPreAttemptHints ?? sessionStep.allowsPreAttemptCoaching,
+      hintsEnabled: hintsEnabled,
+      hintUnlockAfterMisses: policy?.hintUnlockAfterMisses ?? 1,
+      rescueEnabled: rescueEnabled,
+      rescueUnlockAfterMisses: policy?.rescueUnlockAfterMisses ?? 2,
+      onHintRevealed: (hintIndex, text) => _recordHintReveal(
+        context: context,
+        hintIndex: hintIndex,
+        text: text,
+      ),
+    );
+  }
+
+  void _recordHintReveal({
+    required BuildContext context,
+    required int hintIndex,
+    required String text,
+  }) {
+    if (_shownHints.contains(hintIndex)) return;
+    setState(() => _shownHints.add(hintIndex));
+    _persistLessonState();
+    if (text.trim().isNotEmpty) {
+      FeedbackService.hint(BrightQuestScope.of(context), text);
+    }
+  }
 
   List<String> _experimentChoices(
     ContentRepository repository,
@@ -266,59 +445,180 @@ class _LessonFlowScreenState extends State<LessonFlowScreen> {
 
   void _recordAttempt({
     required BuildContext context,
-    required LessonStep step,
+    required MissionSessionStep sessionStep,
     required ContentActivity activity,
     required ActivityEvaluation evaluation,
     required int retries,
     required int responseTimeMs,
   }) {
+    if (_attemptInFlight) return;
+    _attemptInFlight = true;
+    unawaited(
+      _recordAttemptSafely(
+        context: context,
+        sessionStep: sessionStep,
+        activity: activity,
+        evaluation: evaluation,
+        retries: retries,
+        responseTimeMs: responseTimeMs,
+      ),
+    );
+  }
+
+  Future<void> _recordAttemptSafely({
+    required BuildContext context,
+    required MissionSessionStep sessionStep,
+    required ContentActivity activity,
+    required ActivityEvaluation evaluation,
+    required int retries,
+    required int responseTimeMs,
+  }) async {
+    try {
+      final controller = BrightQuestScope.of(context);
+      final now = DateTime.now();
+      final step = sessionStep.lessonStep;
+      final kind = sessionStep.supportMode == MissionSupportMode.mastery
+          ? LearningAttemptKind.transfer
+          : switch (step.kind) {
+              LessonStepKind.guidedTry => LearningAttemptKind.guided,
+              LessonStepKind.transfer => LearningAttemptKind.transfer,
+              _ => LearningAttemptKind.independent,
+            };
+      const evaluator = ActivityResponseEvaluator();
+      final responseLabel = evaluator.responseLabel(evaluation.response);
+      final masteryEligible = activity.payload['masteryEligible'] != false;
+      if (masteryEligible) {
+        final evidenceId = controller.activeSessionEvidenceId(
+              gameId: activity.gameId,
+              learningLevel: widget.level,
+              marker: 'lesson:${step.id}:$_attemptSerial:$responseLabel',
+            ) ??
+            'lesson:${controller.activeProfileId}:${now.microsecondsSinceEpoch}';
+        await controller.recordLearningEvidenceSafely(
+          AttemptEvidence(
+            id: evidenceId,
+            profileId: controller.activeProfileId,
+            classNumber: activity.classNumber,
+            competencyId: activity.competencyId,
+            itemId: activity.id,
+            kind: kind,
+            correct: evaluation.correct,
+            hintLevel: _shownHints.length.clamp(0, 2).toInt(),
+            retries: retries.clamp(0, 99).toInt(),
+            responseTimeMs: responseTimeMs.clamp(0, 3600000).toInt(),
+            confidence:
+                evaluation.correct ? (retries == 0 ? 0.88 : 0.68) : 0.45,
+            recordedAtIso: now.toIso8601String(),
+            misconceptionId: evaluation.misconceptionId,
+            sourceGameId: activity.gameId,
+          ),
+        );
+      } else {
+        await controller.flush();
+      }
+      if (!mounted) return;
+      _attemptSerial += 1;
+
+      const resolver = GameplayActivityResolver();
+      const feedbackEngine = ContextualFeedbackEngine();
+      final feedback = feedbackEngine.build(
+        activity: activity,
+        spec: resolver.resolve(activity),
+        evaluation: evaluation,
+        attemptNumber: retries + 1,
+        revealedHintCount: _shownHints.length,
+        hasUnrevealedHint: false,
+        rescueAvailable: sessionStep.supportMode != MissionSupportMode.mastery,
+      );
+      if (evaluation.correct) {
+        FeedbackService.correct(
+          controller,
+          answer: responseLabel,
+          detail: activity.explanation,
+        );
+        setState(() => _completedInteractiveSteps.add(step.id));
+      } else {
+        FeedbackService.wrong(
+          controller,
+          answer: responseLabel,
+          guidance: '${feedback.message} ${feedback.strategy}',
+        );
+      }
+      _persistLessonState();
+    } finally {
+      _attemptInFlight = false;
+    }
+  }
+
+  void _goBack() {
+    setState(() {
+      index -= 1;
+      _shownHints.clear();
+    });
+    _persistLessonState();
+  }
+
+  void _goNext() {
+    setState(() {
+      index += 1;
+      _shownHints.clear();
+    });
+    _persistLessonState();
+  }
+
+  void _finishLesson() {
+    final level = widget.level;
+    if (level != null) {
+      BrightQuestScope.of(context).transitionActiveSessionToGame(level: level);
+    }
+    Navigator.of(context).pop(true);
+  }
+
+  void _persistLessonState() {
+    final level = widget.level;
+    if (level == null || !_sessionRestored) return;
+    final repository = BrightQuestScope.contentOf(context);
     final controller = BrightQuestScope.of(context);
-    final now = DateTime.now();
-    final kind = switch (step.kind) {
-      LessonStepKind.guidedTry => LearningAttemptKind.guided,
-      LessonStepKind.transfer => LearningAttemptKind.transfer,
-      _ => LearningAttemptKind.independent,
-    };
-    final masteryEligible = activity.payload['masteryEligible'] != false;
-    if (masteryEligible) {
-      controller.recordLearningEvidence(
-        AttemptEvidence(
-          id: 'lesson:${controller.activeProfileId}:${now.microsecondsSinceEpoch}',
-          profileId: controller.activeProfileId,
-          classNumber: activity.classNumber,
-          competencyId: activity.competencyId,
-          itemId: activity.id,
-          kind: kind,
-          correct: evaluation.correct,
-          hintLevel: _shownHints.length.clamp(0, 2).toInt(),
-          retries: retries.clamp(0, 99).toInt(),
-          responseTimeMs: responseTimeMs.clamp(0, 3600000).toInt(),
-          confidence: evaluation.correct ? (retries == 0 ? 0.88 : 0.68) : 0.45,
-          recordedAtIso: now.toIso8601String(),
-          misconceptionId: evaluation.misconceptionId,
-          sourceGameId: activity.gameId,
-        ),
-      );
+    final policy = const AdaptiveDifficultyEngine().forLevel(
+      level: level,
+      levelProgress: controller.levelStatsFor(level.id),
+      gameProgress: controller.statsFor(level.gameId),
+    );
+    final authoredFlow = const LessonEngine().buildForLevel(
+      repository: repository,
+      level: level,
+    );
+    final session = const MissionSessionEngine().build(
+      authoredFlow,
+      policy: policy,
+    );
+    controller.checkpointLessonSession(
+      level: level,
+      stepIndex: index,
+      totalSteps: session.steps.length,
+      completedInteractiveStepIds: _completedInteractiveSteps,
+      shownHintIndices: _shownHints,
+      attemptSerial: _attemptSerial,
+    );
+  }
+
+  String _nextLabel({
+    required MissionSession session,
+    required int currentIndex,
+    required WorldMissionPlan? missionPlan,
+  }) {
+    if (session.isLastStep(currentIndex)) {
+      if (widget.isDirectCompetency) return 'Finish lesson';
+      if (missionPlan == null) return 'Enter main mission';
+      return missionPlan.isBoss
+          ? 'Face ${missionPlan.phaseLabel}'
+          : 'Play ${missionPlan.phaseLabel}';
     }
-    const evaluator = ActivityResponseEvaluator();
-    if (evaluation.correct) {
-      FeedbackService.correct(
-        controller,
-        answer: evaluator.responseLabel(evaluation.response),
-        detail: activity.explanation,
-      );
-      setState(() => _completedInteractiveSteps.add(step.id));
-    } else {
-      FeedbackService.wrong(
-        controller,
-        answer: evaluator.responseLabel(evaluation.response),
-        guidance: const LessonEngine().feedbackFor(
-          activity: activity,
-          correct: false,
-          selectedAnswer: evaluation.response,
-        ),
-      );
-    }
+    if (widget.isDirectCompetency) return 'Continue';
+    final current = session.stepAt(currentIndex);
+    final next = session.stepAt(currentIndex + 1);
+    if (current.phase != next.phase) return 'Next: ${next.phase.label}';
+    return 'Continue ${current.phase.label}';
   }
 
   void _showWhy(BuildContext context, String text) {
@@ -336,4 +636,132 @@ class _LessonFlowScreenState extends State<LessonFlowScreen> {
       ),
     );
   }
+}
+
+class _MissionPlayBrief extends StatelessWidget {
+  const _MissionPlayBrief({
+    required this.sessionStep,
+    required this.step,
+    required this.activity,
+    required this.plan,
+  });
+
+  final MissionSessionStep sessionStep;
+  final LessonStep step;
+  final ContentActivity activity;
+  final WorldMissionPlan? plan;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette =
+        plan == null ? null : paletteForSubject(plan!.identity.subject);
+    final accent = palette?.primary ?? Theme.of(context).colorScheme.primary;
+    final deep = palette?.deep ?? Theme.of(context).colorScheme.primary;
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            accent.withValues(alpha: .10),
+            Colors.white.withValues(alpha: .96),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: accent.withValues(alpha: .18)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(sessionStep.phase.emoji, style: const TextStyle(fontSize: 27)),
+          const SizedBox(width: 11),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  sessionStep.phase.shortLabel,
+                  style: TextStyle(
+                    color: deep,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 9.5,
+                    letterSpacing: .65,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  step.title,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w900,
+                      ),
+                ),
+                if (step.body.trim() != activity.prompt.trim()) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    step.body,
+                    style: const TextStyle(
+                      color: AppTheme.inkMuted,
+                      fontWeight: FontWeight.w700,
+                      height: 1.35,
+                      fontSize: 11.5,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SessionNavigation extends StatelessWidget {
+  const _SessionNavigation({
+    required this.canContinue,
+    required this.isFirst,
+    required this.isLast,
+    required this.nextLabel,
+    required this.finalIcon,
+    required this.onBack,
+    required this.onNext,
+  });
+
+  final bool canContinue;
+  final bool isFirst;
+  final bool isLast;
+  final String nextLabel;
+  final IconData finalIcon;
+  final VoidCallback? onBack;
+  final VoidCallback? onNext;
+
+  @override
+  Widget build(BuildContext context) => Row(
+        children: [
+          OutlinedButton(
+            onPressed: isFirst ? null : onBack,
+            child: const Text('Back'),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: FilledButton.icon(
+                onPressed: canContinue ? onNext : null,
+                icon: Icon(
+                  !canContinue
+                      ? Icons.lock_outline_rounded
+                      : isLast
+                          ? finalIcon
+                          : Icons.arrow_forward_rounded,
+                ),
+                label: Text(
+                  !canContinue ? 'Complete the play step' : nextLabel,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
 }

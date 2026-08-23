@@ -6,6 +6,7 @@ import '../../core/curriculum/curriculum_models.dart';
 import '../../core/learning/game_evidence_adapter.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
+import '../../core/session/game_session_models.dart';
 import '../../widgets/bright_widgets.dart';
 
 class GrammarPuzzleScreen extends StatefulWidget {
@@ -31,6 +32,8 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
   MissionReward? missionReward;
   int _difficulty = 1;
   int _classNumber = 4;
+  int _attemptSerial = 0;
+  bool _answerInFlight = false;
   bool _sessionConfigured = false;
 
   @override
@@ -40,64 +43,109 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
     final controller = BrightQuestScope.of(context);
     _classNumber =
         widget.learningLevel?.classNumber ?? controller.selectedClass;
-    _difficulty = widget.learningLevel?.difficulty ??
-        controller.recommendedDifficulty('grammar_puzzle');
+    _difficulty = controller.resumableDifficulty(
+      gameId: 'grammar_puzzle',
+      classNumber: _classNumber,
+      fallbackDifficulty: widget.learningLevel?.difficulty ??
+          controller.recommendedDifficulty('grammar_puzzle'),
+      learningLevelId: widget.learningLevel?.id,
+    );
+    final missions = BrightQuestScope.contentOf(context)
+        .grammarMissionsForClass(_classNumber, difficulty: _difficulty);
+    final checkpoint = controller.beginOrResumeGameSession(
+      gameId: 'grammar_puzzle',
+      classNumber: _classNumber,
+      difficulty: _difficulty,
+      maxScore: missions.length,
+      learningLevel: widget.learningLevel,
+    );
+    missionIndex = checkpoint.cursor.clamp(0, missions.length - 1).toInt();
+    score = checkpoint.score.clamp(0, missions.length).toInt();
+    noun = checkpoint.data['noun'] as String?;
+    verb = checkpoint.data['verb'] as String?;
+    adjective = checkpoint.data['adjective'] as String?;
+    checked = checkpoint.data['checked'] as bool? ?? false;
+    correct = checkpoint.data['correct'] as bool?;
+    hadMistake = checkpoint.data['hadMistake'] as bool? ?? false;
+    _attemptSerial = (checkpoint.data['attemptSerial'] as num?)?.toInt() ?? 0;
+    if (checkpoint.stage == GameSessionStage.result &&
+        checkpoint.reward != null) {
+      finished = true;
+      missionReward = checkpoint.reward!.toReward();
+    }
     _sessionConfigured = true;
   }
 
-  void _check(GrammarMission mission) {
-    if (checked || noun == null || verb == null || adjective == null) return;
-    final isCorrect = noun == mission.noun &&
-        verb == mission.verb &&
-        adjective == mission.adjective;
-    final controller = BrightQuestScope.of(context);
-    final activity = const GameEvidenceAdapter().resolve(
-      repository: BrightQuestScope.contentOf(context),
-      classNumber: _classNumber,
-      gameId: 'grammar_puzzle',
-      legacyContentId: mission.id,
-    );
-    controller.recordAnswer(
-      gameId: 'grammar_puzzle',
-      correct: isCorrect,
-      topicId: mission.topicId,
-      difficulty: mission.difficulty,
-      masteryGain: 0.06,
-      itemId: activity?.id,
-      competencyId: activity?.competencyId,
-      evidenceKind: const GameEvidenceAdapter().kindFor(widget.learningLevel),
-      retries: hadMistake ? 1 : 0,
-      responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
-      misconceptionId: isCorrect ? null : 'parts_of_speech_classification',
-      confidence: hadMistake ? 0.6 : 0.84,
-    );
-    final chosen = '$noun as noun, $verb as verb, and $adjective as adjective';
-    if (isCorrect) {
-      FeedbackService.correct(
-        controller,
-        answer: chosen,
-        detail: 'Every word is in the right grammar group.',
-      );
-    } else {
-      FeedbackService.wrong(
-        controller,
-        answer: chosen,
-        guidance: 'Change the word categories and try again.',
-      );
+  Future<void> _check(GrammarMission mission) async {
+    if (checked ||
+        noun == null ||
+        verb == null ||
+        adjective == null ||
+        _answerInFlight) {
+      return;
     }
-    setState(() {
-      checked = true;
-      correct = isCorrect;
-      if (isCorrect && !hadMistake) score += 1;
-      if (!isCorrect) hadMistake = true;
-    });
+    _answerInFlight = true;
+    try {
+      final isCorrect = noun == mission.noun &&
+          verb == mission.verb &&
+          adjective == mission.adjective;
+      final controller = BrightQuestScope.of(context);
+      final activity = const GameEvidenceAdapter().resolve(
+        repository: BrightQuestScope.contentOf(context),
+        classNumber: _classNumber,
+        gameId: 'grammar_puzzle',
+        legacyContentId: mission.id,
+      );
+      await controller.recordAnswerSafely(
+        gameId: 'grammar_puzzle',
+        learningLevel: widget.learningLevel,
+        correct: isCorrect,
+        attemptMarker: 'answer:$_attemptSerial:$noun|$verb|$adjective',
+        topicId: mission.topicId,
+        difficulty: mission.difficulty,
+        masteryGain: 0.06,
+        itemId: activity?.id,
+        competencyId: activity?.competencyId,
+        evidenceKind: const GameEvidenceAdapter().kindFor(widget.learningLevel),
+        retries: hadMistake ? 1 : 0,
+        responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
+        misconceptionId: isCorrect ? null : 'parts_of_speech_classification',
+        confidence: hadMistake ? 0.6 : 0.84,
+      );
+      if (!mounted) return;
+      _attemptSerial += 1;
+      final chosen =
+          '$noun as noun, $verb as verb, and $adjective as adjective';
+      if (isCorrect) {
+        FeedbackService.correct(
+          controller,
+          answer: chosen,
+          detail: 'Every word is in the right grammar group.',
+        );
+      } else {
+        FeedbackService.wrong(
+          controller,
+          answer: chosen,
+          guidance: 'Change the word categories and try again.',
+        );
+      }
+      setState(() {
+        checked = true;
+        correct = isCorrect;
+        if (isCorrect && !hadMistake) score += 1;
+        if (!isCorrect) hadMistake = true;
+      });
+      _checkpoint();
+    } finally {
+      _answerInFlight = false;
+    }
   }
 
-  void _next(List<GrammarMission> missions, int classNumber) {
+  Future<void> _next(List<GrammarMission> missions, int classNumber) async {
     if (correct != true) return;
     if (missionIndex == missions.length - 1) {
       final controller = BrightQuestScope.of(context);
-      final reward = controller.completeRun(
+      final reward = await controller.completeRunSafely(
         gameId: 'grammar_puzzle',
         fallbackMissionId:
             'grammar_puzzle:c$classNumber:d$_difficulty:core_run',
@@ -105,6 +153,7 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
         score: score,
         maxScore: missions.length,
       );
+      if (!mounted) return;
       FeedbackService.complete(controller, reward: reward);
       setState(() {
         finished = true;
@@ -122,6 +171,7 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
       hadMistake = false;
       _itemStarted = DateTime.now();
     });
+    _checkpoint();
   }
 
   void _resetSelection() {
@@ -132,12 +182,23 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
       checked = false;
       correct = null;
     });
+    _checkpoint();
   }
 
   void _restart() {
+    final missions = BrightQuestScope.contentOf(context)
+        .grammarMissionsForClass(_classNumber, difficulty: _difficulty);
+    BrightQuestScope.of(context).restartActiveGameSession(
+      gameId: 'grammar_puzzle',
+      classNumber: _classNumber,
+      difficulty: _difficulty,
+      maxScore: missions.length,
+      learningLevel: widget.learningLevel,
+    );
     setState(() {
       missionIndex = 0;
       score = 0;
+      _attemptSerial = 0;
       noun = null;
       verb = null;
       adjective = null;
@@ -146,7 +207,31 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
       hadMistake = false;
       finished = false;
       missionReward = null;
+      _itemStarted = DateTime.now();
     });
+  }
+
+  void _checkpoint() {
+    final missions = BrightQuestScope.contentOf(context)
+        .grammarMissionsForClass(_classNumber, difficulty: _difficulty);
+    BrightQuestScope.of(context).checkpointGameSession(
+      gameId: 'grammar_puzzle',
+      classNumber: _classNumber,
+      difficulty: _difficulty,
+      cursor: missionIndex,
+      score: score,
+      maxScore: missions.length,
+      learningLevel: widget.learningLevel,
+      data: <String, Object?>{
+        'attemptSerial': _attemptSerial,
+        if (noun != null) 'noun': noun,
+        if (verb != null) 'verb': verb,
+        if (adjective != null) 'adjective': adjective,
+        'checked': checked,
+        if (correct != null) 'correct': correct,
+        'hadMistake': hadMistake,
+      },
+    );
   }
 
   @override
@@ -162,6 +247,7 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
         <String>{mission.adjective, 'runs', 'dragon'}.toList();
 
     return GameScaffold(
+      learningLevel: widget.learningLevel,
       title: 'Grammar Puzzle',
       subtitle: widget.learningLevel == null
           ? 'Class $classNumber • Noun, verb and adjective challenge'
@@ -199,11 +285,14 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
             values: nounOptions,
             selected: noun,
             enabled: correct != true,
-            onChanged: (value) => setState(() {
-              noun = value;
-              checked = false;
-              correct = null;
-            }),
+            onChanged: (value) {
+              setState(() {
+                noun = value;
+                checked = false;
+                correct = null;
+              });
+              _checkpoint();
+            },
           ),
           const SizedBox(height: 12),
           _ChoiceGroup(
@@ -212,11 +301,14 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
             values: verbOptions,
             selected: verb,
             enabled: correct != true,
-            onChanged: (value) => setState(() {
-              verb = value;
-              checked = false;
-              correct = null;
-            }),
+            onChanged: (value) {
+              setState(() {
+                verb = value;
+                checked = false;
+                correct = null;
+              });
+              _checkpoint();
+            },
           ),
           const SizedBox(height: 12),
           _ChoiceGroup(
@@ -225,11 +317,14 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
             values: adjectiveOptions,
             selected: adjective,
             enabled: correct != true,
-            onChanged: (value) => setState(() {
-              adjective = value;
-              checked = false;
-              correct = null;
-            }),
+            onChanged: (value) {
+              setState(() {
+                adjective = value;
+                checked = false;
+                correct = null;
+              });
+              _checkpoint();
+            },
           ),
           if (checked) ...[
             const SizedBox(height: 14),
@@ -245,6 +340,7 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
           const SizedBox(height: 18),
           if (finished)
             MissionSummaryCard(
+              learningLevel: widget.learningLevel,
               score: score,
               maxScore: missions.length,
               reward: missionReward,

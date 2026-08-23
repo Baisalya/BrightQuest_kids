@@ -3,14 +3,24 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../app/brightquest_scope.dart';
+import '../core/accessibility/learning_audio_director.dart';
 import '../core/content/achievement_catalog.dart';
+import '../core/curriculum/curriculum_models.dart';
+import '../core/curriculum/world_mission_catalog.dart';
+import '../core/curriculum/world_mission_models.dart';
 import '../core/models/game_models.dart';
 import '../core/models/progress_models.dart';
+import '../core/presentation/game_feel_director.dart';
+import '../core/rewards/adventure_reward_engine.dart';
+import '../core/rewards/adventure_reward_models.dart';
 import '../core/services/bright_audio_service.dart';
 import '../core/theme/app_theme.dart';
+import 'bright_adaptive.dart';
 import 'bright_design_system.dart';
 import 'bright_illustrations.dart';
 import 'bright_motion.dart';
+import 'learning_accessibility_widgets.dart';
+import 'world_mission_widgets.dart';
 
 class BrightHeader extends StatelessWidget {
   const BrightHeader({
@@ -485,6 +495,7 @@ class GameScaffold extends StatelessWidget {
     required this.child,
     this.voicePrompt,
     this.voiceChoices = const <Object>[],
+    this.learningLevel,
     super.key,
   });
 
@@ -494,13 +505,26 @@ class GameScaffold extends StatelessWidget {
   final Widget child;
   final String? voicePrompt;
   final Iterable<Object> voiceChoices;
+  final LearningLevel? learningLevel;
 
   @override
   Widget build(BuildContext context) {
     final sceneId = _gameIdFromTitle(title);
+    final narrationCue = voicePrompt == null
+        ? null
+        : const LearningAudioDirector().forGamePrompt(
+            gameId: sceneId,
+            prompt: voicePrompt!,
+            choices: voiceChoices,
+          );
+    final missionPlan = learningLevel == null
+        ? null
+        : WorldMissionCatalog.planForLevel(learningLevel!);
+    final layout = BrightLayout.of(context);
+    final compactHeight = layout.shortViewport;
     return Scaffold(
       body: BrightPageBackground(
-        primary: Color.lerp(color, Colors.white, 0.89)!,
+        primary: Color.lerp(color, Colors.white, 0.90)!,
         secondary: const Color(0xFFFFFBEC),
         child: Column(
           children: [
@@ -517,8 +541,10 @@ class GameScaffold extends StatelessWidget {
                         if (!controller.soundEnabled) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                                content: Text(
-                                    'Audio is turned off for this explorer.')),
+                              content: Text(
+                                'Audio is turned off for this explorer.',
+                              ),
+                            ),
                           );
                           return;
                         }
@@ -532,110 +558,193 @@ class GameScaffold extends StatelessWidget {
                       icon: const Icon(Icons.volume_up_rounded),
                     ),
             ),
+            if (missionPlan != null)
+              BrightResponsive(
+                maxWidth: 1220,
+                padding: EdgeInsets.fromLTRB(
+                  layout.gutter,
+                  compactHeight ? 5 : 9,
+                  layout.gutter,
+                  0,
+                ),
+                builder: (context, breakpoint) => WorldMissionRibbon(
+                  plan: missionPlan,
+                  compact:
+                      compactHeight || breakpoint == BrightBreakpoint.compact,
+                ),
+              ),
             BrightResponsive(
-              maxWidth: 1180,
-              padding: const EdgeInsets.fromLTRB(14, 13, 14, 7),
+              maxWidth: 1220,
+              padding: EdgeInsets.fromLTRB(
+                layout.gutter,
+                compactHeight ? 8 : 13,
+                layout.gutter,
+                compactHeight ? 4 : 7,
+              ),
               builder: (context, breakpoint) {
                 final compact = breakpoint == BrightBreakpoint.compact;
+                final bannerHeight = compactHeight
+                    ? 92.0
+                    : compact
+                        ? 112.0
+                        : 128.0;
                 return BrightReveal(
                   duration: const Duration(milliseconds: 390),
                   beginScale: 0.985,
                   offset: const Offset(0, -0.025),
                   child: Container(
                     width: double.infinity,
-                    height: compact ? 112 : 126,
+                    height: bannerHeight,
                     clipBehavior: Clip.antiAlias,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                        color,
-                        Color.lerp(color, Colors.black, 0.16)!
-                      ]),
-                      borderRadius: BorderRadius.circular(28),
+                      gradient: LinearGradient(
+                        colors: [
+                          color,
+                          Color.lerp(color, Colors.black, 0.18)!,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(29),
                       border: Border.all(color: Colors.white, width: 2),
                       boxShadow: [
                         BoxShadow(
-                            color: color.withValues(alpha: 0.28),
-                            blurRadius: 22,
-                            offset: const Offset(0, 9))
+                          color: color.withValues(alpha: 0.28),
+                          blurRadius: 22,
+                          offset: const Offset(0, 9),
+                        ),
                       ],
                     ),
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
                         Positioned(
-                            right: -34,
-                            top: -10,
-                            width: compact ? 190 : 260,
-                            child: Opacity(
-                                opacity: .36,
-                                child: BrightGameScene(
-                                    gameId: sceneId, compact: compact))),
+                          right: -34,
+                          top: -10,
+                          width: compact ? 190 : 280,
+                          child: Opacity(
+                            opacity: .34,
+                            child: BrightGameScene(
+                              gameId: sceneId,
+                              compact: compact,
+                            ),
+                          ),
+                        ),
                         Positioned(
-                            left: compact ? 12 : 18,
-                            top: compact ? 17 : 20,
-                            child: _GameMedallion(
-                                color: color,
-                                emoji: _titleEmoji(title),
-                                compact: compact)),
+                          left: compact ? 12 : 18,
+                          top: compactHeight ? 11 : (compact ? 17 : 20),
+                          child: _GameMedallion(
+                            color: color,
+                            emoji: _titleEmoji(title),
+                            compact: compact || compactHeight,
+                          ),
+                        ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(
-                              compact ? 82 : 104,
-                              compact ? 17 : 21,
-                              compact ? 76 : 140,
-                              compact ? 13 : 18),
+                            compactHeight
+                                ? 78
+                                : compact
+                                    ? 82
+                                    : 104,
+                            compactHeight ? 12 : (compact ? 17 : 21),
+                            compact ? 68 : 150,
+                            compactHeight ? 10 : (compact ? 13 : 18),
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(title,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: compact ? 23 : 30,
-                                      fontWeight: FontWeight.w900,
-                                      shadows: const [
-                                        Shadow(
-                                            color: Color(0x33000000),
-                                            blurRadius: 3,
-                                            offset: Offset(0, 2))
-                                      ])),
+                              Text(
+                                title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: compactHeight
+                                      ? 21
+                                      : compact
+                                          ? 23
+                                          : 30,
+                                  fontWeight: FontWeight.w900,
+                                  shadows: const [
+                                    Shadow(
+                                      color: Color(0x33000000),
+                                      blurRadius: 3,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                              ),
                               const SizedBox(height: 4),
-                              Text(subtitle,
-                                  maxLines: compact ? 2 : 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      color:
-                                          Colors.white.withValues(alpha: .94),
-                                      fontSize: compact ? 11 : 13,
-                                      fontWeight: FontWeight.w800,
-                                      height: 1.2)),
+                              Text(
+                                subtitle,
+                                maxLines: compact ? 2 : 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: .94),
+                                  fontSize: compactHeight
+                                      ? 10.5
+                                      : compact
+                                          ? 11
+                                          : 13,
+                                  fontWeight: FontWeight.w800,
+                                  height: 1.2,
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        Positioned(
+                        if (!compactHeight)
+                          Positioned(
                             right: compact ? 10 : 16,
                             bottom: compact ? 10 : 14,
                             child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 9, vertical: 6),
-                                decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: .90),
-                                    borderRadius: BorderRadius.circular(14)),
-                                child: Text(_titleEmoji(title),
-                                    style: TextStyle(
-                                        fontSize: compact ? 22 : 27)))),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 9,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: .90),
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              child: Text(
+                                _titleEmoji(title),
+                                style: TextStyle(fontSize: compact ? 22 : 27),
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   ),
                 );
               },
             ),
+            if (narrationCue != null)
+              BrightResponsive(
+                maxWidth: 1220,
+                padding: EdgeInsets.fromLTRB(
+                  layout.gutter,
+                  0,
+                  layout.gutter,
+                  compactHeight ? 3 : 6,
+                ),
+                builder: (context, breakpoint) => LearningNarrationBar(
+                  key: ValueKey<String>('game_audio:${narrationCue.id}'),
+                  cue: narrationCue,
+                  compact: true,
+                ),
+              ),
             Expanded(
               child: Center(
                 child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 1180),
-                    child: child),
+                  constraints: const BoxConstraints(maxWidth: 1220),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: layout.isPhone ? 0 : 6,
+                    ),
+                    child: child,
+                  ),
+                ),
               ),
             ),
           ],
@@ -964,7 +1073,531 @@ class MissionSummaryCard extends StatelessWidget {
     required this.maxScore,
     required this.reward,
     required this.onReplay,
+    this.learningLevel,
     super.key,
+  });
+
+  final int score;
+  final int maxScore;
+  final MissionReward? reward;
+  final VoidCallback onReplay;
+  final LearningLevel? learningLevel;
+
+  @override
+  Widget build(BuildContext context) {
+    final reduceMotion = BrightQuestScope.of(context).reducedMotionEnabled;
+    final content = learningLevel == null
+        ? _GenericMissionSummary(
+            score: score,
+            maxScore: maxScore,
+            reward: reward,
+            onReplay: onReplay,
+          )
+        : _AdventureMissionSummary(
+            moment: AdventureRewardEngine.summarize(
+              level: learningLevel!,
+              reward: reward,
+              score: score,
+              maxScore: maxScore,
+            ),
+            reward: reward,
+            onReplay: onReplay,
+          );
+
+    if (reduceMotion) return content;
+    return BrightReveal(
+      duration: const Duration(milliseconds: 420),
+      beginScale: 0.92,
+      offset: const Offset(0, 0.025),
+      curve: Curves.easeOutBack,
+      child: content,
+    );
+  }
+}
+
+class _AdventureMissionSummary extends StatelessWidget {
+  const _AdventureMissionSummary({
+    required this.moment,
+    required this.reward,
+    required this.onReplay,
+  });
+
+  final AdventureRewardMoment moment;
+  final MissionReward? reward;
+  final VoidCallback onReplay;
+
+  @override
+  Widget build(BuildContext context) {
+    final plan = moment.missionPlan;
+    final palette = paletteForSubject(plan.identity.subject);
+    final feel = GameFeelDirector.forReward(moment);
+    final trophy = switch (moment.tier) {
+      AdventureRewardTier.worldComplete => '🏆',
+      AdventureRewardTier.bossClear => '👑',
+      AdventureRewardTier.firstClear => '🚩',
+      AdventureRewardTier.starUpgrade => '⭐',
+      AdventureRewardTier.clear => '✨',
+      AdventureRewardTier.retry => '💪',
+    };
+    final cleared = moment.cleared;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: cleared
+              ? [
+                  Color.lerp(const Color(0xFFFFF0A8), palette.secondary, .12)!,
+                  Color.lerp(const Color(0xFFE2F7FF), palette.secondary, .18)!,
+                  const Color(0xFFF3E9FF),
+                ]
+              : const [Color(0xFFFFF1E6), Color(0xFFF5F8FF)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: Colors.white, width: 2),
+        boxShadow: [
+          BoxShadow(
+            color: palette.deep.withValues(alpha: .12),
+            blurRadius: 24,
+            offset: const Offset(0, 9),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 116,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                if (cleared)
+                  Center(
+                    child: BrightCelebrationBurst(
+                      color: palette.primary,
+                      particleCount: moment.worldComplete
+                          ? 24
+                          : moment.bossClear
+                              ? 20
+                              : 16,
+                    ),
+                  ),
+                const Positioned(left: 5, top: 12, child: BrightSparkles()),
+                Positioned(
+                  left: 12,
+                  bottom: -5,
+                  child: SizedBox(
+                    width: 100,
+                    child: BrightMomentReaction(
+                      trigger:
+                          'reward:${moment.tier.name}:${moment.levelStars}',
+                      kind: feel.kind,
+                      child: BrightLionMascot(
+                        size: 94,
+                        mood: feel.mood,
+                        animated: false,
+                      ),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: BrightMomentReaction(
+                    trigger: 'trophy:${moment.tier.name}:${moment.levelStars}',
+                    kind: feel.kind,
+                    child: BrightValuePop(
+                      value:
+                          moment.levelStars + (moment.worldComplete ? 10 : 0),
+                      child: Text(trophy, style: const TextStyle(fontSize: 64)),
+                    ),
+                  ),
+                ),
+                if (cleared)
+                  Positioned(
+                    right: 20,
+                    top: 7,
+                    child: Text(
+                      moment.worldComplete ? '✨🏆✨' : '⭐✨',
+                      style: const TextStyle(fontSize: 25),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          BrightPill(
+            icon: plan.isBoss
+                ? Icons.workspace_premium_rounded
+                : Icons.flag_rounded,
+            label: '${plan.zoneTitle} • ${plan.phaseLabel}',
+            color: palette.deep,
+            background: plan.isBoss
+                ? const Color(0xFFFFEDAF)
+                : palette.primary.withValues(alpha: .10),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            moment.headline,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.w900,
+              color: AppTheme.navy,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            moment.message,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: AppTheme.inkMuted,
+              fontWeight: FontWeight.w700,
+              height: 1.35,
+              fontSize: 12.5,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              BrightPill(
+                icon: Icons.score_rounded,
+                label: 'Score ${moment.score} / ${moment.maxScore}',
+                color: AppTheme.purple,
+              ),
+              if (moment.zoneComplete)
+                const BrightPill(
+                  icon: Icons.workspace_premium_rounded,
+                  label: 'ZONE CLEARED',
+                  color: Color(0xFF8A6000),
+                  background: Color(0xFFFFEDAF),
+                ),
+              if (moment.worldComplete)
+                const BrightPill(
+                  icon: Icons.emoji_events_rounded,
+                  label: 'WORLD CLEARED',
+                  color: Color(0xFF177342),
+                  background: Color(0xFFE2F7E5),
+                ),
+            ],
+          ),
+          const SizedBox(height: 13),
+          if (cleared)
+            BrightValuePop(
+              value: moment.levelStars,
+              child: Text(
+                '${List<String>.filled(moment.levelStars, '⭐').join()}'
+                '${List<String>.filled(3 - moment.levelStars, '☆').join()}',
+                style: const TextStyle(fontSize: 34),
+              ),
+            )
+          else
+            Text(
+              'Reach this mission’s pass target to clear the checkpoint.',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: AppTheme.inkMuted,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          if (cleared) ...[
+            const SizedBox(height: 12),
+            _RewardLootRow(moment: moment),
+          ],
+          if (moment.nextMissionPlan != null) ...[
+            const SizedBox(height: 13),
+            BrightMomentReaction(
+              trigger: 'unlock:${moment.nextMissionPlan!.levelId}',
+              kind: feel.kind,
+              child: _AdventureUnlockCard(
+                currentPlan: plan,
+                nextPlan: moment.nextMissionPlan!,
+                palette: palette,
+              ),
+            ),
+          ] else if (moment.worldComplete) ...[
+            const SizedBox(height: 13),
+            BrightMomentReaction(
+              trigger: 'world:${plan.identity.worldTitle}',
+              kind: feel.kind,
+              child: _WorldCompleteCard(plan: plan, palette: palette),
+            ),
+          ],
+          if (reward != null && reward!.newAchievementIds.isNotEmpty) ...[
+            const SizedBox(height: 13),
+            ...reward!.newAchievementIds.map((id) {
+              final achievement = achievementById(id);
+              if (achievement == null) return const SizedBox.shrink();
+              return Container(
+                width: double.infinity,
+                margin: const EdgeInsets.only(bottom: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 13, vertical: 11),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: .88),
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: const Color(0xFFFFD86B)),
+                ),
+                child: Text(
+                  '${achievement.emoji} Achievement unlocked: ${achievement.title}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w900,
+                    color: AppTheme.navy,
+                  ),
+                ),
+              );
+            }),
+          ],
+          const SizedBox(height: 16),
+          FilledButton.icon(
+            onPressed: onReplay,
+            icon: const Icon(Icons.replay_rounded),
+            label: Text(
+              cleared
+                  ? plan.isBoss
+                      ? 'Challenge Boss Again'
+                      : 'Replay Mission'
+                  : 'Try Again',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RewardLootRow extends StatelessWidget {
+  const _RewardLootRow({required this.moment});
+
+  final AdventureRewardMoment moment;
+
+  @override
+  Widget build(BuildContext context) => Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 9,
+        runSpacing: 9,
+        children: [
+          _RewardLootToken(
+            emoji: '🪙',
+            value: '+${moment.coinsAwarded}',
+            label: 'coins',
+          ),
+          _RewardLootToken(
+            emoji: '⚡',
+            value: '+${moment.xpAwarded}',
+            label: 'XP',
+          ),
+          _RewardLootToken(
+            emoji: '⭐',
+            value: moment.levelStarsAwarded > 0
+                ? '+${moment.levelStarsAwarded}'
+                : '${moment.levelStars}/3',
+            label: moment.levelStarsAwarded > 0 ? 'new stars' : 'mission stars',
+          ),
+        ],
+      );
+}
+
+class _RewardLootToken extends StatelessWidget {
+  const _RewardLootToken({
+    required this.emoji,
+    required this.value,
+    required this.label,
+  });
+
+  final String emoji;
+  final String value;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        constraints: const BoxConstraints(minWidth: 92),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: .88),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Colors.white),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x100C3356),
+              blurRadius: 10,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 22)),
+            const SizedBox(height: 2),
+            Text(
+              value,
+              style: const TextStyle(
+                color: AppTheme.navy,
+                fontWeight: FontWeight.w900,
+                fontSize: 16,
+              ),
+            ),
+            Text(
+              label,
+              style: const TextStyle(
+                color: AppTheme.inkMuted,
+                fontWeight: FontWeight.w800,
+                fontSize: 9.5,
+              ),
+            ),
+          ],
+        ),
+      );
+}
+
+class _AdventureUnlockCard extends StatelessWidget {
+  const _AdventureUnlockCard({
+    required this.currentPlan,
+    required this.nextPlan,
+    required this.palette,
+  });
+
+  final WorldMissionPlan currentPlan;
+  final WorldMissionPlan nextPlan;
+  final BrightWorldPalette palette;
+
+  @override
+  Widget build(BuildContext context) {
+    final changedZone = currentPlan.zoneTitle != nextPlan.zoneTitle;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFFE5FAEA), Color(0xFFF2FFF4)],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFB7E8C1)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child:
+                Text(nextPlan.stageEmoji, style: const TextStyle(fontSize: 26)),
+          ),
+          const SizedBox(width: 11),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  changedZone ? 'NEW ZONE UNLOCKED' : 'NEXT QUEST UNLOCKED',
+                  style: const TextStyle(
+                    color: Color(0xFF218739),
+                    fontWeight: FontWeight.w900,
+                    fontSize: 10,
+                    letterSpacing: .6,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  '${nextPlan.zoneTitle} • ${nextPlan.phaseLabel}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppTheme.navy,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 13,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  nextPlan.stageTitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppTheme.inkMuted,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 11,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Icon(Icons.lock_open_rounded, color: palette.deep),
+        ],
+      ),
+    );
+  }
+}
+
+class _WorldCompleteCard extends StatelessWidget {
+  const _WorldCompleteCard({required this.plan, required this.palette});
+
+  final WorldMissionPlan plan;
+  final BrightWorldPalette palette;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(13),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              const Color(0xFFFFF0B5),
+              palette.secondary.withValues(alpha: .34),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: const Color(0xFFE9BC42)),
+        ),
+        child: Row(
+          children: [
+            const Text('🏆', style: TextStyle(fontSize: 34)),
+            const SizedBox(width: 11),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${plan.identity.worldTitle.toUpperCase()} COMPLETE',
+                    style: const TextStyle(
+                      color: Color(0xFF8A6000),
+                      fontWeight: FontWeight.w900,
+                      fontSize: 10,
+                      letterSpacing: .6,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  const Text(
+                    'Every mission is cleared. Missing stars are now your replay challenge!',
+                    style: TextStyle(
+                      color: AppTheme.navy,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 11.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+}
+
+class _GenericMissionSummary extends StatelessWidget {
+  const _GenericMissionSummary({
+    required this.score,
+    required this.maxScore,
+    required this.reward,
+    required this.onReplay,
   });
 
   final int score;
@@ -975,18 +1608,8 @@ class MissionSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ratio = maxScore <= 0 ? 0.0 : score / maxScore;
-    final currentReward = reward;
-    final levelReward = currentReward?.levelId == null ? null : currentReward;
-    final cleared =
-        levelReward == null ? ratio >= 0.6 : levelReward.levelCompleted;
-    final headline = !cleared
-        ? 'Almost there!'
-        : ratio >= 0.9
-            ? 'Amazing mission!'
-            : 'Mission complete!';
-    final reduceMotion = BrightQuestScope.of(context).reducedMotionEnabled;
-
-    final content = Container(
+    final cleared = ratio >= .6;
+    return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -994,126 +1617,60 @@ class MissionSummaryCard extends StatelessWidget {
           colors: cleared
               ? const [Color(0xFFFFF0A8), Color(0xFFE2F7FF), Color(0xFFF3E9FF)]
               : const [Color(0xFFFFF1E6), Color(0xFFF5F8FF)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(28),
         border: Border.all(color: Colors.white, width: 2),
-        boxShadow: const [
-          BoxShadow(
-              color: Color(0x190C3356), blurRadius: 22, offset: Offset(0, 8))
-        ],
       ),
       child: Column(
         children: [
-          SizedBox(
-            height: 105,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                if (cleared) const Center(child: BrightCelebrationBurst()),
-                const Positioned(left: 10, child: BrightSparkles()),
-                Positioned(
-                    left: 18,
-                    bottom: -7,
-                    child:
-                        SizedBox(width: 96, child: BrightLionMascot(size: 92))),
-                Center(
-                    child: Text(cleared ? '🏆' : '💪',
-                        style: const TextStyle(fontSize: 58))),
-                if (cleared)
-                  const Positioned(
-                      right: 28,
-                      top: 12,
-                      child: Text('⭐✨', style: TextStyle(fontSize: 24))),
-              ],
+          Text(cleared ? '🏆' : '💪', style: const TextStyle(fontSize: 58)),
+          const SizedBox(height: 6),
+          Text(
+            cleared ? 'Mission complete!' : 'Almost there!',
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w900,
+              color: AppTheme.navy,
             ),
           ),
-          const SizedBox(height: 2),
-          Text(headline,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w900,
-                  color: AppTheme.navy)),
-          const SizedBox(height: 7),
+          const SizedBox(height: 8),
           BrightPill(
-              icon: Icons.score_rounded,
-              label: 'Score $score / $maxScore',
-              color: AppTheme.purple),
-          if (levelReward != null) ...[
-            const SizedBox(height: 12),
-            if (levelReward.levelCompleted)
-              BrightValuePop(
-                value: levelReward.levelStars,
-                child: Text(
-                  '${List<String>.filled(levelReward.levelStars, '⭐').join()}${List<String>.filled(3 - levelReward.levelStars, '☆').join()}',
-                  style: const TextStyle(fontSize: 31),
-                ),
-              )
-            else
-              const Text(
-                'Score at least 60% to clear this learning-path level.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: AppTheme.inkMuted, fontWeight: FontWeight.w700),
-              ),
-            if (levelReward.levelCompleted) ...[
-              const SizedBox(height: 7),
-              Text(
-                levelReward.firstCompletion
-                    ? 'First clear: +${levelReward.coinsAwarded} coins • +${levelReward.xpAwarded} XP'
-                    : levelReward.levelStarsAwarded > 0
-                        ? 'New best! +${levelReward.levelStarsAwarded} star${levelReward.levelStarsAwarded == 1 ? '' : 's'} • +${levelReward.coinsAwarded} coins'
-                        : 'Replay reward: +${levelReward.coinsAwarded} coins • +${levelReward.xpAwarded} XP',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    color: AppTheme.inkMuted, fontWeight: FontWeight.w800),
-              ),
-            ],
-            if (levelReward.unlockedNextLevel) ...[
-              const SizedBox(height: 10),
-              const BrightPill(
-                  icon: Icons.lock_open_rounded,
-                  label: 'Next level unlocked!',
-                  color: Color(0xFF218739),
-                  background: Color(0xFFE2F7E5)),
-            ],
-          ] else if (currentReward != null) ...[
+            icon: Icons.score_rounded,
+            label: 'Score $score / $maxScore',
+            color: AppTheme.purple,
+          ),
+          if (reward != null) ...[
             const SizedBox(height: 12),
             Text(
-              currentReward.firstCompletion
-                  ? 'First-clear bonus: +${currentReward.coinsAwarded} coins, +${currentReward.xpAwarded} XP, +${currentReward.starsAwarded} stars'
+              reward!.firstCompletion
+                  ? 'First-clear bonus: +${reward!.coinsAwarded} coins, +${reward!.xpAwarded} XP, +${reward!.starsAwarded} stars'
                   : cleared
-                      ? 'Replay reward: +${currentReward.coinsAwarded} coins, +${currentReward.xpAwarded} XP'
+                      ? 'Replay reward: +${reward!.coinsAwarded} coins, +${reward!.xpAwarded} XP'
                       : 'Practice run saved. Reach 60% to clear the mission.',
               textAlign: TextAlign.center,
               style: const TextStyle(
-                  color: AppTheme.inkMuted, fontWeight: FontWeight.w800),
+                color: AppTheme.inkMuted,
+                fontWeight: FontWeight.w800,
+              ),
             ),
-          ],
-          if (currentReward != null &&
-              currentReward.newAchievementIds.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            ...currentReward.newAchievementIds.map((id) {
-              final achievement = achievementById(id);
-              if (achievement == null) return const SizedBox.shrink();
-              return Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(bottom: 6),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.86),
-                    borderRadius: BorderRadius.circular(16)),
-                child: Text(
-                  '${achievement.emoji} Achievement unlocked: ${achievement.title}',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w900, color: AppTheme.navy),
-                ),
-              );
-            }),
+            if (reward!.newAchievementIds.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              ...reward!.newAchievementIds.map((id) {
+                final achievement = achievementById(id);
+                if (achievement == null) return const SizedBox.shrink();
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: Text(
+                    '${achievement.emoji} Achievement unlocked: ${achievement.title}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: AppTheme.navy,
+                    ),
+                  ),
+                );
+              }),
+            ],
           ],
           const SizedBox(height: 15),
           FilledButton.icon(
@@ -1123,15 +1680,6 @@ class MissionSummaryCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-
-    if (reduceMotion) return content;
-    return BrightReveal(
-      duration: const Duration(milliseconds: 420),
-      beginScale: 0.92,
-      offset: const Offset(0, 0.025),
-      curve: Curves.easeOutBack,
-      child: content,
     );
   }
 }

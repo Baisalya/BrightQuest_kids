@@ -81,7 +81,7 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
     if (widget.reviewMode) {
       final review = _generatedReview;
       return Scaffold(
-        appBar: AppBar(title: Text('${skill.title} review')),
+        appBar: AppBar(title: const Text('Memory Game')),
         body: review == null
             ? const Center(child: CircularProgressIndicator())
             : _ReviewBody(
@@ -127,7 +127,7 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
           activities: activities,
           completedActivityIds: completedActivityIds,
           reducedMotion: controller.reducedMotionEnabled,
-          onDiscover: () => _openTeachingPage(0),
+          onDiscover: () => _openTeachingPage(2),
           onActivity: (activity) =>
               _openActivity(activities: activities, activity: activity),
         ),
@@ -136,15 +136,24 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
 
     final activityIndex = _pageIndex - 3;
     final content = _pageIndex < 3
-        ? _buildTeachingPage(skill, _pageIndex)
+        ? _buildTeachingPage(
+            skill,
+            activities,
+            completedActivityIds,
+          )
         : activityIndex >= 0 && activityIndex < activities.length
-            ? _buildActivityPage(skill, activities[activityIndex])
+            ? _buildActivityPage(
+                skill,
+                activities[activityIndex],
+                activities,
+                completedActivityIds,
+              )
             : const SizedBox.shrink();
     return Scaffold(
       appBar: AppBar(
         title: Text(skill.title),
         leading: IconButton(
-          tooltip: 'Back to play board',
+          tooltip: 'Back to games',
           onPressed: _returnToBoard,
           icon: const Icon(Icons.grid_view_rounded),
         ),
@@ -175,95 +184,108 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
     );
   }
 
-  Widget _buildTeachingPage(NurserySkill skill, int page) {
+  Widget _buildTeachingPage(
+    NurserySkill skill,
+    List<NurseryActivity> activities,
+    Set<String> completedActivityIds,
+  ) {
     final controller = BrightQuestScope.of(context);
     final reducedMotion = controller.reducedMotionEnabled;
-    final title = switch (page) {
-      0 => 'Your mission',
-      1 => 'Magic clue',
-      _ when skill.domainId == 'alphabet' => 'Explore letter words',
-      _ => 'Watch it happen',
-    };
-    final body = switch (page) {
-      0 => skill.objective,
-      1 => skill.explanation,
-      _ => skill.workedExample.caption,
-    };
+    final recommended = nurseryRecommendedActivity(
+      activities,
+      completedActivityIds,
+    );
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(22),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _DiscoveryPortalSelector(
-              selectedPage: page,
-              onSelected: _openTeachingPage,
+            const Text(
+              '👀 Look & listen',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              skill.explanation,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    height: 1.35,
+                    fontWeight: FontWeight.w700,
+                  ),
             ),
             const SizedBox(height: 18),
-            Text(title, style: Theme.of(context).textTheme.headlineSmall),
-            const SizedBox(height: 12),
-            Text(
-              body,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(height: 1.45),
-            ),
-            if (page == 2) ...[
-              const SizedBox(height: 22),
-              TweenAnimationBuilder<double>(
-                tween: Tween<double>(begin: reducedMotion ? 1 : 0.86, end: 1),
-                duration: reducedMotion
-                    ? Duration.zero
-                    : const Duration(milliseconds: 480),
-                curve: Curves.easeOutBack,
-                builder: (context, value, child) => Transform.scale(
-                  scale: value,
-                  child: child,
-                ),
-                child: Container(
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        skill.workedExample.headline,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.w900,
-                            ),
-                      ),
-                      const SizedBox(height: 14),
-                      if (skill.domainId == 'alphabet')
-                        _buildLetterDiscovery(reducedMotion)
-                      else
-                        _WorkedExampleVisual(
-                          skill: skill,
-                          reducedMotion: reducedMotion,
-                        ),
-                    ],
-                  ),
-                ),
+            Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(24),
               ),
-            ],
-            const SizedBox(height: 20),
+              child: Column(
+                children: [
+                  Text(
+                    skill.workedExample.headline,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w900,
+                        ),
+                  ),
+                  const SizedBox(height: 14),
+                  if (skill.domainId == 'alphabet') ...[
+                    const Text(
+                      'Explore letter words',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    _buildLetterDiscovery(reducedMotion),
+                  ] else
+                    _WorkedExampleVisual(
+                      skill: skill,
+                      reducedMotion: reducedMotion,
+                    ),
+                  if (skill.domainId != 'alphabet') ...[
+                    const SizedBox(height: 12),
+                    Text(
+                      skill.workedExample.caption,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(height: 18),
             Wrap(
-              alignment: WrapAlignment.spaceBetween,
-              crossAxisAlignment: WrapCrossAlignment.center,
+              alignment: WrapAlignment.center,
               spacing: 10,
               runSpacing: 10,
               children: [
                 OutlinedButton.icon(
-                  onPressed: () => _readTeaching(skill, page),
+                  onPressed: () => _readTeaching(skill, 2),
                   icon: const Icon(Icons.volume_up_rounded),
-                  label: const Text('Read this to me'),
+                  label: const Text('Hear it'),
                 ),
                 FilledButton.icon(
-                  onPressed: _returnToBoard,
-                  icon: const Icon(Icons.grid_view_rounded),
-                  label: const Text('Choose a game'),
+                  onPressed: recommended == null
+                      ? _returnToBoard
+                      : () => _openActivity(
+                            activities: activities,
+                            activity: recommended,
+                          ),
+                  icon: const Icon(Icons.play_arrow_rounded),
+                  label: const Text('Play Now'),
+                  style: FilledButton.styleFrom(
+                    minimumSize: const Size(150, 52),
+                    textStyle: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -317,8 +339,26 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
         manual: true,
       );
 
-  Widget _buildActivityPage(NurserySkill skill, NurseryActivity activity) {
+  Widget _buildActivityPage(
+    NurserySkill skill,
+    NurseryActivity activity,
+    List<NurseryActivity> activities,
+    Set<String> completedActivityIds,
+  ) {
+    final activityIndex =
+        activities.indexWhere((item) => item.id == activity.id);
+    final safeIndex = activityIndex < 0 ? 0 : activityIndex;
+    final simpleTitle = nurserySimpleGameLabel(
+      activity,
+      safeIndex,
+      activities.length,
+    );
     final portalStyle = nurseryPortalStyleFor(skill, activity);
+    final nextActivity = nurseryNextUnplayedActivity(
+      activities,
+      completedActivityIds,
+      activity,
+    );
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -326,25 +366,12 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _GameSceneBanner(
-              title: portalStyle.title,
-              subtitle: portalStyle.subtitle,
+              title: simpleTitle,
+              subtitle: nurserySimpleGameHint(activity),
               emoji: portalStyle.emoji,
               reducedMotion: BrightQuestScope.of(context).reducedMotionEnabled,
             ),
             const SizedBox(height: 14),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                Chip(label: Text(_phaseLabel(activity.phase))),
-                if (activity.isTrace)
-                  const Chip(
-                      label: Text('Motor practice · not handwriting scoring')),
-                if (!activity.masteryEligible)
-                  const Chip(label: Text('Does not add mastery')),
-              ],
-            ),
-            const SizedBox(height: 12),
             Text(
               activity.prompt,
               textAlign: TextAlign.center,
@@ -354,13 +381,13 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
             ),
             const SizedBox(height: 10),
             Center(
-              child: OutlinedButton.icon(
+              child: IconButton.filledTonal(
+                tooltip: 'Hear the question',
                 onPressed: () => _readActivity(activity),
-                icon: const Icon(Icons.record_voice_over_rounded),
-                label: const Text('Hear instruction and choices'),
+                icon: const Icon(Icons.volume_up_rounded),
               ),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 16),
             NurseryActivityInteraction(
               key: ValueKey('${activity.id}:$_retries:$_hintLevel'),
               activity: activity,
@@ -384,7 +411,10 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
                   child: Text(
                     _feedback!,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontWeight: FontWeight.w800),
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                 ),
               ),
@@ -398,9 +428,9 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
             if (_hintLevel > 0 && !_correct) ...[
               const SizedBox(height: 10),
               Text(
-                'Hint: ${activity.hint}',
+                '💡 ${activity.hint}',
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.w700),
+                style: const TextStyle(fontWeight: FontWeight.w800),
               ),
             ],
             if (_correct && !activity.isTrace) ...[
@@ -417,23 +447,36 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
               ),
             ],
             const SizedBox(height: 16),
-            Wrap(
-              alignment: WrapAlignment.spaceBetween,
-              spacing: 10,
-              runSpacing: 10,
-              children: [
-                TextButton.icon(
-                  onPressed: _correct ? null : () => _useHint(activity),
+            if (!_correct)
+              Center(
+                child: TextButton.icon(
+                  onPressed: () => _useHint(activity),
                   icon: const Icon(Icons.lightbulb_outline_rounded),
-                  label: const Text('Give me a hint'),
+                  label: const Text('Help'),
                 ),
-                FilledButton.icon(
-                  onPressed: _correct ? _returnToBoard : null,
-                  icon: const Icon(Icons.grid_view_rounded),
-                  label: const Text('Back to play board'),
+              )
+            else
+              FilledButton.icon(
+                onPressed: nextActivity == null
+                    ? _returnToBoard
+                    : () => _openActivity(
+                          activities: activities,
+                          activity: nextActivity,
+                        ),
+                icon: Icon(
+                  nextActivity == null
+                      ? Icons.celebration_rounded
+                      : Icons.navigate_next_rounded,
                 ),
-              ],
-            ),
+                label: Text(nextActivity == null ? 'Done!' : 'Next Game'),
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size.fromHeight(54),
+                  textStyle: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -480,7 +523,7 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
       if (mounted) {
         setState(() {
           _correct = true;
-          _feedback = activity.successFeedback;
+          _feedback = 'Great job! ⭐';
           _answerLocked = false;
         });
       }
@@ -497,7 +540,7 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
       if (mounted) {
         setState(() {
           _retries += 1;
-          _feedback = '${activity.wrongFeedback} Try again.';
+          _feedback = 'Almost! Try again.';
           _answerLocked = false;
         });
       }
@@ -544,7 +587,7 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
       if (mounted) {
         setState(() {
           _correct = true;
-          _feedback = 'Great review! ${practice.explanation}';
+          _feedback = 'Great remembering! ⭐';
           _answerLocked = false;
         });
       }
@@ -559,7 +602,7 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
       if (mounted) {
         setState(() {
           _retries += 1;
-          _feedback = 'Good try. Look or listen once more, then try again.';
+          _feedback = 'Almost! Try again.';
           _answerLocked = false;
         });
       }
@@ -630,7 +673,7 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
       if (_pageIndex < 0) {
         unawaited(
           BrightAudioService.instance.speak(
-            'Choose your adventure. Tap a game world to play, or open the discovery zone.',
+            'Let’s play. Tap Play Now, or tap Learn First.',
           ),
         );
       } else if (_pageIndex == 0) {
@@ -725,77 +768,6 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
         'review' => LearningAttemptKind.review,
         _ => LearningAttemptKind.independent,
       };
-
-  static String _phaseLabel(String phase) => switch (phase) {
-        'guided' => 'Try it with me',
-        'independent' => 'Now you try',
-        'transfer' => 'Use it a new way',
-        'practice' => 'Practice',
-        'review' => 'Review',
-        _ => phase,
-      };
-}
-
-class _DiscoveryPortalSelector extends StatelessWidget {
-  const _DiscoveryPortalSelector({
-    required this.selectedPage,
-    required this.onSelected,
-  });
-
-  final int selectedPage;
-  final ValueChanged<int> onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    const items = <(String, String, IconData)>[
-      ('Mission', '🎯', Icons.flag_rounded),
-      ('Magic clue', '✨', Icons.auto_awesome_rounded),
-      ('Show me', '🎬', Icons.play_circle_fill_rounded),
-    ];
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 10,
-      runSpacing: 10,
-      children: [
-        for (var index = 0; index < items.length; index += 1)
-          Semantics(
-            button: true,
-            selected: selectedPage == index,
-            label: '${items[index].$1} discovery card',
-            child: Material(
-              color: selectedPage == index
-                  ? Theme.of(context).colorScheme.primaryContainer
-                  : Theme.of(context).colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(18),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(18),
-                onTap: () => onSelected(index),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 12,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(items[index].$2,
-                          style: const TextStyle(fontSize: 24)),
-                      const SizedBox(width: 7),
-                      Icon(items[index].$3, size: 20),
-                      const SizedBox(width: 6),
-                      Text(
-                        items[index].$1,
-                        style: const TextStyle(fontWeight: FontWeight.w900),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-      ],
-    );
-  }
 }
 
 class _GameSceneBanner extends StatelessWidget {
@@ -896,7 +868,11 @@ class _ReviewBody extends StatelessWidget {
                 padding: const EdgeInsets.all(22),
                 child: Column(
                   children: [
-                    const Chip(label: Text('Delayed review')),
+                    const Text(
+                      '⭐ Memory Game',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+                    ),
                     const SizedBox(height: 10),
                     Text(
                       practice.prompt,
@@ -922,7 +898,7 @@ class _ReviewBody extends StatelessWidget {
                     OutlinedButton.icon(
                       onPressed: onRead,
                       icon: const Icon(Icons.volume_up_rounded),
-                      label: const Text('Read this to me'),
+                      label: const Text('Hear it'),
                     ),
                     const SizedBox(height: 16),
                     Wrap(
@@ -959,7 +935,7 @@ class _ReviewBody extends StatelessWidget {
                     if (hintVisible && !correct) ...[
                       const SizedBox(height: 8),
                       Text(
-                        'Hint: ${practice.explanation}',
+                        '💡 ${practice.explanation}',
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -972,7 +948,7 @@ class _ReviewBody extends StatelessWidget {
                         TextButton.icon(
                           onPressed: correct ? null : onHint,
                           icon: const Icon(Icons.lightbulb_outline_rounded),
-                          label: const Text('Hint'),
+                          label: const Text('Help'),
                         ),
                         FilledButton(
                           onPressed: onDone,

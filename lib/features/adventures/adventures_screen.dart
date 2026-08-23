@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../../app/brightquest_scope.dart';
 import '../../core/curriculum/curriculum_catalog.dart';
 import '../../core/curriculum/curriculum_models.dart';
+import '../../core/curriculum/world_mission_catalog.dart';
 import '../../core/models/game_models.dart';
+import '../../core/session/game_session_models.dart';
 import '../../widgets/bright_design_system.dart';
 import '../../widgets/bright_motion.dart';
 import '../../widgets/bright_widgets.dart';
@@ -36,42 +38,69 @@ class AdventuresScreen extends StatelessWidget {
               ),
             ),
           ),
+          if (controller.resumableGameSessions.isNotEmpty)
+            SliverToBoxAdapter(
+              child: BrightResponsive(
+                padding: const EdgeInsets.fromLTRB(18, 8, 18, 10),
+                builder: (context, _) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    BrightSectionTitle(
+                      title: 'Saved missions',
+                      subtitle: controller.resumableGameSessions.length == 1
+                          ? 'Continue this mission whenever you are ready.'
+                          : '${controller.resumableGameSessions.length} missions are safely paused. You can resume any one.',
+                      icon: Icons.restore_rounded,
+                    ),
+                    const SizedBox(height: 10),
+                    for (final session in controller.resumableGameSessions) ...[
+                      _ResumeMissionCard(
+                        session: session,
+                        onResume: () => resumeGameSession(context, session),
+                        onDiscard: () => controller.discardGameSession(session),
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ],
+                ),
+              ),
+            ),
           SliverToBoxAdapter(
             child: BrightResponsive(
               padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
               builder: (context, _) => const BrightSectionTitle(
                 title: 'Choose a world',
                 subtitle:
-                    'Practice → Challenge → Mastery. Follow the glowing path and collect every star.',
+                    'Each world has its own mission route, challenge trials and a mastery boss.',
                 icon: Icons.auto_awesome_rounded,
               ),
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(18, 0, 18, 22),
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 390,
-                mainAxisExtent: 230,
-                crossAxisSpacing: 14,
-                mainAxisSpacing: 14,
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final world = learningWorlds[index];
-                  return _WorldCard(
-                    world: world,
-                    completed:
-                        controller.completedLevelsForSubject(world.subject),
-                    total: controller.totalLevelsForSubject(world.subject),
-                    stars: controller.starsForSubject(world.subject),
-                    progress: controller.progressForSubject(world.subject),
-                    onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                            builder: (_) => LearningWorldScreen(world: world))),
-                  );
-                },
-                childCount: learningWorlds.length,
+          SliverToBoxAdapter(
+            child: BrightResponsive(
+              padding: const EdgeInsets.fromLTRB(18, 0, 18, 22),
+              builder: (context, _) => BrightAdaptiveGrid(
+                minChildWidth: 300,
+                maxColumns: 4,
+                children: [
+                  for (final world in learningWorlds)
+                    SizedBox(
+                      height: 238,
+                      child: _WorldCard(
+                        world: world,
+                        completed:
+                            controller.completedLevelsForSubject(world.subject),
+                        total: controller.totalLevelsForSubject(world.subject),
+                        stars: controller.starsForSubject(world.subject),
+                        progress: controller.progressForSubject(world.subject),
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => LearningWorldScreen(world: world),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
@@ -86,28 +115,35 @@ class AdventuresScreen extends StatelessWidget {
               ),
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(18, 0, 18, 30),
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 300,
-                mainAxisExtent: 198,
-                crossAxisSpacing: 14,
-                mainAxisSpacing: 14,
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final game = games[index];
-                  return AdventureCard(
-                    game: game,
-                    progress: controller.progressFor(game.id),
-                    badgeText: game.id == 'rewards_room'
-                        ? 'Rewards'
-                        : 'Adaptive D${controller.recommendedDifficulty(game.id)}',
-                    onTap: () => openGame(context, game.id),
-                  );
-                },
-                childCount: games.length,
+          SliverToBoxAdapter(
+            child: BrightResponsive(
+              padding: const EdgeInsets.fromLTRB(18, 0, 18, 30),
+              builder: (context, _) => BrightAdaptiveGrid(
+                minChildWidth: 235,
+                maxColumns: 5,
+                children: [
+                  for (final game in games)
+                    SizedBox(
+                      height: 214,
+                      child: AdventureCard(
+                        game: game,
+                        progress: controller.progressFor(game.id),
+                        badgeText: game.id == 'rewards_room'
+                            ? 'Rewards'
+                            : controller.gameSessionFor(
+                                      gameId: game.id,
+                                      classNumber: controller.selectedClass,
+                                    ) !=
+                                    null
+                                ? 'Resume D${controller.gameSessionFor(
+                                      gameId: game.id,
+                                      classNumber: controller.selectedClass,
+                                    )!.difficulty}'
+                                : 'Adaptive D${controller.recommendedDifficulty(game.id)}',
+                        onTap: () => openGame(context, game.id),
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
@@ -117,13 +153,122 @@ class AdventuresScreen extends StatelessWidget {
   }
 }
 
+class _ResumeMissionCard extends StatelessWidget {
+  const _ResumeMissionCard({
+    required this.session,
+    required this.onResume,
+    required this.onDiscard,
+  });
+
+  final GameSessionCheckpoint session;
+  final VoidCallback onResume;
+  final VoidCallback onDiscard;
+
+  @override
+  Widget build(BuildContext context) {
+    final level = session.learningLevelId == null
+        ? null
+        : learningLevelById(session.learningLevelId!);
+    final stageLabel = switch (session.stage) {
+      GameSessionStage.lesson => 'Learning mission',
+      GameSessionStage.game => 'Game in progress',
+      GameSessionStage.completing => 'Finishing safely',
+      GameSessionStage.result => 'Mission result saved',
+    };
+    final title = level?.title ?? _friendlyGameName(session.gameId);
+    final progress =
+        session.maxScore <= 0 ? null : '${session.score}/${session.maxScore}';
+    return Semantics(
+      container: true,
+      label: 'Resume $title. $stageLabel.',
+      child: Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFFEEF2FF), Color(0xFFE8FBF2)],
+          ),
+          borderRadius: BorderRadius.circular(26),
+          border: Border.all(color: const Color(0xFFB9C8F6)),
+        ),
+        child: Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 14,
+          runSpacing: 12,
+          children: [
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 560),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const BrightPill(
+                    icon: Icons.restore_rounded,
+                    label: 'MISSION SAVED',
+                    color: Color(0xFF3151B8),
+                    background: Color(0xFFDCE5FF),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    progress == null
+                        ? '$stageLabel • Continue where you stopped.'
+                        : '$stageLabel • Saved score $progress',
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                ],
+              ),
+            ),
+            Wrap(
+              spacing: 8,
+              children: [
+                TextButton.icon(
+                  onPressed: onDiscard,
+                  icon: const Icon(Icons.delete_outline_rounded),
+                  label: const Text('Discard'),
+                ),
+                FilledButton.icon(
+                  key: Key('resume_saved_mission_${session.slotKey}'),
+                  onPressed: onResume,
+                  icon: const Icon(Icons.play_arrow_rounded),
+                  label: const Text('Resume'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _friendlyGameName(String gameId) => switch (gameId) {
+        'math_market' => 'Math Market',
+        'fraction_pizza' => 'Fraction Pizza',
+        'science_lab' => 'Science Lab',
+        'story_builder' => 'Story Builder',
+        'grammar_puzzle' => 'Grammar Puzzle',
+        'map_quest' => 'Map Quest',
+        'coding_maze' => 'Coding Maze',
+        'recycling_challenge' => 'Recycling Challenge',
+        _ => 'Saved mission',
+      };
+}
+
 class _PathOverview extends StatelessWidget {
-  const _PathOverview(
-      {required this.classNumber,
-      required this.completed,
-      required this.total,
-      required this.stars,
-      required this.progress});
+  const _PathOverview({
+    required this.classNumber,
+    required this.completed,
+    required this.total,
+    required this.stars,
+    required this.progress,
+  });
   final int classNumber;
   final int completed;
   final int total;
@@ -137,75 +282,200 @@ class _PathOverview extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(colors: [
-              Color(0xFF4D67DB),
-              Color(0xFF45A8EE),
-              Color(0xFF62CA9C)
-            ]),
-            borderRadius: BorderRadius.circular(30),
+            gradient: const LinearGradient(
+              colors: [
+                Color(0xFF4D67DB),
+                Color(0xFF5C63E8),
+                Color(0xFF42A8E9),
+                Color(0xFF63C99D),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(32),
+            border: Border.all(
+                color: Colors.white.withValues(alpha: .55), width: 2),
             boxShadow: const [
               BoxShadow(
-                  color: Color(0x244D67DB),
-                  blurRadius: 26,
-                  offset: Offset(0, 10))
+                color: Color(0x284D67DB),
+                blurRadius: 28,
+                offset: Offset(0, 11),
+              ),
             ],
           ),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final compact = constraints.maxWidth < 600;
-              final details = Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  BrightPill(
-                      icon: Icons.school_rounded,
-                      label: 'CLASS $classNumber MAP',
-                      color: const Color(0xFF765500),
-                      background: const Color(0xFFFFE898)),
-                  const SizedBox(height: 10),
-                  Text('Your Adventure Map',
-                      style: TextStyle(
+          child: Stack(
+            children: [
+              const Positioned(
+                right: -18,
+                top: -24,
+                child: Icon(Icons.auto_awesome_rounded,
+                    size: 120, color: Color(0x12FFFFFF)),
+              ),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final compact = constraints.maxWidth < 680;
+                  final details = Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BrightPill(
+                        icon: Icons.school_rounded,
+                        label: 'CLASS $classNumber ADVENTURE',
+                        color: const Color(0xFF765500),
+                        background: const Color(0xFFFFE898),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Your Adventure Map',
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: compact ? 25 : 31,
-                          fontWeight: FontWeight.w900)),
-                  const SizedBox(height: 4),
-                  Text(
-                      'Clear stages, earn stars and unlock mastery checkpoints.',
-                      style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Clear stages, earn stars and unlock mastery checkpoints.',
+                        style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.9),
-                          fontWeight: FontWeight.w700)),
-                  const SizedBox(height: 14),
-                  BrightAnimatedProgress(
-                      value: progress,
-                      minHeight: 10,
-                      backgroundColor: Colors.white.withValues(alpha: 0.24),
-                      color: Colors.white),
-                  const SizedBox(height: 9),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      _WhiteChip(
-                          icon: Icons.flag_rounded,
-                          text: '$completed/$total levels'),
-                      _WhiteChip(
-                          icon: Icons.star_rounded,
-                          text: '$stars/${total * 3} stars'),
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      _JourneyProgress(progress: progress),
+                      const SizedBox(height: 10),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          _WhiteChip(
+                            icon: Icons.flag_rounded,
+                            text: '$completed/$total levels',
+                          ),
+                          _WhiteChip(
+                            icon: Icons.star_rounded,
+                            text: '$stars/${total * 3} stars',
+                          ),
+                        ],
+                      ),
                     ],
-                  ),
-                ],
-              );
-              if (compact) return details;
-              return Row(
-                children: [
-                  Expanded(child: details),
-                  const SizedBox(width: 18),
-                  const Text('🦁🗺️', style: TextStyle(fontSize: 78)),
-                ],
-              );
-            },
+                  );
+                  if (compact) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        details,
+                        const SizedBox(height: 12),
+                        const Align(
+                          alignment: Alignment.centerRight,
+                          child: Text('🦁🗺️✨', style: TextStyle(fontSize: 42)),
+                        ),
+                      ],
+                    );
+                  }
+                  return Row(
+                    children: [
+                      Expanded(flex: 7, child: details),
+                      const SizedBox(width: 18),
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          height: 150,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: .10),
+                            borderRadius: BorderRadius.circular(26),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: .14),
+                            ),
+                          ),
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('🦁', style: TextStyle(fontSize: 62)),
+                              SizedBox(height: 2),
+                              Text(
+                                'Follow the glowing trail!',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ],
           ),
         ),
       );
+}
+
+class _JourneyProgress extends StatelessWidget {
+  const _JourneyProgress({required this.progress});
+  final double progress;
+
+  @override
+  Widget build(BuildContext context) {
+    final value = progress.clamp(0.0, 1.0).toDouble();
+    return Column(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(99),
+          child: BrightAnimatedProgress(
+            value: value,
+            minHeight: 11,
+            backgroundColor: Colors.white.withValues(alpha: .22),
+            color: const Color(0xFFFFE36F),
+          ),
+        ),
+        const SizedBox(height: 7),
+        Row(
+          children: List<Widget>.generate(5, (index) {
+            final threshold = index / 4;
+            final reached = value >= threshold;
+            return Expanded(
+              child: Row(
+                children: [
+                  Container(
+                    width: 19,
+                    height: 19,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: reached
+                          ? const Color(0xFFFFE36F)
+                          : Colors.white.withValues(alpha: .22),
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 1.4),
+                    ),
+                    child: Icon(
+                      reached ? Icons.star_rounded : Icons.circle,
+                      color: reached
+                          ? const Color(0xFF7B5600)
+                          : Colors.white.withValues(alpha: .72),
+                      size: reached ? 12 : 6,
+                    ),
+                  ),
+                  if (index != 4)
+                    Expanded(
+                      child: Container(
+                        height: 2,
+                        color: Colors.white.withValues(alpha: .18),
+                      ),
+                    ),
+                ],
+              ),
+            );
+          }),
+        ),
+      ],
+    );
+  }
 }
 
 class _WhiteChip extends StatelessWidget {
@@ -256,6 +526,7 @@ class _WorldCardState extends State<_WorldCard> {
   @override
   Widget build(BuildContext context) {
     final palette = paletteForSubject(widget.world.subject);
+    final identity = WorldMissionCatalog.identityFor(widget.world.subject);
     final complete = widget.total > 0 && widget.completed == widget.total;
     return MouseRegion(
       onEnter: (_) => setState(() => hovered = true),
@@ -298,6 +569,18 @@ class _WorldCardState extends State<_WorldCard> {
                       ],
                     ),
                     const Spacer(),
+                    Text(
+                      identity.journeyTitle.toUpperCase(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: .76),
+                        fontWeight: FontWeight.w900,
+                        fontSize: 9,
+                        letterSpacing: .7,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
                     Text(widget.world.title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

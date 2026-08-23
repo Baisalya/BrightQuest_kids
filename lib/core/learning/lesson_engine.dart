@@ -2,6 +2,9 @@ import '../content/content_activity.dart';
 import '../content/content_repository.dart';
 import '../curriculum/content_contract.dart';
 import '../curriculum/curriculum_models.dart';
+import 'activity_response_evaluator.dart';
+import 'contextual_feedback_engine.dart';
+import 'gameplay_activity_resolver.dart';
 
 /// The teaching sequence deliberately separates explanation from assessment.
 enum LessonStepKind {
@@ -79,14 +82,23 @@ class LessonEngine {
       difficulty: level.difficulty,
     );
     final levelCandidates = gameCandidates
-        .where((activity) => activity.difficulty == level.difficulty)
+        .where(
+          (activity) =>
+              activity.difficulty == level.difficulty &&
+              !_isFallbackExperiment(activity),
+        )
         .toList(growable: false);
-    final candidates =
-        levelCandidates.isEmpty ? gameCandidates : levelCandidates;
+    if (levelCandidates.isEmpty) {
+      throw StateError(
+        'No ${level.gameId} activity is authored for ${level.id} at '
+        'difficulty ${level.difficulty}.',
+      );
+    }
     return buildForCompetency(
       repository: repository,
       classNumber: level.classNumber,
-      competencyId: candidates.first.competencyId,
+      competencyId: levelCandidates.first.competencyId,
+      targetDifficulty: level.difficulty,
     );
   }
 
@@ -94,6 +106,7 @@ class LessonEngine {
     required ContentRepository repository,
     required int classNumber,
     required String competencyId,
+    int? targetDifficulty,
   }) {
     final contract = repository.curriculum.classPack(classNumber);
     if (contract == null) {
@@ -114,7 +127,7 @@ class LessonEngine {
 
     final blueprint = repository.learningBlueprintForCompetency(competencyId);
 
-    final activities = repository
+    final allActivities = repository
         .activitiesForClass(classNumber)
         .where(
           (activity) =>
@@ -128,25 +141,79 @@ class LessonEngine {
         return difficulty != 0 ? difficulty : a.id.compareTo(b.id);
       });
 
-    final example = activities.isEmpty ? null : activities.first;
+    // Learning World levels are capped at their authored difficulty. The old
+    // competency flow intentionally remains broad for direct Skill Studio use.
+    final cappedActivities = targetDifficulty == null
+        ? allActivities
+        : allActivities
+            .where((activity) => activity.difficulty <= targetDifficulty)
+            .toList(growable: false);
+    if (targetDifficulty != null && cappedActivities.isEmpty) {
+      throw StateError(
+        'No $competencyId activity is authored at or below difficulty '
+        '$targetDifficulty.',
+      );
+    }
+    final activities = cappedActivities;
+    final targetActivities = targetDifficulty == null
+        ? const <ContentActivity>[]
+        : activities
+            .where((activity) => activity.difficulty == targetDifficulty)
+            .toList(growable: false);
+    if (targetDifficulty != null && targetActivities.isEmpty) {
+      throw StateError(
+        'No $competencyId activity is authored at target difficulty '
+        '$targetDifficulty.',
+      );
+    }
+
+    final example = targetDifficulty == null
+        ? (activities.isEmpty ? null : activities.first)
+        : _teachingExample(activities, targetDifficulty);
+    final guidedActivity = example;
     final blueprintActivities = blueprint?.independentSourceActivityIds
             .map(repository.activityById)
             .whereType<ContentActivity>()
             .where(activities.contains)
             .toList(growable: false) ??
         const <ContentActivity>[];
-    final independent = blueprintActivities.isNotEmpty
-        ? blueprintActivities.first
-        : activities.isEmpty
-            ? null
-            : activities[activities.length ~/ 2];
-    final transfer = activities.length < 2 ? independent : activities.last;
+    final targetBlueprintActivities = targetDifficulty == null
+        ? blueprintActivities
+        : blueprintActivities
+            .where((activity) => activity.difficulty == targetDifficulty)
+            .toList(growable: false);
+    final independent = targetDifficulty == null
+        ? (blueprintActivities.isNotEmpty
+            ? blueprintActivities.first
+            : activities.isEmpty
+                ? null
+                : activities[activities.length ~/ 2])
+        : (targetBlueprintActivities.firstOrNull ??
+            targetActivities.firstOrNull);
+    final transfer = targetDifficulty == null
+        ? (activities.length < 2 ? independent : activities.last)
+        : (targetActivities
+                .where((activity) => activity.id != independent?.id)
+                .firstOrNull ??
+            independent);
     ContentActivity? exitTicket;
-    for (final candidate in activities.reversed) {
-      if (candidate.id != independent?.id && candidate.id != transfer?.id) {
-        exitTicket = candidate;
-        break;
+    if (targetDifficulty == null) {
+      for (final candidate in activities.reversed) {
+        if (candidate.id != independent?.id && candidate.id != transfer?.id) {
+          exitTicket = candidate;
+          break;
+        }
       }
+    } else {
+      exitTicket = targetActivities
+              .where(
+                (activity) =>
+                    activity.id != independent?.id &&
+                    activity.id != transfer?.id,
+              )
+              .firstOrNull ??
+          independent ??
+          transfer;
     }
     exitTicket ??= independent ?? transfer ?? example;
     final objective = blueprint?.objective ?? competency.objective;
@@ -180,9 +247,9 @@ class LessonEngine {
         kind: LessonStepKind.guidedTry,
         title: 'Try it with a clue',
         body: blueprint?.guidedPrompt ??
-            example?.prompt ??
+            guidedActivity?.prompt ??
             'Explain one small example of this idea in your own words.',
-        activityId: example?.id,
+        activityId: guidedActivity?.id,
         hints: <String>[conceptualHint, workedHint],
       ),
       LessonStep(
@@ -258,23 +325,49 @@ class LessonEngine {
     );
   }
 
+  /// Backward-compatible text boundary for callers that still ask the lesson
+  /// engine for response copy. The contextual feedback engine is the single
+  /// coaching implementation; this method no longer maintains a second
+  /// misconception/answer-reveal policy.
   String feedbackFor({
     required ContentActivity activity,
     required bool correct,
     Object? selectedAnswer,
   }) {
-    if (correct) {
-      return 'Yes. ${activity.explanation}';
-    }
-    String? misconceptionId;
-    for (final distractor in activity.distractors) {
-      if (distractor.value == selectedAnswer) {
-        misconceptionId = distractor.misconceptionId;
-        break;
-      }
-    }
-    final misconception = _plainMisconception(misconceptionId);
-    return '$misconception ${activity.explanation}'.trim();
+    const evaluator = ActivityResponseEvaluator();
+    const resolver = GameplayActivityResolver();
+    const feedbackEngine = ContextualFeedbackEngine();
+    final evaluation = correct
+        ? ActivityEvaluation(correct: true, response: selectedAnswer)
+        : evaluator.evaluate(activity, selectedAnswer);
+    final feedback = feedbackEngine.build(
+      activity: activity,
+      spec: resolver.resolve(activity),
+      evaluation: evaluation,
+      attemptNumber: 1,
+      revealedHintCount: 0,
+      hasUnrevealedHint: activity.hints.isNotEmpty,
+      rescueAvailable: true,
+    );
+    return <String>[feedback.message, feedback.strategy]
+        .where((text) => text.trim().isNotEmpty)
+        .join(' ');
+  }
+
+  bool _isFallbackExperiment(ContentActivity activity) =>
+      activity.correctResponseRule['type'] == 'experimentOutcome' &&
+      activity.payload['fallback'] == true;
+
+  ContentActivity? _teachingExample(
+    List<ContentActivity> activities,
+    int targetDifficulty,
+  ) {
+    if (activities.isEmpty) return null;
+    final lower = activities
+        .where((activity) => activity.difficulty < targetDifficulty)
+        .toList(growable: false);
+    if (lower.isNotEmpty) return lower.last;
+    return activities.first;
   }
 
   String _explanation(
@@ -316,24 +409,5 @@ class LessonEngine {
         ? 'Use a smaller or more concrete example.'
         : 'Return to this example: ${activity.prompt}';
     return '$exampleText Point to the important information, say the rule aloud, then try one changed example. Goal: $objective';
-  }
-
-  String _plainMisconception(String? id) {
-    if (id == null || id.isEmpty) {
-      return 'That answer does not fit the rule yet. Compare it with the important information in the question.';
-    }
-    if (id.contains('arithmetic')) {
-      return 'A calculation step may have changed the value. Check the operation and each place-value step.';
-    }
-    if (id.contains('direction')) {
-      return 'The direction may have been read from the wrong starting point. Face the starting direction first.';
-    }
-    if (id.contains('grammar')) {
-      return 'The word may be doing a different job in this sentence. Check what the word names, does, or describes.';
-    }
-    if (id.contains('fraction')) {
-      return 'The whole may not have been split into equal parts. Check the size and number of equal pieces.';
-    }
-    return 'This choice matches a common mix-up. Re-read the clue and explain why each part of your answer fits.';
   }
 }

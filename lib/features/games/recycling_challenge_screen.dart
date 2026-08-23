@@ -6,6 +6,7 @@ import '../../core/curriculum/curriculum_models.dart';
 import '../../core/learning/game_evidence_adapter.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
+import '../../core/session/game_session_models.dart';
 import '../../widgets/bright_widgets.dart';
 
 class RecyclingChallengeScreen extends StatefulWidget {
@@ -28,6 +29,8 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
   MissionReward? missionReward;
   int _difficulty = 1;
   int _classNumber = 4;
+  int _attemptSerial = 0;
+  bool _answerInFlight = false;
   bool _sessionConfigured = false;
 
   @override
@@ -37,60 +40,94 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
     final controller = BrightQuestScope.of(context);
     _classNumber =
         widget.learningLevel?.classNumber ?? controller.selectedClass;
-    _difficulty = widget.learningLevel?.difficulty ??
-        controller.recommendedDifficulty('recycling_challenge');
+    _difficulty = controller.resumableDifficulty(
+      gameId: 'recycling_challenge',
+      classNumber: _classNumber,
+      fallbackDifficulty: widget.learningLevel?.difficulty ??
+          controller.recommendedDifficulty('recycling_challenge'),
+      learningLevelId: widget.learningLevel?.id,
+    );
+    final items = BrightQuestScope.contentOf(context)
+        .recyclingItemsForClass(_classNumber, difficulty: _difficulty);
+    final checkpoint = controller.beginOrResumeGameSession(
+      gameId: 'recycling_challenge',
+      classNumber: _classNumber,
+      difficulty: _difficulty,
+      maxScore: items.length,
+      learningLevel: widget.learningLevel,
+    );
+    index = checkpoint.cursor.clamp(0, items.length - 1).toInt();
+    score = checkpoint.score.clamp(0, items.length).toInt();
+    selectedBin = checkpoint.data['selectedBin'] as String?;
+    correct = checkpoint.data['correct'] as bool?;
+    _attemptSerial = (checkpoint.data['attemptSerial'] as num?)?.toInt() ?? 0;
+    if (checkpoint.stage == GameSessionStage.result &&
+        checkpoint.reward != null) {
+      finished = true;
+      missionReward = checkpoint.reward!.toReward();
+    }
     _sessionConfigured = true;
   }
 
-  void _choose(String bin, RecyclingItem item) {
-    if (selectedBin != null || finished) return;
-    final isCorrect = bin == item.bin;
-    final controller = BrightQuestScope.of(context);
-    final adapter = const GameEvidenceAdapter();
-    final activity = adapter.resolve(
-      repository: BrightQuestScope.contentOf(context),
-      classNumber: _classNumber,
-      gameId: 'recycling_challenge',
-      legacyContentId: item.id,
-    );
-    controller.recordAnswer(
-      gameId: 'recycling_challenge',
-      correct: isCorrect,
-      topicId: item.topicId,
-      difficulty: item.difficulty,
-      masteryGain: 0.05,
-      itemId: activity?.id,
-      competencyId: activity?.competencyId,
-      evidenceKind: adapter.kindFor(widget.learningLevel),
-      responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
-      misconceptionId:
-          isCorrect ? null : adapter.misconceptionFor(activity, bin),
-      confidence: 0.84,
-    );
-    final chosen = '${item.name} in the $bin bin';
-    if (isCorrect) {
-      FeedbackService.correct(controller, answer: chosen);
-    } else {
-      FeedbackService.wrong(
-        controller,
-        answer: chosen,
-        correctAnswer: '${item.bin} bin',
-        guidance:
-            'For this practice, sort by the example material group. Real local recycling rules can differ.',
+  Future<void> _choose(String bin, RecyclingItem item) async {
+    if (selectedBin != null || finished || _answerInFlight) return;
+    _answerInFlight = true;
+    try {
+      final isCorrect = bin == item.bin;
+      final controller = BrightQuestScope.of(context);
+      final adapter = const GameEvidenceAdapter();
+      final activity = adapter.resolve(
+        repository: BrightQuestScope.contentOf(context),
+        classNumber: _classNumber,
+        gameId: 'recycling_challenge',
+        legacyContentId: item.id,
       );
+      await controller.recordAnswerSafely(
+        gameId: 'recycling_challenge',
+        learningLevel: widget.learningLevel,
+        correct: isCorrect,
+        attemptMarker: 'answer:$_attemptSerial:$bin',
+        topicId: item.topicId,
+        difficulty: item.difficulty,
+        masteryGain: 0.05,
+        itemId: activity?.id,
+        competencyId: activity?.competencyId,
+        evidenceKind: adapter.kindFor(widget.learningLevel),
+        responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
+        misconceptionId:
+            isCorrect ? null : adapter.misconceptionFor(activity, bin),
+        confidence: 0.84,
+      );
+      if (!mounted) return;
+      _attemptSerial += 1;
+      final chosen = '${item.name} in the $bin bin';
+      if (isCorrect) {
+        FeedbackService.correct(controller, answer: chosen);
+      } else {
+        FeedbackService.wrong(
+          controller,
+          answer: chosen,
+          correctAnswer: '${item.bin} bin',
+          guidance:
+              'For this practice, sort by the example material group. Real local recycling rules can differ.',
+        );
+      }
+      setState(() {
+        selectedBin = bin;
+        correct = isCorrect;
+        if (isCorrect) score += 1;
+      });
+      _checkpoint();
+    } finally {
+      _answerInFlight = false;
     }
-    setState(() {
-      selectedBin = bin;
-      correct = isCorrect;
-      if (isCorrect) score += 1;
-    });
   }
 
-  void _next(List<RecyclingItem> items, int classNumber) {
+  Future<void> _next(List<RecyclingItem> items, int classNumber) async {
     if (selectedBin == null) return;
     if (index == items.length - 1) {
       final controller = BrightQuestScope.of(context);
-      final reward = controller.completeRun(
+      final reward = await controller.completeRunSafely(
         gameId: 'recycling_challenge',
         fallbackMissionId:
             'recycling_challenge:c$classNumber:d$_difficulty:core_run',
@@ -98,6 +135,7 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
         score: score,
         maxScore: items.length,
       );
+      if (!mounted) return;
       FeedbackService.complete(controller, reward: reward);
       setState(() {
         finished = true;
@@ -111,18 +149,48 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
       correct = null;
       _itemStarted = DateTime.now();
     });
+    _checkpoint();
   }
 
   void _restart() {
+    final items = BrightQuestScope.contentOf(context)
+        .recyclingItemsForClass(_classNumber, difficulty: _difficulty);
+    BrightQuestScope.of(context).restartActiveGameSession(
+      gameId: 'recycling_challenge',
+      classNumber: _classNumber,
+      difficulty: _difficulty,
+      maxScore: items.length,
+      learningLevel: widget.learningLevel,
+    );
     setState(() {
       index = 0;
       score = 0;
+      _attemptSerial = 0;
       selectedBin = null;
       correct = null;
       _itemStarted = DateTime.now();
       finished = false;
       missionReward = null;
     });
+  }
+
+  void _checkpoint() {
+    final items = BrightQuestScope.contentOf(context)
+        .recyclingItemsForClass(_classNumber, difficulty: _difficulty);
+    BrightQuestScope.of(context).checkpointGameSession(
+      gameId: 'recycling_challenge',
+      classNumber: _classNumber,
+      difficulty: _difficulty,
+      cursor: index,
+      score: score,
+      maxScore: items.length,
+      learningLevel: widget.learningLevel,
+      data: <String, Object?>{
+        'attemptSerial': _attemptSerial,
+        if (selectedBin != null) 'selectedBin': selectedBin,
+        if (correct != null) 'correct': correct,
+      },
+    );
   }
 
   @override
@@ -133,6 +201,7 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
     final item = items[index];
 
     return GameScaffold(
+      learningLevel: widget.learningLevel,
       title: 'Recycling Challenge',
       subtitle: widget.learningLevel == null
           ? 'Class $classNumber • Adaptive level $_difficulty • Sort It Right'
@@ -204,6 +273,7 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
           const SizedBox(height: 18),
           if (finished)
             MissionSummaryCard(
+              learningLevel: widget.learningLevel,
               score: score,
               maxScore: items.length,
               reward: missionReward,

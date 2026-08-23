@@ -16,9 +16,9 @@ Nursery implementation status: a separate draft Nursery learning pack is present
 - independent local child profiles and save migration;
 - parent PIN, learning goals, healthy-play time limits, competency evidence reports and weak-area summaries;
 - responsive layouts for Android, Android free-form and Windows;
-- offline BGM/SFX plus smart prompt, choice and answer narration;
+- offline BGM/SFX plus authored lesson/game narration, visible transcripts and smart prompt/choice/answer read-aloud;
 - selectable installed voices with female-first selection and separate BGM/SFX/speech controls;
-- high contrast, text scaling, reduced motion, haptics, dyslexia-friendly spacing, reading focus and visible audio-caption preferences;
+- high contrast, text scaling, reduced motion, haptics, dyslexia-friendly spacing, active Reading Focus and visible narration/audio captions;
 - parent-only fail-closed ₹299 class entitlement foundation with free-sample boundaries; production store verification is intentionally not enabled yet.
 
 The current release contains the technical learning-platform foundation through roadmap Phase 10, but it is **not commercially complete**: curriculum/content remains `needsReview`, production store verification is not configured, and teacher/pilot/real-device release gates are pending. It is not represented as CBSE/NCERT certified. See [PRODUCT_ROADMAP.md](PRODUCT_ROADMAP.md) for the exact technical-versus-external gate status.

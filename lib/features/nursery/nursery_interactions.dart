@@ -118,23 +118,15 @@ class _AnswerBubble extends StatelessWidget {
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    index.isEven ? '⭐' : '✨',
-                    style: const TextStyle(fontSize: 20),
+              child: Center(
+                child: Text(
+                  option.label,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w900,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    option.label,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
@@ -181,7 +173,7 @@ class _PairMatchInteractionState extends State<_PairMatchInteraction> {
     return Column(
       children: [
         const Text(
-          'Choose one item on the left, then its partner on the right.',
+          'Tap a card. Then tap its match.',
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 12),
@@ -261,7 +253,7 @@ class _PairMatchInteractionState extends State<_PairMatchInteraction> {
         const SizedBox(height: 8),
         Text(
           matches.isEmpty
-              ? 'Pick a card to begin the match.'
+              ? 'Tap a card to start.'
               : matches.length < left.length
                   ? 'Nice! ${left.length - matches.length} ${left.length - matches.length == 1 ? 'match' : 'matches'} to go.'
                   : 'All partners are connected!',
@@ -301,7 +293,7 @@ class _SortBucketsInteractionState extends State<_SortBucketsInteraction> {
     return Column(
       children: [
         const Text(
-          'Choose an item, then choose the group where it belongs.',
+          'Tap a picture. Then tap its group.',
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 12),
@@ -362,7 +354,7 @@ class _SortBucketsInteractionState extends State<_SortBucketsInteraction> {
         const SizedBox(height: 14),
         Text(
           assignments.isEmpty
-              ? 'Choose a picture, then send it to a basket.'
+              ? 'Tap a picture to start.'
               : assignments.length < items.length
                   ? '${items.length - assignments.length} ${items.length - assignments.length == 1 ? 'item' : 'items'} still need a home.'
                   : 'Everything is in a basket!',
@@ -411,7 +403,7 @@ class _TraceInteractionState extends State<_TraceInteraction> {
     return Column(
       children: [
         const Text(
-          'Tracing practice follows broad guide dots only. It does not score handwriting correctness.',
+          'Trace the dots in order.',
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
@@ -463,7 +455,7 @@ class _TraceInteractionState extends State<_TraceInteraction> {
           ),
         ),
         const SizedBox(height: 10),
-        Text('${reached.length} of ${points.length} guide dots reached'),
+        Text('${reached.length} / ${points.length} dots'),
         TextButton.icon(
           onPressed: !widget.enabled
               ? null
@@ -472,7 +464,7 @@ class _TraceInteractionState extends State<_TraceInteraction> {
                     submitted = false;
                   }),
           icon: const Icon(Icons.refresh_rounded),
-          label: const Text('Start tracing again'),
+          label: const Text('Try Again'),
         ),
       ],
     );

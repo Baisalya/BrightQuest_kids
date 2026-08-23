@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../app/brightquest_scope.dart';
+import '../core/presentation/game_feel_models.dart';
 
 bool brightReduceMotion(BuildContext context) {
   final controller = BrightQuestScope.maybeOf(context);
@@ -18,6 +19,146 @@ bool brightReduceMotion(BuildContext context) {
 /// transform-driven semantics churn on Windows. Android keeps the full motion.
 bool brightAvoidGeometryMotion(BuildContext context) {
   return brightReduceMotion(context) || Platform.isWindows;
+}
+
+/// Runs one finite reaction whenever [trigger] changes.
+///
+/// On Android this can use a small transform to give taps/results physical
+/// energy. On Windows we intentionally keep the child geometry fixed and only
+/// use opacity, preserving the crash-isolated semantics strategy. Reduced
+/// motion disables the reaction entirely.
+class BrightMomentReaction extends StatefulWidget {
+  const BrightMomentReaction({
+    required this.trigger,
+    required this.kind,
+    required this.child,
+    this.duration,
+    this.animateOnMount = true,
+    super.key,
+  });
+
+  final Object trigger;
+  final BrightMomentKind kind;
+  final Widget child;
+  final Duration? duration;
+  final bool animateOnMount;
+
+  @override
+  State<BrightMomentReaction> createState() => _BrightMomentReactionState();
+}
+
+class _BrightMomentReactionState extends State<BrightMomentReaction>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  Duration get _duration =>
+      widget.duration ??
+      switch (widget.kind) {
+        BrightMomentKind.selection => const Duration(milliseconds: 220),
+        BrightMomentKind.retry => const Duration(milliseconds: 430),
+        BrightMomentKind.powerUp ||
+        BrightMomentKind.hint =>
+          const Duration(milliseconds: 520),
+        BrightMomentKind.bossClear ||
+        BrightMomentKind.worldClear =>
+          const Duration(milliseconds: 820),
+        _ => const Duration(milliseconds: 560),
+      };
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: _duration);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (brightReduceMotion(context) ||
+        (!widget.animateOnMount && _controller.value == 0)) {
+      _controller.stop();
+      _controller.value = 1;
+    } else if (!_controller.isAnimating && _controller.value == 0) {
+      _controller.forward();
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant BrightMomentReaction oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.trigger != widget.trigger || oldWidget.kind != widget.kind) {
+      _controller.duration = _duration;
+      if (brightReduceMotion(context)) {
+        _controller.stop();
+        _controller.value = 1;
+      } else {
+        _controller.forward(from: 0);
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (brightReduceMotion(context)) return widget.child;
+    final avoidGeometry = brightAvoidGeometryMotion(context);
+    return AnimatedBuilder(
+      animation: _controller,
+      child: widget.child,
+      builder: (context, child) {
+        final t = Curves.easeOutCubic.transform(_controller.value);
+        final pulse = math.sin(math.pi * t).clamp(0.0, 1.0).toDouble();
+        final opacity = (0.90 + 0.10 * t).clamp(0.0, 1.0).toDouble();
+        if (avoidGeometry) {
+          return Opacity(
+            opacity: opacity,
+            alwaysIncludeSemantics: true,
+            child: child,
+          );
+        }
+
+        final retryWave = widget.kind == BrightMomentKind.retry
+            ? math.sin(t * math.pi * 4) * 3.2 * (1 - t)
+            : 0.0;
+        final lift = switch (widget.kind) {
+          BrightMomentKind.success ||
+          BrightMomentKind.unlock ||
+          BrightMomentKind.bossClear ||
+          BrightMomentKind.worldClear =>
+            -5.0 * pulse,
+          BrightMomentKind.selection => -1.5 * pulse,
+          BrightMomentKind.hint || BrightMomentKind.powerUp => -2.5 * pulse,
+          _ => 0.0,
+        };
+        final scale = switch (widget.kind) {
+          BrightMomentKind.success ||
+          BrightMomentKind.unlock ||
+          BrightMomentKind.bossClear ||
+          BrightMomentKind.worldClear =>
+            1 + (0.055 * pulse),
+          BrightMomentKind.selection => 1 + (0.018 * pulse),
+          BrightMomentKind.hint ||
+          BrightMomentKind.powerUp =>
+            1 + (0.025 * pulse),
+          _ => 1.0,
+        };
+
+        return Opacity(
+          opacity: opacity,
+          alwaysIncludeSemantics: true,
+          child: Transform.translate(
+            offset: Offset(retryWave, lift),
+            child: Transform.scale(scale: scale, child: child),
+          ),
+        );
+      },
+    );
+  }
 }
 
 class BrightReveal extends StatelessWidget {
@@ -87,13 +228,32 @@ class _BrightPressableScaleState extends State<BrightPressableScale> {
 
   @override
   Widget build(BuildContext context) {
-    final reduceMotion = brightAvoidGeometryMotion(context);
+    final reduceMotion = brightReduceMotion(context);
     if (reduceMotion) return widget.child;
+    final avoidGeometry = brightAvoidGeometryMotion(context);
     final scale = _pressed
         ? widget.pressedScale
         : _hovered
             ? widget.hoverScale
             : 1.0;
+    final opacity = _pressed
+        ? .90
+        : _hovered
+            ? .96
+            : 1.0;
+    final visual = avoidGeometry
+        ? AnimatedOpacity(
+            opacity: opacity,
+            duration: widget.duration,
+            curve: Curves.easeOutCubic,
+            child: widget.child,
+          )
+        : AnimatedScale(
+            scale: scale,
+            duration: widget.duration,
+            curve: Curves.easeOutCubic,
+            child: widget.child,
+          );
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
@@ -106,12 +266,7 @@ class _BrightPressableScaleState extends State<BrightPressableScale> {
         onPointerDown: (_) => setState(() => _pressed = true),
         onPointerUp: (_) => setState(() => _pressed = false),
         onPointerCancel: (_) => setState(() => _pressed = false),
-        child: AnimatedScale(
-          scale: scale,
-          duration: reduceMotion ? Duration.zero : widget.duration,
-          curve: Curves.easeOutCubic,
-          child: widget.child,
-        ),
+        child: visual,
       ),
     );
   }

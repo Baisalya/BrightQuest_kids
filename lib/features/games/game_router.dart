@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
 import '../../app/study_session_tracker.dart';
+import '../../core/curriculum/curriculum_catalog.dart';
 import '../../core/curriculum/curriculum_models.dart';
+import '../../core/session/game_session_models.dart';
+import '../../core/curriculum/world_mission_catalog.dart';
 import '../../core/services/bright_audio_service.dart';
 import '../../core/state/game_controller.dart';
 import '../learning/lesson_flow_screen.dart';
@@ -19,17 +22,58 @@ import 'science_lab_screen.dart';
 import 'story_builder_screen.dart';
 
 void openGame(BuildContext context, String id) {
+  final controller = BrightQuestScope.of(context);
+  if (id == 'rewards_room') {
+    _openGameInternal(context, id, learningLevel: null);
+    return;
+  }
+  final session = controller.gameSessionFor(
+    gameId: id,
+    classNumber: controller.selectedClass,
+  );
+  if (session?.stage == GameSessionStage.completing) {
+    unawaited(resumeGameSession(context, session!));
+    return;
+  }
   _openGameInternal(context, id, learningLevel: null);
 }
 
 void openLearningLevel(BuildContext context, LearningLevel level) {
   final controller = BrightQuestScope.of(context);
+  final savedSession = controller.gameSessionFor(
+    gameId: level.gameId,
+    classNumber: level.classNumber,
+    learningLevelId: level.id,
+  );
+  if (savedSession != null) {
+    if (savedSession.stage == GameSessionStage.lesson) {
+      controller.activateGameSession(savedSession);
+      Navigator.of(context)
+          .push<bool>(
+        MaterialPageRoute<bool>(builder: (_) => LessonFlowScreen(level: level)),
+      )
+          .then((startPractice) {
+        if (startPractice == true && context.mounted) {
+          _openGameInternal(context, level.gameId, learningLevel: level);
+        }
+      });
+    } else if (savedSession.stage == GameSessionStage.completing) {
+      unawaited(resumeGameSession(context, savedSession));
+    } else {
+      controller.activateGameSession(savedSession);
+      _openGameInternal(context, level.gameId, learningLevel: level);
+    }
+    return;
+  }
+
   final content = BrightQuestScope.contentOf(context);
   if (!controller.isLevelUnlocked(level)) {
+    final mission = WorldMissionCatalog.planForLevel(level);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content:
-            Text('Clear the previous level before starting this challenge.'),
+      SnackBar(
+        content: Text(
+          'Clear the previous mission before ${mission.phaseLabel}.',
+        ),
       ),
     );
     return;
@@ -59,6 +103,76 @@ void openLearningLevel(BuildContext context, LearningLevel level) {
       _openGameInternal(context, level.gameId, learningLevel: level);
     }
   });
+}
+
+Future<void> resumeActiveGameSession(BuildContext context) async {
+  final controller = BrightQuestScope.of(context);
+  final session = controller.activeGameSession;
+  if (session == null) return;
+  await resumeGameSession(context, session);
+}
+
+Future<void> resumeGameSession(
+  BuildContext context,
+  GameSessionCheckpoint savedSession,
+) async {
+  final controller = BrightQuestScope.of(context);
+  if (savedSession.profileId != controller.activeProfileId ||
+      savedSession.classNumber != controller.selectedClass) {
+    return;
+  }
+  var session = controller.gameSessionFor(
+    gameId: savedSession.gameId,
+    classNumber: savedSession.classNumber,
+    learningLevelId: savedSession.learningLevelId,
+  );
+  if (session == null) return;
+  controller.activateGameSession(session);
+
+  final level = session.learningLevelId == null
+      ? null
+      : learningLevelById(session.learningLevelId!);
+  if (session.learningLevelId != null && level == null) {
+    controller.discardGameSession(session);
+    return;
+  }
+  if (session.stage == GameSessionStage.lesson && level != null) {
+    Navigator.of(context)
+        .push<bool>(
+      MaterialPageRoute<bool>(builder: (_) => LessonFlowScreen(level: level)),
+    )
+        .then((startPractice) {
+      if (startPractice == true && context.mounted) {
+        _openGameInternal(context, level.gameId, learningLevel: level);
+      }
+    });
+    return;
+  }
+  if (session.stage == GameSessionStage.completing) {
+    final fallbackMissionId = session.data['fallbackMissionId'] as String?;
+    if (fallbackMissionId == null ||
+        fallbackMissionId.isEmpty ||
+        session.maxScore <= 0) {
+      controller.discardGameSession(session);
+      return;
+    }
+    await controller.completeRunSafely(
+      gameId: session.gameId,
+      fallbackMissionId: fallbackMissionId,
+      score: session.score,
+      maxScore: session.maxScore,
+      learningLevel: level,
+    );
+    if (!context.mounted) return;
+    session = controller.gameSessionFor(
+      gameId: savedSession.gameId,
+      classNumber: savedSession.classNumber,
+      learningLevelId: savedSession.learningLevelId,
+    );
+    if (session == null) return;
+    controller.activateGameSession(session);
+  }
+  _openGameInternal(context, session.gameId, learningLevel: level);
 }
 
 void _openGameInternal(
@@ -110,6 +224,14 @@ void _openGameInternal(
       .push(MaterialPageRoute<void>(builder: (_) => routedScreen))
       .whenComplete(() {
     unawaited(audio.stopVoice());
+    final finishedSession = controller.gameSessionFor(
+      gameId: id,
+      classNumber: classNumber,
+      learningLevelId: learningLevel?.id,
+    );
+    if (finishedSession?.stage == GameSessionStage.result) {
+      controller.discardGameSession(finishedSession!);
+    }
     if (controller.soundEnabled) {
       unawaited(audio.playMenuMusic(restart: true));
     }

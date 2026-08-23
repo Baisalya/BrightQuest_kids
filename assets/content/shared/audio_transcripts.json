@@ -12,11 +12,15 @@
     "unlock": "A learning level was unlocked.",
     "complete": "Learning session complete.",
     "menuMusic": "Background music only; no learning information is conveyed by music.",
-    "gameMusic": "Background music only; no learning information is conveyed by music."
+    "gameMusic": "Background music only; no learning information is conveyed by music.",
+    "gameIntro": "The game welcome is decorative guidance; the current task remains visible on screen.",
+    "lessonNarration": "The lesson narration repeats the current visible learning text.",
+    "promptNarration": "The read-aloud control speaks the visible prompt and its visible choices.",
+    "voiceFeedback": "Spoken praise or retry guidance is also shown as visible feedback."
   },
   "review": {
     "status": "needsReview",
-    "revision": 1,
+    "revision": 2,
     "reviewerOwnerId": "primary_teacher_reviewer"
   }
 }

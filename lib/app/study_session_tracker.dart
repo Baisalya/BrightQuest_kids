@@ -36,6 +36,10 @@ class _StudySessionTrackerState extends State<StudySessionTracker>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     _active = state == AppLifecycleState.resumed;
+    if (!_active) {
+      unawaited(widget.controller.flush());
+      unawaited(widget.controller.flushGameSession());
+    }
   }
 
   void _startTimer() {
@@ -54,6 +58,8 @@ class _StudySessionTrackerState extends State<StudySessionTracker>
   void dispose() {
     _timer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
+    unawaited(widget.controller.flush());
+    unawaited(widget.controller.flushGameSession());
     super.dispose();
   }
 

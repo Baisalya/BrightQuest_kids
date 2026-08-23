@@ -25,11 +25,9 @@ void main() {
     );
     await tester.pump();
 
-    final portal = find.bySemanticsLabel(
-      'Number Hunt. How many apples? apple, apple. Ready to play.',
-    );
-    await tester.ensureVisible(portal);
-    await tester.tap(portal);
+    final playNow = find.text('Play Now');
+    await tester.ensureVisible(playNow);
+    await tester.tap(playNow);
     await tester.pump(const Duration(milliseconds: 500));
 
     expect(find.text('How many apples? 🍎🍎'), findsOneWidget);
@@ -68,11 +66,11 @@ void main() {
 
     const prompt =
         'When crossing a road with an adult, which choice is safest?';
-    final portal = find.bySemanticsLabel(
-      'World Quest. $prompt. Ready to play.',
-    );
-    await tester.ensureVisible(portal);
-    await tester.tap(portal);
+    await tester.tap(find.text('More games'));
+    await tester.pumpAndSettle();
+    final starGame = find.text('Star Game');
+    await tester.ensureVisible(starGame);
+    await tester.tap(starGame);
     await tester.pump(const Duration(milliseconds: 500));
 
     expect(find.text(prompt), findsOneWidget);
@@ -128,7 +126,7 @@ void main() {
           ),
         );
         await tester.pump();
-        expect(find.text('Choose your adventure'), findsOneWidget);
+        expect(find.text('Let’s play!'), findsOneWidget);
         expect(find.text('Next'), findsNothing);
         expect(tester.takeException(), isNull, reason: '$skillId at $size');
         await tester.pumpWidget(const SizedBox.shrink());

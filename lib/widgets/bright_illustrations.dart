@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../core/presentation/game_feel_models.dart';
 import 'bright_motion.dart';
 
 class BrightQuestLogo extends StatelessWidget {
@@ -119,28 +120,51 @@ class BrightQuestLogo extends StatelessWidget {
 }
 
 class BrightLionMascot extends StatelessWidget {
-  const BrightLionMascot({this.size = 150, this.scientist = false, super.key});
+  const BrightLionMascot({
+    this.size = 150,
+    this.scientist = false,
+    this.mood = BrightMascotMood.cheerful,
+    this.animated = true,
+    super.key,
+  });
 
   final double size;
   final bool scientist;
+  final BrightMascotMood mood;
+  final bool animated;
 
   @override
-  Widget build(BuildContext context) => BrightReveal(
-        duration: const Duration(milliseconds: 430),
-        beginScale: 0.91,
-        offset: const Offset(0, 0.025),
-        curve: Curves.easeOutBack,
-        child: SizedBox(
-          width: size,
-          height: size * 1.08,
-          child: CustomPaint(painter: _LionPainter(scientist: scientist)),
-        ),
-      );
+  Widget build(BuildContext context) {
+    final mascot = SizedBox(
+      width: size,
+      height: size * 1.08,
+      child: CustomPaint(
+        painter: _LionPainter(scientist: scientist, mood: mood),
+      ),
+    );
+    if (!animated) return mascot;
+    return BrightMomentReaction(
+      trigger: mood,
+      kind: _momentKindForMascotMood(mood),
+      child: mascot,
+    );
+  }
 }
 
+BrightMomentKind _momentKindForMascotMood(BrightMascotMood mood) =>
+    switch (mood) {
+      BrightMascotMood.focused => BrightMomentKind.focus,
+      BrightMascotMood.thinking => BrightMomentKind.retry,
+      BrightMascotMood.encouraging => BrightMomentKind.hint,
+      BrightMascotMood.celebrating => BrightMomentKind.success,
+      BrightMascotMood.heroic => BrightMomentKind.bossClear,
+      BrightMascotMood.cheerful => BrightMomentKind.calm,
+    };
+
 class _LionPainter extends CustomPainter {
-  const _LionPainter({required this.scientist});
+  const _LionPainter({required this.scientist, required this.mood});
   final bool scientist;
+  final BrightMascotMood mood;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -224,6 +248,25 @@ class _LionPainter extends CustomPainter {
     }
     canvas.drawCircle(center, 42, mane);
     canvas.drawCircle(center, 34, fur);
+    if (mood == BrightMascotMood.heroic) {
+      final crown = Path()
+        ..moveTo(49, 24)
+        ..lineTo(53, 8)
+        ..lineTo(64, 18)
+        ..lineTo(73, 4)
+        ..lineTo(82, 18)
+        ..lineTo(94, 8)
+        ..lineTo(97, 25)
+        ..close();
+      canvas.drawPath(crown, Paint()..color = const Color(0xFFFFC928));
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          const Rect.fromLTWH(49, 22, 48, 9),
+          const Radius.circular(4),
+        ),
+        Paint()..color = const Color(0xFFE59B17),
+      );
+    }
     // ears
     canvas.drawCircle(const Offset(45, 37), 13, mane);
     canvas.drawCircle(const Offset(101, 37), 13, mane);
@@ -231,14 +274,48 @@ class _LionPainter extends CustomPainter {
     canvas.drawCircle(const Offset(101, 37), 7, light);
     // muzzle
     canvas.drawOval(const Rect.fromLTWH(49, 59, 48, 29), light);
-    // eyes
-    canvas.drawOval(const Rect.fromLTWH(53, 46, 13, 17), white);
-    canvas.drawOval(const Rect.fromLTWH(80, 46, 13, 17), white);
-    canvas.drawCircle(const Offset(61, 55), 4.5, black);
-    canvas.drawCircle(const Offset(85, 55), 4.5, black);
-    canvas.drawCircle(const Offset(59.5, 53.5), 1.4, white);
-    canvas.drawCircle(const Offset(83.5, 53.5), 1.4, white);
-    // nose and smile
+    // eyes + expression
+    if (mood == BrightMascotMood.celebrating ||
+        mood == BrightMascotMood.heroic) {
+      final happyEye = Paint()
+        ..color = black.color
+        ..strokeWidth = 3
+        ..strokeCap = StrokeCap.round
+        ..style = PaintingStyle.stroke;
+      canvas.drawArc(
+        const Rect.fromLTWH(53, 51, 13, 9),
+        math.pi,
+        math.pi,
+        false,
+        happyEye,
+      );
+      canvas.drawArc(
+        const Rect.fromLTWH(80, 51, 13, 9),
+        math.pi,
+        math.pi,
+        false,
+        happyEye,
+      );
+    } else {
+      canvas.drawOval(const Rect.fromLTWH(53, 46, 13, 17), white);
+      canvas.drawOval(const Rect.fromLTWH(80, 46, 13, 17), white);
+      final pupilShift = mood == BrightMascotMood.thinking
+          ? const Offset(1.5, -2.0)
+          : Offset.zero;
+      canvas.drawCircle(const Offset(61, 55) + pupilShift, 4.5, black);
+      canvas.drawCircle(const Offset(85, 55) + pupilShift, 4.5, black);
+      canvas.drawCircle(const Offset(59.5, 53.5) + pupilShift, 1.4, white);
+      canvas.drawCircle(const Offset(83.5, 53.5) + pupilShift, 1.4, white);
+      if (mood == BrightMascotMood.focused) {
+        final brow = Paint()
+          ..color = maneDark.color
+          ..strokeWidth = 2.4
+          ..strokeCap = StrokeCap.round;
+        canvas.drawLine(const Offset(53, 44), const Offset(65, 42), brow);
+        canvas.drawLine(const Offset(81, 42), const Offset(93, 44), brow);
+      }
+    }
+    // nose and mouth
     canvas.drawPath(
         Path()
           ..moveTo(68, 66)
@@ -249,11 +326,35 @@ class _LionPainter extends CustomPainter {
     final smilePaint = Paint()
       ..color = black.color
       ..strokeWidth = 2.5
+      ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
-    canvas.drawArc(const Rect.fromLTWH(61, 69, 24, 18), 0.05, math.pi - 0.1,
-        false, smilePaint);
-    canvas.drawOval(const Rect.fromLTWH(68, 78, 12, 7),
-        Paint()..color = const Color(0xFFE95F5C));
+    if (mood == BrightMascotMood.thinking) {
+      canvas.drawArc(
+        const Rect.fromLTWH(66, 73, 16, 9),
+        math.pi * .10,
+        math.pi * .80,
+        false,
+        smilePaint,
+      );
+    } else {
+      canvas.drawArc(const Rect.fromLTWH(61, 69, 24, 18), 0.05, math.pi - 0.1,
+          false, smilePaint);
+      canvas.drawOval(const Rect.fromLTWH(68, 78, 12, 7),
+          Paint()..color = const Color(0xFFE95F5C));
+    }
+    if (mood == BrightMascotMood.celebrating ||
+        mood == BrightMascotMood.heroic) {
+      canvas.drawCircle(
+        const Offset(92, 116),
+        8,
+        Paint()..color = const Color(0xFFFFC928),
+      );
+      canvas.drawCircle(
+        const Offset(92, 116),
+        3,
+        Paint()..color = const Color(0xFFFFFFFF),
+      );
+    }
 
     if (scientist) {
       // goggles
@@ -280,7 +381,7 @@ class _LionPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _LionPainter oldDelegate) =>
-      oldDelegate.scientist != scientist;
+      oldDelegate.scientist != scientist || oldDelegate.mood != mood;
 }
 
 class BrightAdventureLandscape extends StatelessWidget {

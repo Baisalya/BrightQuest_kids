@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import '../../app/brightquest_scope.dart';
 import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
+import '../../core/learning/adaptive_difficulty_models.dart';
 import '../../core/learning/game_evidence_adapter.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
+import '../../core/session/game_session_models.dart';
 import '../../core/theme/app_theme.dart';
 import '../../widgets/bright_design_system.dart';
 import '../../widgets/bright_illustrations.dart';
@@ -30,6 +32,8 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
   MissionReward? missionReward;
   int _difficulty = 1;
   int _classNumber = 4;
+  int _attemptSerial = 0;
+  bool _answerInFlight = false;
   bool _sessionConfigured = false;
   DateTime _itemStarted = DateTime.now();
 
@@ -40,64 +44,104 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
     final controller = BrightQuestScope.of(context);
     _classNumber =
         widget.learningLevel?.classNumber ?? controller.selectedClass;
-    _difficulty = widget.learningLevel?.difficulty ??
-        controller.recommendedDifficulty('math_market');
+    _difficulty = controller.resumableDifficulty(
+      gameId: 'math_market',
+      classNumber: _classNumber,
+      fallbackDifficulty: widget.learningLevel?.difficulty ??
+          controller.recommendedDifficulty('math_market'),
+      learningLevelId: widget.learningLevel?.id,
+    );
+    final questions = BrightQuestScope.contentOf(context)
+        .mathQuestionsForClass(_classNumber, difficulty: _difficulty);
+    final checkpoint = controller.beginOrResumeGameSession(
+      gameId: 'math_market',
+      classNumber: _classNumber,
+      difficulty: _difficulty,
+      maxScore: questions.length,
+      learningLevel: widget.learningLevel,
+    );
+    questionIndex = checkpoint.cursor.clamp(0, questions.length - 1).toInt();
+    score = checkpoint.score.clamp(0, questions.length).toInt();
+    selected = (checkpoint.data['selected'] as num?)?.toInt();
+    wasCorrect = checkpoint.data['wasCorrect'] as bool?;
+    hint = checkpoint.data['hint'] as String?;
+    _attemptSerial = (checkpoint.data['attemptSerial'] as num?)?.toInt() ?? 0;
+    if (checkpoint.stage == GameSessionStage.result &&
+        checkpoint.reward != null) {
+      finished = true;
+      missionReward = checkpoint.reward!.toReward();
+    }
     _sessionConfigured = true;
   }
 
-  void _check(MathQuestion question, int value) {
-    if (selected != null || finished) return;
-    final controller = BrightQuestScope.of(context);
-    final repository = BrightQuestScope.contentOf(context);
-    const adapter = GameEvidenceAdapter();
-    final activity = adapter.resolve(
-      repository: repository,
-      classNumber: _classNumber,
-      gameId: 'math_market',
-      legacyContentId: question.id,
-    );
-    final correct = value == question.answer;
-    controller.recordAnswer(
-      gameId: 'math_market',
-      correct: correct,
-      topicId: question.topicId,
-      difficulty: question.difficulty,
-      masteryGain: 0.045,
-      itemId: activity?.id,
-      competencyId: activity?.competencyId,
-      evidenceKind: adapter.kindFor(widget.learningLevel),
-      hintLevel: hint == null ? 0 : 1,
-      responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
-      misconceptionId:
-          correct ? null : adapter.misconceptionFor(activity, value),
-    );
-    if (correct) {
-      FeedbackService.correct(controller, answer: '$value');
-    } else {
-      FeedbackService.wrong(
-        controller,
-        answer: '$value',
-        correctAnswer: '${question.answer}',
+  Future<void> _check(MathQuestion question, int value) async {
+    if (selected != null || finished || _answerInFlight) return;
+    _answerInFlight = true;
+    try {
+      final controller = BrightQuestScope.of(context);
+      final repository = BrightQuestScope.contentOf(context);
+      const adapter = GameEvidenceAdapter();
+      final activity = adapter.resolve(
+        repository: repository,
+        classNumber: _classNumber,
+        gameId: 'math_market',
+        legacyContentId: question.id,
       );
+      final correct = value == question.answer;
+      await controller.recordAnswerSafely(
+        gameId: 'math_market',
+        learningLevel: widget.learningLevel,
+        correct: correct,
+        attemptMarker: 'answer:$_attemptSerial:$value',
+        topicId: question.topicId,
+        difficulty: question.difficulty,
+        masteryGain: 0.045,
+        itemId: activity?.id,
+        competencyId: activity?.competencyId,
+        evidenceKind: adapter.kindFor(widget.learningLevel),
+        hintLevel: hint == null ? 0 : 1,
+        responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
+        misconceptionId:
+            correct ? null : adapter.misconceptionFor(activity, value),
+      );
+      if (!mounted) return;
+      _attemptSerial += 1;
+      if (correct) {
+        FeedbackService.correct(controller, answer: '$value');
+      } else {
+        FeedbackService.wrong(
+          controller,
+          answer: '$value',
+          correctAnswer: '${question.answer}',
+        );
+      }
+      setState(() {
+        selected = value;
+        wasCorrect = correct;
+        if (correct) score += 1;
+      });
+      _checkpoint(
+        questionsLength: BrightQuestScope.contentOf(context)
+            .mathQuestionsForClass(_classNumber, difficulty: _difficulty)
+            .length,
+      );
+    } finally {
+      _answerInFlight = false;
     }
-    setState(() {
-      selected = value;
-      wasCorrect = correct;
-      if (correct) score += 1;
-    });
   }
 
-  void _next(List<MathQuestion> questions, int classNumber) {
+  Future<void> _next(List<MathQuestion> questions, int classNumber) async {
     if (selected == null) return;
     if (questionIndex == questions.length - 1) {
       final controller = BrightQuestScope.of(context);
-      final reward = controller.completeRun(
+      final reward = await controller.completeRunSafely(
         gameId: 'math_market',
         fallbackMissionId: 'math_market:c$classNumber:d$_difficulty:core_run',
         learningLevel: widget.learningLevel,
         score: score,
         maxScore: questions.length,
       );
+      if (!mounted) return;
       FeedbackService.complete(controller, reward: reward);
       setState(() {
         finished = true;
@@ -112,23 +156,47 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
       hint = null;
       _itemStarted = DateTime.now();
     });
+    _checkpoint(questionsLength: questions.length);
   }
 
-  void _showHint(MathQuestion question) {
+  Future<void> _showHint(MathQuestion question) async {
+    if (!learningLevelAllowsMainGameHints(widget.learningLevel)) return;
     final controller = BrightQuestScope.of(context);
-    if (!controller.useHint(gameId: 'math_market', cost: 5)) {
+    final hintUnlocked = await controller.useHintSafely(
+      gameId: 'math_market',
+      learningLevel: widget.learningLevel,
+      cost: 5,
+      marker: 'math:$questionIndex',
+    );
+    if (!mounted) return;
+    if (!hintUnlocked) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('You need 5 coins for a hint.')));
+        const SnackBar(content: Text('You need 5 coins for a hint.')),
+      );
       return;
     }
     setState(() => hint = question.hint);
+    _checkpoint(
+        questionsLength: BrightQuestScope.contentOf(context)
+            .mathQuestionsForClass(_classNumber, difficulty: _difficulty)
+            .length);
     FeedbackService.hint(controller, question.hint);
   }
 
   void _restart() {
+    final questions = BrightQuestScope.contentOf(context)
+        .mathQuestionsForClass(_classNumber, difficulty: _difficulty);
+    BrightQuestScope.of(context).restartActiveGameSession(
+      gameId: 'math_market',
+      classNumber: _classNumber,
+      difficulty: _difficulty,
+      maxScore: questions.length,
+      learningLevel: widget.learningLevel,
+    );
     setState(() {
       questionIndex = 0;
       score = 0;
+      _attemptSerial = 0;
       selected = null;
       wasCorrect = null;
       hint = null;
@@ -136,6 +204,24 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
       missionReward = null;
       _itemStarted = DateTime.now();
     });
+  }
+
+  void _checkpoint({required int questionsLength}) {
+    BrightQuestScope.of(context).checkpointGameSession(
+      gameId: 'math_market',
+      classNumber: _classNumber,
+      difficulty: _difficulty,
+      cursor: questionIndex,
+      score: score,
+      maxScore: questionsLength,
+      learningLevel: widget.learningLevel,
+      data: <String, Object?>{
+        'attemptSerial': _attemptSerial,
+        if (selected != null) 'selected': selected,
+        if (wasCorrect != null) 'wasCorrect': wasCorrect,
+        if (hint != null) 'hint': hint,
+      },
+    );
   }
 
   @override
@@ -146,6 +232,7 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
     final question = questions[questionIndex];
 
     return GameScaffold(
+      learningLevel: widget.learningLevel,
       title: 'Math Market',
       subtitle: widget.learningLevel == null
           ? 'Class $classNumber • Adaptive level $_difficulty • Solve and shop'
@@ -195,13 +282,15 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
                 ? const SuccessBanner(
                     text:
                         'Correct! Great shopping maths. Keep filling the basket!')
-                : const ErrorBanner(
-                    text:
-                        'Not quite. You can use a hint, then try the next market challenge.'),
+                : ErrorBanner(
+                    text: learningLevelAllowsMainGameHints(widget.learningLevel)
+                        ? 'Not quite. You can use a hint, then try the next market challenge.'
+                        : 'Not quite. This run stays independent — review the result, then try the next challenge.'),
           ],
           if (finished) ...[
             const SizedBox(height: 14),
             MissionSummaryCard(
+                learningLevel: widget.learningLevel,
                 score: score,
                 maxScore: questions.length,
                 reward: missionReward,
@@ -213,13 +302,14 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
               spacing: 10,
               runSpacing: 10,
               children: [
-                OutlinedButton.icon(
-                  key: const Key('math_market_hint_button'),
-                  onPressed:
-                      selected == null ? () => _showHint(question) : null,
-                  icon: const Icon(Icons.lightbulb_rounded),
-                  label: const Text('Hint · 5 coins'),
-                ),
+                if (learningLevelAllowsMainGameHints(widget.learningLevel))
+                  OutlinedButton.icon(
+                    key: const Key('math_market_hint_button'),
+                    onPressed:
+                        selected == null ? () => _showHint(question) : null,
+                    icon: const Icon(Icons.lightbulb_rounded),
+                    label: const Text('Hint · 5 coins'),
+                  ),
                 FilledButton.icon(
                   onPressed: selected == null
                       ? null

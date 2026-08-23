@@ -24,12 +24,13 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('Choose your adventure'), findsOneWidget);
-    final letterChallenge = find.text('Letter Challenge');
-    expect(letterChallenge, findsOneWidget);
-    await tester.ensureVisible(letterChallenge);
+    expect(find.text('Let’s play!'), findsOneWidget);
+    await tester.tap(find.text('More games'));
     await tester.pumpAndSettle();
-    await tester.tap(letterChallenge);
+    final starGame = find.text('Star Game');
+    expect(starGame, findsOneWidget);
+    await tester.ensureVisible(starGame);
+    await tester.tap(starGame);
     await tester.pump(const Duration(milliseconds: 350));
 
     expect(

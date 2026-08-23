@@ -10,53 +10,30 @@ Widget _host(GameController controller, Widget child) => MaterialApp(
     );
 
 void main() {
-  testWidgets('alphabet play-board labels match the actual skill',
+  testWidgets('alphabet skill boards expose one obvious child play path',
       (tester) async {
     await tester.binding.setSurfaceSize(const Size(900, 760));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    await tester.pumpWidget(
-      _host(
-        GameController(),
-        const NurseryLessonScreen(skillId: 'alpha_uppercase'),
-      ),
-    );
-    await tester.pump();
-    expect(find.text('Letter Hunt'), findsWidgets);
-    expect(find.text('Letter Challenge'), findsOneWidget);
-    expect(find.text('Sound Safari'), findsNothing);
-    expect(find.text('Sound Challenge'), findsNothing);
-
-    await tester.pumpWidget(
-      _host(
-        GameController(),
-        const NurseryLessonScreen(skillId: 'alpha_letter_sounds'),
-      ),
-    );
-    await tester.pump();
-    expect(find.text('Sound Safari'), findsWidgets);
-    expect(find.text('Sound Challenge'), findsOneWidget);
-    expect(find.text('Letter Challenge'), findsNothing);
-
-    await tester.pumpWidget(
-      _host(
-        GameController(),
-        const NurseryLessonScreen(skillId: 'alpha_beginning_sound'),
-      ),
-    );
-    await tester.pump();
-    expect(find.text('Sound Starter'), findsWidgets);
-    expect(find.text('Beginning-Sound Quest'), findsOneWidget);
-
-    await tester.pumpWidget(
-      _host(
-        GameController(),
-        const NurseryLessonScreen(skillId: 'alpha_listen_select'),
-      ),
-    );
-    await tester.pump();
-    expect(find.text('Listen & Find'), findsWidgets);
-    expect(tester.takeException(), isNull);
+    for (final skillId in <String>[
+      'alpha_uppercase',
+      'alpha_letter_sounds',
+      'alpha_beginning_sound',
+      'alpha_listen_select',
+    ]) {
+      await tester.pumpWidget(
+        _host(
+          GameController(),
+          NurseryLessonScreen(skillId: skillId),
+        ),
+      );
+      await tester.pump();
+      expect(find.text('Let’s play!'), findsOneWidget);
+      expect(find.text('Play Now'), findsOneWidget);
+      expect(find.text('Learn First'), findsOneWidget);
+      expect(find.text('More games'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    }
   });
 
   testWidgets('all alphabet skill boards are overflow-free at target sizes',
@@ -91,7 +68,7 @@ void main() {
           ),
         );
         await tester.pump();
-        expect(find.text('Choose your adventure'), findsOneWidget);
+        expect(find.text('Let’s play!'), findsOneWidget);
         expect(find.text('Next'), findsNothing);
         expect(
           tester.takeException(),
@@ -116,9 +93,7 @@ void main() {
       ),
     );
     await tester.pump();
-    await tester.tap(find.text('Discover Zone'));
-    await tester.pump();
-    await tester.tap(find.text('Show me'));
+    await tester.tap(find.text('Learn First'));
     await tester.pump(const Duration(milliseconds: 500));
 
     expect(

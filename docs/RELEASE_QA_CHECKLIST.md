@@ -2,9 +2,12 @@
 
 ## Automated gate
 
+- Run `tool\qa\run_step12.ps1` on Windows (or `tool/qa/run_step12.sh` in CI/Linux/macOS) for the current production-hardening gate.
 - Run `dart format lib test tool`.
 - Run `flutter analyze` with zero warnings/errors.
 - Run `flutter test` and all content/release tools.
+- Verify root lifecycle durability flushes both authoritative progress and resumable mission slots on inactive/hidden/paused/detached and memory-pressure events.
+- Verify system accessibility text scaling is preserved up to the Step 12 tested 2x ceiling rather than overwritten by the in-app reading-size preference.
 - Build Android release AAB/APK and Windows release executable.
 - Verify schema-v5 migration from legacy saves and corrupted-save fallback.
 - Verify Class 3/4/5 content and free samples offline.
@@ -14,8 +17,8 @@
 
 ## Real-device gate
 
-- Android: compact 360×640, tablet, free-form resize, low-memory resume, sleep/resume and offline cold start.
-- Windows: resize, sleep/resume, repeated narration, repeated game navigation and native crash soak.
+- Android: compact 360×640, 640×360 landscape, tablet, 800×480 short/free-form resize, low-memory resume, sleep/resume and offline cold start.
+- Windows: 1024×600 free-form, 1280×520 short desktop, 1440×900+, resize, hide/show, sleep/resume, repeated narration, repeated game navigation and native crash soak.
 - Accessibility: keyboard focus, large text, high contrast, reduced motion, colour-independent feedback and Android screen-reader checks.
 - Windows Flutter semantics remain disabled until a separate native engine/plugin soak proves restoration safe.
 

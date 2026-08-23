@@ -12,17 +12,30 @@ import '../models/progress_models.dart';
 import '../nursery/nursery_learning_models.dart';
 import '../nursery/nursery_progress_engine.dart';
 import '../persistence/progress_store.dart';
+import '../session/game_session_models.dart';
+import '../session/game_session_store.dart';
 
 class GameController extends ChangeNotifier {
-  GameController({ProgressStore? store})
+  GameController({ProgressStore? store, GameSessionStore? sessionStore})
       : _store = store ?? MemoryProgressStore(),
+        _sessionStore = sessionStore ?? MemoryGameSessionStore(),
         _snapshot = PlayerSnapshot();
 
   final ProgressStore _store;
+  final GameSessionStore _sessionStore;
   PlayerSnapshot _snapshot;
   bool _loaded = false;
   bool _parentSessionUnlocked = false;
   Future<void> _saveTail = Future<void>.value();
+  Future<void> _sessionSaveTail = Future<void>.value();
+  Map<String, GameSessionCheckpoint> _gameSessions =
+      <String, GameSessionCheckpoint>{};
+  final Map<String, String> _foregroundSessionKeys = <String, String>{};
+  final Map<String, Future<AnswerReward>> _answerTransactions =
+      <String, Future<AnswerReward>>{};
+  final Map<String, Future<bool>> _hintTransactions = <String, Future<bool>>{};
+  final Map<String, Future<MissionReward>> _completionTransactions =
+      <String, Future<MissionReward>>{};
 
   static const LearningProgressEngine _learningProgress =
       LearningProgressEngine();
@@ -151,6 +164,14 @@ class GameController extends ChangeNotifier {
     final raw = await _store.read();
     if (raw != null) {
       _snapshot = PlayerSnapshot.fromJson(raw);
+    }
+    _gameSessions = await _sessionStore.readAll();
+    _foregroundSessionKeys.clear();
+    final discardedInvalidSessions = _discardInvalidSessionCheckpoints();
+    if (discardedInvalidSessions) {
+      await _sessionStore.writeAll(
+        Map<String, GameSessionCheckpoint>.from(_gameSessions),
+      );
     }
     _snapshot.schemaVersion = 6;
     _normalizeToday();
@@ -378,6 +399,16 @@ class GameController extends ChangeNotifier {
     if (saveImmediately) _changed();
   }
 
+  Future<void> recordLearningEvidenceSafely(AttemptEvidence evidence) async {
+    if (!_hasLearningEvidenceId(evidence.id)) {
+      recordLearningEvidence(evidence);
+    }
+    await flush();
+  }
+
+  bool _hasLearningEvidenceId(String evidenceId) =>
+      _profile.learning.attemptEvidence.any((item) => item.id == evidenceId);
+
   List<ReviewTask> dueReviewTasks({DateTime? now, int limit = 10}) {
     final timestamp = now ?? DateTime.now();
     _profile.learning =
@@ -476,6 +507,7 @@ class GameController extends ChangeNotifier {
 
   void setClass(int value) {
     if (value < 3 || value > 5 || value == _profile.selectedClass) return;
+    _foregroundSessionKeys.remove(activeProfileId);
     _profile.selectedClass = value;
     _changed();
   }
@@ -583,6 +615,13 @@ class GameController extends ChangeNotifier {
       return false;
     }
     _snapshot.profiles.remove(profileId);
+    _foregroundSessionKeys.remove(profileId);
+    final beforeSessionCount = _gameSessions.length;
+    _gameSessions
+        .removeWhere((_, checkpoint) => checkpoint.profileId == profileId);
+    if (_gameSessions.length != beforeSessionCount) {
+      _enqueueSessionSave();
+    }
     if (_snapshot.activeProfileId == profileId) {
       _snapshot.activeProfileId = _snapshot.profiles.keys.first;
       _normalizeToday();
@@ -638,7 +677,16 @@ class GameController extends ChangeNotifier {
     int responseTimeMs = 0,
     String? misconceptionId,
     double confidence = 0.75,
+    String? evidenceId,
   }) {
+    if (evidenceId != null && _hasLearningEvidenceId(evidenceId)) {
+      return AnswerReward(
+        correct: correct,
+        coinsAwarded: 0,
+        xpAwarded: 0,
+        starsAwarded: 0,
+      );
+    }
     _normalizeToday();
     _touchActivity();
 
@@ -687,7 +735,8 @@ class GameController extends ChangeNotifier {
       final now = DateTime.now();
       recordLearningEvidence(
         AttemptEvidence(
-          id: 'e:${activeProfileId}:${now.microsecondsSinceEpoch}',
+          id: evidenceId ??
+              'e:${activeProfileId}:${now.microsecondsSinceEpoch}',
           profileId: activeProfileId,
           classNumber: selectedClass,
           competencyId: competencyId,
@@ -714,6 +763,243 @@ class GameController extends ChangeNotifier {
       starsAwarded: starsAwarded,
       newAchievementIds: newAchievements,
     );
+  }
+
+  Future<AnswerReward> recordAnswerSafely({
+    required String gameId,
+    required bool correct,
+    required String attemptMarker,
+    String topicId = 'general',
+    int difficulty = 1,
+    double masteryGain = 0.05,
+    int coinReward = 10,
+    int xpReward = 10,
+    String? itemId,
+    String? competencyId,
+    LearningAttemptKind evidenceKind = LearningAttemptKind.independent,
+    int hintLevel = 0,
+    int retries = 0,
+    int responseTimeMs = 0,
+    String? misconceptionId,
+    double confidence = 0.75,
+    LearningLevel? learningLevel,
+  }) {
+    final current = _sessionForAction(
+      gameId: gameId,
+      learningLevel: learningLevel,
+    );
+    if (current == null ||
+        current.profileId != activeProfileId ||
+        current.classNumber != selectedClass ||
+        current.gameId != gameId) {
+      return _recordAnswerSafelyTransaction(
+        gameId: gameId,
+        correct: correct,
+        attemptMarker: attemptMarker,
+        topicId: topicId,
+        difficulty: difficulty,
+        masteryGain: masteryGain,
+        coinReward: coinReward,
+        xpReward: xpReward,
+        itemId: itemId,
+        competencyId: competencyId,
+        evidenceKind: evidenceKind,
+        hintLevel: hintLevel,
+        retries: retries,
+        responseTimeMs: responseTimeMs,
+        misconceptionId: misconceptionId,
+        confidence: confidence,
+        learningLevel: learningLevel,
+      );
+    }
+
+    final key =
+        '${current.profileId}|${current.startedAtIso}|$gameId|$attemptMarker';
+    final existing = _answerTransactions[key];
+    if (existing != null) return existing;
+    final transaction = _recordAnswerSafelyTransaction(
+      gameId: gameId,
+      correct: correct,
+      attemptMarker: attemptMarker,
+      topicId: topicId,
+      difficulty: difficulty,
+      masteryGain: masteryGain,
+      coinReward: coinReward,
+      xpReward: xpReward,
+      itemId: itemId,
+      competencyId: competencyId,
+      evidenceKind: evidenceKind,
+      hintLevel: hintLevel,
+      retries: retries,
+      responseTimeMs: responseTimeMs,
+      misconceptionId: misconceptionId,
+      confidence: confidence,
+      learningLevel: learningLevel,
+    );
+    _answerTransactions[key] = transaction;
+    return transaction.whenComplete(() {
+      if (identical(_answerTransactions[key], transaction)) {
+        _answerTransactions.remove(key);
+      }
+    });
+  }
+
+  Future<AnswerReward> _recordAnswerSafelyTransaction({
+    required String gameId,
+    required bool correct,
+    required String attemptMarker,
+    String topicId = 'general',
+    int difficulty = 1,
+    double masteryGain = 0.05,
+    int coinReward = 10,
+    int xpReward = 10,
+    String? itemId,
+    String? competencyId,
+    LearningAttemptKind evidenceKind = LearningAttemptKind.independent,
+    int hintLevel = 0,
+    int retries = 0,
+    int responseTimeMs = 0,
+    String? misconceptionId,
+    double confidence = 0.75,
+    LearningLevel? learningLevel,
+  }) async {
+    final current = _sessionForAction(
+      gameId: gameId,
+      learningLevel: learningLevel,
+    );
+    if (current == null ||
+        current.profileId != activeProfileId ||
+        current.classNumber != selectedClass ||
+        current.gameId != gameId) {
+      final reward = recordAnswer(
+        gameId: gameId,
+        correct: correct,
+        topicId: topicId,
+        difficulty: difficulty,
+        masteryGain: masteryGain,
+        coinReward: coinReward,
+        xpReward: xpReward,
+        itemId: itemId,
+        competencyId: competencyId,
+        evidenceKind: evidenceKind,
+        hintLevel: hintLevel,
+        retries: retries,
+        responseTimeMs: responseTimeMs,
+        misconceptionId: misconceptionId,
+        confidence: confidence,
+      );
+      await flush();
+      return reward;
+    }
+
+    final committedMarkers = (current.data['_session.answerMarkers'] as List?)
+            ?.whereType<String>()
+            .toSet() ??
+        <String>{};
+    if (committedMarkers.contains(attemptMarker)) {
+      return AnswerReward(
+        correct: correct,
+        coinsAwarded: 0,
+        xpAwarded: 0,
+        starsAwarded: 0,
+      );
+    }
+
+    final pendingMarker = current.data['_session.pendingAnswer'] as String?;
+    final baselineAttempts =
+        (current.data['_session.pendingAnswerBaseAttempts'] as num?)?.toInt();
+    final hasMatchingPending =
+        pendingMarker == attemptMarker && baselineAttempts != null;
+
+    var working = current;
+    if (!hasMatchingPending) {
+      final sortedCommittedMarkers = committedMarkers.toList()..sort();
+      final data = Map<String, Object?>.from(current.data)
+        ..['_session.pendingAnswer'] = attemptMarker
+        ..['_session.pendingAnswerBaseAttempts'] = statsFor(gameId).attempts
+        ..['_session.answerMarkers'] = sortedCommittedMarkers;
+      working = current.copyWith(
+        data: Map<String, Object?>.unmodifiable(data),
+        updatedAtIso: DateTime.now().toIso8601String(),
+      );
+      _putGameSession(working);
+      _enqueueSessionSave();
+      await flushGameSession();
+    }
+
+    final baseAttempts =
+        (working.data['_session.pendingAnswerBaseAttempts'] as num?)?.toInt() ??
+            statsFor(gameId).attempts;
+    final alreadyApplied = statsFor(gameId).attempts > baseAttempts;
+    late AnswerReward reward;
+    if (alreadyApplied) {
+      await flush();
+      reward = AnswerReward(
+        correct: correct,
+        coinsAwarded: 0,
+        xpAwarded: 0,
+        starsAwarded: 0,
+      );
+    } else {
+      reward = recordAnswer(
+        gameId: gameId,
+        correct: correct,
+        topicId: topicId,
+        difficulty: difficulty,
+        masteryGain: masteryGain,
+        coinReward: coinReward,
+        xpReward: xpReward,
+        itemId: itemId,
+        competencyId: competencyId,
+        evidenceKind: evidenceKind,
+        hintLevel: hintLevel,
+        retries: retries,
+        responseTimeMs: responseTimeMs,
+        misconceptionId: misconceptionId,
+        confidence: confidence,
+        evidenceId: activeSessionEvidenceId(
+          gameId: gameId,
+          marker: attemptMarker,
+          learningLevel: learningLevel,
+        ),
+      );
+      await flush();
+    }
+
+    committedMarkers.add(attemptMarker);
+    final live = _gameSessions[current.slotKey];
+    if (live != null && live.startedAtIso == current.startedAtIso) {
+      final sortedCommittedMarkers = committedMarkers.toList()..sort();
+      final finalData = Map<String, Object?>.from(live.data)
+        ..remove('_session.pendingAnswer')
+        ..remove('_session.pendingAnswerBaseAttempts')
+        ..['_session.answerMarkers'] = sortedCommittedMarkers;
+      _putGameSession(live.copyWith(
+        data: Map<String, Object?>.unmodifiable(finalData),
+        updatedAtIso: DateTime.now().toIso8601String(),
+      ));
+      _enqueueSessionSave();
+      await flushGameSession();
+    }
+    return reward;
+  }
+
+  String? activeSessionEvidenceId({
+    required String gameId,
+    required String marker,
+    LearningLevel? learningLevel,
+  }) {
+    final session = _sessionForAction(
+      gameId: gameId,
+      learningLevel: learningLevel,
+    );
+    if (session == null ||
+        session.profileId != activeProfileId ||
+        session.classNumber != selectedClass ||
+        session.gameId != gameId) {
+      return null;
+    }
+    return 'session:${session.profileId}:${session.startedAtIso}:$gameId:$marker';
   }
 
   MissionReward completeMission({
@@ -926,8 +1212,698 @@ class GameController extends ChangeNotifier {
     _changed();
   }
 
+  GameSessionCheckpoint? get activeGameSession {
+    final foregroundKey = _foregroundSessionKeys[activeProfileId];
+    final foreground =
+        foregroundKey == null ? null : _gameSessions[foregroundKey];
+    if (foreground != null &&
+        foreground.profileId == activeProfileId &&
+        foreground.classNumber == selectedClass &&
+        foreground.isResumable) {
+      return foreground;
+    }
+    final sessions = resumableGameSessions;
+    return sessions.isEmpty ? null : sessions.first;
+  }
+
+  List<GameSessionCheckpoint> get resumableGameSessions =>
+      resumableGameSessionsForClass(selectedClass);
+
+  List<GameSessionCheckpoint> resumableGameSessionsForClass(int classNumber) {
+    final sessions = _gameSessions.values
+        .where(
+          (checkpoint) =>
+              checkpoint.profileId == activeProfileId &&
+              checkpoint.classNumber == classNumber &&
+              checkpoint.isResumable,
+        )
+        .toList(growable: false);
+    sessions.sort((a, b) => b.updatedAtIso.compareTo(a.updatedAtIso));
+    return List<GameSessionCheckpoint>.unmodifiable(sessions);
+  }
+
+  List<GameSessionCheckpoint> get allResumableGameSessionsForActiveProfile {
+    final sessions = _gameSessions.values
+        .where(
+          (checkpoint) =>
+              checkpoint.profileId == activeProfileId && checkpoint.isResumable,
+        )
+        .toList(growable: false);
+    sessions.sort((a, b) => b.updatedAtIso.compareTo(a.updatedAtIso));
+    return List<GameSessionCheckpoint>.unmodifiable(sessions);
+  }
+
+  GameSessionCheckpoint? gameSessionFor({
+    required String gameId,
+    required int classNumber,
+    String? learningLevelId,
+  }) =>
+      _gameSessions[gameSessionSlotKey(
+        profileId: activeProfileId,
+        classNumber: classNumber,
+        gameId: gameId,
+        learningLevelId: learningLevelId,
+      )];
+
+  void activateGameSession(GameSessionCheckpoint checkpoint) {
+    if (checkpoint.profileId != activeProfileId) return;
+    final live = _gameSessions[checkpoint.slotKey];
+    if (live == null) return;
+    _foregroundSessionKeys[activeProfileId] = live.slotKey;
+  }
+
+  void _putGameSession(
+    GameSessionCheckpoint checkpoint, {
+    bool activate = true,
+  }) {
+    _gameSessions[checkpoint.slotKey] = checkpoint;
+    if (activate && checkpoint.profileId == activeProfileId) {
+      _foregroundSessionKeys[activeProfileId] = checkpoint.slotKey;
+    }
+  }
+
+  GameSessionCheckpoint? _sessionForAction({
+    required String gameId,
+    LearningLevel? learningLevel,
+  }) {
+    final exact = gameSessionFor(
+      gameId: gameId,
+      classNumber: learningLevel?.classNumber ?? selectedClass,
+      learningLevelId: learningLevel?.id,
+    );
+    if (exact != null) return exact;
+    final foreground = activeGameSession;
+    if (foreground != null && foreground.gameId == gameId) return foreground;
+    return null;
+  }
+
+  int resumableDifficulty({
+    required String gameId,
+    required int classNumber,
+    required int fallbackDifficulty,
+    String? learningLevelId,
+  }) {
+    final current = gameSessionFor(
+      gameId: gameId,
+      classNumber: classNumber,
+      learningLevelId: learningLevelId,
+    );
+    return current?.difficulty ?? fallbackDifficulty.clamp(1, 5).toInt();
+  }
+
+  bool get hasResumableGameSession => resumableGameSessions.isNotEmpty;
+
+  GameSessionCheckpoint beginLessonSession({
+    required LearningLevel level,
+    required int totalSteps,
+  }) {
+    final current = gameSessionFor(
+      gameId: level.gameId,
+      classNumber: level.classNumber,
+      learningLevelId: level.id,
+    );
+    if (current != null && current.stage == GameSessionStage.lesson) {
+      activateGameSession(current);
+      return current;
+    }
+    final now = DateTime.now().toIso8601String();
+    final checkpoint = GameSessionCheckpoint(
+      profileId: activeProfileId,
+      classNumber: level.classNumber,
+      gameId: level.gameId,
+      learningLevelId: level.id,
+      difficulty: level.difficulty,
+      stage: GameSessionStage.lesson,
+      cursor: 0,
+      score: 0,
+      maxScore: totalSteps,
+      startedAtIso: current?.startedAtIso ?? now,
+      updatedAtIso: now,
+    );
+    _putGameSession(checkpoint);
+    _enqueueSessionSave();
+    return checkpoint;
+  }
+
+  void checkpointLessonSession({
+    required LearningLevel level,
+    required int stepIndex,
+    required int totalSteps,
+    required Set<String> completedInteractiveStepIds,
+    required Set<int> shownHintIndices,
+    int attemptSerial = 0,
+  }) {
+    var current = gameSessionFor(
+      gameId: level.gameId,
+      classNumber: level.classNumber,
+      learningLevelId: level.id,
+    );
+    current ??= beginLessonSession(level: level, totalSteps: totalSteps);
+    final updated = current.copyWith(
+      stage: GameSessionStage.lesson,
+      cursor: stepIndex.clamp(0, totalSteps > 0 ? totalSteps - 1 : 0).toInt(),
+      maxScore: totalSteps,
+      completedInteractiveStepIds:
+          Set<String>.unmodifiable(completedInteractiveStepIds),
+      shownHintIndices: Set<int>.unmodifiable(shownHintIndices),
+      data: <String, Object?>{
+        'attemptSerial': attemptSerial.clamp(0, 1000000).toInt(),
+      },
+      clearReward: true,
+      updatedAtIso: DateTime.now().toIso8601String(),
+    );
+    _putGameSession(updated);
+    _enqueueSessionSave();
+  }
+
+  GameSessionCheckpoint beginOrResumeGameSession({
+    required String gameId,
+    required int classNumber,
+    required int difficulty,
+    required int maxScore,
+    LearningLevel? learningLevel,
+  }) {
+    final levelId = learningLevel?.id;
+    final current = gameSessionFor(
+      gameId: gameId,
+      classNumber: classNumber,
+      learningLevelId: levelId,
+    );
+    if (current != null && current.stage != GameSessionStage.lesson) {
+      activateGameSession(current);
+      return current;
+    }
+    final now = DateTime.now().toIso8601String();
+    final checkpoint = GameSessionCheckpoint(
+      profileId: activeProfileId,
+      classNumber: classNumber,
+      gameId: gameId,
+      learningLevelId: levelId,
+      difficulty: difficulty,
+      stage: GameSessionStage.game,
+      cursor: 0,
+      score: 0,
+      maxScore: maxScore,
+      startedAtIso: current?.startedAtIso ?? now,
+      updatedAtIso: now,
+    );
+    _putGameSession(checkpoint);
+    _enqueueSessionSave();
+    return checkpoint;
+  }
+
+  void transitionActiveSessionToGame({required LearningLevel level}) {
+    final current = gameSessionFor(
+      gameId: level.gameId,
+      classNumber: level.classNumber,
+      learningLevelId: level.id,
+    );
+    if (current == null) return;
+    final updated = current.copyWith(
+      stage: GameSessionStage.game,
+      cursor: 0,
+      score: 0,
+      maxScore: 0,
+      data: const <String, Object?>{},
+      shownHintIndices: const <int>{},
+      clearReward: true,
+      updatedAtIso: DateTime.now().toIso8601String(),
+    );
+    _putGameSession(updated);
+    _enqueueSessionSave();
+  }
+
+  void checkpointGameSession({
+    required String gameId,
+    required int classNumber,
+    required int difficulty,
+    required int cursor,
+    required int score,
+    required int maxScore,
+    LearningLevel? learningLevel,
+    Map<String, Object?> data = const <String, Object?>{},
+  }) {
+    var current = gameSessionFor(
+      gameId: gameId,
+      classNumber: classNumber,
+      learningLevelId: learningLevel?.id,
+    );
+    current ??= beginOrResumeGameSession(
+      gameId: gameId,
+      classNumber: classNumber,
+      difficulty: difficulty,
+      maxScore: maxScore,
+      learningLevel: learningLevel,
+    );
+    final preservedSessionData = <String, Object?>{
+      for (final entry in current.data.entries)
+        if (entry.key.startsWith('_session.')) entry.key: entry.value,
+    };
+    final updated = current.copyWith(
+      stage: GameSessionStage.game,
+      cursor: cursor.clamp(0, maxScore > 0 ? maxScore - 1 : 0).toInt(),
+      score: score.clamp(0, maxScore).toInt(),
+      maxScore: maxScore,
+      data: Map<String, Object?>.unmodifiable(
+        <String, Object?>{...preservedSessionData, ...data},
+      ),
+      clearReward: true,
+      updatedAtIso: DateTime.now().toIso8601String(),
+    );
+    _putGameSession(updated);
+    _enqueueSessionSave();
+  }
+
+  Future<bool> useHintSafely({
+    required String gameId,
+    required int cost,
+    required String marker,
+    LearningLevel? learningLevel,
+  }) {
+    final current = _sessionForAction(
+      gameId: gameId,
+      learningLevel: learningLevel,
+    );
+    if (current == null || cost <= 0) {
+      return Future<bool>.value(false);
+    }
+    activateGameSession(current);
+    final key = '${current.profileId}|${current.startedAtIso}|$gameId|$marker';
+    final existing = _hintTransactions[key];
+    if (existing != null) return existing;
+    final transaction = _useHintSafelyTransaction(
+      gameId: gameId,
+      cost: cost,
+      marker: marker,
+      learningLevel: learningLevel,
+    );
+    _hintTransactions[key] = transaction;
+    return transaction.whenComplete(() {
+      if (identical(_hintTransactions[key], transaction)) {
+        _hintTransactions.remove(key);
+      }
+    });
+  }
+
+  Future<bool> _useHintSafelyTransaction({
+    required String gameId,
+    required int cost,
+    required String marker,
+    LearningLevel? learningLevel,
+  }) async {
+    final current = _sessionForAction(
+      gameId: gameId,
+      learningLevel: learningLevel,
+    );
+    if (current == null || cost <= 0) return false;
+    final paidMarkers = (current.data['_session.paidHints'] as List?)
+            ?.whereType<String>()
+            .toSet() ??
+        <String>{};
+    if (paidMarkers.contains(marker)) return true;
+
+    final pendingMarker = current.data['_session.pendingHint'] as String?;
+    final baselineHints =
+        (current.data['_session.pendingHintBaseCount'] as num?)?.toInt();
+    final hasMatchingPending = pendingMarker == marker && baselineHints != null;
+
+    var working = current;
+    if (!hasMatchingPending) {
+      final sortedPaidMarkers = paidMarkers.toList()..sort();
+      final data = Map<String, Object?>.from(current.data)
+        ..['_session.pendingHint'] = marker
+        ..['_session.pendingHintBaseCount'] = statsFor(gameId).hintsUsed
+        ..['_session.paidHints'] = sortedPaidMarkers;
+      working = current.copyWith(
+        data: Map<String, Object?>.unmodifiable(data),
+        updatedAtIso: DateTime.now().toIso8601String(),
+      );
+      _putGameSession(working);
+      _enqueueSessionSave();
+      await flushGameSession();
+    }
+
+    final baseCount =
+        (working.data['_session.pendingHintBaseCount'] as num?)?.toInt() ??
+            statsFor(gameId).hintsUsed;
+    final alreadyApplied = statsFor(gameId).hintsUsed > baseCount;
+    if (alreadyApplied) {
+      await flush();
+    } else {
+      if (!useHint(gameId: gameId, cost: cost)) {
+        final cleared = Map<String, Object?>.from(working.data)
+          ..remove('_session.pendingHint')
+          ..remove('_session.pendingHintBaseCount');
+        _putGameSession(
+          working.copyWith(
+            data: Map<String, Object?>.unmodifiable(cleared),
+            updatedAtIso: DateTime.now().toIso8601String(),
+          ),
+        );
+        _enqueueSessionSave();
+        await flushGameSession();
+        return false;
+      }
+      await flush();
+    }
+
+    paidMarkers.add(marker);
+    final sortedPaidMarkers = paidMarkers.toList()..sort();
+    final committed = Map<String, Object?>.from(working.data)
+      ..remove('_session.pendingHint')
+      ..remove('_session.pendingHintBaseCount')
+      ..['_session.paidHints'] = sortedPaidMarkers;
+    _putGameSession(
+      working.copyWith(
+        data: Map<String, Object?>.unmodifiable(committed),
+        updatedAtIso: DateTime.now().toIso8601String(),
+      ),
+    );
+    _enqueueSessionSave();
+    await flushGameSession();
+    return true;
+  }
+
+  Future<MissionReward> completeRunSafely({
+    required String gameId,
+    required String fallbackMissionId,
+    required int score,
+    required int maxScore,
+    LearningLevel? learningLevel,
+  }) {
+    final current = beginOrResumeGameSession(
+      gameId: gameId,
+      classNumber: learningLevel?.classNumber ?? selectedClass,
+      difficulty: learningLevel?.difficulty ?? recommendedDifficulty(gameId),
+      maxScore: maxScore,
+      learningLevel: learningLevel,
+    );
+    final key =
+        '${current.profileId}|${current.startedAtIso}|$gameId|${learningLevel?.id ?? 'quick'}';
+    final existing = _completionTransactions[key];
+    if (existing != null) return existing;
+    final transaction = _completeRunSafelyTransaction(
+      gameId: gameId,
+      fallbackMissionId: fallbackMissionId,
+      score: score,
+      maxScore: maxScore,
+      learningLevel: learningLevel,
+    );
+    _completionTransactions[key] = transaction;
+    return transaction.whenComplete(() {
+      if (identical(_completionTransactions[key], transaction)) {
+        _completionTransactions.remove(key);
+      }
+    });
+  }
+
+  Future<MissionReward> _completeRunSafelyTransaction({
+    required String gameId,
+    required String fallbackMissionId,
+    required int score,
+    required int maxScore,
+    LearningLevel? learningLevel,
+  }) async {
+    final current = beginOrResumeGameSession(
+      gameId: gameId,
+      classNumber: learningLevel?.classNumber ?? selectedClass,
+      difficulty: learningLevel?.difficulty ?? recommendedDifficulty(gameId),
+      maxScore: maxScore,
+      learningLevel: learningLevel,
+    );
+    if (current.stage == GameSessionStage.result && current.reward != null) {
+      return current.reward!.toReward();
+    }
+
+    GameSessionCheckpoint pending = current;
+    if (current.stage != GameSessionStage.completing) {
+      final levelProgress =
+          learningLevel == null ? null : levelStatsFor(learningLevel.id);
+      final baseline = <String, Object?>{
+        'fallbackMissionId': fallbackMissionId,
+        'score': score,
+        'maxScore': maxScore,
+        'baseCoins': coins,
+        'baseXp': xp,
+        'baseStars': stars,
+        'baseGameCompletedRuns': statsFor(gameId).completedRuns,
+        'baseLevelAttempts': levelProgress?.attempts ?? -1,
+        'baseLevelCompletedRuns': levelProgress?.completedRuns ?? -1,
+        'baseLevelStars': levelProgress?.earnedStars ?? -1,
+        'baseMissionCompleted':
+            _profile.completedMissionIds.contains(fallbackMissionId),
+        'baseAchievementIds': unlockedAchievementIds.toList()..sort(),
+      };
+      pending = current.copyWith(
+        stage: GameSessionStage.completing,
+        score: score.clamp(0, maxScore).toInt(),
+        maxScore: maxScore,
+        data: baseline,
+        clearReward: true,
+        updatedAtIso: DateTime.now().toIso8601String(),
+      );
+      _putGameSession(pending);
+      _enqueueSessionSave();
+      await flushGameSession();
+    }
+
+    final baseGameRuns =
+        (pending.data['baseGameCompletedRuns'] as num?)?.toInt() ??
+            statsFor(gameId).completedRuns;
+    final baseLevelAttempts =
+        (pending.data['baseLevelAttempts'] as num?)?.toInt() ?? -1;
+    final alreadyApplied = learningLevel != null
+        ? levelStatsFor(learningLevel.id).attempts > baseLevelAttempts
+        : statsFor(gameId).completedRuns > baseGameRuns;
+
+    late MissionReward reward;
+    if (alreadyApplied) {
+      await flush();
+      reward = _recoverMissionReward(
+        checkpoint: pending,
+        fallbackMissionId: fallbackMissionId,
+        learningLevel: learningLevel,
+      );
+    } else {
+      reward = completeRun(
+        gameId: gameId,
+        fallbackMissionId: fallbackMissionId,
+        score: score,
+        maxScore: maxScore,
+        learningLevel: learningLevel,
+      );
+      await flush();
+    }
+
+    _putGameSession(pending.copyWith(
+      stage: GameSessionStage.result,
+      score: score.clamp(0, maxScore).toInt(),
+      maxScore: maxScore,
+      reward: GameSessionRewardSnapshot.fromReward(reward),
+      data: const <String, Object?>{},
+      updatedAtIso: DateTime.now().toIso8601String(),
+    ));
+    _enqueueSessionSave();
+    await flushGameSession();
+    return reward;
+  }
+
+  MissionReward _recoverMissionReward({
+    required GameSessionCheckpoint checkpoint,
+    required String fallbackMissionId,
+    required LearningLevel? learningLevel,
+  }) {
+    final baseCoins = (checkpoint.data['baseCoins'] as num?)?.toInt() ?? coins;
+    final baseXp = (checkpoint.data['baseXp'] as num?)?.toInt() ?? xp;
+    final baseStars = (checkpoint.data['baseStars'] as num?)?.toInt() ?? stars;
+    final beforeAchievements = (checkpoint.data['baseAchievementIds'] as List?)
+            ?.whereType<String>()
+            .toSet() ??
+        const <String>{};
+    final newAchievements = unlockedAchievementIds
+        .where((id) => !beforeAchievements.contains(id))
+        .toList(growable: false);
+    if (learningLevel != null) {
+      final progress = levelStatsFor(learningLevel.id);
+      final baseCompletedRuns =
+          (checkpoint.data['baseLevelCompletedRuns'] as num?)?.toInt() ??
+              progress.completedRuns;
+      final baseLevelStars =
+          (checkpoint.data['baseLevelStars'] as num?)?.toInt() ??
+              progress.earnedStars;
+      final next = _nextLevelInTrack(learningLevel);
+      final ratio = checkpoint.maxScore <= 0
+          ? 0.0
+          : checkpoint.score / checkpoint.maxScore;
+      return MissionReward(
+        firstCompletion: baseCompletedRuns == 0 && progress.completedRuns > 0,
+        coinsAwarded: (coins - baseCoins).clamp(0, 1000000).toInt(),
+        xpAwarded: (xp - baseXp).clamp(0, 1000000).toInt(),
+        starsAwarded: (stars - baseStars).clamp(0, 1000000).toInt(),
+        levelId: learningLevel.id,
+        levelCompleted: ratio >= learningLevel.passRatio,
+        levelStars: progress.earnedStars,
+        levelStarsAwarded:
+            (progress.earnedStars - baseLevelStars).clamp(0, 3).toInt(),
+        unlockedNextLevel: ratio >= learningLevel.passRatio &&
+            next != null &&
+            isLevelUnlocked(next),
+        newAchievementIds: newAchievements,
+      );
+    }
+    final baseMissionCompleted =
+        checkpoint.data['baseMissionCompleted'] as bool? ?? false;
+    final nowCompleted =
+        _profile.completedMissionIds.contains(fallbackMissionId);
+    return MissionReward(
+      firstCompletion: !baseMissionCompleted && nowCompleted,
+      coinsAwarded: (coins - baseCoins).clamp(0, 1000000).toInt(),
+      xpAwarded: (xp - baseXp).clamp(0, 1000000).toInt(),
+      starsAwarded: (stars - baseStars).clamp(0, 1000000).toInt(),
+      newAchievementIds: newAchievements,
+    );
+  }
+
+  void discardGameSession(GameSessionCheckpoint checkpoint) {
+    final removed = _gameSessions.remove(checkpoint.slotKey);
+    if (removed == null) return;
+    if (_foregroundSessionKeys[checkpoint.profileId] == checkpoint.slotKey) {
+      _foregroundSessionKeys.remove(checkpoint.profileId);
+    }
+    _enqueueSessionSave();
+    notifyListeners();
+  }
+
+  void discardGameSessionFor({
+    required String gameId,
+    required int classNumber,
+    String? learningLevelId,
+  }) {
+    final checkpoint = gameSessionFor(
+      gameId: gameId,
+      classNumber: classNumber,
+      learningLevelId: learningLevelId,
+    );
+    if (checkpoint != null) discardGameSession(checkpoint);
+  }
+
+  void discardActiveGameSession() {
+    final current = activeGameSession;
+    if (current != null) discardGameSession(current);
+  }
+
+  void discardAllGameSessionsForActiveProfile() {
+    final profileId = activeProfileId;
+    final before = _gameSessions.length;
+    _gameSessions
+        .removeWhere((_, checkpoint) => checkpoint.profileId == profileId);
+    _foregroundSessionKeys.remove(profileId);
+    if (_gameSessions.length == before) return;
+    _enqueueSessionSave();
+    notifyListeners();
+  }
+
+  void restartActiveGameSession({
+    required String gameId,
+    required int classNumber,
+    required int difficulty,
+    required int maxScore,
+    LearningLevel? learningLevel,
+  }) {
+    final now = DateTime.now().toIso8601String();
+    final checkpoint = GameSessionCheckpoint(
+      profileId: activeProfileId,
+      classNumber: classNumber,
+      gameId: gameId,
+      learningLevelId: learningLevel?.id,
+      difficulty: difficulty,
+      stage: GameSessionStage.game,
+      cursor: 0,
+      score: 0,
+      maxScore: maxScore,
+      startedAtIso: now,
+      updatedAtIso: now,
+    );
+    _putGameSession(checkpoint);
+    _enqueueSessionSave();
+  }
+
+  Future<void> flushGameSession() {
+    _enqueueSessionSave();
+    return _sessionSaveTail;
+  }
+
+  bool _discardInvalidSessionCheckpoints() {
+    final knownGameIds = games
+        .where((game) => game.id != 'rewards_room')
+        .map((game) => game.id)
+        .toSet();
+    var removed = false;
+    _gameSessions.removeWhere((slotKey, checkpoint) {
+      final profile = _snapshot.profiles[checkpoint.profileId];
+      if (profile == null) {
+        removed = true;
+        return true;
+      }
+      var invalid = slotKey != checkpoint.slotKey ||
+          !checkpoint.isResumable ||
+          !knownGameIds.contains(checkpoint.gameId);
+      if (!invalid && checkpoint.stage == GameSessionStage.completing) {
+        final fallbackMissionId =
+            checkpoint.data['fallbackMissionId'] as String?;
+        final achievementIds = checkpoint.data['baseAchievementIds'];
+        final validAchievementIds = achievementIds is List &&
+            achievementIds.every((value) => value is String);
+        invalid = fallbackMissionId == null ||
+            fallbackMissionId.isEmpty ||
+            checkpoint.maxScore <= 0 ||
+            checkpoint.score < 0 ||
+            checkpoint.score > checkpoint.maxScore ||
+            checkpoint.data['baseCoins'] is! num ||
+            checkpoint.data['baseXp'] is! num ||
+            checkpoint.data['baseStars'] is! num ||
+            checkpoint.data['baseGameCompletedRuns'] is! num ||
+            !validAchievementIds;
+        if (!invalid && checkpoint.learningLevelId != null) {
+          invalid = checkpoint.data['baseLevelAttempts'] is! num ||
+              checkpoint.data['baseLevelCompletedRuns'] is! num ||
+              checkpoint.data['baseLevelStars'] is! num;
+        }
+        if (!invalid && checkpoint.learningLevelId == null) {
+          invalid = checkpoint.data['baseMissionCompleted'] is! bool;
+        }
+      }
+      final learningLevelId = checkpoint.learningLevelId;
+      if (!invalid && learningLevelId != null) {
+        final level = learningLevelById(learningLevelId);
+        invalid = level == null ||
+            level.classNumber != checkpoint.classNumber ||
+            level.gameId != checkpoint.gameId ||
+            level.difficulty != checkpoint.difficulty;
+      }
+      final updated = DateTime.tryParse(checkpoint.updatedAtIso);
+      if (!invalid && updated == null) invalid = true;
+      if (!invalid && updated != null) {
+        final age = DateTime.now().difference(updated);
+        invalid = age.inDays > 14 || age < const Duration(minutes: -5);
+      }
+      removed = removed || invalid;
+      return invalid;
+    });
+    return removed;
+  }
+
+  void _enqueueSessionSave() {
+    final snapshot = Map<String, GameSessionCheckpoint>.from(_gameSessions);
+    _sessionSaveTail = _sessionSaveTail
+        .catchError((Object _, StackTrace __) {})
+        .then((_) => _sessionStore.writeAll(snapshot));
+  }
+
   Future<void> resetProgress() async {
     final current = _profile;
+    discardAllGameSessionsForActiveProfile();
+    await flushGameSession();
     final replacement = ChildProfileSnapshot(
       id: current.id,
       name: current.name,
@@ -955,6 +1931,18 @@ class GameController extends ChangeNotifier {
   Future<void> flush() {
     _enqueueSave(_snapshot.toJson());
     return _saveTail;
+  }
+
+  /// Flushes both authoritative progress and resumable game-session state.
+  ///
+  /// This is used by the root lifecycle boundary so backgrounding, desktop
+  /// window hiding and memory pressure cannot leave one persistence stream
+  /// newer than the other merely because the child was outside a game route.
+  Future<void> flushAll() async {
+    await Future.wait<void>(<Future<void>>[
+      flush(),
+      flushGameSession(),
+    ]);
   }
 
   LearningLevel? _nextLevelInTrack(LearningLevel level) {

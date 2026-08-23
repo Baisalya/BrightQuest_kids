@@ -10,6 +10,7 @@ import 'core/content/content_repository.dart';
 import 'core/entitlements/entitlement_service.dart';
 import 'core/persistence/shared_preferences_progress_store.dart';
 import 'core/services/bright_audio_service.dart';
+import 'core/session/shared_preferences_game_session_store.dart';
 import 'core/state/game_controller.dart';
 
 const bool _windowsSemanticsCanary = bool.fromEnvironment(
@@ -26,7 +27,10 @@ Future<void> main() async {
     ),
     verifiedAccessResolver: entitlementService.hasProductionAccess,
   );
-  final controller = GameController(store: SharedPreferencesProgressStore());
+  final controller = GameController(
+    store: SharedPreferencesProgressStore(),
+    sessionStore: SharedPreferencesGameSessionStore(),
+  );
   await controller.load();
   final app = BrightQuestApp(
     controller: controller,

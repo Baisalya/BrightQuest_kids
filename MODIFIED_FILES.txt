@@ -1,0 +1,42 @@
+BrightQuest Kids — Step 12 Production Hardening, Cross-Device QA & Release Readiness
+
+Base:
+- BrightQuest_Kids_Nursery_Simple_Play_TestFix_Full_Project.zip
+
+Modified/added project files (12):
+- CHANGELOG.md
+- docs/RELEASE_QA_CHECKLIST.md
+- docs/STEP12_PRODUCTION_HARDENING.md
+- lib/app/app_persistence_boundary.dart
+- lib/app/brightquest_app.dart
+- lib/core/services/bright_audio_service.dart
+- lib/core/state/game_controller.dart
+- lib/widgets/bright_adaptive.dart
+- test/step12_production_hardening_test.dart
+- tool/qa/run_step12.ps1
+- tool/qa/run_step12.sh
+- tool/qa/step12_production_readiness_audit.dart
+
+Implemented:
+- Root lifecycle persistence boundary across every app route.
+- GameController.flushAll() for authoritative progress + independent mission-slot durability.
+- System accessibility text scale preservation up to a tested 2x ceiling.
+- Very-short free-form/sidebar hardening below 460 logical pixels.
+- Hidden-state audio lifecycle pause support without changing Windows TTS/MCI isolation.
+- Step 12 cross-device/persistence/static-safety regression suite.
+- Deterministic Step 12 production-readiness audit and PowerShell/shell runners.
+- Release QA documentation updates.
+
+Packaging-environment validation:
+- 0 structural Dart delimiter errors across 196 Dart files.
+- 0 missing relative imports in changed Dart files.
+- Static Step 12 source/content invariant simulation passed.
+- Windows generated registrant still contains no flutter_tts.
+- Protected shell still contains no IndexedStack.
+- Nursery coverage remains 32 skills / 132 activities.
+- Class 3/4/5 activity counts remain 111 each.
+- ZIP integrity verified.
+
+Not claimed here:
+- Flutter analyze/test/build were not executable in the packaging container.
+- Teacher/pilot/store/privacy/real-device/native-Windows external gates remain pending.

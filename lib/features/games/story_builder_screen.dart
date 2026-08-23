@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import '../../app/brightquest_scope.dart';
 import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
+import '../../core/learning/adaptive_difficulty_models.dart';
 import '../../core/learning/game_evidence_adapter.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
+import '../../core/session/game_session_models.dart';
 import '../../core/theme/app_theme.dart';
 import '../../widgets/bright_design_system.dart';
 import '../../widgets/bright_illustrations.dart';
@@ -32,6 +34,8 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
   MissionReward? missionReward;
   int _difficulty = 1;
   int _classNumber = 4;
+  int _attemptSerial = 0;
+  bool _answerInFlight = false;
   bool _sessionConfigured = false;
 
   @override
@@ -41,8 +45,38 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
     final controller = BrightQuestScope.of(context);
     _classNumber =
         widget.learningLevel?.classNumber ?? controller.selectedClass;
-    _difficulty = widget.learningLevel?.difficulty ??
-        controller.recommendedDifficulty('story_builder');
+    _difficulty = controller.resumableDifficulty(
+      gameId: 'story_builder',
+      classNumber: _classNumber,
+      fallbackDifficulty: widget.learningLevel?.difficulty ??
+          controller.recommendedDifficulty('story_builder'),
+      learningLevelId: widget.learningLevel?.id,
+    );
+    final missions = BrightQuestScope.contentOf(context)
+        .storyMissionsForClass(_classNumber, difficulty: _difficulty);
+    final checkpoint = controller.beginOrResumeGameSession(
+      gameId: 'story_builder',
+      classNumber: _classNumber,
+      difficulty: _difficulty,
+      maxScore: missions.length,
+      learningLevel: widget.learningLevel,
+    );
+    missionIndex = checkpoint.cursor.clamp(0, missions.length - 1).toInt();
+    score = checkpoint.score.clamp(0, missions.length).toInt();
+    selected
+      ..clear()
+      ..addAll((checkpoint.data['selected'] as List?)?.whereType<String>() ??
+          const <String>[]);
+    checked = checkpoint.data['checked'] as bool? ?? false;
+    correct = checkpoint.data['correct'] as bool?;
+    hadMistake = checkpoint.data['hadMistake'] as bool? ?? false;
+    _hintUsed = checkpoint.data['hintUsed'] as bool? ?? false;
+    _attemptSerial = (checkpoint.data['attemptSerial'] as num?)?.toInt() ?? 0;
+    if (checkpoint.stage == GameSessionStage.result &&
+        checkpoint.reward != null) {
+      finished = true;
+      missionReward = checkpoint.reward!.toReward();
+    }
     _sessionConfigured = true;
   }
 
@@ -61,6 +95,7 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
       checked = false;
       correct = null;
     });
+    _checkpoint();
   }
 
   void _removeWord(int index) {
@@ -70,66 +105,78 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
       checked = false;
       correct = null;
     });
+    _checkpoint();
   }
 
-  void _check(StoryMission mission) {
-    if (checked || selected.isEmpty) return;
-    final isCorrect = selected.join(' ') == mission.words.join(' ');
-    final controller = BrightQuestScope.of(context);
-    final activity = const GameEvidenceAdapter().resolve(
-      repository: BrightQuestScope.contentOf(context),
-      classNumber: _classNumber,
-      gameId: 'story_builder',
-      legacyContentId: mission.id,
-    );
-    controller.recordAnswer(
-      gameId: 'story_builder',
-      correct: isCorrect,
-      topicId: mission.topicId,
-      difficulty: mission.difficulty,
-      masteryGain: 0.07,
-      itemId: activity?.id,
-      competencyId: activity?.competencyId,
-      evidenceKind: const GameEvidenceAdapter().kindFor(widget.learningLevel),
-      hintLevel: _hintUsed ? 1 : 0,
-      retries: hadMistake ? 1 : 0,
-      responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
-      misconceptionId: isCorrect ? null : 'sentence_order',
-      confidence: _hintUsed ? 0.55 : 0.82,
-    );
-    final chosenSentence = selected.join(' ');
-    if (isCorrect) {
-      FeedbackService.correct(
-        controller,
-        answer: chosenSentence,
-        detail: 'You built the sentence in the right order.',
+  Future<void> _check(StoryMission mission) async {
+    if (checked || selected.isEmpty || _answerInFlight) return;
+    _answerInFlight = true;
+    try {
+      final isCorrect = selected.join(' ') == mission.words.join(' ');
+      final controller = BrightQuestScope.of(context);
+      final activity = const GameEvidenceAdapter().resolve(
+        repository: BrightQuestScope.contentOf(context),
+        classNumber: _classNumber,
+        gameId: 'story_builder',
+        legacyContentId: mission.id,
       );
-    } else {
-      FeedbackService.wrong(
-        controller,
-        answer: chosenSentence,
-        guidance: 'Rearrange the words and try again.',
+      await controller.recordAnswerSafely(
+        gameId: 'story_builder',
+        learningLevel: widget.learningLevel,
+        correct: isCorrect,
+        attemptMarker: 'answer:$_attemptSerial:${selected.join('|')}',
+        topicId: mission.topicId,
+        difficulty: mission.difficulty,
+        masteryGain: 0.07,
+        itemId: activity?.id,
+        competencyId: activity?.competencyId,
+        evidenceKind: const GameEvidenceAdapter().kindFor(widget.learningLevel),
+        hintLevel: _hintUsed ? 1 : 0,
+        retries: hadMistake ? 1 : 0,
+        responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
+        misconceptionId: isCorrect ? null : 'sentence_order',
+        confidence: _hintUsed ? 0.55 : 0.82,
       );
+      if (!mounted) return;
+      _attemptSerial += 1;
+      final chosenSentence = selected.join(' ');
+      if (isCorrect) {
+        FeedbackService.correct(
+          controller,
+          answer: chosenSentence,
+          detail: 'You built the sentence in the right order.',
+        );
+      } else {
+        FeedbackService.wrong(
+          controller,
+          answer: chosenSentence,
+          guidance: 'Rearrange the words and try again.',
+        );
+      }
+      setState(() {
+        checked = true;
+        correct = isCorrect;
+        if (isCorrect && !hadMistake) score += 1;
+        if (!isCorrect) hadMistake = true;
+      });
+      _checkpoint();
+    } finally {
+      _answerInFlight = false;
     }
-    setState(() {
-      checked = true;
-      correct = isCorrect;
-      if (isCorrect && !hadMistake) score += 1;
-      if (!isCorrect) hadMistake = true;
-    });
   }
 
-  void _next(List<StoryMission> missions, int classNumber) {
+  Future<void> _next(List<StoryMission> missions, int classNumber) async {
     if (correct != true) return;
     if (missionIndex == missions.length - 1) {
       final controller = BrightQuestScope.of(context);
-      final reward = controller.completeRun(
+      final reward = await controller.completeRunSafely(
         gameId: 'story_builder',
         fallbackMissionId: 'story_builder:c$classNumber:d$_difficulty:core_run',
         learningLevel: widget.learningLevel,
         score: score,
         maxScore: missions.length,
       );
+      if (!mounted) return;
       FeedbackService.complete(controller, reward: reward);
       setState(() {
         finished = true;
@@ -146,19 +193,30 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
       _hintUsed = false;
       _itemStarted = DateTime.now();
     });
+    _checkpoint();
   }
 
-  void _showHint(StoryMission mission) {
+  Future<void> _showHint(StoryMission mission) async {
+    if (!learningLevelAllowsMainGameHints(widget.learningLevel)) return;
     final controller = BrightQuestScope.of(context);
-    if (!controller.useHint(gameId: 'story_builder', cost: 3)) {
+    final hintUnlocked = await controller.useHintSafely(
+      gameId: 'story_builder',
+      learningLevel: widget.learningLevel,
+      cost: 3,
+      marker: 'story:$missionIndex',
+    );
+    if (!mounted) return;
+    if (!hintUnlocked) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('You need 3 coins for a hint.')));
+        const SnackBar(content: Text('You need 3 coins for a hint.')),
+      );
       return;
     }
     setState(() {
       hadMistake = true;
       _hintUsed = true;
     });
+    _checkpoint();
     final nextIndex =
         selected.length.clamp(0, mission.words.length - 1).toInt();
     final nextWord = mission.words[nextIndex];
@@ -169,18 +227,50 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
   }
 
   void _restart() {
+    final missions = BrightQuestScope.contentOf(context)
+        .storyMissionsForClass(_classNumber, difficulty: _difficulty);
+    BrightQuestScope.of(context).restartActiveGameSession(
+      gameId: 'story_builder',
+      classNumber: _classNumber,
+      difficulty: _difficulty,
+      maxScore: missions.length,
+      learningLevel: widget.learningLevel,
+    );
     setState(() {
       missionIndex = 0;
       score = 0;
+      _attemptSerial = 0;
       selected.clear();
       checked = false;
       correct = null;
       hadMistake = false;
       _hintUsed = false;
-      _itemStarted = DateTime.now();
       finished = false;
       missionReward = null;
+      _itemStarted = DateTime.now();
     });
+  }
+
+  void _checkpoint() {
+    final missions = BrightQuestScope.contentOf(context)
+        .storyMissionsForClass(_classNumber, difficulty: _difficulty);
+    BrightQuestScope.of(context).checkpointGameSession(
+      gameId: 'story_builder',
+      classNumber: _classNumber,
+      difficulty: _difficulty,
+      cursor: missionIndex,
+      score: score,
+      maxScore: missions.length,
+      learningLevel: widget.learningLevel,
+      data: <String, Object?>{
+        'attemptSerial': _attemptSerial,
+        'selected': List<String>.from(selected),
+        'checked': checked,
+        if (correct != null) 'correct': correct,
+        'hadMistake': hadMistake,
+        'hintUsed': _hintUsed,
+      },
+    );
   }
 
   @override
@@ -192,6 +282,7 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
     final remaining = _remainingWords(mission);
 
     return GameScaffold(
+      learningLevel: widget.learningLevel,
       title: 'Story Builder',
       subtitle: widget.learningLevel == null
           ? 'Class $classNumber • Read, choose, arrange, learn'
@@ -246,6 +337,7 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
           const SizedBox(height: 16),
           if (finished)
             MissionSummaryCard(
+                learningLevel: widget.learningLevel,
                 score: score,
                 maxScore: missions.length,
                 reward: missionReward,
@@ -281,11 +373,13 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
                   icon: const Icon(Icons.menu_book_rounded),
                   label: const Text('Read'),
                 ),
-                OutlinedButton.icon(
+                if (learningLevelAllowsMainGameHints(widget.learningLevel))
+                  OutlinedButton.icon(
                     onPressed:
                         correct == true ? null : () => _showHint(mission),
                     icon: const Icon(Icons.lightbulb_rounded),
-                    label: const Text('Hint · 3 coins')),
+                    label: const Text('Hint · 3 coins'),
+                  ),
                 FilledButton.icon(
                     onPressed: checked || selected.isEmpty
                         ? null

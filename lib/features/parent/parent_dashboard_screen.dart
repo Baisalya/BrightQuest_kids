@@ -241,7 +241,7 @@ class ParentDashboardScreen extends StatelessWidget {
                     SwitchListTile(
                       title: const Text('Reading focus'),
                       subtitle: const Text(
-                        'Keeps reading support ready for passages and explanations.',
+                        'Highlights the current learning text and narration transcript with extra spacing and contrast.',
                       ),
                       value: controller.readingFocusEnabled,
                       onChanged: controller.setReadingFocusEnabled,
@@ -249,7 +249,7 @@ class ParentDashboardScreen extends StatelessWidget {
                     SwitchListTile(
                       title: const Text('Captions / visible audio meaning'),
                       subtitle: const Text(
-                        'Learning feedback remains visible even when audio is muted or unavailable.',
+                        'Shows the current narration transcript and choices even when speech is muted or unavailable.',
                       ),
                       value: controller.captionsEnabled,
                       onChanged: controller.setCaptionsEnabled,
@@ -397,9 +397,9 @@ class ParentDashboardScreen extends StatelessWidget {
                                 ),
                               SwitchListTile(
                                 title:
-                                    const Text('Automatic guide introductions'),
+                                    const Text('Automatic learning narration'),
                                 subtitle: const Text(
-                                    'The guide welcomes the child when a game opens.'),
+                                    'Reads lesson steps automatically and keeps game introductions spoken. Read-aloud buttons always remain manual.'),
                                 value: audio.autoNarrationEnabled,
                                 onChanged: controller.soundEnabled &&
                                         audio.voiceAvailable &&

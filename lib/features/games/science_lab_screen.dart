@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
@@ -7,6 +9,7 @@ import '../../core/learning/game_evidence_adapter.dart';
 import '../../core/learning/learning_models.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
+import '../../core/session/game_session_models.dart';
 import '../../core/theme/app_theme.dart';
 import '../../widgets/bright_design_system.dart';
 import '../../widgets/bright_illustrations.dart';
@@ -33,6 +36,8 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
   MissionReward? missionReward;
   int _difficulty = 1;
   int _classNumber = 4;
+  int _attemptSerial = 0;
+  bool _answerInFlight = false;
   bool _sessionConfigured = false;
 
   @override
@@ -42,8 +47,38 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
     final controller = BrightQuestScope.of(context);
     _classNumber =
         widget.learningLevel?.classNumber ?? controller.selectedClass;
-    _difficulty = widget.learningLevel?.difficulty ??
-        controller.recommendedDifficulty('science_lab');
+    _difficulty = controller.resumableDifficulty(
+      gameId: 'science_lab',
+      classNumber: _classNumber,
+      fallbackDifficulty: widget.learningLevel?.difficulty ??
+          controller.recommendedDifficulty('science_lab'),
+      learningLevelId: widget.learningLevel?.id,
+    );
+    final questions = BrightQuestScope.contentOf(context)
+        .scienceQuestionsForClass(_classNumber, difficulty: _difficulty);
+    final checkpoint = controller.beginOrResumeGameSession(
+      gameId: 'science_lab',
+      classNumber: _classNumber,
+      difficulty: _difficulty,
+      maxScore: questions.length + 1,
+      learningLevel: widget.learningLevel,
+    );
+    quizIndex = checkpoint.cursor.clamp(0, questions.length - 1).toInt();
+    quizScore = (checkpoint.data['quizScore'] as num?)?.toInt() ?? 0;
+    ingredients
+      ..clear()
+      ..addAll((checkpoint.data['ingredients'] as List?)?.whereType<String>() ??
+          const <String>[]);
+    selectedQuiz = checkpoint.data['selectedQuiz'] as String?;
+    quizCorrect = checkpoint.data['quizCorrect'] as bool?;
+    experimentRecorded =
+        checkpoint.data['experimentRecorded'] as bool? ?? false;
+    _attemptSerial = (checkpoint.data['attemptSerial'] as num?)?.toInt() ?? 0;
+    if (checkpoint.stage == GameSessionStage.result &&
+        checkpoint.reward != null) {
+      finished = true;
+      missionReward = checkpoint.reward!.toReward();
+    }
     _sessionConfigured = true;
   }
 
@@ -53,15 +88,31 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
     final reaction = BrightQuestScope.contentOf(context)
         .scienceReactionForIngredients(_classNumber, ingredients);
     if (reaction.id == 'fizz' && !experimentRecorded) {
+      if (_answerInFlight) return;
+      _answerInFlight = true;
+      unawaited(_recordExperimentSafely(reaction.title, reaction.explanation));
+      return;
+    }
+    _checkpoint();
+  }
+
+  Future<void> _recordExperimentSafely(
+    String reactionTitle,
+    String reactionExplanation,
+  ) async {
+    try {
       final controller = BrightQuestScope.of(context);
       final activity =
           BrightQuestScope.contentOf(context).activityForScienceReaction(
         classNumber: _classNumber,
-        reactionId: reaction.id,
+        reactionId: 'fizz',
       );
-      controller.recordAnswer(
+      await controller.recordAnswerSafely(
         gameId: 'science_lab',
+        learningLevel: widget.learningLevel,
         correct: true,
+        attemptMarker:
+            'answer:$_attemptSerial:experiment:${(ingredients.toList()..sort()).join('|')}',
         topicId: activity?.topicId ?? 'reactions',
         difficulty: activity?.difficulty ?? _difficulty,
         masteryGain: 0.06,
@@ -73,67 +124,93 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
         responseTimeMs: DateTime.now().difference(_quizStarted).inMilliseconds,
         confidence: 0.8,
       );
+      if (!mounted) return;
+      _attemptSerial += 1;
       FeedbackService.correct(
-        BrightQuestScope.of(context),
-        answer: reaction.title,
-        detail: reaction.explanation,
+        controller,
+        answer: reactionTitle,
+        detail: reactionExplanation,
       );
       setState(() => experimentRecorded = true);
+      _checkpoint();
+    } finally {
+      _answerInFlight = false;
     }
   }
 
   void _clearExperiment() {
-    if (finished) return;
+    if (finished || _answerInFlight) return;
     setState(ingredients.clear);
+    _checkpoint();
   }
 
   void _answerQuiz(ScienceQuizQuestion question, String value) {
-    if (selectedQuiz != null || finished) return;
-    final correct = value == question.answer;
-    final controller = BrightQuestScope.of(context);
-    final adapter = const GameEvidenceAdapter();
-    final activity = adapter.resolve(
-      repository: BrightQuestScope.contentOf(context),
-      classNumber: _classNumber,
-      gameId: 'science_lab',
-      legacyContentId: question.id,
-    );
-    controller.recordAnswer(
-      gameId: 'science_lab',
-      correct: correct,
-      topicId: question.topicId,
-      difficulty: question.difficulty,
-      masteryGain: 0.05,
-      itemId: activity?.id,
-      competencyId: activity?.competencyId,
-      evidenceKind: adapter.kindFor(widget.learningLevel),
-      responseTimeMs: DateTime.now().difference(_quizStarted).inMilliseconds,
-      misconceptionId:
-          correct ? null : adapter.misconceptionFor(activity, value),
-      confidence: 0.84,
-    );
-    if (correct) {
-      FeedbackService.correct(
-        controller,
-        answer: value,
-        detail: question.explanation,
-      );
-    } else {
-      FeedbackService.wrong(
-        controller,
-        answer: value,
-        correctAnswer: question.answer,
-        guidance: question.explanation,
-      );
-    }
-    setState(() {
-      selectedQuiz = value;
-      quizCorrect = correct;
-      if (correct) quizScore += 1;
-    });
+    if (selectedQuiz != null || finished || _answerInFlight) return;
+    _answerInFlight = true;
+    unawaited(_answerQuizSafely(question, value));
   }
 
-  void _nextQuiz(List<ScienceQuizQuestion> questions, int classNumber) {
+  Future<void> _answerQuizSafely(
+    ScienceQuizQuestion question,
+    String value,
+  ) async {
+    try {
+      final correct = value == question.answer;
+      final controller = BrightQuestScope.of(context);
+      final adapter = const GameEvidenceAdapter();
+      final activity = adapter.resolve(
+        repository: BrightQuestScope.contentOf(context),
+        classNumber: _classNumber,
+        gameId: 'science_lab',
+        legacyContentId: question.id,
+      );
+      await controller.recordAnswerSafely(
+        gameId: 'science_lab',
+        learningLevel: widget.learningLevel,
+        correct: correct,
+        attemptMarker: 'answer:$_attemptSerial:$value',
+        topicId: question.topicId,
+        difficulty: question.difficulty,
+        masteryGain: 0.05,
+        itemId: activity?.id,
+        competencyId: activity?.competencyId,
+        evidenceKind: adapter.kindFor(widget.learningLevel),
+        responseTimeMs: DateTime.now().difference(_quizStarted).inMilliseconds,
+        misconceptionId:
+            correct ? null : adapter.misconceptionFor(activity, value),
+        confidence: 0.84,
+      );
+      if (!mounted) return;
+      _attemptSerial += 1;
+      if (correct) {
+        FeedbackService.correct(
+          controller,
+          answer: value,
+          detail: question.explanation,
+        );
+      } else {
+        FeedbackService.wrong(
+          controller,
+          answer: value,
+          correctAnswer: question.answer,
+          guidance: question.explanation,
+        );
+      }
+      setState(() {
+        selectedQuiz = value;
+        quizCorrect = correct;
+        if (correct) quizScore += 1;
+      });
+      _checkpoint();
+    } finally {
+      _answerInFlight = false;
+    }
+  }
+
+  Future<void> _nextQuiz(
+    List<ScienceQuizQuestion> questions,
+    int classNumber,
+  ) async {
     if (selectedQuiz == null) return;
     if (quizIndex == questions.length - 1) {
       if (!experimentRecorded) {
@@ -144,13 +221,14 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
       }
       final totalScore = quizScore + 1;
       final controller = BrightQuestScope.of(context);
-      final reward = controller.completeRun(
+      final reward = await controller.completeRunSafely(
         gameId: 'science_lab',
         fallbackMissionId: 'science_lab:c$classNumber:d$_difficulty:core_run',
         learningLevel: widget.learningLevel,
         score: totalScore,
         maxScore: questions.length + 1,
       );
+      if (!mounted) return;
       FeedbackService.complete(controller, reward: reward);
       setState(() {
         finished = true;
@@ -164,13 +242,24 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
       quizCorrect = null;
       _quizStarted = DateTime.now();
     });
+    _checkpoint();
   }
 
   void _restart() {
+    final questions = BrightQuestScope.contentOf(context)
+        .scienceQuestionsForClass(_classNumber, difficulty: _difficulty);
+    BrightQuestScope.of(context).restartActiveGameSession(
+      gameId: 'science_lab',
+      classNumber: _classNumber,
+      difficulty: _difficulty,
+      maxScore: questions.length + 1,
+      learningLevel: widget.learningLevel,
+    );
     setState(() {
       ingredients.clear();
       quizIndex = 0;
       quizScore = 0;
+      _attemptSerial = 0;
       selectedQuiz = null;
       quizCorrect = null;
       _quizStarted = DateTime.now();
@@ -178,6 +267,28 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
       finished = false;
       missionReward = null;
     });
+  }
+
+  void _checkpoint() {
+    final questions = BrightQuestScope.contentOf(context)
+        .scienceQuestionsForClass(_classNumber, difficulty: _difficulty);
+    BrightQuestScope.of(context).checkpointGameSession(
+      gameId: 'science_lab',
+      classNumber: _classNumber,
+      difficulty: _difficulty,
+      cursor: quizIndex,
+      score: quizScore + (experimentRecorded ? 1 : 0),
+      maxScore: questions.length + 1,
+      learningLevel: widget.learningLevel,
+      data: <String, Object?>{
+        'attemptSerial': _attemptSerial,
+        'ingredients': ingredients.toList()..sort(),
+        'quizScore': quizScore,
+        if (selectedQuiz != null) 'selectedQuiz': selectedQuiz,
+        if (quizCorrect != null) 'quizCorrect': quizCorrect,
+        'experimentRecorded': experimentRecorded,
+      },
+    );
   }
 
   @override
@@ -190,6 +301,7 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
     final question = questions[quizIndex];
 
     return GameScaffold(
+      learningLevel: widget.learningLevel,
       title: 'Science Lab',
       subtitle: widget.learningLevel == null
           ? 'Class $classNumber • Adaptive level $_difficulty • Mix & Discover'
@@ -342,6 +454,7 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
           const SizedBox(height: 16),
           if (finished)
             MissionSummaryCard(
+                learningLevel: widget.learningLevel,
                 score: quizScore + 1,
                 maxScore: questions.length + 1,
                 reward: missionReward,

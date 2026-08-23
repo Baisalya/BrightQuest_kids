@@ -41,29 +41,26 @@ class ProgressScreen extends StatelessWidget {
                 ),
                 BrightResponsive(
                   padding: const EdgeInsets.fromLTRB(18, 0, 18, 10),
-                  builder: (context, breakpoint) => Wrap(
+                  builder: (context, _) => BrightAdaptiveGrid(
+                    minChildWidth: 300,
+                    maxColumns: 4,
                     spacing: 12,
                     runSpacing: 12,
-                    children: learningWorlds.map((world) {
-                      final total =
-                          controller.totalLevelsForSubject(world.subject);
-                      return SizedBox(
-                        width: breakpoint == BrightBreakpoint.compact
-                            ? double.infinity
-                            : 360,
-                        child: _WorldProgressCard(
+                    children: [
+                      for (final world in learningWorlds)
+                        _WorldProgressCard(
                           emoji: world.emoji,
                           title: world.title,
                           completed: controller
                               .completedLevelsForSubject(world.subject),
-                          total: total,
+                          total:
+                              controller.totalLevelsForSubject(world.subject),
                           stars: controller.starsForSubject(world.subject),
                           progress:
                               controller.progressForSubject(world.subject),
                           color: paletteForSubject(world.subject).primary,
                         ),
-                      );
-                    }).toList(),
+                    ],
                   ),
                 ),
                 BrightResponsive(
@@ -76,40 +73,41 @@ class ProgressScreen extends StatelessWidget {
                 ),
                 BrightResponsive(
                   padding: const EdgeInsets.fromLTRB(18, 0, 18, 30),
-                  builder: (context, breakpoint) => Wrap(
+                  builder: (context, _) => BrightAdaptiveGrid(
+                    minChildWidth: 300,
+                    maxColumns: 4,
                     spacing: 12,
                     runSpacing: 12,
-                    children: games
-                        .where((game) => game.id != 'rewards_room')
-                        .map((game) {
-                      final stats = controller.statsFor(game.id);
-                      final difficulty =
-                          controller.recommendedDifficulty(game.id);
-                      final weakTopics = stats.topicProgress.entries.toList()
-                        ..sort((a, b) =>
-                            a.value.accuracy.compareTo(b.value.accuracy));
-                      final weakest = weakTopics
-                          .where((entry) => entry.value.attempts >= 2)
-                          .take(2)
-                          .toList();
-                      return SizedBox(
-                        width: breakpoint == BrightBreakpoint.compact
-                            ? double.infinity
-                            : 365,
-                        child: _MasteryCard(
-                          game: game,
-                          mastery: stats.mastery,
-                          masteryStars: stats.masteryStars,
-                          correct: stats.correctAnswers,
-                          attempts: stats.attempts,
-                          hints: stats.hintsUsed,
-                          difficulty: difficulty,
-                          weakest: weakest
-                              .map((entry) => _prettyTopic(entry.key))
-                              .toList(),
+                    children: [
+                      for (final game
+                          in games.where((game) => game.id != 'rewards_room'))
+                        Builder(
+                          builder: (context) {
+                            final stats = controller.statsFor(game.id);
+                            final difficulty =
+                                controller.recommendedDifficulty(game.id);
+                            final weakTopics = stats.topicProgress.entries
+                                .toList()
+                              ..sort((a, b) =>
+                                  a.value.accuracy.compareTo(b.value.accuracy));
+                            final weakest = weakTopics
+                                .where((entry) => entry.value.attempts >= 2)
+                                .take(2)
+                                .map((entry) => _prettyTopic(entry.key))
+                                .toList();
+                            return _MasteryCard(
+                              game: game,
+                              mastery: stats.mastery,
+                              masteryStars: stats.masteryStars,
+                              correct: stats.correctAnswers,
+                              attempts: stats.attempts,
+                              hints: stats.hintsUsed,
+                              difficulty: difficulty,
+                              weakest: weakest,
+                            );
+                          },
                         ),
-                      );
-                    }).toList(),
+                    ],
                   ),
                 ),
               ],
