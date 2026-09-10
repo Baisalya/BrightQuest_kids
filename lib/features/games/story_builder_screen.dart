@@ -5,6 +5,10 @@ import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
 import '../../core/learning/adaptive_difficulty_models.dart';
 import '../../core/learning/game_evidence_adapter.dart';
+import '../../core/learning/endless_practice_coordinator.dart';
+import '../../core/learning/mission_run_game_content.dart';
+import '../../core/learning/mission_run_models.dart';
+import '../../core/learning/mission_run_session_coordinator.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
 import '../../core/session/game_session_models.dart';
@@ -14,8 +18,13 @@ import '../../widgets/bright_illustrations.dart';
 import '../../widgets/bright_widgets.dart';
 
 class StoryBuilderScreen extends StatefulWidget {
-  const StoryBuilderScreen({this.learningLevel, super.key});
+  const StoryBuilderScreen({
+    this.learningLevel,
+    this.endlessPractice = false,
+    super.key,
+  });
   final LearningLevel? learningLevel;
+  final bool endlessPractice;
 
   @override
   State<StoryBuilderScreen> createState() => _StoryBuilderScreenState();
@@ -37,6 +46,8 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
   int _attemptSerial = 0;
   bool _answerInFlight = false;
   bool _sessionConfigured = false;
+  MissionRunPlan? _missionRunPlan;
+  List<StoryMission> _missions = const <StoryMission>[];
 
   @override
   void didChangeDependencies() {
@@ -48,21 +59,65 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
     _difficulty = controller.resumableDifficulty(
       gameId: 'story_builder',
       classNumber: _classNumber,
-      fallbackDifficulty: widget.learningLevel?.difficulty ??
-          controller.recommendedDifficulty('story_builder'),
+      fallbackDifficulty: widget.endlessPractice
+          ? 3
+          : widget.learningLevel?.difficulty ??
+              controller.recommendedDifficulty('story_builder'),
       learningLevelId: widget.learningLevel?.id,
     );
-    final missions = BrightQuestScope.contentOf(context)
-        .storyMissionsForClass(_classNumber, difficulty: _difficulty);
+    final repository = BrightQuestScope.contentOf(context);
+    final existingCheckpoint = controller.gameSessionFor(
+      gameId: 'story_builder',
+      classNumber: _classNumber,
+      learningLevelId: widget.learningLevel?.id,
+    );
+    final level = widget.learningLevel;
+    if (level != null) {
+      _missionRunPlan = const MissionRunSessionCoordinator().restore(
+        repository: repository,
+        level: level,
+        data: existingCheckpoint?.data ?? const <String, Object?>{},
+      );
+    } else if (widget.endlessPractice) {
+      _missionRunPlan = const EndlessPracticeCoordinator().createOrRestore(
+        repository: repository,
+        classNumber: _classNumber,
+        gameId: 'story_builder',
+        checkpoint: existingCheckpoint,
+        history: controller.missionExposureHistoryForGame(
+          classNumber: _classNumber,
+          gameId: 'story_builder',
+        ),
+        learningState: controller.learningState,
+        gameProgress: controller.statsFor('story_builder'),
+      );
+    }
+    _missions = _missionRunPlan == null
+        ? repository.storyMissionsForClass(
+            _classNumber,
+            difficulty: _difficulty,
+          )
+        : const MissionRunGameContent().storyMissions(
+            repository: repository,
+            plan: _missionRunPlan!,
+          );
+    if (_missions.isEmpty) {
+      throw StateError('Story Builder cannot start without missions.');
+    }
     final checkpoint = controller.beginOrResumeGameSession(
       gameId: 'story_builder',
       classNumber: _classNumber,
       difficulty: _difficulty,
-      maxScore: missions.length,
+      maxScore: _missions.length,
       learningLevel: widget.learningLevel,
+      sessionData: _missionRunPlan == null
+          ? const <String, Object?>{}
+          : const MissionRunSessionCoordinator().sessionDataFor(
+              _missionRunPlan!,
+            ),
     );
-    missionIndex = checkpoint.cursor.clamp(0, missions.length - 1).toInt();
-    score = checkpoint.score.clamp(0, missions.length).toInt();
+    missionIndex = checkpoint.cursor.clamp(0, _missions.length - 1).toInt();
+    score = checkpoint.score.clamp(0, _missions.length).toInt();
     selected
       ..clear()
       ..addAll((checkpoint.data['selected'] as List?)?.whereType<String>() ??
@@ -171,8 +226,11 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
       final controller = BrightQuestScope.of(context);
       final reward = await controller.completeRunSafely(
         gameId: 'story_builder',
-        fallbackMissionId: 'story_builder:c$classNumber:d$_difficulty:core_run',
+        fallbackMissionId: widget.endlessPractice
+            ? 'endless_practice:c$classNumber:story_builder'
+            : 'story_builder:c$classNumber:d$_difficulty:core_run',
         learningLevel: widget.learningLevel,
+        practiceOnly: widget.endlessPractice,
         score: score,
         maxScore: missions.length,
       );
@@ -227,16 +285,59 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
   }
 
   void _restart() {
-    final missions = BrightQuestScope.contentOf(context)
-        .storyMissionsForClass(_classNumber, difficulty: _difficulty);
-    BrightQuestScope.of(context).restartActiveGameSession(
+    final repository = BrightQuestScope.contentOf(context);
+    final controller = BrightQuestScope.of(context);
+    var nextPlan = _missionRunPlan;
+    var nextMissions = _missions;
+    final level = widget.learningLevel;
+    if (level != null && _missionRunPlan != null) {
+      nextPlan = const MissionRunSessionCoordinator().createWorldReplay(
+        repository: repository,
+        level: level,
+        previousPlan: _missionRunPlan!,
+        history: controller.missionExposureHistoryFor(level),
+        learningState: controller.learningState,
+        levelProgress: controller.levelStatsFor(level.id),
+        gameProgress: controller.statsFor(level.gameId),
+      );
+      nextMissions = const MissionRunGameContent().storyMissions(
+        repository: repository,
+        plan: nextPlan,
+      );
+    } else if (widget.endlessPractice && _missionRunPlan != null) {
+      nextPlan = const EndlessPracticeCoordinator().createNextRound(
+        repository: repository,
+        previousPlan: _missionRunPlan!,
+        history: controller.missionExposureHistoryForGame(
+          classNumber: _classNumber,
+          gameId: 'story_builder',
+        ),
+        learningState: controller.learningState,
+        gameProgress: controller.statsFor('story_builder'),
+      );
+      nextMissions = const MissionRunGameContent().storyMissions(
+        repository: repository,
+        plan: nextPlan,
+      );
+    } else {
+      nextMissions = repository.storyMissionsForClass(
+        _classNumber,
+        difficulty: _difficulty,
+      );
+    }
+    controller.restartActiveGameSession(
       gameId: 'story_builder',
       classNumber: _classNumber,
       difficulty: _difficulty,
-      maxScore: missions.length,
+      maxScore: nextMissions.length,
       learningLevel: widget.learningLevel,
+      sessionData: nextPlan == null
+          ? const <String, Object?>{}
+          : const MissionRunSessionCoordinator().sessionDataFor(nextPlan),
     );
     setState(() {
+      _missionRunPlan = nextPlan;
+      _missions = nextMissions;
       missionIndex = 0;
       score = 0;
       _attemptSerial = 0;
@@ -252,15 +353,13 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
   }
 
   void _checkpoint() {
-    final missions = BrightQuestScope.contentOf(context)
-        .storyMissionsForClass(_classNumber, difficulty: _difficulty);
     BrightQuestScope.of(context).checkpointGameSession(
       gameId: 'story_builder',
       classNumber: _classNumber,
       difficulty: _difficulty,
       cursor: missionIndex,
       score: score,
-      maxScore: missions.length,
+      maxScore: _missions.length,
       learningLevel: widget.learningLevel,
       data: <String, Object?>{
         'attemptSerial': _attemptSerial,
@@ -276,17 +375,18 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
   @override
   Widget build(BuildContext context) {
     final classNumber = _classNumber;
-    final missions = BrightQuestScope.contentOf(context)
-        .storyMissionsForClass(classNumber, difficulty: _difficulty);
+    final missions = _missions;
     final mission = missions[missionIndex];
     final remaining = _remainingWords(mission);
 
     return GameScaffold(
       learningLevel: widget.learningLevel,
       title: 'Story Builder',
-      subtitle: widget.learningLevel == null
-          ? 'Class $classNumber • Read, choose, arrange, learn'
-          : 'Class $classNumber • ${widget.learningLevel!.typeLabel} • ${widget.learningLevel!.title}',
+      subtitle: widget.endlessPractice
+          ? 'Class $classNumber • ∞ Endless Practice • 10 rotating missions'
+          : widget.learningLevel == null
+              ? 'Class $classNumber • Read, choose, arrange, learn'
+              : 'Class $classNumber • ${widget.learningLevel!.typeLabel} • ${widget.learningLevel!.title}',
       color: const Color(0xFF22B8A7),
       voicePrompt: mission.prompt,
       voiceChoices: mission.words,
@@ -337,11 +437,13 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
           const SizedBox(height: 16),
           if (finished)
             MissionSummaryCard(
-                learningLevel: widget.learningLevel,
-                score: score,
-                maxScore: missions.length,
-                reward: missionReward,
-                onReplay: _restart)
+              learningLevel: widget.learningLevel,
+              score: score,
+              maxScore: missions.length,
+              reward: missionReward,
+              onReplay: _restart,
+              replayLabel: widget.endlessPractice ? 'Next 10 Missions' : null,
+            )
           else
             Wrap(
               spacing: 8,
@@ -469,12 +571,18 @@ class _StoryScene extends StatelessWidget {
           );
           if (compact)
             return Column(children: [SizedBox(height: 150, child: art), copy]);
-          return SizedBox(
-              height: 190,
-              child: Row(children: [
-                Expanded(flex: 5, child: art),
-                Expanded(flex: 4, child: copy)
-              ]));
+          return ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 190),
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(flex: 5, child: art),
+                  Expanded(flex: 4, child: copy),
+                ],
+              ),
+            ),
+          );
         },
       ),
     );

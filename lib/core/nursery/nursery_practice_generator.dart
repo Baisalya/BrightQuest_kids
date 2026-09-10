@@ -88,8 +88,7 @@ class NurseryPracticeGenerator {
     final distractor1 = pack.letterAssociations[
         (answerIndex + 5 + random.nextInt(7)) % pack.letterAssociations.length];
     final distractor2 = pack.letterAssociations[
-        (answerIndex + 13 + random.nextInt(5)) %
-            pack.letterAssociations.length];
+        (answerIndex + 13 + random.nextInt(5)) % pack.letterAssociations.length];
     final choices = <String>{
       target,
       lowercase ? distractor1.lowercase : distractor1.uppercase,
@@ -107,7 +106,7 @@ class NurseryPracticeGenerator {
       answer: target,
       choices: choices,
       explanation: '$target is the letter we were looking for.',
-      visualTokens: <String>[target, example.picture, example.word],
+      visualTokens: <String>[target, example.word],
     );
   }
 
@@ -123,10 +122,8 @@ class NurseryPracticeGenerator {
       length: pack.letterAssociations.length,
     );
     final answer = pack.letterAssociations[index];
-    final d1 =
-        pack.letterAssociations[(index + 8) % pack.letterAssociations.length];
-    final d2 =
-        pack.letterAssociations[(index + 17) % pack.letterAssociations.length];
+    final d1 = pack.letterAssociations[(index + 8) % pack.letterAssociations.length];
+    final d2 = pack.letterAssociations[(index + 17) % pack.letterAssociations.length];
     return _choicePractice(
       skill: skill,
       seed: seed,
@@ -135,7 +132,7 @@ class NurseryPracticeGenerator {
       choices: <String>[answer.lowercase, d1.lowercase, d2.lowercase],
       explanation:
           '${answer.uppercase} and ${answer.lowercase} are the same letter in uppercase and lowercase.',
-      visualTokens: <String>[answer.uppercase, '↔', answer.lowercase],
+      visualTokens: <String>[answer.uppercase, 'matches', answer.lowercase],
     );
   }
 
@@ -151,27 +148,28 @@ class NurseryPracticeGenerator {
           if (example.word.toUpperCase().startsWith(letter.uppercase))
             (letter, example),
     ];
-    final selected =
-        pool[_cycleIndex(seed: seed, salt: skill.id, length: pool.length)];
+    final selected = pool[
+      _cycleIndex(seed: seed, salt: skill.id, length: pool.length)
+    ];
     final answer = selected.$1;
     final example = selected.$2;
     final index = pack.letterAssociations.indexOf(answer);
-    final d1 =
-        pack.letterAssociations[(index + 6) % pack.letterAssociations.length];
-    final d2 =
-        pack.letterAssociations[(index + 14) % pack.letterAssociations.length];
+    final d1 = pack.letterAssociations[
+        (index + 6) % pack.letterAssociations.length];
+    final d2 = pack.letterAssociations[
+        (index + 14) % pack.letterAssociations.length];
     final d1Example = d1.examples[random.nextInt(d1.examples.length)];
     final d2Example = d2.examples[random.nextInt(d2.examples.length)];
     return _choicePractice(
       skill: skill,
       seed: seed,
       prompt:
-          'Look at ${example.picture}. Which word belongs with ${answer.uppercase}?',
+          'Look at the picture. Which word belongs with ${answer.uppercase}?',
       answer: example.word,
       choices: <String>[example.word, d1Example.word, d2Example.word],
       explanation:
-          '${answer.uppercase} is for ${example.word}, shown by ${example.picture}.',
-      visualTokens: <String>[answer.uppercase, example.picture, example.word],
+          '${answer.uppercase} is for ${example.word}.',
+      visualTokens: <String>[answer.uppercase, example.word],
     );
   }
 
@@ -186,14 +184,15 @@ class NurseryPracticeGenerator {
         for (final example in letter.soundPracticeExamples) (letter, example),
     ];
     final selected = eligible[
-        _cycleIndex(seed: seed, salt: skill.id, length: eligible.length)];
+      _cycleIndex(seed: seed, salt: skill.id, length: eligible.length)
+    ];
     final answer = selected.$1;
     final example = selected.$2;
     final index = pack.letterAssociations.indexOf(answer);
-    final d1 =
-        pack.letterAssociations[(index + 9) % pack.letterAssociations.length];
-    final d2 =
-        pack.letterAssociations[(index + 18) % pack.letterAssociations.length];
+    final d1 = pack.letterAssociations[
+        (index + 9) % pack.letterAssociations.length];
+    final d2 = pack.letterAssociations[
+        (index + 18) % pack.letterAssociations.length];
     return _choicePractice(
       skill: skill,
       seed: seed,
@@ -204,7 +203,7 @@ class NurseryPracticeGenerator {
       choices: <String>[answer.uppercase, d1.uppercase, d2.uppercase],
       explanation:
           '${example.word} starts with ${answer.uppercase}. ${example.soundCue}',
-      visualTokens: <String>[example.picture, example.word, answer.uppercase],
+      visualTokens: <String>[example.word, answer.uppercase],
     );
   }
 
@@ -220,10 +219,8 @@ class NurseryPracticeGenerator {
       length: pack.letterAssociations.length,
     );
     final answer = pack.letterAssociations[index];
-    final d1 =
-        pack.letterAssociations[(index + 4) % pack.letterAssociations.length];
-    final d2 =
-        pack.letterAssociations[(index + 11) % pack.letterAssociations.length];
+    final d1 = pack.letterAssociations[(index + 4) % pack.letterAssociations.length];
+    final d2 = pack.letterAssociations[(index + 11) % pack.letterAssociations.length];
     return _choicePractice(
       skill: skill,
       seed: seed,
@@ -246,14 +243,15 @@ class NurseryPracticeGenerator {
         for (final example in letter.beginningSoundExamples) (letter, example),
     ];
     final selected = eligible[
-        _cycleIndex(seed: seed, salt: skill.id, length: eligible.length)];
+      _cycleIndex(seed: seed, salt: skill.id, length: eligible.length)
+    ];
     final answer = selected.$1;
     final example = selected.$2;
     final index = pack.letterAssociations.indexOf(answer);
-    final d1 =
-        pack.letterAssociations[(index + 7) % pack.letterAssociations.length];
-    final d2 =
-        pack.letterAssociations[(index + 15) % pack.letterAssociations.length];
+    final d1 = pack.letterAssociations[
+        (index + 7) % pack.letterAssociations.length];
+    final d2 = pack.letterAssociations[
+        (index + 15) % pack.letterAssociations.length];
     return _choicePractice(
       skill: skill,
       seed: seed,
@@ -264,7 +262,7 @@ class NurseryPracticeGenerator {
       choices: <String>[answer.uppercase, d1.uppercase, d2.uppercase],
       explanation:
           '${example.word} begins with ${answer.uppercase}. ${example.soundCue}',
-      visualTokens: <String>[example.picture, example.word],
+      visualTokens: <String>[example.word],
     );
   }
 
@@ -280,12 +278,11 @@ class NurseryPracticeGenerator {
     };
     final min = bounds.$1;
     final max = bounds.$2;
-    final answer = min +
-        _cycleIndex(
-          seed: seed,
-          salt: '${skill.id}:number',
-          length: max - min + 1,
-        );
+    final answer = min + _cycleIndex(
+      seed: seed,
+      salt: '${skill.id}:number',
+      length: max - min + 1,
+    );
     final choices = _nearbyNumberChoices(answer, min, max);
     return _choicePractice(
       skill: skill,
@@ -304,11 +301,11 @@ class NurseryPracticeGenerator {
   ) {
     final min = skill.id == 'math_count_0_5' ? 0 : 6;
     final max = skill.id == 'math_count_0_5' ? 5 : 10;
-    const symbols = <String>['●', '★', '🍎', '🐟'];
+    const visuals = <String>['dot', 'star', 'apple', 'fish'];
     final cases = <(int, String)>[
-      if (min == 0) (0, '●'),
+      if (min == 0) (0, 'dot'),
       for (var count = min == 0 ? 1 : min; count <= max; count += 1)
-        for (final symbol in symbols) (count, symbol),
+        for (final visual in visuals) (count, visual),
     ];
     final selected = cases[_cycleIndex(
       seed: seed,
@@ -316,26 +313,25 @@ class NurseryPracticeGenerator {
       length: cases.length,
     )];
     final count = selected.$1;
-    final symbol = selected.$2;
-    final visual = List<String>.filled(count, symbol).join();
+    final visual = selected.$2;
     final choices = _nearbyNumberChoices(count, 0, 10);
     return _choicePractice(
       skill: skill,
       seed: seed,
       prompt: count == 0
           ? 'How many objects are in the empty counting space?'
-          : 'Count the objects: $visual',
+          : 'Count the ${_pictureNoun(visual, count)} pictures. How many are there?',
       narration: count == 0
           ? 'How many objects are in the empty counting space?'
-          : 'Count the objects carefully. How many are there?',
+          : 'Count the ${_pictureNoun(visual, count)} carefully. How many are there?',
       answer: '$count',
       choices: choices.map((value) => '$value').toList(),
       explanation: count == 0
           ? 'The counting space is empty, so the amount is zero.'
-          : 'There ${count == 1 ? 'is' : 'are'} $count ${count == 1 ? 'object' : 'objects'}.',
+          : 'There ${count == 1 ? 'is' : 'are'} $count ${count == 1 ? 'picture' : 'pictures'}.',
       visualTokens: count == 0
           ? const <String>['empty counting space']
-          : List<String>.filled(count, symbol),
+          : List<String>.filled(count, visual),
     );
   }
 
@@ -361,7 +357,7 @@ class NurseryPracticeGenerator {
       explanation: answer == 0
           ? 'The empty group has zero objects.'
           : 'Count once: this group has $answer dots.',
-      visualTokens: <String>['$answer', '↔', _quantityLabel(answer)],
+      visualTokens: <String>['$answer', 'matches', _quantityLabel(answer)],
     );
   }
 
@@ -440,8 +436,9 @@ class NurseryPracticeGenerator {
       prompt: 'Which number is ${askMore ? 'more' : 'less'}: $left or $right?',
       answer: '$answer',
       choices: <String>['$left', '$right'],
-      explanation:
-          askMore ? '$right is more than $left.' : '$left is less than $right.',
+      explanation: askMore
+          ? '$right is more than $left.'
+          : '$left is less than $right.',
     );
   }
 
@@ -455,39 +452,37 @@ class NurseryPracticeGenerator {
         for (var right = 1; right <= 5; right += 1)
           if (left + right <= 10) (left, right),
     ];
-    const symbols = <String>['●', '★', '🍎', '🐟'];
+    const visuals = <String>['dot', 'star', 'apple', 'fish'];
     final objectMode = skill.id == 'math_add_objects';
-    final caseCount = objectMode ? facts.length * symbols.length : facts.length;
+    final caseCount = objectMode ? facts.length * visuals.length : facts.length;
     final caseIndex = _cycleIndex(
       seed: seed,
       salt: '${skill.id}:addition',
       length: caseCount,
     );
-    final fact = facts[objectMode ? caseIndex ~/ symbols.length : caseIndex];
-    final symbol = objectMode ? symbols[caseIndex % symbols.length] : '●';
+    final fact = facts[objectMode ? caseIndex ~/ visuals.length : caseIndex];
+    final visual = objectMode ? visuals[caseIndex % visuals.length] : 'dot';
     final left = fact.$1;
     final right = fact.$2;
     final total = left + right;
     final choices = _nearbyNumberChoices(total, 0, 10);
-    final leftObjects = List<String>.filled(left, symbol).join();
-    final rightObjects = List<String>.filled(right, symbol).join();
     return _choicePractice(
       skill: skill,
       seed: seed,
       prompt: objectMode
-          ? '$leftObjects + $rightObjects = how many objects?'
+          ? 'Add $left ${_pictureNoun(visual, left)} and $right ${_pictureNoun(visual, right)}. How many altogether?'
           : '$left + $right = ?',
       narration: objectMode
-          ? 'Join the first group and the second group. How many objects are there altogether?'
+          ? 'Join $left ${_pictureNoun(visual, left)} and $right ${_pictureNoun(visual, right)}. How many are there altogether?'
           : '$left plus $right equals what number?',
       answer: '$total',
       choices: choices.map((value) => '$value').toList(),
       explanation: '$left and $right combine to make $total.',
       visualTokens: objectMode
           ? <String>[
-              ...List<String>.filled(left, symbol),
+              ...List<String>.filled(left, visual),
               '+',
-              ...List<String>.filled(right, symbol),
+              ...List<String>.filled(right, visual),
               '=',
               '$total',
             ]
@@ -500,14 +495,7 @@ class NurseryPracticeGenerator {
     int seed,
     _NurseryStableRandom random,
   ) {
-    const catalog = <(String, String)>[
-      ('red', '🔴'),
-      ('blue', '🔵'),
-      ('green', '🟢'),
-      ('yellow', '🟡'),
-      ('orange', '🟠'),
-      ('purple', '🟣'),
-    ];
+    const catalog = <String>['red', 'blue', 'green', 'yellow', 'orange', 'purple'];
     final index = _cycleIndex(
       seed: seed,
       salt: '${skill.id}:colour',
@@ -519,12 +507,12 @@ class NurseryPracticeGenerator {
     return _choicePractice(
       skill: skill,
       seed: seed,
-      prompt: 'What colour is ${answer.$2}?',
+      prompt: 'Which colour word matches this colour?',
       narration: 'Look at the coloured circle. Which colour word matches it?',
-      answer: answer.$1,
-      choices: <String>[answer.$1, d1.$1, d2.$1],
-      explanation: '${answer.$2} shows ${answer.$1}.',
-      visualTokens: <String>[answer.$2],
+      answer: answer,
+      choices: <String>[answer, d1, d2],
+      explanation: 'This colour is $answer.',
+      visualTokens: <String>['colour:$answer'],
     );
   }
 
@@ -533,12 +521,7 @@ class NurseryPracticeGenerator {
     int seed,
     _NurseryStableRandom random,
   ) {
-    const catalog = <(String, String)>[
-      ('circle', '●'),
-      ('square', '■'),
-      ('triangle', '▲'),
-      ('rectangle', '▭'),
-    ];
+    const catalog = <String>['circle', 'square', 'triangle', 'rectangle'];
     final index = _cycleIndex(
       seed: seed,
       salt: '${skill.id}:shape',
@@ -550,12 +533,12 @@ class NurseryPracticeGenerator {
     return _choicePractice(
       skill: skill,
       seed: seed,
-      prompt: 'Which shape is ${answer.$2}?',
+      prompt: 'Which shape word matches this shape?',
       narration: 'Look at the shape. Which shape word matches it?',
-      answer: answer.$1,
-      choices: <String>[answer.$1, d1.$1, d2.$1],
-      explanation: '${answer.$2} is a ${answer.$1}.',
-      visualTokens: <String>[answer.$2],
+      answer: answer,
+      choices: <String>[answer, d1, d2],
+      explanation: 'This shape is a $answer.',
+      visualTokens: <String>[answer],
     );
   }
 
@@ -565,50 +548,20 @@ class NurseryPracticeGenerator {
     _NurseryStableRandom random,
   ) {
     final catalog = switch (skill.id) {
-      'knowledge_animals' => const <(String, String)>[
-          ('cat', '🐱'),
-          ('dog', '🐶'),
-          ('fish', '🐟'),
-          ('rabbit', '🐰'),
-          ('goat', '🐐'),
-          ('cow', '🐮'),
-          ('tiger', '🐯'),
-          ('bird', '🐦'),
+      'knowledge_animals' => const <String>[
+          'cat', 'dog', 'fish', 'rabbit', 'goat', 'cow', 'tiger', 'bird',
         ],
-      'knowledge_foods' => const <(String, String)>[
-          ('apple', '🍎'),
-          ('mango', '🥭'),
-          ('carrot', '🥕'),
-          ('orange', '🍊'),
-          ('banana', '🍌'),
-          ('potato', '🥔'),
-          ('pear', '🍐'),
-          ('broccoli', '🥦'),
+      'knowledge_foods' => const <String>[
+          'apple', 'mango', 'carrot', 'orange', 'banana', 'potato', 'pear',
+          'broccoli',
         ],
-      'knowledge_objects' => const <(String, String)>[
-          ('ball', '⚽'),
-          ('book', '📘'),
-          ('shoe', '👟'),
-          ('cup', '🥤'),
-          ('spoon', '🥄'),
-          ('pencil', '✏️'),
-          ('hat', '🧢'),
-          ('key', '🔑'),
+      'knowledge_objects' => const <String>[
+          'ball', 'book', 'shoe', 'cup', 'spoon', 'pencil', 'hat', 'key',
         ],
-      'knowledge_body' => const <(String, String)>[
-          ('eyes', '👀'),
-          ('hands', '🙌'),
-          ('feet', '🦶🦶'),
-          ('ears', '👂'),
-          ('nose', '👃'),
-          ('mouth', '👄'),
+      'knowledge_body' => const <String>[
+          'eyes', 'hands', 'feet', 'ears', 'nose', 'mouth',
         ],
-      _ => const <(String, String)>[
-          ('cat', '🐱'),
-          ('ball', '⚽'),
-          ('apple', '🍎'),
-          ('book', '📘'),
-        ],
+      _ => const <String>['cat', 'ball', 'apple', 'book'],
     };
     final index = _cycleIndex(
       seed: seed,
@@ -617,9 +570,9 @@ class NurseryPracticeGenerator {
     );
     final answer = catalog[index];
     final values = <String>[
-      answer.$1,
-      catalog[(index + 1) % catalog.length].$1,
-      catalog[(index + 2) % catalog.length].$1,
+      answer,
+      catalog[(index + 1) % catalog.length],
+      catalog[(index + 2) % catalog.length],
     ];
     final category = switch (skill.id) {
       'knowledge_animals' => 'animal',
@@ -631,12 +584,12 @@ class NurseryPracticeGenerator {
     return _choicePractice(
       skill: skill,
       seed: seed,
-      prompt: 'Which word matches ${answer.$2}?',
+      prompt: 'Which word matches this $category picture?',
       narration: 'Look at the $category picture. Which word names it?',
-      answer: answer.$1,
+      answer: answer,
       choices: values,
-      explanation: '${answer.$2} is ${answer.$1}.',
-      visualTokens: <String>[answer.$2],
+      explanation: 'This picture shows $answer.',
+      visualTokens: <String>[answer],
     );
   }
 
@@ -710,12 +663,12 @@ class NurseryPracticeGenerator {
     _NurseryStableRandom random,
   ) {
     const pairs = <(String, String)>[
-      ('🔴', '🔵'),
-      ('▲', '●'),
-      ('🍎', '🍌'),
-      ('🟡', '🟢'),
-      ('■', '▲'),
-      ('🐱', '🐟'),
+      ('red', 'blue'),
+      ('triangle', 'circle'),
+      ('apple', 'banana'),
+      ('yellow', 'green'),
+      ('square', 'triangle'),
+      ('cat', 'fish'),
     ];
     final pair = pairs[_cycleIndex(
       seed: seed,
@@ -723,15 +676,15 @@ class NurseryPracticeGenerator {
       length: pairs.length,
     )];
     final distractor = switch (pair.$1) {
-      '🔴' || '🟡' => '🟣',
-      '▲' || '■' => '★',
-      '🍎' => '🍊',
-      _ => '🐶',
+      'red' || 'yellow' => 'purple',
+      'triangle' || 'square' => 'star',
+      'apple' => 'orange',
+      _ => 'dog',
     };
     return _choicePractice(
       skill: skill,
       seed: seed,
-      prompt: 'What comes next? ${pair.$1} ${pair.$2} ${pair.$1} __',
+      prompt: 'What comes next in this picture pattern?',
       answer: pair.$2,
       choices: <String>[pair.$2, pair.$1, distractor],
       explanation: 'The pattern repeats ${pair.$1}, ${pair.$2}.',
@@ -744,7 +697,7 @@ class NurseryPracticeGenerator {
     int seed,
     _NurseryStableRandom random,
   ) {
-    const cards = <String>['🔺', '🔵', '⭐', '🍎', '🐟'];
+    const cards = <String>['triangle', 'blue', 'star', 'apple', 'fish'];
     final index = _cycleIndex(
       seed: seed,
       salt: '${skill.id}:matching',
@@ -754,15 +707,15 @@ class NurseryPracticeGenerator {
     return _choicePractice(
       skill: skill,
       seed: seed,
-      prompt: 'Which card is exactly the same as $answer?',
+      prompt: 'Which card is exactly the same as the picture?',
       answer: answer,
       choices: <String>[
         answer,
         cards[(index + 1) % cards.length],
         cards[(index + 2) % cards.length],
       ],
-      explanation: '$answer matches $answer because both cards are the same.',
-      visualTokens: <String>[answer, '↔', '?'],
+      explanation: '$answer matches because both cards are the same.',
+      visualTokens: <String>[answer, 'matches', '?'],
     );
   }
 
@@ -772,10 +725,10 @@ class NurseryPracticeGenerator {
     _NurseryStableRandom random,
   ) {
     const groups = <(String, String, String, String)>[
-      ('fruit', '🍎', '🐶', '📘'),
-      ('animal', '🐟', '🥕', '⚽'),
-      ('object', '📘', '🍊', '🐰'),
-      ('red things', '🔴', '🔵', '▲'),
+      ('fruit', 'apple', 'dog', 'book'),
+      ('animal', 'fish', 'carrot', 'ball'),
+      ('object', 'book', 'orange', 'rabbit'),
+      ('red things', 'red', 'blue', 'triangle'),
     ];
     final group = groups[_cycleIndex(
       seed: seed,
@@ -789,7 +742,7 @@ class NurseryPracticeGenerator {
       answer: group.$2,
       choices: <String>[group.$2, group.$3, group.$4],
       explanation: '${group.$2} belongs in the ${group.$1} group.',
-      visualTokens: <String>[group.$1, '→', group.$2],
+      visualTokens: <String>[group.$1, 'then', group.$2],
     );
   }
 
@@ -798,29 +751,29 @@ class NurseryPracticeGenerator {
     int seed,
     _NurseryStableRandom random,
   ) {
-    const sets = <(String, String, String)>[
-      ('🍎 🍎 🍌', '🍌', 'banana'),
-      ('⭐ ⭐ ⚽', '⚽', 'ball'),
-      ('🔺 🔺 🔵', '🔵', 'blue circle'),
-      ('🐱 🐱 🐟', '🐟', 'fish'),
-      ('🟡 🟡 🟢', '🟢', 'green circle'),
-      ('📘 📘 ⚽', '⚽', 'ball'),
+    const sets = <(List<String>, String, String)>[
+      (<String>['apple', 'apple', 'banana'], 'banana', 'banana'),
+      (<String>['star', 'star', 'ball'], 'ball', 'ball'),
+      (<String>['triangle', 'triangle', 'blue'], 'blue', 'blue circle'),
+      (<String>['cat', 'cat', 'fish'], 'fish', 'fish'),
+      (<String>['yellow', 'yellow', 'green'], 'green', 'green circle'),
+      (<String>['book', 'book', 'ball'], 'ball', 'ball'),
     ];
     final item = sets[_cycleIndex(
       seed: seed,
       salt: '${skill.id}:observation',
       length: sets.length,
     )];
+    final repeated = item.$1.first;
     return _choicePractice(
       skill: skill,
       seed: seed,
-      prompt: 'Look carefully: ${item.$1}. Which item is different?',
-      narration:
-          'Look carefully at the three pictures. Which item is different?',
+      prompt: 'Look carefully at the ${item.$1.first} picture row. Which picture is different?',
+      narration: 'Look carefully at the ${item.$1.first} picture row. Which picture is different?',
       answer: item.$2,
-      choices: <String>[item.$2, item.$1.split(' ').first, '🐶'],
+      choices: <String>[item.$2, repeated, 'dog'],
       explanation: '${item.$3} is the one that is different.',
-      visualTokens: item.$1.split(' '),
+      visualTokens: item.$1,
     );
   }
 
@@ -863,7 +816,12 @@ class NurseryPracticeGenerator {
   }
 
   String _quantityLabel(int count) =>
-      count == 0 ? 'empty group' : List<String>.filled(count, '●').join();
+      count == 0 ? 'empty group' : '$count ${count == 1 ? 'dot' : 'dots'}';
+
+  String _pictureNoun(String visual, int count) {
+    if (count == 1 || visual == 'fish') return visual;
+    return '${visual}s';
+  }
 
   List<int> _nearbyNumberChoices(int answer, int min, int max) {
     final candidates = <int>[answer];
@@ -888,6 +846,7 @@ class NurseryPracticeGenerator {
     final offset = seed.abs() % values.length;
     return <String>[...values.skip(offset), ...values.take(offset)];
   }
+
 
   int _cycleIndex({
     required int seed,

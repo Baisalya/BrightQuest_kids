@@ -1,5 +1,6 @@
 import '../entitlements/entitlement_models.dart';
 import '../learning/learning_models.dart';
+import '../learning/mission_exposure_memory.dart';
 import '../nursery/nursery_learning_models.dart';
 
 class TopicProgress {
@@ -164,16 +165,21 @@ class ChildProfileSnapshot {
     Map<String, GameProgress>? gameProgress,
     Map<String, LearningLevelProgress>? levelProgress,
     Set<String>? unlockedRewards,
+    Map<String, String>? equippedCosmetics,
     Set<String>? completedMissionIds,
     Set<String>? claimedDailyChallengeIds,
     Set<String>? unlockedAchievementIds,
     LearningProfileState? learning,
     NurseryLearningState? nurseryLearning,
+    MissionExposureMemory? missionExposureMemory,
   })  : learning = learning ?? const LearningProfileState(),
         nurseryLearning = nurseryLearning ?? const NurseryLearningState(),
+        missionExposureMemory =
+            missionExposureMemory ?? MissionExposureMemory(),
         gameProgress = gameProgress ?? <String, GameProgress>{},
         levelProgress = levelProgress ?? <String, LearningLevelProgress>{},
         unlockedRewards = unlockedRewards ?? <String>{},
+        equippedCosmetics = equippedCosmetics ?? <String, String>{},
         completedMissionIds = completedMissionIds ?? <String>{},
         claimedDailyChallengeIds = claimedDailyChallengeIds ?? <String>{},
         unlockedAchievementIds = unlockedAchievementIds ?? <String>{};
@@ -203,11 +209,13 @@ class ChildProfileSnapshot {
   Map<String, GameProgress> gameProgress;
   Map<String, LearningLevelProgress> levelProgress;
   Set<String> unlockedRewards;
+  Map<String, String> equippedCosmetics;
   Set<String> completedMissionIds;
   Set<String> claimedDailyChallengeIds;
   Set<String> unlockedAchievementIds;
   LearningProfileState learning;
   NurseryLearningState nurseryLearning;
+  MissionExposureMemory missionExposureMemory;
 
   Map<String, Object?> toJson() => <String, Object?>{
         'id': id,
@@ -239,11 +247,13 @@ class ChildProfileSnapshot {
           (key, value) => MapEntry<String, Object?>(key, value.toJson()),
         ),
         'unlockedRewards': unlockedRewards.toList()..sort(),
+        'equippedCosmetics': Map<String, String>.from(equippedCosmetics),
         'completedMissionIds': completedMissionIds.toList()..sort(),
         'claimedDailyChallengeIds': claimedDailyChallengeIds.toList()..sort(),
         'unlockedAchievementIds': unlockedAchievementIds.toList()..sort(),
         'learning': learning.toJson(),
         'nurseryLearning': nurseryLearning.toJson(),
+        'missionExposureMemory': missionExposureMemory.toJson(),
       };
 
   factory ChildProfileSnapshot.fromJson(Map<String, Object?> json) {
@@ -298,6 +308,7 @@ class ChildProfileSnapshot {
       gameProgress: progress,
       levelProgress: levels,
       unlockedRewards: _stringSet(json['unlockedRewards']),
+      equippedCosmetics: _stringMap(json['equippedCosmetics']),
       completedMissionIds: _stringSet(json['completedMissionIds']),
       claimedDailyChallengeIds: _stringSet(json['claimedDailyChallengeIds']),
       unlockedAchievementIds: _stringSet(json['unlockedAchievementIds']),
@@ -311,6 +322,11 @@ class ChildProfileSnapshot {
               Map<String, Object?>.from(json['nurseryLearning'] as Map),
             )
           : const NurseryLearningState(),
+      missionExposureMemory: json['missionExposureMemory'] is Map
+          ? MissionExposureMemory.fromJson(
+              Map<String, Object?>.from(json['missionExposureMemory'] as Map),
+            )
+          : MissionExposureMemory(),
     );
   }
 
@@ -325,6 +341,17 @@ class ChildProfileSnapshot {
   static Set<String> _stringSet(Object? value) {
     if (value is! List) return <String>{};
     return value.whereType<String>().toSet();
+  }
+
+  static Map<String, String> _stringMap(Object? value) {
+    if (value is! Map) return <String, String>{};
+    final result = <String, String>{};
+    for (final entry in value.entries) {
+      if (entry.key is String && entry.value is String) {
+        result[entry.key as String] = entry.value as String;
+      }
+    }
+    return result;
   }
 }
 

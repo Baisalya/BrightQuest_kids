@@ -8,6 +8,7 @@ import '../../core/curriculum/curriculum_catalog.dart';
 import '../../core/curriculum/curriculum_models.dart';
 import '../../core/session/game_session_models.dart';
 import '../../core/curriculum/world_mission_catalog.dart';
+import '../../core/learning/endless_practice_coordinator.dart';
 import '../../core/services/bright_audio_service.dart';
 import '../../core/state/game_controller.dart';
 import '../learning/lesson_flow_screen.dart';
@@ -31,11 +32,60 @@ void openGame(BuildContext context, String id) {
     gameId: id,
     classNumber: controller.selectedClass,
   );
-  if (session?.stage == GameSessionStage.completing) {
-    unawaited(resumeGameSession(context, session!));
-    return;
+  if (session != null) {
+    final isEndless =
+        EndlessPracticeCoordinator.isEndlessSessionData(session.data);
+    if (session.stage == GameSessionStage.completing ||
+        (isEndless && session.isInProgress)) {
+      unawaited(resumeGameSession(context, session));
+      return;
+    }
+    if (isEndless && session.stage == GameSessionStage.result) {
+      // An explicit normal game launch must not inherit a completed Endless
+      // Practice plan from the shared quick-play slot.
+      controller.discardGameSession(session);
+    }
   }
   _openGameInternal(context, id, learningLevel: null);
+}
+
+void openEndlessPractice(BuildContext context, String gameId) {
+  final controller = BrightQuestScope.of(context);
+  final coreLevels = levelsForGame(controller.selectedClass, gameId);
+  final unlocked = coreLevels.length == 3 &&
+      coreLevels.every((level) => controller.levelStatsFor(level.id).completed);
+  if (!unlocked) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Clear Practice, Challenge and Mastery before Endless Practice.',
+        ),
+      ),
+    );
+    return;
+  }
+
+  final existing = controller.gameSessionFor(
+    gameId: gameId,
+    classNumber: controller.selectedClass,
+  );
+  if (existing != null) {
+    final isEndless =
+        EndlessPracticeCoordinator.isEndlessSessionData(existing.data);
+    if (isEndless && existing.stage == GameSessionStage.completing) {
+      unawaited(resumeGameSession(context, existing));
+      return;
+    }
+    if (!isEndless || existing.stage == GameSessionStage.result) {
+      controller.discardGameSession(existing);
+    }
+  }
+  _openGameInternal(
+    context,
+    gameId,
+    learningLevel: null,
+    endlessPractice: true,
+  );
 }
 
 void openLearningLevel(BuildContext context, LearningLevel level) {
@@ -45,7 +95,7 @@ void openLearningLevel(BuildContext context, LearningLevel level) {
     classNumber: level.classNumber,
     learningLevelId: level.id,
   );
-  if (savedSession != null) {
+  if (savedSession != null && savedSession.isInProgress) {
     if (savedSession.stage == GameSessionStage.lesson) {
       controller.activateGameSession(savedSession);
       Navigator.of(context)
@@ -64,6 +114,13 @@ void openLearningLevel(BuildContext context, LearningLevel level) {
       _openGameInternal(context, level.gameId, learningLevel: level);
     }
     return;
+  }
+  if (savedSession != null) {
+    // An explicit World-stage launch after a completed result is a fresh
+    // encounter. Progress/rewards are authoritative in PlayerSnapshot, so the
+    // old result checkpoint is safe to discard here. Dedicated resume actions
+    // can still restore result checkpoints before the child explicitly replays.
+    controller.discardGameSession(savedSession);
   }
 
   final content = BrightQuestScope.contentOf(context);
@@ -162,6 +219,7 @@ Future<void> resumeGameSession(
       score: session.score,
       maxScore: session.maxScore,
       learningLevel: level,
+      practiceOnly: session.data['practiceOnly'] == true,
     );
     if (!context.mounted) return;
     session = controller.gameSessionFor(
@@ -172,13 +230,20 @@ Future<void> resumeGameSession(
     if (session == null) return;
     controller.activateGameSession(session);
   }
-  _openGameInternal(context, session.gameId, learningLevel: level);
+  _openGameInternal(
+    context,
+    session.gameId,
+    learningLevel: level,
+    endlessPractice: level == null &&
+        EndlessPracticeCoordinator.isEndlessSessionData(session.data),
+  );
 }
 
 void _openGameInternal(
   BuildContext context,
   String id, {
   required LearningLevel? learningLevel,
+  bool endlessPractice = false,
 }) {
   final controller = BrightQuestScope.of(context);
   final classNumber = learningLevel?.classNumber ?? controller.selectedClass;
@@ -201,17 +266,43 @@ void _openGameInternal(
   }
 
   final Widget screen = switch (id) {
-    'math_market' => MathMarketScreen(learningLevel: learningLevel),
-    'fraction_pizza' => FractionPizzaScreen(learningLevel: learningLevel),
-    'science_lab' => ScienceLabScreen(learningLevel: learningLevel),
-    'story_builder' => StoryBuilderScreen(learningLevel: learningLevel),
-    'grammar_puzzle' => GrammarPuzzleScreen(learningLevel: learningLevel),
-    'map_quest' => MapQuestScreen(learningLevel: learningLevel),
-    'coding_maze' => CodingMazeScreen(learningLevel: learningLevel),
-    'recycling_challenge' =>
-      RecyclingChallengeScreen(learningLevel: learningLevel),
+    'math_market' => MathMarketScreen(
+        learningLevel: learningLevel,
+        endlessPractice: endlessPractice,
+      ),
+    'fraction_pizza' => FractionPizzaScreen(
+        learningLevel: learningLevel,
+        endlessPractice: endlessPractice,
+      ),
+    'science_lab' => ScienceLabScreen(
+        learningLevel: learningLevel,
+        endlessPractice: endlessPractice,
+      ),
+    'story_builder' => StoryBuilderScreen(
+        learningLevel: learningLevel,
+        endlessPractice: endlessPractice,
+      ),
+    'grammar_puzzle' => GrammarPuzzleScreen(
+        learningLevel: learningLevel,
+        endlessPractice: endlessPractice,
+      ),
+    'map_quest' => MapQuestScreen(
+        learningLevel: learningLevel,
+        endlessPractice: endlessPractice,
+      ),
+    'coding_maze' => CodingMazeScreen(
+        learningLevel: learningLevel,
+        endlessPractice: endlessPractice,
+      ),
+    'recycling_challenge' => RecyclingChallengeScreen(
+        learningLevel: learningLevel,
+        endlessPractice: endlessPractice,
+      ),
     'rewards_room' => const RewardsRoomScreen(),
-    _ => MathMarketScreen(learningLevel: learningLevel),
+    _ => MathMarketScreen(
+        learningLevel: learningLevel,
+        endlessPractice: endlessPractice,
+      ),
   };
   final routedScreen = id == 'rewards_room'
       ? screen

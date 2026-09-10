@@ -78,8 +78,7 @@ void main() {
       }
     });
 
-    test('My World generated visuals match the independent vocabulary catalog',
-        () {
+    test('My World generated visuals match the independent vocabulary catalog', () {
       const generator = NurseryPracticeGenerator();
       final pack = _pack();
       for (final entry in nurseryPhaseCWorldGeneratedCatalog.entries) {
@@ -100,30 +99,28 @@ void main() {
       }
     });
 
-    test('spoken visual normalization is stable for Math and My World', () {
+    test('semantic spoken labels are stable for Math and My World', () {
       expect(
-        nurserySpeakableText('How many apples? 🍎🍎🍎'),
-        'How many apples? apple, apple, apple',
+        nurserySpeakableText('How many apples are shown?'),
+        'How many apples are shown?',
       );
       expect(
         nurserySpeakableText('★★ + ★ = how many stars?'),
-        'star, star plus star equals how many stars?',
+        'star star plus star equals how many stars?',
       );
-      expect(nurserySpokenLabel('🔴'), 'red circle');
+      expect(nurserySpokenLabel('red'), 'red');
       expect(nurserySpokenLabel('▲'), 'triangle');
-      expect(nurserySpokenLabel('🐱'), 'cat');
-      expect(nurserySpokenLabel('🍎 apple'), 'apple');
-      expect(nurserySpokenLabel('🦶🦶'), '2 feet');
+      expect(nurserySpokenLabel('cat'), 'cat');
+      expect(nurserySpokenLabel('apple'), 'apple');
+      expect(nurserySpokenLabel('2 feet'), '2 feet');
     });
 
     test('review seed planner advances from the latest generated review', () {
       const planner = NurseryReviewSeedPlanner();
       const skillId = 'math_count_0_5';
-      final first = planner.nextSeed(
-          skillId: skillId, evidence: const <NurseryAttemptEvidence>[]);
+      final first = planner.nextSeed(skillId: skillId, evidence: const <NurseryAttemptEvidence>[]);
       expect(
-        planner.nextSeed(
-            skillId: skillId, evidence: const <NurseryAttemptEvidence>[]),
+        planner.nextSeed(skillId: skillId, evidence: const <NurseryAttemptEvidence>[]),
         first,
       );
 

@@ -5,15 +5,24 @@ import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
 import '../../core/gameplay/game_logic.dart';
 import '../../core/learning/game_evidence_adapter.dart';
+import '../../core/learning/endless_practice_coordinator.dart';
+import '../../core/learning/mission_run_game_content.dart';
+import '../../core/learning/mission_run_models.dart';
+import '../../core/learning/mission_run_session_coordinator.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
 import '../../core/session/game_session_models.dart';
 import '../../widgets/bright_widgets.dart';
 
 class FractionPizzaScreen extends StatefulWidget {
-  const FractionPizzaScreen({this.learningLevel, super.key});
+  const FractionPizzaScreen({
+    this.learningLevel,
+    this.endlessPractice = false,
+    super.key,
+  });
 
   final LearningLevel? learningLevel;
+  final bool endlessPractice;
 
   @override
   State<FractionPizzaScreen> createState() => _FractionPizzaScreenState();
@@ -33,6 +42,8 @@ class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
   int _attemptSerial = 0;
   bool _answerInFlight = false;
   bool _sessionConfigured = false;
+  MissionRunPlan? _missionRunPlan;
+  List<FractionMission> _missions = const <FractionMission>[];
   DateTime _itemStarted = DateTime.now();
 
   @override
@@ -45,21 +56,65 @@ class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
     _difficulty = controller.resumableDifficulty(
       gameId: 'fraction_pizza',
       classNumber: _classNumber,
-      fallbackDifficulty: widget.learningLevel?.difficulty ??
-          controller.recommendedDifficulty('fraction_pizza'),
+      fallbackDifficulty: widget.endlessPractice
+          ? 3
+          : widget.learningLevel?.difficulty ??
+              controller.recommendedDifficulty('fraction_pizza'),
       learningLevelId: widget.learningLevel?.id,
     );
-    final missions = BrightQuestScope.contentOf(context)
-        .fractionMissionsForClass(_classNumber, difficulty: _difficulty);
+    final repository = BrightQuestScope.contentOf(context);
+    final existingCheckpoint = controller.gameSessionFor(
+      gameId: 'fraction_pizza',
+      classNumber: _classNumber,
+      learningLevelId: widget.learningLevel?.id,
+    );
+    final level = widget.learningLevel;
+    if (level != null) {
+      _missionRunPlan = const MissionRunSessionCoordinator().restore(
+        repository: repository,
+        level: level,
+        data: existingCheckpoint?.data ?? const <String, Object?>{},
+      );
+    } else if (widget.endlessPractice) {
+      _missionRunPlan = const EndlessPracticeCoordinator().createOrRestore(
+        repository: repository,
+        classNumber: _classNumber,
+        gameId: 'fraction_pizza',
+        checkpoint: existingCheckpoint,
+        history: controller.missionExposureHistoryForGame(
+          classNumber: _classNumber,
+          gameId: 'fraction_pizza',
+        ),
+        learningState: controller.learningState,
+        gameProgress: controller.statsFor('fraction_pizza'),
+      );
+    }
+    _missions = _missionRunPlan == null
+        ? repository.fractionMissionsForClass(
+            _classNumber,
+            difficulty: _difficulty,
+          )
+        : const MissionRunGameContent().fractionMissions(
+            repository: repository,
+            plan: _missionRunPlan!,
+          );
+    if (_missions.isEmpty) {
+      throw StateError('Fraction Pizza cannot start without missions.');
+    }
     final checkpoint = controller.beginOrResumeGameSession(
       gameId: 'fraction_pizza',
       classNumber: _classNumber,
       difficulty: _difficulty,
-      maxScore: missions.length,
+      maxScore: _missions.length,
       learningLevel: widget.learningLevel,
+      sessionData: _missionRunPlan == null
+          ? const <String, Object?>{}
+          : const MissionRunSessionCoordinator().sessionDataFor(
+              _missionRunPlan!,
+            ),
     );
-    missionIndex = checkpoint.cursor.clamp(0, missions.length - 1).toInt();
-    score = checkpoint.score.clamp(0, missions.length).toInt();
+    missionIndex = checkpoint.cursor.clamp(0, _missions.length - 1).toInt();
+    score = checkpoint.score.clamp(0, _missions.length).toInt();
     selectedSlices = (checkpoint.data['selectedSlices'] as num?)?.toInt() ?? 0;
     checked = checkpoint.data['checked'] as bool? ?? false;
     correct = checkpoint.data['correct'] as bool?;
@@ -155,9 +210,11 @@ class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
       final controller = BrightQuestScope.of(context);
       final reward = await controller.completeRunSafely(
         gameId: 'fraction_pizza',
-        fallbackMissionId:
-            'fraction_pizza:c$classNumber:d$_difficulty:core_run',
+        fallbackMissionId: widget.endlessPractice
+            ? 'endless_practice:c$classNumber:fraction_pizza'
+            : 'fraction_pizza:c$classNumber:d$_difficulty:core_run',
         learningLevel: widget.learningLevel,
+        practiceOnly: widget.endlessPractice,
         score: score,
         maxScore: missions.length,
       );
@@ -181,16 +238,59 @@ class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
   }
 
   void _restart() {
-    final missions = BrightQuestScope.contentOf(context)
-        .fractionMissionsForClass(_classNumber, difficulty: _difficulty);
-    BrightQuestScope.of(context).restartActiveGameSession(
+    final repository = BrightQuestScope.contentOf(context);
+    final controller = BrightQuestScope.of(context);
+    var nextPlan = _missionRunPlan;
+    var nextMissions = _missions;
+    final level = widget.learningLevel;
+    if (level != null && _missionRunPlan != null) {
+      nextPlan = const MissionRunSessionCoordinator().createWorldReplay(
+        repository: repository,
+        level: level,
+        previousPlan: _missionRunPlan!,
+        history: controller.missionExposureHistoryFor(level),
+        learningState: controller.learningState,
+        levelProgress: controller.levelStatsFor(level.id),
+        gameProgress: controller.statsFor(level.gameId),
+      );
+      nextMissions = const MissionRunGameContent().fractionMissions(
+        repository: repository,
+        plan: nextPlan,
+      );
+    } else if (widget.endlessPractice && _missionRunPlan != null) {
+      nextPlan = const EndlessPracticeCoordinator().createNextRound(
+        repository: repository,
+        previousPlan: _missionRunPlan!,
+        history: controller.missionExposureHistoryForGame(
+          classNumber: _classNumber,
+          gameId: 'fraction_pizza',
+        ),
+        learningState: controller.learningState,
+        gameProgress: controller.statsFor('fraction_pizza'),
+      );
+      nextMissions = const MissionRunGameContent().fractionMissions(
+        repository: repository,
+        plan: nextPlan,
+      );
+    } else {
+      nextMissions = repository.fractionMissionsForClass(
+        _classNumber,
+        difficulty: _difficulty,
+      );
+    }
+    controller.restartActiveGameSession(
       gameId: 'fraction_pizza',
       classNumber: _classNumber,
       difficulty: _difficulty,
-      maxScore: missions.length,
+      maxScore: nextMissions.length,
       learningLevel: widget.learningLevel,
+      sessionData: nextPlan == null
+          ? const <String, Object?>{}
+          : const MissionRunSessionCoordinator().sessionDataFor(nextPlan),
     );
     setState(() {
+      _missionRunPlan = nextPlan;
+      _missions = nextMissions;
       missionIndex = 0;
       selectedSlices = 0;
       score = 0;
@@ -205,15 +305,13 @@ class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
   }
 
   void _checkpoint() {
-    final missions = BrightQuestScope.contentOf(context)
-        .fractionMissionsForClass(_classNumber, difficulty: _difficulty);
     BrightQuestScope.of(context).checkpointGameSession(
       gameId: 'fraction_pizza',
       classNumber: _classNumber,
       difficulty: _difficulty,
       cursor: missionIndex,
       score: score,
-      maxScore: missions.length,
+      maxScore: _missions.length,
       learningLevel: widget.learningLevel,
       data: <String, Object?>{
         'attemptSerial': _attemptSerial,
@@ -228,17 +326,18 @@ class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
   @override
   Widget build(BuildContext context) {
     final classNumber = _classNumber;
-    final missions = BrightQuestScope.contentOf(context)
-        .fractionMissionsForClass(classNumber, difficulty: _difficulty);
+    final missions = _missions;
     final mission = missions[missionIndex];
     final target = '${mission.numerator}/${mission.denominator}';
 
     return GameScaffold(
       learningLevel: widget.learningLevel,
       title: 'Fraction Pizza',
-      subtitle: widget.learningLevel == null
-          ? 'Class $classNumber • Adaptive level $_difficulty • Slice & Solve'
-          : 'Class $classNumber • ${widget.learningLevel!.typeLabel} • ${widget.learningLevel!.title}',
+      subtitle: widget.endlessPractice
+          ? 'Class $classNumber • ∞ Endless Practice • 10 rotating missions'
+          : widget.learningLevel == null
+              ? 'Class $classNumber • Adaptive level $_difficulty • Slice & Solve'
+              : 'Class $classNumber • ${widget.learningLevel!.typeLabel} • ${widget.learningLevel!.title}',
       color: const Color(0xFFFF9A35),
       voicePrompt:
           'Select ${mission.numerator} out of ${mission.denominator} equal parts from this ${mission.totalSlices}-slice pizza.',
@@ -340,6 +439,7 @@ class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
               maxScore: missions.length,
               reward: missionReward,
               onReplay: _restart,
+              replayLabel: widget.endlessPractice ? 'Next 10 Missions' : null,
             )
           else
             Row(

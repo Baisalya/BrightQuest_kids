@@ -7,6 +7,7 @@ import 'content_generators.dart';
 import 'content_pack_validator.dart';
 import 'game_content.dart';
 import 'learning_blueprint.dart';
+import 'skill_studio_generators.dart';
 
 class ContentPackFormatException implements Exception {
   const ContentPackFormatException(this.issues);
@@ -78,8 +79,18 @@ class ContentRepository {
   final NurseryContentPack? nurseryPack;
 
   static const int generatedPracticeVariantsPerFamily = 12;
+  static const int maxGeneratedPracticeSeed = 999999999;
+
+  /// Legacy public helper count (Math/Fraction/Grammar/Map, four generated
+  /// samples per difficulty) retained for compatibility with existing audits.
   static const int generatedPracticeVariantCountPerClass =
       generatedPracticeVariantsPerFamily * 4;
+
+  /// Step 4 mission planner capacity: eight world-game families × three exact
+  /// tiers × twelve deterministic variants per family/tier.
+  static const int generatedMissionFamilyCount = 8;
+  static const int generatedMissionVariantCountPerClass =
+      generatedPracticeVariantsPerFamily * generatedMissionFamilyCount * 3;
 
   static const List<String> bundledPackPaths = <String>[
     'assets/content/class_3/pack.json',
@@ -288,7 +299,59 @@ class ContentRepository {
     for (final activity in allActivities) {
       if (activity.id == activityId) return activity;
     }
-    return null;
+
+    final skillGenerated = RegExp(
+      r'^skillgen_(c[345]_[a-z0-9_]+)_s(\d{1,9})$',
+    ).firstMatch(activityId);
+    if (skillGenerated != null) {
+      final competencyId = skillGenerated.group(1)!;
+      final classNumber = int.parse(competencyId.substring(1, 2));
+      final seed = int.parse(skillGenerated.group(2)!);
+      if (!isClassPackUnlocked(classNumber)) return null;
+      ContentActivity? template;
+      for (final candidate in packForClass(classNumber).activities) {
+        if (candidate.gameId == 'skill_studio' &&
+            candidate.competencyId == competencyId) {
+          template = candidate;
+          break;
+        }
+      }
+      if (template == null) return null;
+      return const SkillStudioPracticeGenerators().generate(
+        template: template,
+        seed: seed,
+      );
+    }
+
+    // Mission-run plans persist canonical generated activity ids. Rehydrate
+    // them through the same deterministic generator bridge used by legacy
+    // content ids so lesson/game resume never needs to store answer payloads.
+    final generated = RegExp(
+      r'^c([345])_generated_(math|fraction|grammar|map|story|science|coding|recycling)_d([123])_s(\d{1,9})$',
+    ).firstMatch(activityId);
+    if (generated == null) return null;
+    final classNumber = int.parse(generated.group(1)!);
+    final family = generated.group(2)!;
+    final difficulty = int.parse(generated.group(3)!);
+    final seed = int.parse(generated.group(4)!);
+    if (seed < 0 || seed > maxGeneratedPracticeSeed) return null;
+    final gameId = switch (family) {
+      'math' => 'math_market',
+      'fraction' => 'fraction_pizza',
+      'grammar' => 'grammar_puzzle',
+      'map' => 'map_quest',
+      'story' => 'story_builder',
+      'science' => 'science_lab',
+      'coding' => 'coding_maze',
+      'recycling' => 'recycling_challenge',
+      _ => '',
+    };
+    if (gameId.isEmpty || !isClassPackUnlocked(classNumber)) return null;
+    return _generatedPracticeActivity(
+      classNumber: classNumber,
+      gameId: gameId,
+      legacyContentId: 'gen_${family}_c${classNumber}_d${difficulty}_s$seed',
+    );
   }
 
   ContentActivity? activityForLegacyContent({
@@ -334,6 +397,122 @@ class ContentRepository {
             )
             .toList(growable: false),
       );
+
+  /// Returns a rolling generated practice window for direct Skill Studio.
+  ///
+  /// Existing audited World generators are reused only when their generated
+  /// activity still belongs to the requested competency. Dedicated Skill
+  /// Studio Maths gaps use the conservative parameterised generator.
+  /// Knowledge-heavy competencies deliberately return an empty list and rely
+  /// on authored spaced review instead of fabricated content.
+  List<ContentActivity> generatedSkillStudioPracticeForCompetency(
+    int classNumber,
+    String competencyId, {
+    required int seedBase,
+    int candidateCount = 32,
+  }) {
+    if (!isClassPackUnlocked(classNumber) || candidateCount <= 0) {
+      return const <ContentActivity>[];
+    }
+    final authored = activitiesForCompetency(classNumber, competencyId);
+    if (authored.isEmpty) return const <ContentActivity>[];
+
+    final result = <ContentActivity>[];
+    final seenIds = <String>{};
+    void add(ContentActivity activity) {
+      if (activity.classNumber == classNumber &&
+          activity.competencyId == competencyId &&
+          seenIds.add(activity.id)) {
+        result.add(activity);
+      }
+    }
+
+    final gameIds = authored
+        .map((activity) => activity.gameId)
+        .where(_supportsGeneratedWorldFamily)
+        .toSet();
+    for (final gameId in gameIds) {
+      final generated = generatedEndlessPracticeActivitiesForGame(
+        classNumber,
+        gameId,
+        maxDifficulty: 3,
+        seedBase: seedBase,
+        candidatesPerDifficulty: 16,
+      );
+      for (final activity in generated) {
+        if (activity.competencyId == competencyId) add(activity);
+        if (result.length >= candidateCount) {
+          return List<ContentActivity>.unmodifiable(result);
+        }
+      }
+    }
+
+    ContentActivity? template;
+    for (final activity in authored) {
+      if (activity.gameId == 'skill_studio') {
+        template = activity;
+        break;
+      }
+    }
+    final generators = const SkillStudioPracticeGenerators();
+    if (template != null && generators.supports(competencyId)) {
+      final normalizedBase = seedBase.abs() % 900000000;
+      for (var offset = 0; offset < candidateCount * 2; offset += 1) {
+        final seed = (normalizedBase + offset * 104729 + 17) %
+            (SkillStudioPracticeGenerators.maxSeed + 1);
+        final activity = generators.generate(template: template, seed: seed);
+        if (activity != null) add(activity);
+        if (result.length >= candidateCount) break;
+      }
+    }
+    return List<ContentActivity>.unmodifiable(result);
+  }
+
+  bool supportsGeneratedSkillStudioPractice(
+    int classNumber,
+    String competencyId,
+  ) {
+    if (!isClassPackUnlocked(classNumber)) return false;
+    final authored = activitiesForCompetency(classNumber, competencyId);
+    final skillGenerators = const SkillStudioPracticeGenerators();
+    if (authored.any(
+      (activity) =>
+          activity.gameId == 'skill_studio' &&
+          skillGenerators.supports(competencyId),
+    )) {
+      return true;
+    }
+    for (final activity in authored) {
+      if (!_supportsGeneratedWorldFamily(activity.gameId) ||
+          activity.difficulty < 1 ||
+          activity.difficulty > 3) {
+        continue;
+      }
+      final generated = generatedPracticeActivitiesForGameAtExactDifficulty(
+        classNumber,
+        activity.gameId,
+        difficulty: activity.difficulty,
+      );
+      if (generated.any(
+        (candidate) => candidate.competencyId == competencyId,
+      )) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  static bool _supportsGeneratedWorldFamily(String gameId) =>
+      const <String>{
+        'math_market',
+        'fraction_pizza',
+        'grammar_puzzle',
+        'map_quest',
+        'story_builder',
+        'science_lab',
+        'coding_maze',
+        'recycling_challenge',
+      }.contains(gameId);
 
   List<ContentActivity> freeSampleActivitiesForClass(int classNumber) =>
       List<ContentActivity>.unmodifiable(
@@ -381,6 +560,123 @@ class ContentRepository {
     if (!accessPolicy.isUnlocked(classNumber)) return false;
     return isClassPackUnlocked(classNumber) ||
         isGameFreeSample(classNumber, gameId);
+  }
+
+  /// Exact-tier authored activities used by the mission planner.
+  ///
+  /// The existing [activitiesForGame] API intentionally remains cumulative for
+  /// legacy game screens. This exact-tier API lets the new mission-selection
+  /// layer avoid replaying lower-difficulty content in Challenge/Mastery before
+  /// those screens are migrated.
+  List<ContentActivity> activitiesForGameAtExactDifficulty(
+    int classNumber,
+    String gameId, {
+    required int difficulty,
+  }) {
+    if (!accessPolicy.isUnlocked(classNumber)) {
+      throw StateError(
+        'Class $classNumber content pack is locked by the development-only access policy.',
+      );
+    }
+    final safeDifficulty = difficulty.clamp(1, 3).toInt();
+    final unlocked = isClassPackUnlocked(classNumber);
+    final values = packForClass(classNumber)
+        .activities
+        .where(
+          (activity) =>
+              activity.gameId == gameId &&
+              activity.difficulty == safeDifficulty &&
+              (unlocked || isFreeSampleActivity(activity)),
+        )
+        .toList(growable: false);
+    return List<ContentActivity>.unmodifiable(values);
+  }
+
+  /// Deterministic generated mission variants for one exact tier.
+  ///
+  /// Every family is converted back into the same ContentActivity schema used
+  /// by authored packs, so the mission planner, lesson engine and game adapters
+  /// share one correctness/persistence boundary.
+  List<ContentActivity> generatedPracticeActivitiesForGameAtExactDifficulty(
+    int classNumber,
+    String gameId, {
+    required int difficulty,
+  }) {
+    if (!isClassPackUnlocked(classNumber)) return const <ContentActivity>[];
+    final safeDifficulty = difficulty.clamp(1, 3).toInt();
+    final family = switch (gameId) {
+      'math_market' => 'math',
+      'fraction_pizza' => 'fraction',
+      'grammar_puzzle' => 'grammar',
+      'map_quest' => 'map',
+      'story_builder' => 'story',
+      'science_lab' => 'science',
+      'coding_maze' => 'coding',
+      'recycling_challenge' => 'recycling',
+      _ => null,
+    };
+    if (family == null) return const <ContentActivity>[];
+
+    final result = <ContentActivity>[];
+    for (var seed = 0; seed < generatedPracticeVariantsPerFamily; seed += 1) {
+      final legacyContentId =
+          'gen_${family}_c${classNumber}_d${safeDifficulty}_s$seed';
+      final activity = _generatedPracticeActivity(
+        classNumber: classNumber,
+        gameId: gameId,
+        legacyContentId: legacyContentId,
+      );
+      if (activity != null) result.add(activity);
+    }
+    return List<ContentActivity>.unmodifiable(result);
+  }
+
+  /// Builds a deterministic seed window for post-progression practice.
+  ///
+  /// The normal Learning World candidate bank remains fixed at
+  /// [generatedPracticeVariantsPerFamily]. Endless Practice uses larger seeds
+  /// only through this explicit API, so the 72-level release contract and its
+  /// quality audit remain unchanged.
+  List<ContentActivity> generatedEndlessPracticeActivitiesForGame(
+    int classNumber,
+    String gameId, {
+    required int maxDifficulty,
+    required int seedBase,
+    int candidatesPerDifficulty = 24,
+  }) {
+    if (!isClassPackUnlocked(classNumber) || candidatesPerDifficulty <= 0) {
+      return const <ContentActivity>[];
+    }
+    final safeDifficulty = maxDifficulty.clamp(1, 3).toInt();
+    final family = switch (gameId) {
+      'math_market' => 'math',
+      'fraction_pizza' => 'fraction',
+      'grammar_puzzle' => 'grammar',
+      'map_quest' => 'map',
+      'story_builder' => 'story',
+      'science_lab' => 'science',
+      'coding_maze' => 'coding',
+      'recycling_challenge' => 'recycling',
+      _ => null,
+    };
+    if (family == null) return const <ContentActivity>[];
+
+    final normalizedBase = seedBase.abs() % 900000000;
+    final result = <ContentActivity>[];
+    for (var difficulty = 1; difficulty <= safeDifficulty; difficulty += 1) {
+      for (var offset = 0; offset < candidatesPerDifficulty; offset += 1) {
+        final seed = (normalizedBase + difficulty * 100003 + offset) %
+            (maxGeneratedPracticeSeed + 1);
+        final activity = _generatedPracticeActivity(
+          classNumber: classNumber,
+          gameId: gameId,
+          legacyContentId:
+              'gen_${family}_c${classNumber}_d${difficulty}_s$seed',
+        );
+        if (activity != null) result.add(activity);
+      }
+    }
+    return List<ContentActivity>.unmodifiable(result);
   }
 
   List<ContentActivity> activitiesForGame(
@@ -713,20 +1009,28 @@ class ContentRepository {
     required String legacyContentId,
   }) {
     final match = RegExp(
-      r'^gen_(math|fraction|grammar|map)_c([345])_d([123])_s([0-3])$',
+      r'^gen_(math|fraction|grammar|map|story|science|coding|recycling)_c([345])_d([123])_s(\d{1,9})$',
     ).firstMatch(legacyContentId);
     if (match == null || int.parse(match.group(2)!) != classNumber) return null;
+    final parsedSeed = int.parse(match.group(4)!);
+    if (parsedSeed < 0 || parsedSeed > maxGeneratedPracticeSeed) {
+      return null;
+    }
     final family = match.group(1)!;
     final expectedGameId = switch (family) {
       'math' => 'math_market',
       'fraction' => 'fraction_pizza',
       'grammar' => 'grammar_puzzle',
       'map' => 'map_quest',
+      'story' => 'story_builder',
+      'science' => 'science_lab',
+      'coding' => 'coding_maze',
+      'recycling' => 'recycling_challenge',
       _ => '',
     };
     if (expectedGameId != gameId) return null;
     final difficulty = int.parse(match.group(3)!);
-    final seed = int.parse(match.group(4)!);
+    final seed = parsedSeed;
     const generators = DeterministicContentGenerators();
 
     late String prompt;
@@ -858,6 +1162,120 @@ class ContentRepository {
         ];
         hints = <ContentHint>[ContentHint(step: 1, text: item.hint)];
         break;
+      case 'story':
+        final item = generators.story(
+          classNumber: classNumber,
+          difficulty: difficulty,
+          seed: seed,
+        );
+        prompt = item.prompt;
+        topicId = item.topicId;
+        rule = <String, dynamic>{
+          'type': 'orderedWords',
+          'value': item.words,
+        };
+        payload = <String, dynamic>{'words': item.words};
+        explanation =
+            'The sentence is complete when the words are arranged in this order: ${item.words.join(' ')}.';
+        hints = const <ContentHint>[
+          ContentHint(
+            step: 1,
+            text: 'Find the opening idea first, then place words so the sentence sounds complete.',
+          ),
+        ];
+        break;
+      case 'science':
+        final item = generators.scienceQuiz(
+          classNumber: classNumber,
+          difficulty: difficulty,
+          seed: seed,
+        );
+        prompt = item.question;
+        topicId = item.topicId;
+        rule = <String, dynamic>{'type': 'exactText', 'value': item.answer};
+        payload = <String, dynamic>{
+          'answer': item.answer,
+          'choices': item.choices,
+        };
+        explanation = item.explanation;
+        distractors = <ContentDistractor>[
+          for (final choice
+              in item.choices.where((value) => value != item.answer))
+            ContentDistractor(
+              value: choice,
+              misconceptionId: 'generated_science_concept_confusion',
+            ),
+        ];
+        hints = <ContentHint>[
+          ContentHint(step: 1, text: item.explanation),
+        ];
+        break;
+      case 'coding':
+        final item = generators.codingRoute(
+          classNumber: classNumber,
+          difficulty: difficulty,
+          seed: seed,
+        );
+        prompt =
+            'On a ${item.width}×${item.height} grid, guide the robot facing ${item.startDirection.name} from (${item.startX}, ${item.startY}) to (${item.goalX}, ${item.goalY}) within ${item.maxCommands} commands.';
+        topicId = item.topicId;
+        rule = <String, dynamic>{
+          'type': 'reachGridGoal',
+          'goalX': item.goalX,
+          'goalY': item.goalY,
+          'maxCommands': item.maxCommands,
+        };
+        payload = <String, dynamic>{
+          'width': item.width,
+          'height': item.height,
+          'startX': item.startX,
+          'startY': item.startY,
+          'goalX': item.goalX,
+          'goalY': item.goalY,
+          'startDirection': item.startDirection.name,
+          'obstacles': item.obstacles.toList(growable: false),
+          'maxCommands': item.maxCommands,
+        };
+        explanation =
+            'Plan a valid route to the goal without entering blocked cells or leaving the grid.';
+        hints = const <ContentHint>[
+          ContentHint(
+            step: 1,
+            text: 'Plan the turns before adding moves, then check the command limit.',
+          ),
+        ];
+        break;
+      case 'recycling':
+        final item = generators.recycling(
+          classNumber: classNumber,
+          difficulty: difficulty,
+          seed: seed,
+        );
+        prompt = 'Put ${item.name} in the correct waste-sorting bin.';
+        topicId = item.topicId;
+        rule = <String, dynamic>{'type': 'exactText', 'value': item.bin};
+        payload = <String, dynamic>{
+          'name': item.name,
+          'emoji': item.emoji,
+          'bin': item.bin,
+        };
+        explanation =
+            '${item.name} belongs in the ${item.bin} material group for this practice.';
+        distractors = <ContentDistractor>[
+          for (final bin in const <String>['Paper', 'Plastic', 'Organic'])
+            if (bin != item.bin)
+              ContentDistractor(
+                value: bin,
+                misconceptionId: 'generated_waste_material_confusion',
+              ),
+        ];
+        hints = const <ContentHint>[
+          ContentHint(
+            step: 1,
+            text: 'Think about the main material, or whether the item is food or plant waste.',
+          ),
+        ];
+        break;
     }
 
     final candidates = packForClass(classNumber)
@@ -887,7 +1305,7 @@ class ContentRepository {
       relatedCompetencyIds: template.relatedCompetencyIds,
       learningOutcomeId: template.learningOutcomeId,
       relatedLearningOutcomeIds: template.relatedLearningOutcomeIds,
-      activityType: 'independentPractice',
+      activityType: family == 'coding' ? 'simulation' : 'independentPractice',
       difficulty: difficulty,
       prompt: prompt,
       correctResponseRule: rule,

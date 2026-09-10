@@ -1,5 +1,7 @@
 import '../curriculum/content_contract.dart';
 import 'learning_models.dart';
+import 'mission_mastery_intelligence.dart';
+import 'mission_mastery_models.dart';
 
 class ParentCompetencyRow {
   const ParentCompetencyRow({
@@ -8,6 +10,10 @@ class ParentCompetencyRow {
     required this.unitId,
     required this.title,
     required this.state,
+    required this.longTermStatus,
+    required this.longTermLabel,
+    required this.longTermReason,
+    required this.longTermConfidence,
     required this.evidenceCount,
     required this.lastPracticeIso,
     required this.nextReviewIso,
@@ -19,6 +25,10 @@ class ParentCompetencyRow {
   final String unitId;
   final String title;
   final LearningEvidenceState state;
+  final LongTermMasteryStatus longTermStatus;
+  final String longTermLabel;
+  final String longTermReason;
+  final double longTermConfidence;
   final int evidenceCount;
   final String? lastPracticeIso;
   final String? nextReviewIso;
@@ -89,6 +99,12 @@ class ParentReportEngine {
     for (final competency in classPack.competencies) {
       final mastery = learning.skillMastery[competency.id] ??
           SkillMastery(competencyId: competency.id);
+      final longTerm = const MissionMasteryIntelligence().forCompetency(
+        learningState: learning,
+        classNumber: classNumber,
+        competencyId: competency.id,
+        now: now,
+      );
       rows.add(
         ParentCompetencyRow(
           competencyId: competency.id,
@@ -96,10 +112,15 @@ class ParentReportEngine {
           unitId: competency.unitId,
           title: competency.title,
           state: mastery.state,
+          longTermStatus: longTerm.status,
+          longTermLabel: longTerm.label,
+          longTermReason: longTerm.reason,
+          longTermConfidence: longTerm.confidence,
           evidenceCount: mastery.evidenceCount,
           lastPracticeIso: mastery.lastEvidenceIso,
           nextReviewIso: mastery.nextReviewIso,
-          parentNote: _parentNote(mastery),
+          parentNote:
+              '${_parentNote(mastery)} Long-term signal: ${longTerm.label}.',
         ),
       );
     }
@@ -110,14 +131,16 @@ class ParentReportEngine {
       return date != null && !date.isBefore(weekStart) && !date.isAfter(now);
     }).toList();
     final learnedSkills = weekEvidence.map((item) => item.competencyId).toSet();
-    final retained = learning.skillMastery.values
-        .where((skill) => skill.state == LearningEvidenceState.secure)
+    final retained = rows
+        .where((row) => row.longTermStatus == LongTermMasteryStatus.secure)
         .length;
-    final support = learning.skillMastery.values
-        .where((skill) => skill.state == LearningEvidenceState.needsSupport)
+    final support = rows
+        .where(
+            (row) => row.longTermStatus == LongTermMasteryStatus.needsPractice)
         .length;
     final weakest = rows
-        .where((row) => row.state == LearningEvidenceState.needsSupport)
+        .where(
+            (row) => row.longTermStatus == LongTermMasteryStatus.needsPractice)
         .toList();
     final suggestion = weakest.isEmpty
         ? 'Spend five minutes asking the child to teach you one recently learned idea using their own example.'

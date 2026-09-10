@@ -23,6 +23,7 @@ class RecommendationEngine {
         LearningEvidenceState.masteredNow when due => 1,
         LearningEvidenceState.masteredNow => 4,
         LearningEvidenceState.notStarted => 5,
+        LearningEvidenceState.secure when due => 1,
         LearningEvidenceState.secure => 6,
       };
       final reason = switch (skill.state) {
@@ -38,8 +39,10 @@ class RecommendationEngine {
           'Mastered now; a later review will make it secure.',
         LearningEvidenceState.notStarted =>
           'This skill has not been explored yet.',
+        LearningEvidenceState.secure when due =>
+          'Secure skill; a maintenance retention check is due now.',
         LearningEvidenceState.secure =>
-          'Secure; revisit later in mixed practice.',
+          'Secure; keep it alive through mixed practice and maintenance review.',
       };
       values.add(
         LearningRecommendation(

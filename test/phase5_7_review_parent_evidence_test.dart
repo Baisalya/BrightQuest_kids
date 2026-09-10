@@ -78,6 +78,12 @@ void main() {
       expect(
         report.rows
             .firstWhere((row) => row.competencyId == supportId)
+            .longTermLabel,
+        'Needs practice',
+      );
+      expect(
+        report.rows
+            .firstWhere((row) => row.competencyId == supportId)
             .parentNote,
         contains('Several pieces of evidence'),
       );

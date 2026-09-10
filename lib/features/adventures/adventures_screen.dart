@@ -6,6 +6,7 @@ import '../../core/curriculum/curriculum_models.dart';
 import '../../core/curriculum/world_mission_catalog.dart';
 import '../../core/models/game_models.dart';
 import '../../core/session/game_session_models.dart';
+import '../../core/theme/app_theme.dart';
 import '../../widgets/bright_design_system.dart';
 import '../../widgets/bright_motion.dart';
 import '../../widgets/bright_widgets.dart';
@@ -42,27 +43,40 @@ class AdventuresScreen extends StatelessWidget {
             SliverToBoxAdapter(
               child: BrightResponsive(
                 padding: const EdgeInsets.fromLTRB(18, 8, 18, 10),
-                builder: (context, _) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    BrightSectionTitle(
-                      title: 'Saved missions',
-                      subtitle: controller.resumableGameSessions.length == 1
-                          ? 'Continue this mission whenever you are ready.'
-                          : '${controller.resumableGameSessions.length} missions are safely paused. You can resume any one.',
-                      icon: Icons.restore_rounded,
-                    ),
-                    const SizedBox(height: 10),
-                    for (final session in controller.resumableGameSessions) ...[
-                      _ResumeMissionCard(
-                        session: session,
-                        onResume: () => resumeGameSession(context, session),
-                        onDiscard: () => controller.discardGameSession(session),
+                builder: (context, _) {
+                  final sessions = controller.resumableGameSessions;
+                  final recent = sessions.first;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      BrightSectionTitle(
+                        title: 'Recent saved mission',
+                        subtitle: sessions.length == 1
+                            ? 'Continue where you stopped.'
+                            : 'Your latest save stays here. ${sessions.length - 1} more ${sessions.length - 1 == 1 ? 'save is' : 'saves are'} grouped inside their games.',
+                        icon: Icons.restore_rounded,
+                        trailing: sessions.length > 1
+                            ? OutlinedButton.icon(
+                                key: const Key('show_all_saved_missions'),
+                                onPressed: () => _showAllSavedMissions(
+                                  context,
+                                  sessions,
+                                ),
+                                icon: const Icon(Icons.list_alt_rounded),
+                                label: Text('Show all (${sessions.length})'),
+                              )
+                            : null,
                       ),
                       const SizedBox(height: 10),
+                      _ResumeMissionCard(
+                        key: const Key('recent_saved_mission_card'),
+                        session: recent,
+                        onResume: () => resumeGameSession(context, recent),
+                        onDiscard: () => controller.discardGameSession(recent),
+                      ),
                     ],
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           SliverToBoxAdapter(
@@ -153,9 +167,130 @@ class AdventuresScreen extends StatelessWidget {
   }
 }
 
+Future<void> _showAllSavedMissions(
+  BuildContext context,
+  List<GameSessionCheckpoint> sessions,
+) async {
+  final controller = BrightQuestScope.of(context);
+  final compact = MediaQuery.sizeOf(context).width < 700;
+
+  Widget overlay(BuildContext overlayContext) => _SavedMissionsOverlay(
+        sessions: sessions,
+        onResume: (session) {
+          Navigator.of(overlayContext).pop();
+          resumeGameSession(context, session);
+        },
+        onDiscard: (session) {
+          controller.discardGameSession(session);
+          Navigator.of(overlayContext).pop();
+        },
+        onClose: () => Navigator.of(overlayContext).pop(),
+      );
+
+  if (compact) {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      showDragHandle: true,
+      builder: (overlayContext) => SizedBox(
+        height: MediaQuery.sizeOf(overlayContext).height * .82,
+        child: overlay(overlayContext),
+      ),
+    );
+    return;
+  }
+
+  await showDialog<void>(
+    context: context,
+    builder: (overlayContext) => Dialog(
+      clipBehavior: Clip.antiAlias,
+      child: SizedBox(
+        width: 760,
+        height: MediaQuery.sizeOf(overlayContext).height * .78,
+        child: overlay(overlayContext),
+      ),
+    ),
+  );
+}
+
+class _SavedMissionsOverlay extends StatelessWidget {
+  const _SavedMissionsOverlay({
+    required this.sessions,
+    required this.onResume,
+    required this.onDiscard,
+    required this.onClose,
+  });
+
+  final List<GameSessionCheckpoint> sessions;
+  final ValueChanged<GameSessionCheckpoint> onResume;
+  final ValueChanged<GameSessionCheckpoint> onDiscard;
+  final VoidCallback onClose;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.fromLTRB(18, 10, 18, 18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'All saved missions',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      SizedBox(height: 3),
+                      Text(
+                        'Recent first. You can also find each save inside its own game.',
+                        style: TextStyle(
+                          color: AppTheme.inkMuted,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  key: const Key('all_saved_missions_close'),
+                  tooltip: 'Close',
+                  onPressed: onClose,
+                  icon: const Icon(Icons.close_rounded),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Expanded(
+              child: ListView.separated(
+                key: const Key('all_saved_missions_list'),
+                itemCount: sessions.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                itemBuilder: (context, index) {
+                  final session = sessions[index];
+                  return _ResumeMissionCard(
+                    key: Key('all_saved_mission_${session.slotKey}'),
+                    session: session,
+                    onResume: () => onResume(session),
+                    onDiscard: () => onDiscard(session),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+}
+
 class _ResumeMissionCard extends StatelessWidget {
   const _ResumeMissionCard({
     required this.session,
+    super.key,
     required this.onResume,
     required this.onDiscard,
   });

@@ -92,6 +92,24 @@ class _DiagnosticScreenState extends State<DiagnosticScreen> {
               'BrightQuest uses several pieces of evidence before suggesting support. It never ranks one child against another.',
               textAlign: TextAlign.center,
             ),
+            const SizedBox(height: 16),
+            FilledButton.icon(
+              key: const ValueKey<String>('discovery_check_again'),
+              onPressed: () {
+                controller.startOrRestartDiagnostic(repository);
+                setState(() {
+                  _questionStarted = DateTime.now();
+                  _confidence = 0.7;
+                });
+              },
+              icon: const Icon(Icons.refresh_rounded),
+              label: const Text('Check my skills again'),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              'A re-check stays short and rotates recently used questions when another reviewed option exists.',
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 20),
             for (final recommendation in recommendations)
               Card(
@@ -101,8 +119,8 @@ class _DiagnosticScreenState extends State<DiagnosticScreen> {
                   subtitle: Text(recommendation.reason),
                 ),
               ),
-            const SizedBox(height: 16),
-            FilledButton(
+            const SizedBox(height: 10),
+            OutlinedButton(
               onPressed: () => Navigator.of(context).pop(),
               child: const Text('Continue learning'),
             ),

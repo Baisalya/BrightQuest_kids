@@ -1,98 +1,59 @@
-/// Converts Nursery visual tokens into stable, child-friendly speech.
+import 'nursery_legacy_visual_aliases.dart';
+
+/// Stable spoken labels for semantic Nursery visual tokens.
 ///
-/// We do this before handing text to the platform TTS so Android and Windows
-/// do not disagree about emoji/symbol pronunciation. The visible UI remains
-/// unchanged; only the spoken representation is normalized.
+/// Authored/generated Nursery content is semantic after Step 8. Old emoji are
+/// normalized by [NurseryLegacyVisualAliases] before speech is produced.
 const Map<String, String> nurseryExactSpokenLabels = <String, String>{
-  '🔴': 'red circle',
-  '🔵': 'blue circle',
-  '🟢': 'green circle',
-  '🟡': 'yellow circle',
-  '🟠': 'orange circle',
-  '🟣': 'purple circle',
   '●': 'circle',
   '▲': 'triangle',
-  '🔺': 'triangle',
   '■': 'square',
   '▭': 'rectangle',
-  '🍎': 'apple',
-  '🍌': 'banana',
-  '🍊': 'orange',
-  '🥭': 'mango',
-  '🥕': 'carrot',
-  '🥔': 'potato',
-  '🍐': 'pear',
-  '🥦': 'broccoli',
-  '🐱': 'cat',
-  '🐶': 'dog',
-  '🐟': 'fish',
-  '🐰': 'rabbit',
-  '🐐': 'goat',
-  '🐮': 'cow',
-  '🐯': 'tiger',
-  '🐦': 'bird',
-  '⚽': 'ball',
-  '📘': 'book',
-  '👟': 'shoe',
-  '🥤': 'cup',
-  '🥄': 'spoon',
-  '✏️': 'pencil',
-  '🧢': 'hat',
-  '🔑': 'key',
-  '👀': 'eyes',
-  '🙌': 'hands',
-  '🦶': 'foot',
-  '👂': 'ear',
-  '👃': 'nose',
-  '👄': 'mouth',
-  '⭐': 'star',
   '★': 'star',
-  '☀️': 'sun',
-  '🪁': 'kite',
-  '🦆': 'duck',
+  'alphabet': 'letters',
+  'numbers': 'numbers',
+  'colours': 'colours',
+  'thinking': 'thinking',
+  'matching': 'matching',
+  'listening': 'listening',
+  'sorting': 'sorting',
+  'picture words': 'picture words',
+  'celebration': 'great job',
+  'addition': 'addition',
 };
 
-const Map<String, (String, String)> _nurseryCountableVisuals =
+const Map<String, (String, String)> _nurseryCountableSemanticVisuals =
     <String, (String, String)>{
-  '●': ('dot', 'dots'),
-  '★': ('star', 'stars'),
-  '⭐': ('star', 'stars'),
-  '🍎': ('apple', 'apples'),
-  '🍌': ('banana', 'bananas'),
-  '🍊': ('orange', 'oranges'),
-  '🥭': ('mango', 'mangoes'),
-  '🥕': ('carrot', 'carrots'),
-  '🐟': ('fish', 'fish'),
-  '⚽': ('ball', 'balls'),
-  '🦶': ('foot', 'feet'),
-  '👂': ('ear', 'ears'),
+  'dot': ('dot', 'dots'),
+  'star': ('star', 'stars'),
+  'apple': ('apple', 'apples'),
+  'banana': ('banana', 'bananas'),
+  'orange': ('orange', 'oranges'),
+  'mango': ('mango', 'mangoes'),
+  'carrot': ('carrot', 'carrots'),
+  'fish': ('fish', 'fish'),
+  'ball': ('ball', 'balls'),
+  'foot': ('foot', 'feet'),
+  'ear': ('ear', 'ears'),
 };
 
-/// A short spoken label for an answer choice or isolated visual token.
+/// A short child-friendly label for an answer or isolated visual token.
 String nurserySpokenLabel(String value) {
-  final trimmed = value.trim();
-  if (trimmed.isEmpty) return '';
-
-  final exact = nurseryExactSpokenLabels[trimmed];
+  final raw = value.trim();
+  if (raw.isEmpty) return '';
+  final canonical = nurseryCanonicalLegacyVisualValue(raw);
+  final semanticPrefix = RegExp(r'^(?:colour|color|shape):(.+)$')
+      .firstMatch(canonical.toLowerCase());
+  if (semanticPrefix != null) return semanticPrefix.group(1)!.trim();
+  final exact = nurseryExactSpokenLabels[canonical];
   if (exact != null) return exact;
 
-  for (final entry in nurseryExactSpokenLabels.entries) {
-    if (!trimmed.startsWith(entry.key)) continue;
-    final remainder = trimmed.substring(entry.key.length).trim();
-    if (remainder.toLowerCase() == entry.value.toLowerCase()) {
-      return entry.value;
-    }
+  final counted = _parseCountedSemantic(canonical);
+  if (counted != null) {
+    return nurseryCountedSemanticLabel(counted.$1, counted.$2);
   }
 
-  for (final entry in _nurseryCountableVisuals.entries) {
-    final token = entry.key;
-    if (!_isOnlyRepeatedToken(trimmed, token)) continue;
-    final count = trimmed.length ~/ token.length;
-    final names = entry.value;
-    return count == 1 ? 'one ${names.$1}' : '$count ${names.$2}';
-  }
-
-  final normalized = nurserySpeakableText(trimmed);
+  final normalized = nurserySpeakableText(canonical);
   final words = normalized.split(' ');
   if (words.length == 2 && words[0].toLowerCase() == words[1].toLowerCase()) {
     return words.first;
@@ -100,54 +61,118 @@ String nurserySpokenLabel(String value) {
   return normalized;
 }
 
-/// Rewrites visual-heavy Nursery prompt/narration text into reliable speech.
+/// Rewrites Nursery prompt/narration text into reliable platform speech.
 String nurserySpeakableText(String value) {
-  var result = value;
+  var result = nurseryReplaceLegacyEmojiInText(value);
 
-  // Replace counting visuals with individually speakable objects. Do not say
-  // the quantity here: prompts such as "How many apples? 🍎🍎🍎" must
-  // remain a real counting task instead of TTS revealing "3 apples".
-  for (final entry in _nurseryCountableVisuals.entries) {
-    final token = entry.key;
-    final singular = entry.value.$1;
-    result = result.replaceAllMapped(
-      RegExp('(?:${RegExp.escape(token)})+'),
-      (match) {
-        final raw = match.group(0)!;
-        final count = raw.length ~/ token.length;
-        return ' ${List<String>.filled(count, singular).join(', ')} ';
-      },
-    );
-  }
-
-  // Then normalize remaining one-off visuals.
   for (final entry in nurseryExactSpokenLabels.entries) {
+    if (entry.key.length != 1) continue;
     result = result.replaceAll(entry.key, ' ${entry.value} ');
   }
 
   return result
       .replaceAll(' + ', ' plus ')
       .replaceAll(' = ', ' equals ')
+      .replaceAll(' & ', ' and ')
       .replaceAll('__', ' blank ')
       .replaceAll('(none)', 'no objects')
       .replaceAll(RegExp(r'\s+'), ' ')
       .trim();
 }
 
+/// Returns only legacy inline visual groups embedded in pre-Step-8 copy.
+/// New Nursery content carries semantic visuals explicitly in activity payloads
+/// or visual-token lists and therefore does not need text parsing.
+List<String> nurseryVisualTokensInText(String value) {
+  if (value.isEmpty) return const <String>[];
+  final pictograms = nurseryLegacyEmojiTokensInText(value);
+  final result = <String>[...pictograms];
+
+  const symbols = <String>['●', '★', '▲', '■', '▭'];
+  for (final symbol in symbols) {
+    var index = 0;
+    while (index < value.length) {
+      final found = value.indexOf(symbol, index);
+      if (found < 0) break;
+      var end = found + symbol.length;
+      while (value.startsWith(symbol, end)) {
+        end += symbol.length;
+      }
+      result.add(value.substring(found, end));
+      index = end;
+    }
+  }
+  return List<String>.unmodifiable(result);
+}
+
+/// Child-facing copy with legacy inline pictograms removed. Step 8 content is
+/// already visual-free prose; this remains as a backwards-compatibility guard.
+String nurseryVisualFreeText(String value) {
+  var result = value;
+  for (final token in nurseryVisualTokensInText(value)) {
+    result = result.replaceFirst(token, ' ');
+  }
+  result = result
+      .replaceAll('__', 'the missing card')
+      .replaceAllMapped(
+        RegExp(r'\s+([?.!,:;])'),
+        (match) => match.group(1)!,
+      )
+      .replaceAll(RegExp(r'\s+'), ' ')
+      .trim();
+
+  if (result.startsWith('What comes next?')) {
+    return 'What comes next in this pattern?';
+  }
+  if (result.startsWith('Remember the pair')) {
+    return 'Look carefully. Which pair did you see?';
+  }
+  if (result.startsWith('Look:') && result.contains('different')) {
+    return 'Look carefully. Which picture is different?';
+  }
+  if (result.startsWith('Which colour word matches')) {
+    return 'Which colour word matches this colour?';
+  }
+  if (result.startsWith('Do these have the same amount?')) {
+    return 'Do these picture groups have the same amount?';
+  }
+  if (result.startsWith('Are these amounts same or different?')) {
+    return 'Are these picture groups the same amount or different?';
+  }
+  if (result.startsWith('+') || result.contains(' +  =')) {
+    return 'Add the picture groups. How many altogether?';
+  }
+  return result.isEmpty ? 'Look at the pictures.' : result;
+}
+
 bool nurseryContainsRawVisualToken(String value) {
   if (value.contains('●') ||
+      value.contains('★') ||
       value.contains('▲') ||
       value.contains('■') ||
       value.contains('▭')) {
     return true;
   }
-  return nurseryExactSpokenLabels.keys.any(value.contains);
+  return nurseryContainsLegacyEmoji(value);
 }
 
-bool _isOnlyRepeatedToken(String value, String token) {
-  if (value.isEmpty || token.isEmpty || value.length % token.length != 0) {
-    return false;
+(int, String)? _parseCountedSemantic(String value) {
+  final match = RegExp(r'^(\d+)\s+(.+)$').firstMatch(value.trim().toLowerCase());
+  if (match == null) return null;
+  final count = int.tryParse(match.group(1)!);
+  if (count == null) return null;
+  var noun = match.group(2)!.trim();
+  final singular = _singularCountable(noun);
+  if (singular == null) return null;
+  return (count, singular);
+}
+
+String? _singularCountable(String noun) {
+  final normalized = noun.trim().toLowerCase();
+  for (final entry in _nurseryCountableSemanticVisuals.entries) {
+    if (normalized == entry.value.$1 || normalized == entry.value.$2) {
+      return entry.key;
+    }
   }
-  return value ==
-      List<String>.filled(value.length ~/ token.length, token).join();
+  return null;
 }

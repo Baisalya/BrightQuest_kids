@@ -72,8 +72,7 @@ class NurseryMathWorldAudit {
               severity: TeachingAuditSeverity.high,
               code: 'phase_c.math.prompt_narration_drift',
               location: location,
-              message:
-                  'Visible prompt and spoken narration describe different content.',
+              message: 'Visible prompt and spoken narration describe different content.',
             ),
           );
         }
@@ -96,10 +95,11 @@ class NurseryMathWorldAudit {
         if (skillId.startsWith('math_count_')) {
           checks += 1;
           final answer = int.tryParse('${rule['value']}');
-          final visualCount = _countObjectsInText(activity.prompt);
-          final expected = activity.prompt.toLowerCase().startsWith('no stars')
-              ? 0
-              : visualCount;
+          final expected = activity.visualTokens.isNotEmpty
+              ? _visualQuantity(activity.visualTokens)
+              : activity.prompt.toLowerCase().startsWith('no stars')
+                  ? 0
+                  : _countObjectsInText(activity.prompt);
           if (answer == null || expected != answer) {
             findings.add(
               TeachingAuditFinding(
@@ -137,7 +137,9 @@ class NurseryMathWorldAudit {
 
         if (skillId == 'math_add_objects') {
           checks += 1;
-          final equation = _objectAdditionFromPrompt(activity.prompt);
+          final equation = activity.visualTokens.isNotEmpty
+              ? _objectAdditionFromVisualTokens(activity.visualTokens)
+              : _objectAdditionFromPrompt(activity.prompt);
           final answer = int.tryParse('${rule['value']}');
           if (equation == null || answer == null || equation != answer) {
             findings.add(
@@ -154,8 +156,7 @@ class NurseryMathWorldAudit {
 
         if (skillId == 'math_add_numerals') {
           checks += 1;
-          final match =
-              RegExp(r'(\d+)\s*\+\s*(\d+)').firstMatch(activity.prompt);
+          final match = RegExp(r'(\d+)\s*\+\s*(\d+)').firstMatch(activity.prompt);
           final answer = int.tryParse('${rule['value']}');
           final sum = match == null
               ? null
@@ -221,8 +222,7 @@ class NurseryMathWorldAudit {
             severity: TeachingAuditSeverity.high,
             code: 'phase_c.world.prompt_narration_drift',
             location: entry.key,
-            message:
-                'Visible prompt and spoken narration are not synchronized.',
+            message: 'Visible prompt and spoken narration are not synchronized.',
           ),
         );
       }
@@ -254,8 +254,7 @@ class NurseryMathWorldAudit {
           severity: TeachingAuditSeverity.high,
           code: 'phase_c.world.shape_3d_2d_ambiguity',
           location: 'nursery.knowledge_shapes.t1',
-          message:
-              'Door example must refer to its 2D front face, not the whole 3D object.',
+          message: 'Door example must refer to its 2D front face, not the whole 3D object.',
         ),
       );
     }
@@ -279,8 +278,7 @@ class NurseryMathWorldAudit {
           severity: TeachingAuditSeverity.high,
           code: 'phase_c.world.body_part_ambiguity',
           location: 'nursery.knowledge_body.t1',
-          message:
-              'Body-part transfer must identify feet without relying on shoes or ground contact.',
+          message: 'Body-part transfer must identify feet without relying on shoes or ground contact.',
         ),
       );
     }
@@ -293,8 +291,7 @@ class NurseryMathWorldAudit {
           severity: TeachingAuditSeverity.blocker,
           code: 'phase_c.world.road_safety_answer_drift',
           location: 'nursery.knowledge_routines.t1',
-          message:
-              'Road-safety transfer must keep the child with the adult and waiting for a safe crossing.',
+          message: 'Road-safety transfer must keep the child with the adult and waiting for a safe crossing.',
         ),
       );
     }
@@ -314,8 +311,7 @@ class NurseryMathWorldAudit {
       final skill = pack.skillById(skillId);
       if (skill == null) continue;
       for (var seed = 0; seed < generatedSeedsPerSkill; seed += 1) {
-        final practice =
-            generator.generate(pack: pack, skill: skill, seed: seed);
+        final practice = generator.generate(pack: pack, skill: skill, seed: seed);
         final location = '$skillId/seed:$seed';
         final answerText = '${practice.correctResponseRule['value']}';
 
@@ -336,17 +332,14 @@ class NurseryMathWorldAudit {
         if (skillId.startsWith('math_count_')) {
           checks += 1;
           final answer = int.tryParse(answerText);
-          final visualCount = practice.visualTokens
-              .where((token) => token != 'empty counting space')
-              .length;
+          final visualCount = _visualQuantity(practice.visualTokens);
           if (answer == null || answer != visualCount) {
             findings.add(
               TeachingAuditFinding(
                 severity: TeachingAuditSeverity.blocker,
                 code: 'phase_c.math.generated_count_mismatch',
                 location: location,
-                message:
-                    'Generated count shows $visualCount but scores $answerText.',
+                message: 'Generated count shows $visualCount but scores $answerText.',
               ),
             );
           }
@@ -378,16 +371,17 @@ class NurseryMathWorldAudit {
             final plus = practice.visualTokens.indexOf('+');
             final equals = practice.visualTokens.indexOf('=');
             if (plus > 0 && equals > plus) {
-              final left = practice.visualTokens.take(plus).length;
-              final right = practice.visualTokens
-                  .skip(plus + 1)
-                  .take(equals - plus - 1)
-                  .length;
+              final left = _visualQuantity(practice.visualTokens.take(plus));
+              final right = _visualQuantity(
+                practice.visualTokens
+                    .skip(plus + 1)
+                    .take(equals - plus - 1),
+              );
               sum = left + right;
             }
           } else {
-            final match =
-                RegExp(r'(\d+)\s*\+\s*(\d+)').firstMatch(practice.prompt);
+            final match = RegExp(r'(\d+)\s*\+\s*(\d+)')
+                .firstMatch(practice.prompt);
             if (match != null) {
               sum = int.parse(match.group(1)!) + int.parse(match.group(2)!);
             }
@@ -421,28 +415,26 @@ class NurseryMathWorldAudit {
       final skill = pack.skillById(skillId);
       if (skill == null) continue;
       for (var seed = 0; seed < generatedSeedsPerSkill; seed += 1) {
-        final practice =
-            generator.generate(pack: pack, skill: skill, seed: seed);
+        final practice = generator.generate(pack: pack, skill: skill, seed: seed);
         final location = '$skillId/seed:$seed';
         final answer = '${practice.correctResponseRule['value']}';
 
         checks += 1;
         final spokenNarration = nurserySpeakableText(practice.narration);
-        if (spokenNarration.isEmpty ||
-            nurseryContainsRawVisualToken(spokenNarration)) {
+        if (spokenNarration.isEmpty || nurseryContainsRawVisualToken(spokenNarration)) {
           findings.add(
             TeachingAuditFinding(
               severity: TeachingAuditSeverity.high,
               code: 'phase_c.world.generated_audio_not_normalized',
               location: location,
-              message:
-                  'Generated My World narration still depends on raw visual symbols.',
+              message: 'Generated My World narration still depends on raw visual symbols.',
             ),
           );
         }
 
-        final visual =
-            practice.visualTokens.isEmpty ? null : practice.visualTokens.first;
+        final visual = practice.visualTokens.isEmpty
+            ? null
+            : practice.visualTokens.first;
         final expectedCatalog = nurseryPhaseCWorldGeneratedCatalog[skillId] ??
             nurseryPhaseCColourCatalog[skillId] ??
             nurseryPhaseCShapeCatalog[skillId];
@@ -455,8 +447,7 @@ class NurseryMathWorldAudit {
                 severity: TeachingAuditSeverity.blocker,
                 code: 'phase_c.world.generated_visual_answer_mismatch',
                 location: location,
-                message:
-                    'Visual $visual should map to $expected but scores $answer.',
+                message: 'Visual $visual should map to $expected but scores $answer.',
               ),
             );
           }
@@ -498,8 +489,7 @@ class NurseryMathWorldAudit {
             severity: TeachingAuditSeverity.high,
             code: 'phase_c.non_repeat.skill_not_referenced',
             location: skill.id,
-            message:
-                'No Phase-C non-repetition window is defined for this skill.',
+            message: 'No Phase-C non-repetition window is defined for this skill.',
           ),
         );
         continue;
@@ -507,8 +497,7 @@ class NurseryMathWorldAudit {
       final window = requested.clamp(2, 64).toInt();
       final signatures = <String>{};
       for (var seed = 0; seed < window; seed += 1) {
-        final practice =
-            generator.generate(pack: pack, skill: skill, seed: seed);
+        final practice = generator.generate(pack: pack, skill: skill, seed: seed);
         final signature =
             '${practice.prompt}|${practice.correctResponseRule['value']}';
         checks += 1;
@@ -534,7 +523,7 @@ class NurseryMathWorldAudit {
   }
 
   int _countObjectsInText(String value) {
-    const tokens = <String>['●', '★', '⭐', '🍎', '🐟', '⚽', '🍊'];
+    const tokens = <String>['●', '★'];
     var count = 0;
     for (final token in tokens) {
       count += RegExp(RegExp.escape(token)).allMatches(value).length;
@@ -542,12 +531,48 @@ class NurseryMathWorldAudit {
     return count;
   }
 
-  int _dotQuantity(String value) {
-    if (value.trim().toLowerCase() == 'none' ||
-        value.trim().toLowerCase() == 'empty group') {
-      return 0;
+  int _visualQuantity(Iterable<String> tokens) {
+    var count = 0;
+    for (final raw in tokens) {
+      final token = raw.trim().toLowerCase();
+      if (token.isEmpty ||
+          token == '+' ||
+          token == '=' ||
+          token == 'matches' ||
+          token == 'then' ||
+          token == 'empty counting space') {
+        continue;
+      }
+      final counted = RegExp(r'^(\d+)\s+[a-z][a-z ]*$').firstMatch(token);
+      if (counted != null) {
+        count += int.parse(counted.group(1)!);
+      } else if (RegExp(r'^\d+$').hasMatch(token)) {
+        // Standalone numerals are equation labels, not picture quantities.
+        continue;
+      } else {
+        count += 1;
+      }
     }
+    return count;
+  }
+
+  int _dotQuantity(String value) {
+    final normalized = value.trim().toLowerCase();
+    if (normalized == 'none' || normalized == 'empty group') return 0;
+    final semantic = RegExp(r'^(\d+)\s+dots?$').firstMatch(normalized);
+    if (semantic != null) return int.parse(semantic.group(1)!);
     return RegExp(RegExp.escape('●')).allMatches(value).length;
+  }
+
+  int? _objectAdditionFromVisualTokens(List<String> tokens) {
+    final plus = tokens.indexOf('+');
+    final equals = tokens.indexOf('=');
+    final end = equals > plus ? equals : tokens.length;
+    if (plus <= 0 || end <= plus) return null;
+    final leftCount = _visualQuantity(tokens.take(plus));
+    final rightCount = _visualQuantity(tokens.skip(plus + 1).take(end - plus - 1));
+    if (leftCount == 0 || rightCount == 0) return null;
+    return leftCount + rightCount;
   }
 
   int? _objectAdditionFromPrompt(String prompt) {

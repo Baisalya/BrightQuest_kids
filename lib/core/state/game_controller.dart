@@ -1,10 +1,20 @@
 import 'package:flutter/foundation.dart';
 
 import '../content/achievement_catalog.dart';
+import '../content/cosmetic_catalog.dart';
 import '../content/content_repository.dart';
 import '../entitlements/entitlement_models.dart';
+import '../learning/endless_practice_coordinator.dart';
+import '../learning/gameplay_activity_resolver.dart';
 import '../learning/learning_models.dart';
 import '../learning/learning_progress_engine.dart';
+import '../learning/mission_mastery_intelligence.dart';
+import '../learning/mission_mastery_models.dart';
+import '../learning/mission_exposure_memory.dart';
+import '../learning/mission_content_signature.dart';
+import '../learning/mission_run_models.dart';
+import '../learning/mission_run_session_coordinator.dart';
+import '../learning/world_progression_policy.dart';
 import '../curriculum/curriculum_catalog.dart';
 import '../curriculum/curriculum_models.dart';
 import '../models/game_models.dart';
@@ -69,6 +79,8 @@ class GameController extends ChangeNotifier {
       answersToday == 0 ? 0.0 : correctToday / answersToday;
   Set<String> get unlockedRewards =>
       Set<String>.unmodifiable(_profile.unlockedRewards);
+  Map<String, String> get equippedCosmetics =>
+      Map<String, String>.unmodifiable(_profile.equippedCosmetics);
   Set<String> get unlockedAchievementIds =>
       Set<String>.unmodifiable(_profile.unlockedAchievementIds);
 
@@ -194,10 +206,151 @@ class GameController extends ChangeNotifier {
   LearningLevelProgress levelStatsFor(String levelId) =>
       _profile.levelProgress.putIfAbsent(levelId, LearningLevelProgress.new);
 
+  MissionExposureHistory missionExposureHistoryFor(LearningLevel level) =>
+      missionExposureHistoryForGame(
+        classNumber: level.classNumber,
+        gameId: level.gameId,
+      );
+
+  MissionExposureHistory missionExposureHistoryForGame({
+    required int classNumber,
+    required String gameId,
+  }) =>
+      _profile.missionExposureMemory.historyFor(
+        classNumber: classNumber,
+        gameId: gameId,
+      );
+
+  MissionExposureHistory missionExposureHistoryForClass(int classNumber) =>
+      _profile.missionExposureMemory.historyForClass(classNumber);
+
+  bool recordMissionExposureRecords({
+    required int classNumber,
+    required String runId,
+    required Iterable<MissionExposureRecord> records,
+  }) {
+    final changed = _profile.missionExposureMemory.recordRecords(
+      classNumber: classNumber,
+      runId: runId,
+      records: records,
+    );
+    if (changed) _changed();
+    return changed;
+  }
+
+  int recommendedEncountersFor(LearningLevel level) =>
+      const WorldProgressionPolicy().recommendedEncountersFor(level);
+
+  int completedRecommendedEncountersFor(LearningLevel level) =>
+      const WorldProgressionPolicy().completedRecommendedEncounters(
+        level: level,
+        progress: levelStatsFor(level.id),
+      );
+
+  bool hasMetRecommendedEncounters(LearningLevel level) =>
+      const WorldProgressionPolicy().hasMetRecommendation(
+        level: level,
+        progress: levelStatsFor(level.id),
+      );
+
+  LearningLevel? nextRecommendedWorldLevelForSubject(SubjectWorld subject) {
+    final levels = levelsForSubject(selectedClass, subject);
+    for (final level in levels) {
+      if (isLevelUnlocked(level) && !hasMetRecommendedEncounters(level)) {
+        return level;
+      }
+    }
+    return nextLevelForSubject(subject);
+  }
+
+  LevelMasteryInsight masteryInsightForLevel(
+    ContentRepository repository,
+    LearningLevel level, {
+    DateTime? now,
+  }) =>
+      const MissionMasteryIntelligence().forLevel(
+        repository: repository,
+        level: level,
+        learningState: _profile.learning,
+        now: now,
+      );
+
+  LearningLevel? nextLongTermWorldLevelForSubject(
+    ContentRepository repository,
+    SubjectWorld subject, {
+    DateTime? now,
+  }) {
+    final levels = levelsForSubject(selectedClass, subject);
+    final longTerm = const MissionMasteryIntelligence().nextLongTermLevel(
+      repository: repository,
+      levels: levels,
+      learningState: _profile.learning,
+      isUnlocked: isLevelUnlocked,
+      isCompleted: (level) => levelStatsFor(level.id).completed,
+      now: now,
+    );
+    return longTerm ?? nextRecommendedWorldLevelForSubject(subject);
+  }
+
   double progressFor(String gameId) => statsFor(gameId).mastery;
 
   bool isRewardUnlocked(String rewardId) =>
       _profile.unlockedRewards.contains(rewardId);
+
+  String? equippedRewardIdForGame(String gameId) {
+    if (_profile.equippedCosmetics.containsKey(gameId)) {
+      final explicit = _profile.equippedCosmetics[gameId] ?? '';
+      if (explicit.isEmpty) return null;
+      final definition = cosmeticById(explicit);
+      if (definition == null ||
+          definition.gameId != gameId ||
+          !_profile.unlockedRewards.contains(explicit)) {
+        return null;
+      }
+      return explicit;
+    }
+
+    // Backward-compatible migration behavior: profiles that already owned a
+    // cosmetic before the equip feature automatically see their first owned
+    // cosmetic active. No save rewrite is required until the child changes it.
+    for (final definition in cosmeticsForGame(gameId)) {
+      if (_profile.unlockedRewards.contains(definition.id)) {
+        return definition.id;
+      }
+    }
+    return null;
+  }
+
+  CosmeticDefinition? equippedCosmeticForGame(String gameId) {
+    final id = equippedRewardIdForGame(gameId);
+    return id == null ? null : cosmeticById(id);
+  }
+
+  bool isRewardEquipped(String rewardId) {
+    final definition = cosmeticById(rewardId);
+    if (definition == null) return false;
+    return equippedRewardIdForGame(definition.gameId) == rewardId;
+  }
+
+  bool equipReward(String rewardId) {
+    final definition = cosmeticById(rewardId);
+    if (definition == null || !_profile.unlockedRewards.contains(rewardId)) {
+      return false;
+    }
+    if (_profile.equippedCosmetics[definition.gameId] == rewardId) return true;
+    _profile.equippedCosmetics[definition.gameId] = rewardId;
+    _changed();
+    return true;
+  }
+
+  bool unequipRewardForGame(String gameId) {
+    if (equippedRewardIdForGame(gameId) == null) return false;
+    // Empty string is an intentional explicit "none" marker. Removing the key
+    // would re-enable the legacy auto-equip fallback for older owned cosmetics.
+    _profile.equippedCosmetics[gameId] = '';
+    _changed();
+    return true;
+  }
 
   bool isMissionCompleted(String missionId) =>
       _profile.completedMissionIds.contains(missionId);
@@ -330,10 +483,29 @@ class GameController extends ChangeNotifier {
     DateTime? now,
   }) {
     final timestamp = now ?? DateTime.now();
+    final recentDiagnostic = _profile.learning.attemptEvidence
+        .where(
+          (item) =>
+              item.classNumber == selectedClass &&
+              item.kind == LearningAttemptKind.diagnostic &&
+              item.itemId.trim().isNotEmpty,
+        )
+        .toList(growable: false)
+      ..sort((a, b) {
+        final aTime = DateTime.tryParse(a.recordedAtIso) ??
+            DateTime.fromMillisecondsSinceEpoch(0);
+        final bTime = DateTime.tryParse(b.recordedAtIso) ??
+            DateTime.fromMillisecondsSinceEpoch(0);
+        return bTime.compareTo(aTime);
+      });
     final progress = _learningProgress.startDiagnostic(
       repository: repository,
       classNumber: selectedClass,
       now: timestamp,
+      recentItemIds: recentDiagnostic.map((item) => item.itemId),
+      recentContentFingerprints: _profile.missionExposureMemory
+          .historyForClass(selectedClass)
+          .contentFingerprints,
     );
     _profile.learning = _profile.learning.copyWith(diagnostic: progress);
     _changed();
@@ -376,6 +548,31 @@ class GameController extends ChangeNotifier {
       ),
       saveImmediately: false,
     );
+    final diagnosticSpec = const GameplayActivityResolver().resolve(activity);
+    if (diagnosticSpec.isSupported) {
+      _profile.missionExposureMemory.recordRecords(
+        classNumber: selectedClass,
+        runId: 'diagnostic:${activeProfileId}:${progress.startedAtIso}:'
+            '${progress.currentIndex}:${activity.id}',
+        records: <MissionExposureRecord>[
+          MissionExposureRecord(
+            classNumber: selectedClass,
+            levelId: 'diagnostic:c$selectedClass',
+            gameId: 'diagnostic',
+            activityKey: '$selectedClass|diagnostic|${activity.id}',
+            archetypeId: missionArchetypeId(activity, diagnosticSpec),
+            mechanicName: diagnosticSpec.mechanic.name,
+            roleName: MissionRunRole.training.name,
+            runSeed: progress.currentIndex,
+            seenAtIso: timestamp.toUtc().toIso8601String(),
+            contentFingerprint: missionActivityFingerprint(activity),
+            topicId: activity.topicId,
+            competencyId: activity.competencyId,
+            difficulty: activity.difficulty,
+          ),
+        ],
+      );
+    }
     _profile.learning = _profile.learning.copyWith(
       diagnostic: _learningProgress.advanceDiagnostic(
         progress: progress,
@@ -597,6 +794,10 @@ class GameController extends ChangeNotifier {
     }
     _snapshot.activeProfileId = profileId;
     _normalizeToday();
+    _profile.learning = _learningProgress.refreshReviewStates(
+      _profile.learning,
+      DateTime.now(),
+    );
     _changed();
     return true;
   }
@@ -1007,6 +1208,7 @@ class GameController extends ChangeNotifier {
     required String missionId,
     required int score,
     required int maxScore,
+    bool practiceOnly = false,
   }) {
     if (maxScore <= 0) {
       return const MissionReward(
@@ -1033,14 +1235,22 @@ class GameController extends ChangeNotifier {
 
     if (ratio >= 0.6) {
       _profile.missionsToday += 1;
-      firstCompletion = _profile.completedMissionIds.add(missionId);
-      if (firstCompletion) {
-        coinBonus = 30;
-        xpBonus = 40;
-        starBonus = ratio >= 0.9 ? 2 : 1;
-      } else {
+      if (practiceOnly) {
+        // Endless Practice is repeatable enrichment, not another curriculum
+        // clear. Keep the familiar replay reward without adding stars or a
+        // permanent completed-mission marker that could distort progression.
         coinBonus = 5;
         xpBonus = 10;
+      } else {
+        firstCompletion = _profile.completedMissionIds.add(missionId);
+        if (firstCompletion) {
+          coinBonus = 30;
+          xpBonus = 40;
+          starBonus = ratio >= 0.9 ? 2 : 1;
+        } else {
+          coinBonus = 5;
+          xpBonus = 10;
+        }
       }
     }
 
@@ -1165,6 +1375,7 @@ class GameController extends ChangeNotifier {
     required int score,
     required int maxScore,
     LearningLevel? learningLevel,
+    bool practiceOnly = false,
   }) {
     if (learningLevel != null) {
       return completeLearningLevel(
@@ -1178,6 +1389,7 @@ class GameController extends ChangeNotifier {
       missionId: fallbackMissionId,
       score: score,
       maxScore: maxScore,
+      practiceOnly: practiceOnly,
     );
   }
 
@@ -1197,10 +1409,17 @@ class GameController extends ChangeNotifier {
   }
 
   bool buyReward({required String rewardId, required int cost}) {
-    if (cost <= 0 || _profile.unlockedRewards.contains(rewardId)) return false;
-    if (_profile.coins < cost) return false;
-    _profile.coins -= cost;
+    if (_profile.unlockedRewards.contains(rewardId)) return false;
+    final definition = cosmeticById(rewardId);
+    final resolvedCost = definition?.cost ?? cost;
+    if (resolvedCost <= 0 || _profile.coins < resolvedCost) return false;
+    _profile.coins -= resolvedCost;
     _profile.unlockedRewards.add(rewardId);
+    if (definition != null) {
+      // Unlocking a new cosmetic also equips it, so the child sees an immediate
+      // visual result. Switching between already-owned cosmetics remains free.
+      _profile.equippedCosmetics[definition.gameId] = definition.id;
+    }
     _changed();
     return true;
   }
@@ -1316,6 +1535,7 @@ class GameController extends ChangeNotifier {
   GameSessionCheckpoint beginLessonSession({
     required LearningLevel level,
     required int totalSteps,
+    Map<String, Object?> sessionData = const <String, Object?>{},
   }) {
     final current = gameSessionFor(
       gameId: level.gameId,
@@ -1323,8 +1543,19 @@ class GameController extends ChangeNotifier {
       learningLevelId: level.id,
     );
     if (current != null && current.stage == GameSessionStage.lesson) {
-      activateGameSession(current);
-      return current;
+      final mergedSessionData = <String, Object?>{
+        ...current.data,
+        for (final entry in sessionData.entries)
+          if (entry.key.startsWith('_session.')) entry.key: entry.value,
+      };
+      final restored = current.copyWith(
+        data: Map<String, Object?>.unmodifiable(mergedSessionData),
+        updatedAtIso: DateTime.now().toIso8601String(),
+      );
+      _putGameSession(restored);
+      _enqueueSessionSave();
+      activateGameSession(restored);
+      return restored;
     }
     final now = DateTime.now().toIso8601String();
     final checkpoint = GameSessionCheckpoint(
@@ -1339,6 +1570,10 @@ class GameController extends ChangeNotifier {
       maxScore: totalSteps,
       startedAtIso: current?.startedAtIso ?? now,
       updatedAtIso: now,
+      data: Map<String, Object?>.unmodifiable(<String, Object?>{
+        for (final entry in sessionData.entries)
+          if (entry.key.startsWith('_session.')) entry.key: entry.value,
+      }),
     );
     _putGameSession(checkpoint);
     _enqueueSessionSave();
@@ -1359,6 +1594,10 @@ class GameController extends ChangeNotifier {
       learningLevelId: level.id,
     );
     current ??= beginLessonSession(level: level, totalSteps: totalSteps);
+    final preservedSessionData = <String, Object?>{
+      for (final entry in current.data.entries)
+        if (entry.key.startsWith('_session.')) entry.key: entry.value,
+    };
     final updated = current.copyWith(
       stage: GameSessionStage.lesson,
       cursor: stepIndex.clamp(0, totalSteps > 0 ? totalSteps - 1 : 0).toInt(),
@@ -1367,6 +1606,7 @@ class GameController extends ChangeNotifier {
           Set<String>.unmodifiable(completedInteractiveStepIds),
       shownHintIndices: Set<int>.unmodifiable(shownHintIndices),
       data: <String, Object?>{
+        ...preservedSessionData,
         'attemptSerial': attemptSerial.clamp(0, 1000000).toInt(),
       },
       clearReward: true,
@@ -1382,6 +1622,7 @@ class GameController extends ChangeNotifier {
     required int difficulty,
     required int maxScore,
     LearningLevel? learningLevel,
+    Map<String, Object?> sessionData = const <String, Object?>{},
   }) {
     final levelId = learningLevel?.id;
     final current = gameSessionFor(
@@ -1390,6 +1631,20 @@ class GameController extends ChangeNotifier {
       learningLevelId: levelId,
     );
     if (current != null && current.stage != GameSessionStage.lesson) {
+      if (sessionData.isNotEmpty) {
+        final merged = <String, Object?>{
+          ...current.data,
+          for (final entry in sessionData.entries)
+            if (entry.key.startsWith('_session.')) entry.key: entry.value,
+        };
+        final restored = current.copyWith(
+          data: Map<String, Object?>.unmodifiable(merged),
+          updatedAtIso: DateTime.now().toIso8601String(),
+        );
+        _putGameSession(restored);
+        _enqueueSessionSave();
+        return restored;
+      }
       activateGameSession(current);
       return current;
     }
@@ -1406,6 +1661,10 @@ class GameController extends ChangeNotifier {
       maxScore: maxScore,
       startedAtIso: current?.startedAtIso ?? now,
       updatedAtIso: now,
+      data: Map<String, Object?>.unmodifiable(<String, Object?>{
+        for (final entry in sessionData.entries)
+          if (entry.key.startsWith('_session.')) entry.key: entry.value,
+      }),
     );
     _putGameSession(checkpoint);
     _enqueueSessionSave();
@@ -1419,12 +1678,16 @@ class GameController extends ChangeNotifier {
       learningLevelId: level.id,
     );
     if (current == null) return;
+    final preservedSessionData = <String, Object?>{
+      for (final entry in current.data.entries)
+        if (entry.key.startsWith('_session.')) entry.key: entry.value,
+    };
     final updated = current.copyWith(
       stage: GameSessionStage.game,
       cursor: 0,
       score: 0,
       maxScore: 0,
-      data: const <String, Object?>{},
+      data: Map<String, Object?>.unmodifiable(preservedSessionData),
       shownHintIndices: const <int>{},
       clearReward: true,
       updatedAtIso: DateTime.now().toIso8601String(),
@@ -1590,6 +1853,7 @@ class GameController extends ChangeNotifier {
     required int score,
     required int maxScore,
     LearningLevel? learningLevel,
+    bool practiceOnly = false,
   }) {
     final current = beginOrResumeGameSession(
       gameId: gameId,
@@ -1608,6 +1872,7 @@ class GameController extends ChangeNotifier {
       score: score,
       maxScore: maxScore,
       learningLevel: learningLevel,
+      practiceOnly: practiceOnly,
     );
     _completionTransactions[key] = transaction;
     return transaction.whenComplete(() {
@@ -1623,6 +1888,7 @@ class GameController extends ChangeNotifier {
     required int score,
     required int maxScore,
     LearningLevel? learningLevel,
+    required bool practiceOnly,
   }) async {
     final current = beginOrResumeGameSession(
       gameId: gameId,
@@ -1640,6 +1906,8 @@ class GameController extends ChangeNotifier {
       final levelProgress =
           learningLevel == null ? null : levelStatsFor(learningLevel.id);
       final baseline = <String, Object?>{
+        for (final entry in current.data.entries)
+          if (entry.key.startsWith('_session.')) entry.key: entry.value,
         'fallbackMissionId': fallbackMissionId,
         'score': score,
         'maxScore': maxScore,
@@ -1652,6 +1920,7 @@ class GameController extends ChangeNotifier {
         'baseLevelStars': levelProgress?.earnedStars ?? -1,
         'baseMissionCompleted':
             _profile.completedMissionIds.contains(fallbackMissionId),
+        'practiceOnly': practiceOnly,
         'baseAchievementIds': unlockedAchievementIds.toList()..sort(),
       };
       pending = current.copyWith(
@@ -1691,21 +1960,79 @@ class GameController extends ChangeNotifier {
         score: score,
         maxScore: maxScore,
         learningLevel: learningLevel,
+        practiceOnly: practiceOnly,
       );
       await flush();
     }
 
+    final exposureChanged = _recordMissionExposureFromCheckpoint(
+      checkpoint: pending,
+      learningLevel: learningLevel,
+    );
+    if (exposureChanged) {
+      _changed();
+      await flush();
+    }
+
+    final preservedResultSessionData = <String, Object?>{
+      for (final entry in pending.data.entries)
+        if (entry.key.startsWith('_session.')) entry.key: entry.value,
+    };
     _putGameSession(pending.copyWith(
       stage: GameSessionStage.result,
       score: score.clamp(0, maxScore).toInt(),
       maxScore: maxScore,
       reward: GameSessionRewardSnapshot.fromReward(reward),
-      data: const <String, Object?>{},
+      data: Map<String, Object?>.unmodifiable(preservedResultSessionData),
       updatedAtIso: DateTime.now().toIso8601String(),
     ));
     _enqueueSessionSave();
     await flushGameSession();
     return reward;
+  }
+
+  bool _recordMissionExposureFromCheckpoint({
+    required GameSessionCheckpoint checkpoint,
+    required LearningLevel? learningLevel,
+  }) {
+    if (checkpoint.profileId != activeProfileId) return false;
+    final raw = checkpoint.data[MissionRunSessionCoordinator.sessionDataKey];
+    if (raw is! Map) return false;
+    try {
+      final plan = MissionRunPlan.fromJson(Map<String, Object?>.from(raw));
+      if (learningLevel != null) {
+        if (checkpoint.classNumber != learningLevel.classNumber ||
+            checkpoint.gameId != learningLevel.gameId ||
+            checkpoint.learningLevelId != learningLevel.id ||
+            plan.levelId != learningLevel.id ||
+            plan.classNumber != learningLevel.classNumber ||
+            plan.gameId != learningLevel.gameId ||
+            plan.difficulty != learningLevel.difficulty) {
+          return false;
+        }
+      } else {
+        if (checkpoint.learningLevelId != null ||
+            !EndlessPracticeCoordinator.isEndlessPlan(plan) ||
+            plan.classNumber != checkpoint.classNumber ||
+            plan.gameId != checkpoint.gameId) {
+          return false;
+        }
+      }
+      final runId = <String>[
+        checkpoint.profileId,
+        plan.levelId,
+        checkpoint.startedAtIso,
+        plan.runSeed.toString(),
+      ].join('|');
+      return _profile.missionExposureMemory.recordPlan(
+        plan: plan,
+        runId: runId,
+        seenAt: DateTime.now().toUtc(),
+      );
+    } catch (_) {
+      // Invalid/stale session metadata must not block reward completion.
+      return false;
+    }
   }
 
   MissionReward _recoverMissionReward({
@@ -1748,6 +2075,15 @@ class GameController extends ChangeNotifier {
         unlockedNextLevel: ratio >= learningLevel.passRatio &&
             next != null &&
             isLevelUnlocked(next),
+        newAchievementIds: newAchievements,
+      );
+    }
+    if (checkpoint.data['practiceOnly'] == true) {
+      return MissionReward(
+        firstCompletion: false,
+        coinsAwarded: (coins - baseCoins).clamp(0, 1000000).toInt(),
+        xpAwarded: (xp - baseXp).clamp(0, 1000000).toInt(),
+        starsAwarded: 0,
         newAchievementIds: newAchievements,
       );
     }
@@ -1809,6 +2145,7 @@ class GameController extends ChangeNotifier {
     required int difficulty,
     required int maxScore,
     LearningLevel? learningLevel,
+    Map<String, Object?> sessionData = const <String, Object?>{},
   }) {
     final now = DateTime.now().toIso8601String();
     final checkpoint = GameSessionCheckpoint(
@@ -1823,6 +2160,10 @@ class GameController extends ChangeNotifier {
       maxScore: maxScore,
       startedAtIso: now,
       updatedAtIso: now,
+      data: Map<String, Object?>.unmodifiable(<String, Object?>{
+        for (final entry in sessionData.entries)
+          if (entry.key.startsWith('_session.')) entry.key: entry.value,
+      }),
     );
     _putGameSession(checkpoint);
     _enqueueSessionSave();

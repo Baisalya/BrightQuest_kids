@@ -56,6 +56,34 @@ class AttemptEvidence {
   bool get delayed => kind == LearningAttemptKind.review;
   bool get transfer => kind == LearningAttemptKind.transfer;
 
+  AttemptEvidence copyWith({
+    LearningAttemptKind? kind,
+    bool? correct,
+    int? hintLevel,
+    int? retries,
+    int? responseTimeMs,
+    double? confidence,
+    String? recordedAtIso,
+    String? misconceptionId,
+    String? sourceGameId,
+  }) =>
+      AttemptEvidence(
+        id: id,
+        profileId: profileId,
+        classNumber: classNumber,
+        competencyId: competencyId,
+        itemId: itemId,
+        kind: kind ?? this.kind,
+        correct: correct ?? this.correct,
+        hintLevel: hintLevel ?? this.hintLevel,
+        retries: retries ?? this.retries,
+        responseTimeMs: responseTimeMs ?? this.responseTimeMs,
+        confidence: confidence ?? this.confidence,
+        recordedAtIso: recordedAtIso ?? this.recordedAtIso,
+        misconceptionId: misconceptionId ?? this.misconceptionId,
+        sourceGameId: sourceGameId ?? this.sourceGameId,
+      );
+
   Map<String, Object?> toJson() => <String, Object?>{
         'id': id,
         'profileId': profileId,

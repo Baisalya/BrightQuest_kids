@@ -36,7 +36,8 @@ void main() {
         final blueprints = _json(
           'assets/content/class_$classNumber/learning_blueprints.json',
         );
-        for (final raw in (blueprints['blueprints'] as List).whereType<Map>()) {
+        for (final raw
+            in (blueprints['blueprints'] as List).whereType<Map>()) {
           final id = raw['id'] ?? raw['competencyId'];
           expect(raw['locale'], 'en-IN', reason: '$id');
           expect(
@@ -87,10 +88,15 @@ void main() {
           .join('\n');
       expect(source, isNot(contains('Timer.periodic(')));
       expect(source, isNot(contains('.repeat(')));
-      final home = File('lib/features/nursery/nursery_home_screen.dart')
-          .readAsStringSync();
-      expect(home, contains('cacheWidth: 128'));
-      expect(home, contains('cacheHeight: 128'));
+      final semanticVisual =
+          File('lib/features/nursery/nursery_visual.dart').readAsStringSync();
+      final animatedAsset = File(
+        'lib/features/nursery/nursery_asset_reaction.dart',
+      ).readAsStringSync();
+      for (final assetBoundary in <String>[semanticVisual, animatedAsset]) {
+        expect(assetBoundary, contains('cacheWidth: 128'));
+        expect(assetBoundary, contains('cacheHeight: 128'));
+      }
     });
 
     test('208 local letter cards stay within the Phase D asset budget', () {

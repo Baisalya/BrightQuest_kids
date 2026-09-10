@@ -43,7 +43,7 @@ Animation requirements are implemented through finite Flutter implicit/tween ani
 
 ## Character and object states
 
-Nursery uses the existing BrightQuest visual language and lion guide but keeps the screen less dense than Classes 3–5. Visual objects are represented by large shapes, letters, numerals, colour swatches and familiar emoji/pictograms with adjacent text labels when meaning matters.
+Nursery uses the existing BrightQuest visual language while keeping the screen less dense than Classes 3–5. Child-facing learning visuals resolve through the Nursery semantic visual layer to bundled local illustrations, Flutter-painted vectors, large letters/numerals and colour/shape primitives. Platform emoji rendering is not a presentation dependency.
 
 Interaction states are explicit: `ready`, `selected`, `correct`, `tryAgain`, `hintShown`, `completed`. Correct/wrong meaning is always communicated by icon/text in addition to colour/audio.
 
@@ -101,14 +101,15 @@ Nursery uses width-driven Flutter layout only, consistent with `BrightResponsive
 
 ## Asset requirements
 
-Nursery v1 deliberately avoids a new third-party asset dependency. It uses:
+Nursery deliberately avoids a new third-party asset dependency. It uses:
 
-- Flutter/material icons and shape drawing;
-- Unicode letter/numeral text;
-- familiar emoji/pictograms with visible word labels where semantic ambiguity could matter;
+- the centralized Nursery semantic visual resolver and asset catalog;
+- the bundled local Nursery picture-card library;
+- Flutter/material icons plus painted vector shapes, colour swatches and counting groups;
+- Unicode letter/numeral typography where the symbol itself is the learning target;
 - current BrightQuest music/SFX and dynamic installed-device narration.
 
-A later art pass may replace pictograms with reviewed local illustrations, but must preserve stable content IDs, visible text and accessibility labels. No remote image/network dependency is required for learning.
+All learning visuals remain local/offline. Stable content IDs, answer values, visible text and accessibility labels stay independent of the illustration chosen by the renderer. No remote image/network dependency is required for learning.
 
 ## Picture-word discovery cards
 
@@ -125,3 +126,11 @@ The child chooses a portal, completes the interaction, and returns to the play b
 The discovery area also avoids linear navigation. `Mission`, `Magic clue`, and `Show me` are selectable discovery cards, and the child may switch among them directly. The worked example remains animated with the existing reduced-motion fallback. Game-portal and answer-card entrance animations are finite one-shot animations only; reduced motion suppresses the portal/answer entrance motion.
 
 Matching and sorting interactions now submit automatically when the final partner/item is placed, removing an unnecessary form-style `Check` button. Tracing was already auto-submitted when the ordered guide path completes. Choice activities use large tappable answer bubbles rather than compact form buttons. All game portals and answer targets remain standard Flutter semantic buttons with keyboard/mouse/touch activation support.
+
+## Step 3 Calm Home Navigation
+
+The Nursery landing screen is intentionally reduced to two child-facing decisions: one large recommended play action and four world cards. It no longer exposes the due-review queue as a row of separate buttons and no longer places the full A–Z picture book on the landing screen. The picture book remains available inside **ABC & Sounds**, where it is contextually relevant.
+
+The recommended action is computed by a pure presentation planner and does not create a second progress system. Priority is: (1) an existing due review task, (2) the most recently played non-secure skill, (3) the first not-started skill, then (4) a gentle replay when every skill is secure. The planner reads the existing `NurserySkillMastery` and `NurseryReviewTask` contracts only; it does not persist new state.
+
+The four home world cards use large semantic illustrations, short titles and a quiet progress strip. Compact phone layouts use a two-column 2×2 world arrangement when space allows, while larger windows expand naturally through the existing adaptive grid. Detailed skill choice stays one level deeper inside a world, reducing the number of simultaneous controls a Nursery child sees on first entry.

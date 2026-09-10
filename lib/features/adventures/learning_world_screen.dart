@@ -6,8 +6,11 @@ import '../../core/curriculum/curriculum_models.dart';
 import '../../core/curriculum/world_mission_catalog.dart';
 import '../../core/curriculum/world_mission_models.dart';
 import '../../core/models/progress_models.dart';
+import '../../core/learning/mission_mastery_models.dart';
+import '../../core/learning/world_progression_policy.dart';
 import '../../core/rewards/adventure_reward_engine.dart';
 import '../../core/rewards/adventure_reward_models.dart';
+import '../../core/session/game_session_models.dart';
 import '../../core/theme/app_theme.dart';
 import '../../widgets/bright_design_system.dart';
 import '../../widgets/bright_illustrations.dart';
@@ -23,6 +26,7 @@ class LearningWorldScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = BrightQuestScope.of(context);
+    final repository = BrightQuestScope.contentOf(context);
     final levels = levelsForSubject(controller.selectedClass, world.subject);
     final journey = AdventureRewardEngine.worldProgress(
       levels: levels,
@@ -30,7 +34,15 @@ class LearningWorldScreen extends StatelessWidget {
     );
     final palette = paletteForSubject(world.subject);
     final identity = WorldMissionCatalog.identityFor(world.subject);
-    final nextLevel = controller.nextLevelForSubject(world.subject);
+    const progressionPolicy = WorldProgressionPolicy();
+    final encounterJourney = progressionPolicy.progressForLevels(
+      levels: levels,
+      progressFor: controller.levelStatsFor,
+    );
+    final nextLevel = controller.nextLongTermWorldLevelForSubject(
+      repository,
+      world.subject,
+    );
     final nextPlan =
         nextLevel == null ? null : WorldMissionCatalog.planForLevel(nextLevel);
     final zones = _groupLevelsByTopic(levels);
@@ -53,6 +65,7 @@ class LearningWorldScreen extends StatelessWidget {
                   palette: palette,
                   classNumber: controller.selectedClass,
                   journey: journey,
+                  encounterJourney: encounterJourney,
                   nextPlan: nextPlan,
                   onContinue: nextLevel == null
                       ? null
@@ -102,7 +115,30 @@ class LearningWorldScreen extends StatelessWidget {
                         currentLevelId: nextLevel?.id,
                         progressFor: controller.levelStatsFor,
                         isUnlocked: controller.isLevelUnlocked,
+                        recommendedEncountersFor:
+                            controller.recommendedEncountersFor,
+                        completedEncountersFor:
+                            controller.completedRecommendedEncountersFor,
+                        masteryInsightFor: (level) =>
+                            controller.masteryInsightForLevel(
+                          repository,
+                          level,
+                        ),
                         onPlay: (level) => openLearningLevel(context, level),
+                        savedSessions: controller.resumableGameSessions
+                            .where(
+                              (session) =>
+                                  session.gameId ==
+                                  zones[zoneIndex].first.gameId,
+                            )
+                            .toList(growable: false),
+                        onResumeSaved: (session) =>
+                            resumeGameSession(context, session),
+                        onDiscardSaved: controller.discardGameSession,
+                        onEndlessPractice: () => openEndlessPractice(
+                          context,
+                          zones[zoneIndex].first.gameId,
+                        ),
                       ),
                       if (zoneIndex != zones.length - 1)
                         _ZoneConnector(
@@ -142,6 +178,7 @@ class _WorldHero extends StatelessWidget {
     required this.palette,
     required this.classNumber,
     required this.journey,
+    required this.encounterJourney,
     required this.nextPlan,
     required this.onContinue,
   });
@@ -151,6 +188,7 @@ class _WorldHero extends StatelessWidget {
   final BrightWorldPalette palette;
   final int classNumber;
   final AdventureWorldProgress journey;
+  final WorldEncounterProgress encounterJourney;
   final WorldMissionPlan? nextPlan;
   final VoidCallback? onContinue;
 
@@ -249,6 +287,10 @@ class _WorldHero extends StatelessWidget {
                     spacing: 8,
                     runSpacing: 8,
                     children: [
+                      _HeroChip(
+                        text:
+                            '🎯 ${encounterJourney.completedEncounters}/${encounterJourney.totalEncounters} encounters',
+                      ),
                       _HeroChip(
                         text:
                             '${journey.completedMissions}/${journey.totalMissions} quests',
@@ -560,7 +602,14 @@ class _WorldZone extends StatelessWidget {
     required this.currentLevelId,
     required this.progressFor,
     required this.isUnlocked,
+    required this.recommendedEncountersFor,
+    required this.completedEncountersFor,
+    required this.masteryInsightFor,
     required this.onPlay,
+    required this.savedSessions,
+    required this.onResumeSaved,
+    required this.onDiscardSaved,
+    required this.onEndlessPractice,
   });
 
   final int zoneIndex;
@@ -569,7 +618,14 @@ class _WorldZone extends StatelessWidget {
   final String? currentLevelId;
   final LearningLevelProgress Function(String levelId) progressFor;
   final bool Function(LearningLevel level) isUnlocked;
+  final int Function(LearningLevel level) recommendedEncountersFor;
+  final int Function(LearningLevel level) completedEncountersFor;
+  final LevelMasteryInsight Function(LearningLevel level) masteryInsightFor;
   final ValueChanged<LearningLevel> onPlay;
+  final List<GameSessionCheckpoint> savedSessions;
+  final ValueChanged<GameSessionCheckpoint> onResumeSaved;
+  final ValueChanged<GameSessionCheckpoint> onDiscardSaved;
+  final VoidCallback onEndlessPractice;
 
   @override
   Widget build(BuildContext context) {
@@ -579,6 +635,10 @@ class _WorldZone extends StatelessWidget {
       progressFor: progressFor,
     );
     final zoneUnlocked = levels.any(isUnlocked);
+    final encounterProgress = const WorldProgressionPolicy().progressForLevels(
+      levels: levels,
+      progressFor: progressFor,
+    );
     final gameId = levels.first.gameId;
 
     return BrightReveal(
@@ -623,6 +683,7 @@ class _WorldZone extends StatelessWidget {
                 final copy = _ZoneHeaderCopy(
                   plan: firstPlan,
                   progress: zoneProgress,
+                  encounterProgress: encounterProgress,
                   palette: palette,
                 );
                 final scene = _ZoneScene(
@@ -657,6 +718,9 @@ class _WorldZone extends StatelessWidget {
                       progress: progressFor(level.id),
                       unlocked: isUnlocked(level),
                       current: currentLevelId == level.id,
+                      encounterTarget: recommendedEncountersFor(level),
+                      completedEncounters: completedEncountersFor(level),
+                      masteryInsight: masteryInsightFor(level),
                       palette: palette,
                       onPlay: isUnlocked(level) ? () => onPlay(level) : null,
                     ),
@@ -694,11 +758,306 @@ class _WorldZone extends StatelessWidget {
                 );
               },
             ),
+            if (savedSessions.isNotEmpty) ...[
+              const SizedBox(height: 14),
+              _SavedGameMissionsCard(
+                gameId: gameId,
+                sessions: savedSessions,
+                palette: palette,
+                onResume: onResumeSaved,
+                onDiscard: onDiscardSaved,
+              ),
+            ],
+            const SizedBox(height: 14),
+            _EndlessPracticeCard(
+              unlocked: zoneProgress.complete,
+              gameId: gameId,
+              palette: palette,
+              onPressed: zoneProgress.complete ? onEndlessPractice : null,
+            ),
           ],
         ),
       ),
     );
   }
+}
+
+class _SavedGameMissionsCard extends StatelessWidget {
+  const _SavedGameMissionsCard({
+    required this.gameId,
+    required this.sessions,
+    required this.palette,
+    required this.onResume,
+    required this.onDiscard,
+  });
+
+  final String gameId;
+  final List<GameSessionCheckpoint> sessions;
+  final BrightWorldPalette palette;
+  final ValueChanged<GameSessionCheckpoint> onResume;
+  final ValueChanged<GameSessionCheckpoint> onDiscard;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        key: Key('saved_missions_in_game_$gameId'),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: palette.secondary.withValues(alpha: .28),
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(
+            color: palette.primary.withValues(alpha: .22),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.bookmark_added_rounded, color: palette.deep),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Saved in this game',
+                    style: TextStyle(
+                      color: palette.deep,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
+                Text(
+                  '${sessions.length}',
+                  style: TextStyle(
+                    color: palette.deep,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            const Text(
+              'Continue a paused level here instead of searching a long global list.',
+              style: TextStyle(
+                color: AppTheme.inkMuted,
+                fontWeight: FontWeight.w700,
+                height: 1.3,
+                fontSize: 11.5,
+              ),
+            ),
+            const SizedBox(height: 10),
+            for (var index = 0; index < sessions.length; index++) ...[
+              _SavedGameMissionRow(
+                session: sessions[index],
+                palette: palette,
+                onResume: () => onResume(sessions[index]),
+                onDiscard: () => onDiscard(sessions[index]),
+              ),
+              if (index != sessions.length - 1) const SizedBox(height: 8),
+            ],
+          ],
+        ),
+      );
+}
+
+class _SavedGameMissionRow extends StatelessWidget {
+  const _SavedGameMissionRow({
+    required this.session,
+    required this.palette,
+    required this.onResume,
+    required this.onDiscard,
+  });
+
+  final GameSessionCheckpoint session;
+  final BrightWorldPalette palette;
+  final VoidCallback onResume;
+  final VoidCallback onDiscard;
+
+  @override
+  Widget build(BuildContext context) {
+    final level = session.learningLevelId == null
+        ? null
+        : learningLevelById(session.learningLevelId!);
+    final title = level?.title ?? 'Quick Play / extra practice';
+    final stage = switch (session.stage) {
+      GameSessionStage.lesson => 'Lesson saved',
+      GameSessionStage.game => 'Game saved',
+      GameSessionStage.completing => 'Finishing safely',
+      GameSessionStage.result => 'Result saved',
+    };
+    final score =
+        session.maxScore > 0 ? ' • ${session.score}/${session.maxScore}' : '';
+
+    final info = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          title,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontWeight: FontWeight.w900),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          '$stage$score',
+          style: const TextStyle(
+            color: AppTheme.inkMuted,
+            fontWeight: FontWeight.w700,
+            fontSize: 11.5,
+          ),
+        ),
+      ],
+    );
+
+    final actions = Wrap(
+      spacing: 6,
+      runSpacing: 6,
+      children: [
+        TextButton.icon(
+          onPressed: onDiscard,
+          icon: const Icon(Icons.delete_outline_rounded, size: 18),
+          label: const Text('Discard'),
+        ),
+        FilledButton.icon(
+          key: Key('resume_game_saved_mission_${session.slotKey}'),
+          onPressed: onResume,
+          style: FilledButton.styleFrom(
+            backgroundColor: palette.deep,
+            foregroundColor: Colors.white,
+          ),
+          icon: const Icon(Icons.play_arrow_rounded, size: 18),
+          label: const Text('Resume'),
+        ),
+      ],
+    );
+
+    return Container(
+      key: Key('game_saved_mission_${session.slotKey}'),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: .86),
+        borderRadius: BorderRadius.circular(17),
+        border: Border.all(color: palette.primary.withValues(alpha: .14)),
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth < 620) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                info,
+                const SizedBox(height: 8),
+                Align(alignment: Alignment.centerRight, child: actions),
+              ],
+            );
+          }
+          return Row(
+            children: [
+              Expanded(child: info),
+              const SizedBox(width: 12),
+              actions,
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _EndlessPracticeCard extends StatelessWidget {
+  const _EndlessPracticeCard({
+    required this.unlocked,
+    required this.gameId,
+    required this.palette,
+    required this.onPressed,
+  });
+
+  final bool unlocked;
+  final String gameId;
+  final BrightWorldPalette palette;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        key: Key('endless_practice_$gameId'),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: unlocked
+              ? palette.primary.withValues(alpha: .08)
+              : const Color(0xFFF4F5F7),
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(
+            color: unlocked
+                ? palette.primary.withValues(alpha: .24)
+                : const Color(0x18000000),
+          ),
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final compact = constraints.maxWidth < 620;
+            final copy = Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.all_inclusive_rounded,
+                      color: unlocked ? palette.deep : AppTheme.inkMuted,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Endless Practice',
+                      style: TextStyle(
+                        color: unlocked ? palette.deep : AppTheme.inkMuted,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  unlocked
+                      ? 'Keep going in 10-mission adaptive rounds with recent-question rotation.'
+                      : 'Clear Practice, Challenge and Mastery to unlock unlimited extra practice.',
+                  style: const TextStyle(
+                    color: AppTheme.inkMuted,
+                    fontWeight: FontWeight.w700,
+                    height: 1.3,
+                    fontSize: 11.5,
+                  ),
+                ),
+              ],
+            );
+            final button = FilledButton.icon(
+              key: Key('endless_practice_button_$gameId'),
+              onPressed: onPressed,
+              style: FilledButton.styleFrom(
+                backgroundColor:
+                    unlocked ? palette.deep : const Color(0xFFD5D9E0),
+                foregroundColor: Colors.white,
+              ),
+              icon: Icon(
+                unlocked ? Icons.all_inclusive_rounded : Icons.lock_rounded,
+              ),
+              label: Text(unlocked ? 'Practice More' : 'Locked'),
+            );
+            if (compact) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [copy, const SizedBox(height: 10), button],
+              );
+            }
+            return Row(
+              children: [
+                Expanded(child: copy),
+                const SizedBox(width: 14),
+                button,
+              ],
+            );
+          },
+        ),
+      );
 }
 
 class _ZoneScene extends StatelessWidget {
@@ -761,11 +1120,13 @@ class _ZoneHeaderCopy extends StatelessWidget {
   const _ZoneHeaderCopy({
     required this.plan,
     required this.progress,
+    required this.encounterProgress,
     required this.palette,
   });
 
   final WorldMissionPlan plan;
   final AdventureZoneProgress progress;
+  final WorldEncounterProgress encounterProgress;
   final BrightWorldPalette palette;
 
   @override
@@ -790,6 +1151,13 @@ class _ZoneHeaderCopy extends StatelessWidget {
                 icon: Icons.flag_rounded,
                 label:
                     '${progress.completedMissions}/${progress.totalMissions} quests',
+                color: palette.deep,
+                background: palette.primary.withValues(alpha: .10),
+              ),
+              BrightPill(
+                icon: Icons.autorenew_rounded,
+                label:
+                    '${encounterProgress.completedEncounters}/${encounterProgress.totalEncounters} encounters',
                 color: palette.deep,
                 background: palette.primary.withValues(alpha: .10),
               ),
@@ -862,6 +1230,9 @@ class _MissionStageCard extends StatelessWidget {
     required this.progress,
     required this.unlocked,
     required this.current,
+    required this.encounterTarget,
+    required this.completedEncounters,
+    required this.masteryInsight,
     required this.palette,
     required this.onPlay,
   });
@@ -871,6 +1242,9 @@ class _MissionStageCard extends StatelessWidget {
   final LearningLevelProgress progress;
   final bool unlocked;
   final bool current;
+  final int encounterTarget;
+  final int completedEncounters;
+  final LevelMasteryInsight masteryInsight;
   final BrightWorldPalette palette;
   final VoidCallback? onPlay;
 
@@ -879,16 +1253,19 @@ class _MissionStageCard extends StatelessWidget {
     final stars = progress.earnedStars;
     final bestPercent = (progress.bestRatio * 100).round();
     final boss = plan.isBoss;
-    final statusLabel = progress.completed
-        ? stars == 3
-            ? 'PERFECT CLEAR'
-            : 'CLEARED'
-        : current
-            ? 'NEXT QUEST'
-            : unlocked
-                ? 'READY'
-                : 'LOCKED';
-    final statusColor = progress.completed
+    final encounterSetComplete = completedEncounters >= encounterTarget;
+    final statusLabel = !unlocked
+        ? 'LOCKED'
+        : current && !encounterSetComplete
+            ? 'NEXT ENCOUNTER'
+            : encounterSetComplete
+                ? stars == 3
+                    ? 'MISSION SET MASTERED'
+                    : 'MISSION SET CLEARED'
+                : progress.completed
+                    ? 'FRESH ENCOUNTER READY'
+                    : 'READY';
+    final statusColor = encounterSetComplete
         ? const Color(0xFF208447)
         : current
             ? palette.deep
@@ -1026,7 +1403,39 @@ class _MissionStageCard extends StatelessWidget {
                 height: 1.3,
               ),
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 8),
+            _MasteryReadinessPill(
+              key: Key('world_mastery_${level.id}'),
+              insight: masteryInsight,
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: BrightAnimatedProgress(
+                    value: encounterTarget <= 0
+                        ? 0
+                        : (completedEncounters / encounterTarget)
+                            .clamp(0.0, 1.0)
+                            .toDouble(),
+                    minHeight: 6,
+                    backgroundColor: palette.primary.withValues(alpha: .10),
+                    color: palette.primary,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '$completedEncounters/$encounterTarget encounters',
+                  key: Key('world_encounters_${level.id}'),
+                  style: const TextStyle(
+                    color: AppTheme.inkMuted,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 9.5,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
             if (progress.completed)
               Wrap(
                 spacing: 7,
@@ -1081,16 +1490,87 @@ class _MissionStageCard extends StatelessWidget {
                           : Icons.play_arrow_rounded,
                 ),
                 label: Text(
-                  progress.completed
-                      ? stars < 3
-                          ? 'Replay for 3 Stars'
-                          : 'Replay Mission'
-                      : unlocked
+                  !unlocked
+                      ? 'Locked'
+                      : completedEncounters == 0
                           ? plan.actionLabel
-                          : 'Locked',
+                          : !encounterSetComplete
+                              ? 'Fresh Encounter ${completedEncounters + 1}/$encounterTarget'
+                              : stars < 3
+                                  ? 'Fresh Replay for 3 Stars'
+                                  : 'Replay Fresh Mission',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MasteryReadinessPill extends StatelessWidget {
+  const _MasteryReadinessPill({required this.insight, super.key});
+
+  final LevelMasteryInsight insight;
+
+  @override
+  Widget build(BuildContext context) {
+    final (icon, foreground, background) = switch (insight.status) {
+      LongTermMasteryStatus.secure => (
+          Icons.verified_rounded,
+          const Color(0xFF208447),
+          const Color(0xFFE7F8EA),
+        ),
+      LongTermMasteryStatus.retentionDue => (
+          Icons.schedule_rounded,
+          const Color(0xFF8A6400),
+          const Color(0xFFFFF2C7),
+        ),
+      LongTermMasteryStatus.needsPractice => (
+          Icons.volunteer_activism_rounded,
+          const Color(0xFFB33A3A),
+          const Color(0xFFFFE8E8),
+        ),
+      LongTermMasteryStatus.demonstrated => (
+          Icons.workspace_premium_rounded,
+          const Color(0xFF244BB0),
+          const Color(0xFFE9EEFF),
+        ),
+      LongTermMasteryStatus.improving => (
+          Icons.trending_up_rounded,
+          const Color(0xFF7352A8),
+          const Color(0xFFF1EAFE),
+        ),
+      LongTermMasteryStatus.notStarted => (
+          Icons.radio_button_unchecked_rounded,
+          AppTheme.inkMuted,
+          const Color(0xFFF0F2F5),
+        ),
+    };
+    return Tooltip(
+      message: insight.reason,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 14, color: foreground),
+            const SizedBox(width: 5),
+            Text(
+              insight.label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: foreground,
+                fontWeight: FontWeight.w900,
+                fontSize: 9.5,
               ),
             ),
           ],

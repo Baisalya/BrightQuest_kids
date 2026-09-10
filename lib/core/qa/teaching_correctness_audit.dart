@@ -227,8 +227,7 @@ class TeachingCorrectnessAudit {
         );
       }
 
-      for (final option
-          in activity.options.where((item) => item.id != correctId)) {
+      for (final option in activity.options.where((item) => item.id != correctId)) {
         checks += 1;
         if (evaluator.evaluate(activity, option.id).correct) {
           findings.add(
@@ -345,8 +344,9 @@ class TeachingCorrectnessAudit {
 
     final answer = practice.correctResponseRule['value'];
     final optionIds = practice.options.map((option) => option.id).toList();
-    final normalizedLabels =
-        practice.options.map((option) => option.label.trim()).toList();
+    final normalizedLabels = practice.options
+        .map((option) => option.label.trim())
+        .toList();
 
     checks += 1;
     if (optionIds.length < 2 ||
@@ -386,8 +386,7 @@ class TeachingCorrectnessAudit {
       );
     }
 
-    for (final option
-        in practice.options.where((item) => item.id != '$answer')) {
+    for (final option in practice.options.where((item) => item.id != '$answer')) {
       checks += 1;
       if (evaluator.evaluateGenerated(practice, option.id).correct) {
         findings.add(
@@ -446,8 +445,7 @@ class TeachingCorrectnessAudit {
             severity: TeachingAuditSeverity.blocker,
             code: code,
             location: location,
-            message:
-                '$reason Expected $expected but the scored answer is $answer.',
+            message: '$reason Expected $expected but the scored answer is $answer.',
           ),
         );
       }
@@ -528,8 +526,8 @@ class TeachingCorrectnessAudit {
       );
     }
 
-    final numericAddition =
-        RegExp(r'\b(\d+)\s*\+\s*(\d+)\s*=').firstMatch(prompt);
+    final numericAddition = RegExp(r'\b(\d+)\s*\+\s*(\d+)\s*=')
+        .firstMatch(prompt);
     if (numericAddition != null) {
       expectAnswer(
         '${int.parse(numericAddition.group(1)!) + int.parse(numericAddition.group(2)!)}',
@@ -539,10 +537,10 @@ class TeachingCorrectnessAudit {
     }
 
     if (prompt.toLowerCase().contains('what is missing?')) {
-      final blankAtEnd =
-          RegExp(r'(\d+)\s*,\s*(\d+)\s*,\s*__').firstMatch(prompt);
-      final blankInMiddle =
-          RegExp(r'(\d+)\s*,\s*__\s*,\s*(\d+)').firstMatch(prompt);
+      final blankAtEnd = RegExp(r'(\d+)\s*,\s*(\d+)\s*,\s*__')
+          .firstMatch(prompt);
+      final blankInMiddle = RegExp(r'(\d+)\s*,\s*__\s*,\s*(\d+)')
+          .firstMatch(prompt);
       final blankBeforeLast = RegExp(
         r'(\d+)\s*,\s*(\d+)\s*,\s*__\s*,\s*(\d+)',
       ).firstMatch(prompt);
@@ -608,8 +606,7 @@ class TeachingCorrectnessAudit {
             severity: TeachingAuditSeverity.blocker,
             code: 'nursery.alphabet.letter_choice_answer_mismatch',
             location: location,
-            message:
-                'Letter-choice prompt and scored answer disagree ($answer).',
+            message: 'Letter-choice prompt and scored answer disagree ($answer).',
           ),
         );
       }
@@ -628,8 +625,7 @@ class TeachingCorrectnessAudit {
             severity: TeachingAuditSeverity.blocker,
             code: 'nursery.alphabet.case_match_answer_mismatch',
             location: location,
-            message:
-                'Upper/lowercase matching prompt scores $answer incorrectly.',
+            message: 'Upper/lowercase matching prompt scores $answer incorrectly.',
           ),
         );
       }
@@ -647,8 +643,7 @@ class TeachingCorrectnessAudit {
             severity: TeachingAuditSeverity.blocker,
             code: 'nursery.alphabet.listen_letter_answer_mismatch',
             location: location,
-            message:
-                'Listen-and-select prompt and scored answer disagree ($answer).',
+            message: 'Listen-and-select prompt and scored answer disagree ($answer).',
           ),
         );
       }
@@ -686,11 +681,7 @@ class TeachingCorrectnessAudit {
         caseSensitive: false,
       ).firstMatch(practice.prompt);
       final expectedCount = match == null ? null : int.parse(match.group(1)!);
-      final answerCount = answer == 'empty group'
-          ? 0
-          : answer.runes
-              .where((rune) => String.fromCharCode(rune) == '●')
-              .length;
+      final answerCount = _nurseryQuantityAnswerCount(answer);
       if (expectedCount == null || expectedCount != answerCount) {
         findings.add(
           TeachingAuditFinding(
@@ -744,7 +735,8 @@ class TeachingCorrectnessAudit {
       final match = RegExp(r'(\d+)\s*\+\s*(\d+)').firstMatch(practice.prompt);
       int? recomputed;
       if (match != null) {
-        recomputed = int.parse(match.group(1)!) + int.parse(match.group(2)!);
+        recomputed =
+            int.parse(match.group(1)!) + int.parse(match.group(2)!);
       } else if (skill.id == 'math_add_objects') {
         final plusIndex = practice.visualTokens.indexOf('+');
         final equalsIndex = practice.visualTokens.indexOf('=');
@@ -783,8 +775,8 @@ class TeachingCorrectnessAudit {
 
     if (skill.generatorFamily == 'missingNumber') {
       checks += 1;
-      final match =
-          RegExp(r'(\d+)\s*,\s*__\s*,\s*(\d+)').firstMatch(practice.prompt);
+      final match = RegExp(r'(\d+)\s*,\s*__\s*,\s*(\d+)')
+          .firstMatch(practice.prompt);
       if (match == null ||
           int.parse(match.group(1)!) + 1 != int.tryParse(answer) ||
           int.parse(match.group(2)!) - 1 != int.tryParse(answer)) {
@@ -793,8 +785,7 @@ class TeachingCorrectnessAudit {
             severity: TeachingAuditSeverity.blocker,
             code: 'nursery.math.sequence_answer_mismatch',
             location: location,
-            message:
-                'Missing-number answer $answer does not complete the sequence.',
+            message: 'Missing-number answer $answer does not complete the sequence.',
           ),
         );
       }
@@ -873,6 +864,15 @@ class TeachingCorrectnessAudit {
     );
   }
 
+  int? _nurseryQuantityAnswerCount(String value) {
+    final normalized = value.trim().toLowerCase();
+    if (normalized == 'empty group' || normalized == 'none') return 0;
+    final semantic = RegExp(r'^(\d+)\s+dots?$').firstMatch(normalized);
+    if (semantic != null) return int.parse(semantic.group(1)!);
+    final legacyDots = RegExp(RegExp.escape('●')).allMatches(value).length;
+    return legacyDots > 0 ? legacyDots : null;
+  }
+
   TeachingAuditReport _auditClassActivities(
     Iterable<ContentActivity> activities,
   ) {
@@ -918,7 +918,8 @@ class TeachingCorrectnessAudit {
               severity: TeachingAuditSeverity.blocker,
               code: 'class.authored.distractor_accepted',
               location: location,
-              message: 'Distractor ${distractor.value} is accepted as correct.',
+              message:
+                  'Distractor ${distractor.value} is accepted as correct.',
             ),
           );
         }
@@ -1054,8 +1055,7 @@ class TeachingCorrectnessAudit {
 
     if (activity.gameId == 'story_builder' && type == 'orderedWords') {
       checks += 1;
-      final ordered =
-          (rule['value'] as List?)?.map((value) => '$value').toList();
+      final ordered = (rule['value'] as List?)?.map((value) => '$value').toList();
       final payloadWords = (activity.payload['words'] as List?)
           ?.map((value) => '$value')
           .toList();
@@ -1125,7 +1125,8 @@ class TeachingCorrectnessAudit {
       }
     }
 
-    if ((activity.gameId == 'science_lab' || activity.gameId == 'map_quest') &&
+    if ((activity.gameId == 'science_lab' ||
+            activity.gameId == 'map_quest') &&
         type == 'exactText') {
       checks += 1;
       final scored = '${rule['value'] ?? ''}'.trim();
@@ -1200,8 +1201,7 @@ class TeachingCorrectnessAudit {
                 severity: TeachingAuditSeverity.blocker,
                 code: 'class.generated.arithmetic_invalid_choices',
                 location: 'class-$classNumber/math/d$difficulty/seed:$seed',
-                message:
-                    'Arithmetic choices are duplicated or omit the answer.',
+                message: 'Arithmetic choices are duplicated or omit the answer.',
               ),
             );
           }

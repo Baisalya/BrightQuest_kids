@@ -6,7 +6,7 @@
   "locale": "en-IN",
   "review": {
     "status": "needsReview",
-    "revision": 2,
+    "revision": 3,
     "author": "BrightQuest content draft",
     "reviewerOwnerId": "nursery-qualified-reviewer",
     "reviewedAt": null
@@ -36,25 +36,25 @@
       "id": "alphabet",
       "title": "Letters & Sounds",
       "description": "Recognise letters, connect sounds and words, listen, match and trace.",
-      "emoji": "🔤"
+      "visualKey": "alphabet"
     },
     {
       "id": "math",
       "title": "Early Maths",
       "description": "Recognise numbers, count, compare, sequence and combine small groups.",
-      "emoji": "🔢"
+      "visualKey": "numbers"
     },
     {
       "id": "knowledge",
       "title": "My World",
       "description": "Learn colours, shapes, animals, food, objects, body parts and routines.",
-      "emoji": "🌈"
+      "visualKey": "world"
     },
     {
       "id": "thinking",
       "title": "Think & Notice",
       "description": "Spot patterns, match, sort, remember and listen carefully.",
-      "emoji": "🧩"
+      "visualKey": "thinking"
     }
   ],
   "letterAssociations": [
@@ -62,7 +62,7 @@
       "uppercase": "A",
       "lowercase": "a",
       "word": "Apple",
-      "picture": "🍎",
+      "picture": "apple",
       "soundCue": "short a as in apple",
       "review": {
         "status": "needsReview",
@@ -74,7 +74,7 @@
       "examples": [
         {
           "word": "Apple",
-          "picture": "🍎",
+          "picture": "apple",
           "assetPath": "assets/nursery/letter_cards/a_1_apple.png",
           "soundCue": "Listen to the first sound in apple.",
           "soundPracticeEligible": true,
@@ -83,7 +83,7 @@
         },
         {
           "word": "Ant",
-          "picture": "🐜",
+          "picture": "ant",
           "assetPath": "assets/nursery/letter_cards/a_2_ant.png",
           "soundCue": "Listen to the first sound in ant.",
           "soundPracticeEligible": true,
@@ -92,7 +92,7 @@
         },
         {
           "word": "Aeroplane",
-          "picture": "✈️",
+          "picture": "aeroplane",
           "assetPath": "assets/nursery/letter_cards/a_3_aeroplane.png",
           "soundCue": "Aeroplane starts with A, but it does not use the simple short A sound.",
           "soundPracticeEligible": false,
@@ -101,7 +101,7 @@
         },
         {
           "word": "Axe",
-          "picture": "🪓",
+          "picture": "axe",
           "assetPath": "assets/nursery/letter_cards/a_4_axe.png",
           "soundCue": "Listen to the first sound in axe.",
           "soundPracticeEligible": true,
@@ -110,7 +110,7 @@
         },
         {
           "word": "Avocado",
-          "picture": "🥑",
+          "picture": "avocado",
           "assetPath": "assets/nursery/letter_cards/a_5_avocado.png",
           "soundCue": "Listen to the first sound in avocado.",
           "soundPracticeEligible": true,
@@ -119,7 +119,7 @@
         },
         {
           "word": "Alligator",
-          "picture": "🐊",
+          "picture": "alligator",
           "assetPath": "assets/nursery/letter_cards/a_6_alligator.png",
           "soundCue": "Listen to the first sound in alligator.",
           "soundPracticeEligible": true,
@@ -128,7 +128,7 @@
         },
         {
           "word": "Ambulance",
-          "picture": "🚑",
+          "picture": "ambulance",
           "assetPath": "assets/nursery/letter_cards/a_7_ambulance.png",
           "soundCue": "Listen to the first sound in ambulance.",
           "soundPracticeEligible": true,
@@ -137,7 +137,7 @@
         },
         {
           "word": "Arrow",
-          "picture": "🏹",
+          "picture": "arrow",
           "assetPath": "assets/nursery/letter_cards/a_8_arrow.png",
           "soundCue": "Listen to the first sound in arrow.",
           "soundPracticeEligible": true,
@@ -150,7 +150,7 @@
       "uppercase": "B",
       "lowercase": "b",
       "word": "Ball",
-      "picture": "⚽",
+      "picture": "ball",
       "soundCue": "b as in ball",
       "review": {
         "status": "needsReview",
@@ -162,7 +162,7 @@
       "examples": [
         {
           "word": "Ball",
-          "picture": "⚽",
+          "picture": "ball",
           "assetPath": "assets/nursery/letter_cards/b_1_ball.png",
           "soundCue": "Listen to the first sound in ball.",
           "soundPracticeEligible": true,
@@ -171,7 +171,7 @@
         },
         {
           "word": "Banana",
-          "picture": "🍌",
+          "picture": "banana",
           "assetPath": "assets/nursery/letter_cards/b_2_banana.png",
           "soundCue": "Listen to the first sound in banana.",
           "soundPracticeEligible": true,
@@ -180,7 +180,7 @@
         },
         {
           "word": "Bird",
-          "picture": "🐦",
+          "picture": "bird",
           "assetPath": "assets/nursery/letter_cards/b_3_bird.png",
           "soundCue": "Listen to the first sound in bird.",
           "soundPracticeEligible": true,
@@ -189,7 +189,7 @@
         },
         {
           "word": "Bus",
-          "picture": "🚌",
+          "picture": "bus",
           "assetPath": "assets/nursery/letter_cards/b_4_bus.png",
           "soundCue": "Listen to the first sound in bus.",
           "soundPracticeEligible": true,
@@ -198,7 +198,7 @@
         },
         {
           "word": "Boat",
-          "picture": "⛵",
+          "picture": "boat",
           "assetPath": "assets/nursery/letter_cards/b_5_boat.png",
           "soundCue": "Listen to the first sound in boat.",
           "soundPracticeEligible": true,
@@ -207,7 +207,7 @@
         },
         {
           "word": "Book",
-          "picture": "📘",
+          "picture": "book",
           "assetPath": "assets/nursery/letter_cards/b_6_book.png",
           "soundCue": "Listen to the first sound in book.",
           "soundPracticeEligible": true,
@@ -216,7 +216,7 @@
         },
         {
           "word": "Butterfly",
-          "picture": "🦋",
+          "picture": "butterfly",
           "assetPath": "assets/nursery/letter_cards/b_7_butterfly.png",
           "soundCue": "Listen to the first sound in butterfly.",
           "soundPracticeEligible": true,
@@ -225,7 +225,7 @@
         },
         {
           "word": "Balloon",
-          "picture": "🎈",
+          "picture": "balloon",
           "assetPath": "assets/nursery/letter_cards/b_8_balloon.png",
           "soundCue": "Listen to the first sound in balloon.",
           "soundPracticeEligible": true,
@@ -238,7 +238,7 @@
       "uppercase": "C",
       "lowercase": "c",
       "word": "Cat",
-      "picture": "🐱",
+      "picture": "cat",
       "soundCue": "k sound as in cat",
       "review": {
         "status": "needsReview",
@@ -250,7 +250,7 @@
       "examples": [
         {
           "word": "Cat",
-          "picture": "🐱",
+          "picture": "cat",
           "assetPath": "assets/nursery/letter_cards/c_1_cat.png",
           "soundCue": "Listen to the first sound in cat.",
           "soundPracticeEligible": true,
@@ -259,7 +259,7 @@
         },
         {
           "word": "Car",
-          "picture": "🚗",
+          "picture": "car",
           "assetPath": "assets/nursery/letter_cards/c_2_car.png",
           "soundCue": "Listen to the first sound in car.",
           "soundPracticeEligible": true,
@@ -268,7 +268,7 @@
         },
         {
           "word": "Cup",
-          "picture": "🥤",
+          "picture": "cup",
           "assetPath": "assets/nursery/letter_cards/c_3_cup.png",
           "soundCue": "Listen to the first sound in cup.",
           "soundPracticeEligible": true,
@@ -277,7 +277,7 @@
         },
         {
           "word": "Cow",
-          "picture": "🐄",
+          "picture": "cow",
           "assetPath": "assets/nursery/letter_cards/c_4_cow.png",
           "soundCue": "Listen to the first sound in cow.",
           "soundPracticeEligible": true,
@@ -286,7 +286,7 @@
         },
         {
           "word": "Cake",
-          "picture": "🎂",
+          "picture": "cake",
           "assetPath": "assets/nursery/letter_cards/c_5_cake.png",
           "soundCue": "Listen to the first sound in cake.",
           "soundPracticeEligible": true,
@@ -295,7 +295,7 @@
         },
         {
           "word": "Cap",
-          "picture": "🧢",
+          "picture": "cap",
           "assetPath": "assets/nursery/letter_cards/c_6_cap.png",
           "soundCue": "Listen to the first sound in cap.",
           "soundPracticeEligible": true,
@@ -304,7 +304,7 @@
         },
         {
           "word": "Candle",
-          "picture": "🕯️",
+          "picture": "candle",
           "assetPath": "assets/nursery/letter_cards/c_7_candle.png",
           "soundCue": "Listen to the first sound in candle.",
           "soundPracticeEligible": true,
@@ -313,7 +313,7 @@
         },
         {
           "word": "Carrot",
-          "picture": "🥕",
+          "picture": "carrot",
           "assetPath": "assets/nursery/letter_cards/c_8_carrot.png",
           "soundCue": "Listen to the first sound in carrot.",
           "soundPracticeEligible": true,
@@ -326,7 +326,7 @@
       "uppercase": "D",
       "lowercase": "d",
       "word": "Dog",
-      "picture": "🐶",
+      "picture": "dog",
       "soundCue": "d as in dog",
       "review": {
         "status": "needsReview",
@@ -338,7 +338,7 @@
       "examples": [
         {
           "word": "Dog",
-          "picture": "🐶",
+          "picture": "dog",
           "assetPath": "assets/nursery/letter_cards/d_1_dog.png",
           "soundCue": "Listen to the first sound in dog.",
           "soundPracticeEligible": true,
@@ -347,7 +347,7 @@
         },
         {
           "word": "Duck",
-          "picture": "🦆",
+          "picture": "duck",
           "assetPath": "assets/nursery/letter_cards/d_2_duck.png",
           "soundCue": "Listen to the first sound in duck.",
           "soundPracticeEligible": true,
@@ -356,7 +356,7 @@
         },
         {
           "word": "Drum",
-          "picture": "🥁",
+          "picture": "drum",
           "assetPath": "assets/nursery/letter_cards/d_3_drum.png",
           "soundCue": "Drum starts with D. We will practise its sound team later.",
           "soundPracticeEligible": false,
@@ -365,7 +365,7 @@
         },
         {
           "word": "Doll",
-          "picture": "🪆",
+          "picture": "doll",
           "assetPath": "assets/nursery/letter_cards/d_4_doll.png",
           "soundCue": "Listen to the first sound in doll.",
           "soundPracticeEligible": true,
@@ -374,7 +374,7 @@
         },
         {
           "word": "Door",
-          "picture": "🚪",
+          "picture": "door",
           "assetPath": "assets/nursery/letter_cards/d_5_door.png",
           "soundCue": "Listen to the first sound in door.",
           "soundPracticeEligible": true,
@@ -383,7 +383,7 @@
         },
         {
           "word": "Deer",
-          "picture": "🦌",
+          "picture": "deer",
           "assetPath": "assets/nursery/letter_cards/d_6_deer.png",
           "soundCue": "Listen to the first sound in deer.",
           "soundPracticeEligible": true,
@@ -392,7 +392,7 @@
         },
         {
           "word": "Dice",
-          "picture": "🎲",
+          "picture": "dice",
           "assetPath": "assets/nursery/letter_cards/d_7_dice.png",
           "soundCue": "Listen to the first sound in dice.",
           "soundPracticeEligible": true,
@@ -401,7 +401,7 @@
         },
         {
           "word": "Donut",
-          "picture": "🍩",
+          "picture": "donut",
           "assetPath": "assets/nursery/letter_cards/d_8_donut.png",
           "soundCue": "Listen to the first sound in donut.",
           "soundPracticeEligible": true,
@@ -414,7 +414,7 @@
       "uppercase": "E",
       "lowercase": "e",
       "word": "Egg",
-      "picture": "🥚",
+      "picture": "egg",
       "soundCue": "short e as in egg",
       "review": {
         "status": "needsReview",
@@ -426,7 +426,7 @@
       "examples": [
         {
           "word": "Egg",
-          "picture": "🥚",
+          "picture": "egg",
           "assetPath": "assets/nursery/letter_cards/e_1_egg.png",
           "soundCue": "Listen to the first sound in egg.",
           "soundPracticeEligible": true,
@@ -435,7 +435,7 @@
         },
         {
           "word": "Elephant",
-          "picture": "🐘",
+          "picture": "elephant",
           "assetPath": "assets/nursery/letter_cards/e_2_elephant.png",
           "soundCue": "Listen to the first sound in elephant.",
           "soundPracticeEligible": true,
@@ -444,7 +444,7 @@
         },
         {
           "word": "Envelope",
-          "picture": "✉️",
+          "picture": "envelope",
           "assetPath": "assets/nursery/letter_cards/e_3_envelope.png",
           "soundCue": "Envelope starts with E. People may say its first sound differently, so we use it for letter discovery.",
           "soundPracticeEligible": false,
@@ -453,7 +453,7 @@
         },
         {
           "word": "Engine",
-          "picture": "🚂",
+          "picture": "engine",
           "assetPath": "assets/nursery/letter_cards/e_4_engine.png",
           "soundCue": "Listen to the first sound in engine.",
           "soundPracticeEligible": true,
@@ -462,7 +462,7 @@
         },
         {
           "word": "Earth",
-          "picture": "🌍",
+          "picture": "earth",
           "assetPath": "assets/nursery/letter_cards/e_5_earth.png",
           "soundCue": "Earth starts with E. Listen: earth sounds different from egg.",
           "soundPracticeEligible": false,
@@ -471,7 +471,7 @@
         },
         {
           "word": "Eagle",
-          "picture": "🦅",
+          "picture": "eagle",
           "assetPath": "assets/nursery/letter_cards/e_6_eagle.png",
           "soundCue": "Eagle starts with E. Listen: eagle sounds different from egg.",
           "soundPracticeEligible": false,
@@ -480,7 +480,7 @@
         },
         {
           "word": "Eye",
-          "picture": "👁️",
+          "picture": "eye",
           "assetPath": "assets/nursery/letter_cards/e_7_eye.png",
           "soundCue": "Eye starts with E. Listen: eye sounds different from egg.",
           "soundPracticeEligible": false,
@@ -489,7 +489,7 @@
         },
         {
           "word": "Ear",
-          "picture": "👂",
+          "picture": "ear",
           "assetPath": "assets/nursery/letter_cards/e_8_ear.png",
           "soundCue": "Ear starts with E. Listen: ear sounds different from egg.",
           "soundPracticeEligible": false,
@@ -502,7 +502,7 @@
       "uppercase": "F",
       "lowercase": "f",
       "word": "Fish",
-      "picture": "🐟",
+      "picture": "fish",
       "soundCue": "f as in fish",
       "review": {
         "status": "needsReview",
@@ -514,7 +514,7 @@
       "examples": [
         {
           "word": "Fish",
-          "picture": "🐟",
+          "picture": "fish",
           "assetPath": "assets/nursery/letter_cards/f_1_fish.png",
           "soundCue": "Listen to the first sound in fish.",
           "soundPracticeEligible": true,
@@ -523,7 +523,7 @@
         },
         {
           "word": "Frog",
-          "picture": "🐸",
+          "picture": "frog",
           "assetPath": "assets/nursery/letter_cards/f_2_frog.png",
           "soundCue": "Frog starts with F. We will practise its sound team later.",
           "soundPracticeEligible": false,
@@ -532,7 +532,7 @@
         },
         {
           "word": "Flower",
-          "picture": "🌼",
+          "picture": "flower",
           "assetPath": "assets/nursery/letter_cards/f_3_flower.png",
           "soundCue": "Flower starts with F. We will practise its sound team later.",
           "soundPracticeEligible": false,
@@ -541,7 +541,7 @@
         },
         {
           "word": "Fox",
-          "picture": "🦊",
+          "picture": "fox",
           "assetPath": "assets/nursery/letter_cards/f_4_fox.png",
           "soundCue": "Listen to the first sound in fox.",
           "soundPracticeEligible": true,
@@ -550,7 +550,7 @@
         },
         {
           "word": "Flag",
-          "picture": "🚩",
+          "picture": "flag",
           "assetPath": "assets/nursery/letter_cards/f_5_flag.png",
           "soundCue": "Flag starts with F. We will practise its sound team later.",
           "soundPracticeEligible": false,
@@ -559,7 +559,7 @@
         },
         {
           "word": "Feather",
-          "picture": "🪶",
+          "picture": "feather",
           "assetPath": "assets/nursery/letter_cards/f_6_feather.png",
           "soundCue": "Listen to the first sound in feather.",
           "soundPracticeEligible": true,
@@ -568,7 +568,7 @@
         },
         {
           "word": "Foot",
-          "picture": "🦶",
+          "picture": "foot",
           "assetPath": "assets/nursery/letter_cards/f_7_foot.png",
           "soundCue": "Listen to the first sound in foot.",
           "soundPracticeEligible": true,
@@ -577,7 +577,7 @@
         },
         {
           "word": "Fan",
-          "picture": "🪭",
+          "picture": "fan",
           "assetPath": "assets/nursery/letter_cards/f_8_fan.png",
           "soundCue": "Listen to the first sound in fan.",
           "soundPracticeEligible": true,
@@ -590,7 +590,7 @@
       "uppercase": "G",
       "lowercase": "g",
       "word": "Goat",
-      "picture": "🐐",
+      "picture": "goat",
       "soundCue": "g as in goat",
       "review": {
         "status": "needsReview",
@@ -602,7 +602,7 @@
       "examples": [
         {
           "word": "Goat",
-          "picture": "🐐",
+          "picture": "goat",
           "assetPath": "assets/nursery/letter_cards/g_1_goat.png",
           "soundCue": "Listen to the first sound in goat.",
           "soundPracticeEligible": true,
@@ -611,7 +611,7 @@
         },
         {
           "word": "Grapes",
-          "picture": "🍇",
+          "picture": "grapes",
           "assetPath": "assets/nursery/letter_cards/g_2_grapes.png",
           "soundCue": "Grapes starts with G. We will practise its sound team later.",
           "soundPracticeEligible": false,
@@ -620,7 +620,7 @@
         },
         {
           "word": "Gift",
-          "picture": "🎁",
+          "picture": "gift",
           "assetPath": "assets/nursery/letter_cards/g_3_gift.png",
           "soundCue": "Listen to the first sound in gift.",
           "soundPracticeEligible": true,
@@ -629,7 +629,7 @@
         },
         {
           "word": "Girl",
-          "picture": "👧",
+          "picture": "girl",
           "assetPath": "assets/nursery/letter_cards/g_4_girl.png",
           "soundCue": "Listen to the first sound in girl.",
           "soundPracticeEligible": true,
@@ -638,7 +638,7 @@
         },
         {
           "word": "Glass",
-          "picture": "🥛",
+          "picture": "glass",
           "assetPath": "assets/nursery/letter_cards/g_5_glass.png",
           "soundCue": "Glass starts with G. We will practise its sound team later.",
           "soundPracticeEligible": false,
@@ -647,7 +647,7 @@
         },
         {
           "word": "Guitar",
-          "picture": "🎸",
+          "picture": "guitar",
           "assetPath": "assets/nursery/letter_cards/g_6_guitar.png",
           "soundCue": "Listen to the first sound in guitar.",
           "soundPracticeEligible": true,
@@ -656,7 +656,7 @@
         },
         {
           "word": "Globe",
-          "picture": "🌎",
+          "picture": "globe",
           "assetPath": "assets/nursery/letter_cards/g_7_globe.png",
           "soundCue": "Globe starts with G. We will practise its sound team later.",
           "soundPracticeEligible": false,
@@ -665,7 +665,7 @@
         },
         {
           "word": "Goose",
-          "picture": "🪿",
+          "picture": "goose",
           "assetPath": "assets/nursery/letter_cards/g_8_goose.png",
           "soundCue": "Listen to the first sound in goose.",
           "soundPracticeEligible": true,
@@ -678,7 +678,7 @@
       "uppercase": "H",
       "lowercase": "h",
       "word": "Hat",
-      "picture": "🎩",
+      "picture": "hat",
       "soundCue": "h as in hat",
       "review": {
         "status": "needsReview",
@@ -690,7 +690,7 @@
       "examples": [
         {
           "word": "Hat",
-          "picture": "🎩",
+          "picture": "hat",
           "assetPath": "assets/nursery/letter_cards/h_1_hat.png",
           "soundCue": "Listen to the first sound in hat.",
           "soundPracticeEligible": true,
@@ -699,7 +699,7 @@
         },
         {
           "word": "Hen",
-          "picture": "🐔",
+          "picture": "hen",
           "assetPath": "assets/nursery/letter_cards/h_2_hen.png",
           "soundCue": "Listen to the first sound in hen.",
           "soundPracticeEligible": true,
@@ -708,7 +708,7 @@
         },
         {
           "word": "House",
-          "picture": "🏠",
+          "picture": "house",
           "assetPath": "assets/nursery/letter_cards/h_3_house.png",
           "soundCue": "Listen to the first sound in house.",
           "soundPracticeEligible": true,
@@ -717,7 +717,7 @@
         },
         {
           "word": "Horse",
-          "picture": "🐴",
+          "picture": "horse",
           "assetPath": "assets/nursery/letter_cards/h_4_horse.png",
           "soundCue": "Listen to the first sound in horse.",
           "soundPracticeEligible": true,
@@ -726,7 +726,7 @@
         },
         {
           "word": "Hand",
-          "picture": "✋",
+          "picture": "hand",
           "assetPath": "assets/nursery/letter_cards/h_5_hand.png",
           "soundCue": "Listen to the first sound in hand.",
           "soundPracticeEligible": true,
@@ -735,7 +735,7 @@
         },
         {
           "word": "Heart",
-          "picture": "❤️",
+          "picture": "heart",
           "assetPath": "assets/nursery/letter_cards/h_6_heart.png",
           "soundCue": "Listen to the first sound in heart.",
           "soundPracticeEligible": true,
@@ -744,7 +744,7 @@
         },
         {
           "word": "Helicopter",
-          "picture": "🚁",
+          "picture": "helicopter",
           "assetPath": "assets/nursery/letter_cards/h_7_helicopter.png",
           "soundCue": "Listen to the first sound in helicopter.",
           "soundPracticeEligible": true,
@@ -753,7 +753,7 @@
         },
         {
           "word": "Hammer",
-          "picture": "🔨",
+          "picture": "hammer",
           "assetPath": "assets/nursery/letter_cards/h_8_hammer.png",
           "soundCue": "Listen to the first sound in hammer.",
           "soundPracticeEligible": true,
@@ -766,7 +766,7 @@
       "uppercase": "I",
       "lowercase": "i",
       "word": "Ink",
-      "picture": "🖋️",
+      "picture": "ink",
       "soundCue": "short i as in ink",
       "review": {
         "status": "needsReview",
@@ -778,7 +778,7 @@
       "examples": [
         {
           "word": "Ink",
-          "picture": "🖋️",
+          "picture": "ink",
           "assetPath": "assets/nursery/letter_cards/i_1_ink.png",
           "soundCue": "Listen to the first sound in ink.",
           "soundPracticeEligible": true,
@@ -787,7 +787,7 @@
         },
         {
           "word": "Insect",
-          "picture": "🐞",
+          "picture": "insect",
           "assetPath": "assets/nursery/letter_cards/i_2_insect.png",
           "soundCue": "Listen to the first sound in insect.",
           "soundPracticeEligible": true,
@@ -796,7 +796,7 @@
         },
         {
           "word": "Igloo",
-          "picture": "Igloo",
+          "picture": "igloo",
           "assetPath": "assets/nursery/letter_cards/i_3_igloo.png",
           "soundCue": "Listen to the first sound in igloo.",
           "soundPracticeEligible": true,
@@ -805,7 +805,7 @@
         },
         {
           "word": "Ice Cream",
-          "picture": "🍨",
+          "picture": "ice cream",
           "assetPath": "assets/nursery/letter_cards/i_4_ice_cream.png",
           "soundCue": "Ice cream starts with I. Listen: ice sounds different from ink.",
           "soundPracticeEligible": false,
@@ -814,7 +814,7 @@
         },
         {
           "word": "Island",
-          "picture": "🏝️",
+          "picture": "island",
           "assetPath": "assets/nursery/letter_cards/i_5_island.png",
           "soundCue": "Island starts with I. Listen: island sounds different from ink.",
           "soundPracticeEligible": false,
@@ -823,7 +823,7 @@
         },
         {
           "word": "Iguana",
-          "picture": "🦎",
+          "picture": "iguana",
           "assetPath": "assets/nursery/letter_cards/i_6_iguana.png",
           "soundCue": "Listen to the first sound in iguana.",
           "soundPracticeEligible": true,
@@ -832,7 +832,7 @@
         },
         {
           "word": "Ice Cube",
-          "picture": "🧊",
+          "picture": "ice cube",
           "assetPath": "assets/nursery/letter_cards/i_7_ice_cube.png",
           "soundCue": "Ice cube starts with I. Listen: ice sounds different from ink.",
           "soundPracticeEligible": false,
@@ -841,7 +841,7 @@
         },
         {
           "word": "Ivy",
-          "picture": "🍃",
+          "picture": "ivy",
           "assetPath": "assets/nursery/letter_cards/i_8_ivy.png",
           "soundCue": "Ivy starts with I. Listen: ivy sounds different from ink.",
           "soundPracticeEligible": false,
@@ -854,7 +854,7 @@
       "uppercase": "J",
       "lowercase": "j",
       "word": "Jug",
-      "picture": "🏺",
+      "picture": "jug",
       "soundCue": "j as in jug",
       "review": {
         "status": "needsReview",
@@ -866,7 +866,7 @@
       "examples": [
         {
           "word": "Jug",
-          "picture": "Jug",
+          "picture": "jug",
           "assetPath": "assets/nursery/letter_cards/j_1_jug.png",
           "soundCue": "Listen to the first sound in jug.",
           "soundPracticeEligible": true,
@@ -875,7 +875,7 @@
         },
         {
           "word": "Juice",
-          "picture": "🧃",
+          "picture": "juice",
           "assetPath": "assets/nursery/letter_cards/j_2_juice.png",
           "soundCue": "Listen to the first sound in juice.",
           "soundPracticeEligible": true,
@@ -884,7 +884,7 @@
         },
         {
           "word": "Jet",
-          "picture": "✈️",
+          "picture": "jet",
           "assetPath": "assets/nursery/letter_cards/j_3_jet.png",
           "soundCue": "Listen to the first sound in jet.",
           "soundPracticeEligible": true,
@@ -893,7 +893,7 @@
         },
         {
           "word": "Jar",
-          "picture": "🫙",
+          "picture": "jar",
           "assetPath": "assets/nursery/letter_cards/j_4_jar.png",
           "soundCue": "Listen to the first sound in jar.",
           "soundPracticeEligible": true,
@@ -902,7 +902,7 @@
         },
         {
           "word": "Jeans",
-          "picture": "👖",
+          "picture": "jeans",
           "assetPath": "assets/nursery/letter_cards/j_5_jeans.png",
           "soundCue": "Listen to the first sound in jeans.",
           "soundPracticeEligible": true,
@@ -911,7 +911,7 @@
         },
         {
           "word": "Jacket",
-          "picture": "🧥",
+          "picture": "jacket",
           "assetPath": "assets/nursery/letter_cards/j_6_jacket.png",
           "soundCue": "Listen to the first sound in jacket.",
           "soundPracticeEligible": true,
@@ -920,7 +920,7 @@
         },
         {
           "word": "Jeep",
-          "picture": "🚙",
+          "picture": "jeep",
           "assetPath": "assets/nursery/letter_cards/j_7_jeep.png",
           "soundCue": "Listen to the first sound in jeep.",
           "soundPracticeEligible": true,
@@ -929,7 +929,7 @@
         },
         {
           "word": "Jewel",
-          "picture": "💎",
+          "picture": "jewel",
           "assetPath": "assets/nursery/letter_cards/j_8_jewel.png",
           "soundCue": "Listen to the first sound in jewel.",
           "soundPracticeEligible": true,
@@ -942,7 +942,7 @@
       "uppercase": "K",
       "lowercase": "k",
       "word": "Kite",
-      "picture": "🪁",
+      "picture": "kite",
       "soundCue": "k as in kite",
       "review": {
         "status": "needsReview",
@@ -954,7 +954,7 @@
       "examples": [
         {
           "word": "Kite",
-          "picture": "🪁",
+          "picture": "kite",
           "assetPath": "assets/nursery/letter_cards/k_1_kite.png",
           "soundCue": "Listen to the first sound in kite.",
           "soundPracticeEligible": true,
@@ -963,7 +963,7 @@
         },
         {
           "word": "Key",
-          "picture": "🔑",
+          "picture": "key",
           "assetPath": "assets/nursery/letter_cards/k_2_key.png",
           "soundCue": "Listen to the first sound in key.",
           "soundPracticeEligible": true,
@@ -972,7 +972,7 @@
         },
         {
           "word": "King",
-          "picture": "🤴",
+          "picture": "king",
           "assetPath": "assets/nursery/letter_cards/k_3_king.png",
           "soundCue": "Listen to the first sound in king.",
           "soundPracticeEligible": true,
@@ -981,7 +981,7 @@
         },
         {
           "word": "Kangaroo",
-          "picture": "🦘",
+          "picture": "kangaroo",
           "assetPath": "assets/nursery/letter_cards/k_4_kangaroo.png",
           "soundCue": "Listen to the first sound in kangaroo.",
           "soundPracticeEligible": true,
@@ -990,7 +990,7 @@
         },
         {
           "word": "Kiwi",
-          "picture": "🥝",
+          "picture": "kiwi",
           "assetPath": "assets/nursery/letter_cards/k_5_kiwi.png",
           "soundCue": "Listen to the first sound in kiwi.",
           "soundPracticeEligible": true,
@@ -999,7 +999,7 @@
         },
         {
           "word": "Koala",
-          "picture": "🐨",
+          "picture": "koala",
           "assetPath": "assets/nursery/letter_cards/k_6_koala.png",
           "soundCue": "Listen to the first sound in koala.",
           "soundPracticeEligible": true,
@@ -1008,7 +1008,7 @@
         },
         {
           "word": "Kettle",
-          "picture": "🫖",
+          "picture": "kettle",
           "assetPath": "assets/nursery/letter_cards/k_7_kettle.png",
           "soundCue": "Listen to the first sound in kettle.",
           "soundPracticeEligible": true,
@@ -1017,7 +1017,7 @@
         },
         {
           "word": "Keyboard",
-          "picture": "⌨️",
+          "picture": "keyboard",
           "assetPath": "assets/nursery/letter_cards/k_8_keyboard.png",
           "soundCue": "Listen to the first sound in keyboard.",
           "soundPracticeEligible": true,
@@ -1030,7 +1030,7 @@
       "uppercase": "L",
       "lowercase": "l",
       "word": "Lion",
-      "picture": "🦁",
+      "picture": "lion",
       "soundCue": "l as in lion",
       "review": {
         "status": "needsReview",
@@ -1042,7 +1042,7 @@
       "examples": [
         {
           "word": "Lion",
-          "picture": "🦁",
+          "picture": "lion",
           "assetPath": "assets/nursery/letter_cards/l_1_lion.png",
           "soundCue": "Listen to the first sound in lion.",
           "soundPracticeEligible": true,
@@ -1051,7 +1051,7 @@
         },
         {
           "word": "Leaf",
-          "picture": "🍃",
+          "picture": "leaf",
           "assetPath": "assets/nursery/letter_cards/l_2_leaf.png",
           "soundCue": "Listen to the first sound in leaf.",
           "soundPracticeEligible": true,
@@ -1060,7 +1060,7 @@
         },
         {
           "word": "Lemon",
-          "picture": "🍋",
+          "picture": "lemon",
           "assetPath": "assets/nursery/letter_cards/l_3_lemon.png",
           "soundCue": "Listen to the first sound in lemon.",
           "soundPracticeEligible": true,
@@ -1069,7 +1069,7 @@
         },
         {
           "word": "Lamp",
-          "picture": "Lamp",
+          "picture": "lamp",
           "assetPath": "assets/nursery/letter_cards/l_4_lamp.png",
           "soundCue": "Listen to the first sound in lamp.",
           "soundPracticeEligible": true,
@@ -1078,7 +1078,7 @@
         },
         {
           "word": "Ladder",
-          "picture": "🪜",
+          "picture": "ladder",
           "assetPath": "assets/nursery/letter_cards/l_5_ladder.png",
           "soundCue": "Listen to the first sound in ladder.",
           "soundPracticeEligible": true,
@@ -1087,7 +1087,7 @@
         },
         {
           "word": "Ladybug",
-          "picture": "🐞",
+          "picture": "ladybug",
           "assetPath": "assets/nursery/letter_cards/l_6_ladybug.png",
           "soundCue": "Listen to the first sound in ladybug.",
           "soundPracticeEligible": true,
@@ -1096,7 +1096,7 @@
         },
         {
           "word": "Lock",
-          "picture": "🔒",
+          "picture": "lock",
           "assetPath": "assets/nursery/letter_cards/l_7_lock.png",
           "soundCue": "Listen to the first sound in lock.",
           "soundPracticeEligible": true,
@@ -1105,7 +1105,7 @@
         },
         {
           "word": "Lotus",
-          "picture": "🪷",
+          "picture": "lotus",
           "assetPath": "assets/nursery/letter_cards/l_8_lotus.png",
           "soundCue": "Listen to the first sound in lotus.",
           "soundPracticeEligible": true,
@@ -1118,7 +1118,7 @@
       "uppercase": "M",
       "lowercase": "m",
       "word": "Mango",
-      "picture": "🥭",
+      "picture": "mango",
       "soundCue": "m as in mango",
       "review": {
         "status": "needsReview",
@@ -1130,7 +1130,7 @@
       "examples": [
         {
           "word": "Mango",
-          "picture": "🥭",
+          "picture": "mango",
           "assetPath": "assets/nursery/letter_cards/m_1_mango.png",
           "soundCue": "Listen to the first sound in mango.",
           "soundPracticeEligible": true,
@@ -1139,7 +1139,7 @@
         },
         {
           "word": "Moon",
-          "picture": "🌙",
+          "picture": "moon",
           "assetPath": "assets/nursery/letter_cards/m_2_moon.png",
           "soundCue": "Listen to the first sound in moon.",
           "soundPracticeEligible": true,
@@ -1148,7 +1148,7 @@
         },
         {
           "word": "Mouse",
-          "picture": "🐭",
+          "picture": "mouse",
           "assetPath": "assets/nursery/letter_cards/m_3_mouse.png",
           "soundCue": "Listen to the first sound in mouse.",
           "soundPracticeEligible": true,
@@ -1157,7 +1157,7 @@
         },
         {
           "word": "Monkey",
-          "picture": "🐒",
+          "picture": "monkey",
           "assetPath": "assets/nursery/letter_cards/m_4_monkey.png",
           "soundCue": "Listen to the first sound in monkey.",
           "soundPracticeEligible": true,
@@ -1166,7 +1166,7 @@
         },
         {
           "word": "Milk",
-          "picture": "🥛",
+          "picture": "milk",
           "assetPath": "assets/nursery/letter_cards/m_5_milk.png",
           "soundCue": "Listen to the first sound in milk.",
           "soundPracticeEligible": true,
@@ -1175,7 +1175,7 @@
         },
         {
           "word": "Mirror",
-          "picture": "🪞",
+          "picture": "mirror",
           "assetPath": "assets/nursery/letter_cards/m_6_mirror.png",
           "soundCue": "Listen to the first sound in mirror.",
           "soundPracticeEligible": true,
@@ -1184,7 +1184,7 @@
         },
         {
           "word": "Mountain",
-          "picture": "⛰️",
+          "picture": "mountain",
           "assetPath": "assets/nursery/letter_cards/m_7_mountain.png",
           "soundCue": "Listen to the first sound in mountain.",
           "soundPracticeEligible": true,
@@ -1193,7 +1193,7 @@
         },
         {
           "word": "Mug",
-          "picture": "☕",
+          "picture": "mug",
           "assetPath": "assets/nursery/letter_cards/m_8_mug.png",
           "soundCue": "Listen to the first sound in mug.",
           "soundPracticeEligible": true,
@@ -1206,7 +1206,7 @@
       "uppercase": "N",
       "lowercase": "n",
       "word": "Nest",
-      "picture": "🪺",
+      "picture": "nest",
       "soundCue": "n as in nest",
       "review": {
         "status": "needsReview",
@@ -1218,7 +1218,7 @@
       "examples": [
         {
           "word": "Nest",
-          "picture": "🪺",
+          "picture": "nest",
           "assetPath": "assets/nursery/letter_cards/n_1_nest.png",
           "soundCue": "Listen to the first sound in nest.",
           "soundPracticeEligible": true,
@@ -1227,7 +1227,7 @@
         },
         {
           "word": "Nose",
-          "picture": "👃",
+          "picture": "nose",
           "assetPath": "assets/nursery/letter_cards/n_2_nose.png",
           "soundCue": "Listen to the first sound in nose.",
           "soundPracticeEligible": true,
@@ -1236,7 +1236,7 @@
         },
         {
           "word": "Nut",
-          "picture": "🥜",
+          "picture": "nut",
           "assetPath": "assets/nursery/letter_cards/n_3_nut.png",
           "soundCue": "Listen to the first sound in nut.",
           "soundPracticeEligible": true,
@@ -1245,7 +1245,7 @@
         },
         {
           "word": "Net",
-          "picture": "🥅",
+          "picture": "net",
           "assetPath": "assets/nursery/letter_cards/n_4_net.png",
           "soundCue": "Listen to the first sound in net.",
           "soundPracticeEligible": true,
@@ -1254,7 +1254,7 @@
         },
         {
           "word": "Newspaper",
-          "picture": "📰",
+          "picture": "newspaper",
           "assetPath": "assets/nursery/letter_cards/n_5_newspaper.png",
           "soundCue": "Listen to the first sound in newspaper.",
           "soundPracticeEligible": true,
@@ -1263,7 +1263,7 @@
         },
         {
           "word": "Nurse",
-          "picture": "👩‍⚕️",
+          "picture": "nurse",
           "assetPath": "assets/nursery/letter_cards/n_6_nurse.png",
           "soundCue": "Listen to the first sound in nurse.",
           "soundPracticeEligible": true,
@@ -1272,7 +1272,7 @@
         },
         {
           "word": "Necklace",
-          "picture": "📿",
+          "picture": "necklace",
           "assetPath": "assets/nursery/letter_cards/n_7_necklace.png",
           "soundCue": "Listen to the first sound in necklace.",
           "soundPracticeEligible": true,
@@ -1281,7 +1281,7 @@
         },
         {
           "word": "Notebook",
-          "picture": "📓",
+          "picture": "notebook",
           "assetPath": "assets/nursery/letter_cards/n_8_notebook.png",
           "soundCue": "Listen to the first sound in notebook.",
           "soundPracticeEligible": true,
@@ -1294,7 +1294,7 @@
       "uppercase": "O",
       "lowercase": "o",
       "word": "Orange",
-      "picture": "🍊",
+      "picture": "orange",
       "soundCue": "short o as in orange",
       "review": {
         "status": "needsReview",
@@ -1306,7 +1306,7 @@
       "examples": [
         {
           "word": "Orange",
-          "picture": "🍊",
+          "picture": "orange",
           "assetPath": "assets/nursery/letter_cards/o_1_orange.png",
           "soundCue": "Orange starts with O. People may say its first vowel a little differently, so we use it for letter discovery.",
           "soundPracticeEligible": false,
@@ -1315,7 +1315,7 @@
         },
         {
           "word": "Ox",
-          "picture": "🐂",
+          "picture": "ox",
           "assetPath": "assets/nursery/letter_cards/o_2_ox.png",
           "soundCue": "Listen to the first sound in ox.",
           "soundPracticeEligible": true,
@@ -1324,7 +1324,7 @@
         },
         {
           "word": "Octopus",
-          "picture": "🐙",
+          "picture": "octopus",
           "assetPath": "assets/nursery/letter_cards/o_3_octopus.png",
           "soundCue": "Listen to the first sound in octopus.",
           "soundPracticeEligible": true,
@@ -1333,7 +1333,7 @@
         },
         {
           "word": "Owl",
-          "picture": "🦉",
+          "picture": "owl",
           "assetPath": "assets/nursery/letter_cards/o_4_owl.png",
           "soundCue": "Owl starts with O. Listen: owl sounds different from ox.",
           "soundPracticeEligible": false,
@@ -1342,7 +1342,7 @@
         },
         {
           "word": "Onion",
-          "picture": "🧅",
+          "picture": "onion",
           "assetPath": "assets/nursery/letter_cards/o_5_onion.png",
           "soundCue": "Onion starts with O. Listen: onion sounds different from ox.",
           "soundPracticeEligible": false,
@@ -1351,7 +1351,7 @@
         },
         {
           "word": "Olive",
-          "picture": "🫒",
+          "picture": "olive",
           "assetPath": "assets/nursery/letter_cards/o_6_olive.png",
           "soundCue": "Olive starts with O. People may say its first vowel a little differently, so we use it for letter discovery.",
           "soundPracticeEligible": false,
@@ -1360,7 +1360,7 @@
         },
         {
           "word": "Ocean",
-          "picture": "🌊",
+          "picture": "ocean",
           "assetPath": "assets/nursery/letter_cards/o_7_ocean.png",
           "soundCue": "Ocean starts with O. Listen: ocean sounds different from ox.",
           "soundPracticeEligible": false,
@@ -1369,7 +1369,7 @@
         },
         {
           "word": "Ostrich",
-          "picture": "Ostrich",
+          "picture": "ostrich",
           "assetPath": "assets/nursery/letter_cards/o_8_ostrich.png",
           "soundCue": "Listen to the first sound in ostrich.",
           "soundPracticeEligible": true,
@@ -1382,7 +1382,7 @@
       "uppercase": "P",
       "lowercase": "p",
       "word": "Pen",
-      "picture": "🖊️",
+      "picture": "pen",
       "soundCue": "p as in pen",
       "review": {
         "status": "needsReview",
@@ -1394,7 +1394,7 @@
       "examples": [
         {
           "word": "Pen",
-          "picture": "🖊️",
+          "picture": "pen",
           "assetPath": "assets/nursery/letter_cards/p_1_pen.png",
           "soundCue": "Listen to the first sound in pen.",
           "soundPracticeEligible": true,
@@ -1403,7 +1403,7 @@
         },
         {
           "word": "Pig",
-          "picture": "🐷",
+          "picture": "pig",
           "assetPath": "assets/nursery/letter_cards/p_2_pig.png",
           "soundCue": "Listen to the first sound in pig.",
           "soundPracticeEligible": true,
@@ -1412,7 +1412,7 @@
         },
         {
           "word": "Pear",
-          "picture": "🍐",
+          "picture": "pear",
           "assetPath": "assets/nursery/letter_cards/p_3_pear.png",
           "soundCue": "Listen to the first sound in pear.",
           "soundPracticeEligible": true,
@@ -1421,7 +1421,7 @@
         },
         {
           "word": "Parrot",
-          "picture": "🦜",
+          "picture": "parrot",
           "assetPath": "assets/nursery/letter_cards/p_4_parrot.png",
           "soundCue": "Listen to the first sound in parrot.",
           "soundPracticeEligible": true,
@@ -1430,7 +1430,7 @@
         },
         {
           "word": "Pizza",
-          "picture": "🍕",
+          "picture": "pizza",
           "assetPath": "assets/nursery/letter_cards/p_5_pizza.png",
           "soundCue": "Listen to the first sound in pizza.",
           "soundPracticeEligible": true,
@@ -1439,7 +1439,7 @@
         },
         {
           "word": "Panda",
-          "picture": "🐼",
+          "picture": "panda",
           "assetPath": "assets/nursery/letter_cards/p_6_panda.png",
           "soundCue": "Listen to the first sound in panda.",
           "soundPracticeEligible": true,
@@ -1448,7 +1448,7 @@
         },
         {
           "word": "Peacock",
-          "picture": "🦚",
+          "picture": "peacock",
           "assetPath": "assets/nursery/letter_cards/p_7_peacock.png",
           "soundCue": "Listen to the first sound in peacock.",
           "soundPracticeEligible": true,
@@ -1457,7 +1457,7 @@
         },
         {
           "word": "Pumpkin",
-          "picture": "🎃",
+          "picture": "pumpkin",
           "assetPath": "assets/nursery/letter_cards/p_8_pumpkin.png",
           "soundCue": "Listen to the first sound in pumpkin.",
           "soundPracticeEligible": true,
@@ -1470,7 +1470,7 @@
       "uppercase": "Q",
       "lowercase": "q",
       "word": "Queen",
-      "picture": "👸",
+      "picture": "queen",
       "soundCue": "qu as in queen",
       "review": {
         "status": "needsReview",
@@ -1482,7 +1482,7 @@
       "examples": [
         {
           "word": "Queen",
-          "picture": "👸",
+          "picture": "queen",
           "assetPath": "assets/nursery/letter_cards/q_1_queen.png",
           "soundCue": "Q usually works with U at the start of queen.",
           "soundPracticeEligible": false,
@@ -1491,7 +1491,7 @@
         },
         {
           "word": "Question",
-          "picture": "❓",
+          "picture": "question",
           "assetPath": "assets/nursery/letter_cards/q_2_question.png",
           "soundCue": "Q usually works with U at the start of question.",
           "soundPracticeEligible": false,
@@ -1500,7 +1500,7 @@
         },
         {
           "word": "Quilt",
-          "picture": "Quilt",
+          "picture": "quilt",
           "assetPath": "assets/nursery/letter_cards/q_3_quilt.png",
           "soundCue": "Q usually works with U at the start of quilt.",
           "soundPracticeEligible": false,
@@ -1509,7 +1509,7 @@
         },
         {
           "word": "Quail",
-          "picture": "Quail",
+          "picture": "quail",
           "assetPath": "assets/nursery/letter_cards/q_4_quail.png",
           "soundCue": "Q usually works with U at the start of quail.",
           "soundPracticeEligible": false,
@@ -1518,7 +1518,7 @@
         },
         {
           "word": "Quill",
-          "picture": "🪶",
+          "picture": "quill",
           "assetPath": "assets/nursery/letter_cards/q_5_quill.png",
           "soundCue": "Q usually works with U at the start of quill.",
           "soundPracticeEligible": false,
@@ -1527,7 +1527,7 @@
         },
         {
           "word": "Quarter",
-          "picture": "🪙",
+          "picture": "quarter",
           "assetPath": "assets/nursery/letter_cards/q_6_quarter.png",
           "soundCue": "Q usually works with U at the start of quarter.",
           "soundPracticeEligible": false,
@@ -1536,7 +1536,7 @@
         },
         {
           "word": "Quiver",
-          "picture": "Quiver",
+          "picture": "quiver",
           "assetPath": "assets/nursery/letter_cards/q_7_quiver.png",
           "soundCue": "Q usually works with U at the start of quiver.",
           "soundPracticeEligible": false,
@@ -1545,7 +1545,7 @@
         },
         {
           "word": "Quiet",
-          "picture": "🤫",
+          "picture": "quiet",
           "assetPath": "assets/nursery/letter_cards/q_8_quiet.png",
           "soundCue": "Q usually works with U at the start of quiet.",
           "soundPracticeEligible": false,
@@ -1558,7 +1558,7 @@
       "uppercase": "R",
       "lowercase": "r",
       "word": "Rabbit",
-      "picture": "🐰",
+      "picture": "rabbit",
       "soundCue": "r as in rabbit",
       "review": {
         "status": "needsReview",
@@ -1570,7 +1570,7 @@
       "examples": [
         {
           "word": "Rabbit",
-          "picture": "🐰",
+          "picture": "rabbit",
           "assetPath": "assets/nursery/letter_cards/r_1_rabbit.png",
           "soundCue": "Listen to the first sound in rabbit.",
           "soundPracticeEligible": true,
@@ -1579,7 +1579,7 @@
         },
         {
           "word": "Rose",
-          "picture": "🌹",
+          "picture": "rose",
           "assetPath": "assets/nursery/letter_cards/r_2_rose.png",
           "soundCue": "Listen to the first sound in rose.",
           "soundPracticeEligible": true,
@@ -1588,7 +1588,7 @@
         },
         {
           "word": "Rain",
-          "picture": "🌧️",
+          "picture": "rain",
           "assetPath": "assets/nursery/letter_cards/r_3_rain.png",
           "soundCue": "Listen to the first sound in rain.",
           "soundPracticeEligible": true,
@@ -1597,7 +1597,7 @@
         },
         {
           "word": "Ring",
-          "picture": "💍",
+          "picture": "ring",
           "assetPath": "assets/nursery/letter_cards/r_4_ring.png",
           "soundCue": "Listen to the first sound in ring.",
           "soundPracticeEligible": true,
@@ -1606,7 +1606,7 @@
         },
         {
           "word": "Robot",
-          "picture": "🤖",
+          "picture": "robot",
           "assetPath": "assets/nursery/letter_cards/r_5_robot.png",
           "soundCue": "Listen to the first sound in robot.",
           "soundPracticeEligible": true,
@@ -1615,7 +1615,7 @@
         },
         {
           "word": "Rocket",
-          "picture": "🚀",
+          "picture": "rocket",
           "assetPath": "assets/nursery/letter_cards/r_6_rocket.png",
           "soundCue": "Listen to the first sound in rocket.",
           "soundPracticeEligible": true,
@@ -1624,7 +1624,7 @@
         },
         {
           "word": "Rainbow",
-          "picture": "🌈",
+          "picture": "rainbow",
           "assetPath": "assets/nursery/letter_cards/r_7_rainbow.png",
           "soundCue": "Listen to the first sound in rainbow.",
           "soundPracticeEligible": true,
@@ -1633,7 +1633,7 @@
         },
         {
           "word": "Rooster",
-          "picture": "🐓",
+          "picture": "rooster",
           "assetPath": "assets/nursery/letter_cards/r_8_rooster.png",
           "soundCue": "Listen to the first sound in rooster.",
           "soundPracticeEligible": true,
@@ -1646,7 +1646,7 @@
       "uppercase": "S",
       "lowercase": "s",
       "word": "Sun",
-      "picture": "☀️",
+      "picture": "sun",
       "soundCue": "s as in sun",
       "review": {
         "status": "needsReview",
@@ -1658,7 +1658,7 @@
       "examples": [
         {
           "word": "Sun",
-          "picture": "☀️",
+          "picture": "sun",
           "assetPath": "assets/nursery/letter_cards/s_1_sun.png",
           "soundCue": "Listen to the first sound in sun.",
           "soundPracticeEligible": true,
@@ -1667,7 +1667,7 @@
         },
         {
           "word": "Star",
-          "picture": "⭐",
+          "picture": "star",
           "assetPath": "assets/nursery/letter_cards/s_2_star.png",
           "soundCue": "Star starts with S. We will practise its sound team later.",
           "soundPracticeEligible": false,
@@ -1676,7 +1676,7 @@
         },
         {
           "word": "Snake",
-          "picture": "🐍",
+          "picture": "snake",
           "assetPath": "assets/nursery/letter_cards/s_3_snake.png",
           "soundCue": "Snake starts with S. We will practise its sound team later.",
           "soundPracticeEligible": false,
@@ -1685,7 +1685,7 @@
         },
         {
           "word": "Ship",
-          "picture": "🚢",
+          "picture": "ship",
           "assetPath": "assets/nursery/letter_cards/s_4_ship.png",
           "soundCue": "Ship starts with S, but S and H work together to make a different sound.",
           "soundPracticeEligible": false,
@@ -1694,7 +1694,7 @@
         },
         {
           "word": "Spoon",
-          "picture": "🥄",
+          "picture": "spoon",
           "assetPath": "assets/nursery/letter_cards/s_5_spoon.png",
           "soundCue": "Spoon starts with S. We will practise its sound team later.",
           "soundPracticeEligible": false,
@@ -1703,7 +1703,7 @@
         },
         {
           "word": "Socks",
-          "picture": "🧦",
+          "picture": "socks",
           "assetPath": "assets/nursery/letter_cards/s_6_socks.png",
           "soundCue": "Listen to the first sound in socks.",
           "soundPracticeEligible": true,
@@ -1712,7 +1712,7 @@
         },
         {
           "word": "Strawberry",
-          "picture": "🍓",
+          "picture": "strawberry",
           "assetPath": "assets/nursery/letter_cards/s_7_strawberry.png",
           "soundCue": "Strawberry starts with S. We will practise its sound team later.",
           "soundPracticeEligible": false,
@@ -1721,7 +1721,7 @@
         },
         {
           "word": "Scissors",
-          "picture": "✂️",
+          "picture": "scissors",
           "assetPath": "assets/nursery/letter_cards/s_8_scissors.png",
           "soundCue": "Listen to the first sound in scissors.",
           "soundPracticeEligible": true,
@@ -1734,7 +1734,7 @@
       "uppercase": "T",
       "lowercase": "t",
       "word": "Tiger",
-      "picture": "🐯",
+      "picture": "tiger",
       "soundCue": "t as in tiger",
       "review": {
         "status": "needsReview",
@@ -1746,7 +1746,7 @@
       "examples": [
         {
           "word": "Tiger",
-          "picture": "🐯",
+          "picture": "tiger",
           "assetPath": "assets/nursery/letter_cards/t_1_tiger.png",
           "soundCue": "Listen to the first sound in tiger.",
           "soundPracticeEligible": true,
@@ -1755,7 +1755,7 @@
         },
         {
           "word": "Tree",
-          "picture": "🌳",
+          "picture": "tree",
           "assetPath": "assets/nursery/letter_cards/t_2_tree.png",
           "soundCue": "Tree starts with T. We will practise its sound team later.",
           "soundPracticeEligible": false,
@@ -1764,7 +1764,7 @@
         },
         {
           "word": "Train",
-          "picture": "🚆",
+          "picture": "train",
           "assetPath": "assets/nursery/letter_cards/t_3_train.png",
           "soundCue": "Train starts with T. We will practise its sound team later.",
           "soundPracticeEligible": false,
@@ -1773,7 +1773,7 @@
         },
         {
           "word": "Tomato",
-          "picture": "🍅",
+          "picture": "tomato",
           "assetPath": "assets/nursery/letter_cards/t_4_tomato.png",
           "soundCue": "Listen to the first sound in tomato.",
           "soundPracticeEligible": true,
@@ -1782,7 +1782,7 @@
         },
         {
           "word": "Toothbrush",
-          "picture": "🪥",
+          "picture": "toothbrush",
           "assetPath": "assets/nursery/letter_cards/t_5_toothbrush.png",
           "soundCue": "Listen to the first sound in toothbrush.",
           "soundPracticeEligible": true,
@@ -1791,7 +1791,7 @@
         },
         {
           "word": "Turtle",
-          "picture": "🐢",
+          "picture": "turtle",
           "assetPath": "assets/nursery/letter_cards/t_6_turtle.png",
           "soundCue": "Listen to the first sound in turtle.",
           "soundPracticeEligible": true,
@@ -1800,7 +1800,7 @@
         },
         {
           "word": "Teddy",
-          "picture": "🧸",
+          "picture": "teddy",
           "assetPath": "assets/nursery/letter_cards/t_7_teddy.png",
           "soundCue": "Listen to the first sound in teddy.",
           "soundPracticeEligible": true,
@@ -1809,7 +1809,7 @@
         },
         {
           "word": "Truck",
-          "picture": "🚚",
+          "picture": "truck",
           "assetPath": "assets/nursery/letter_cards/t_8_truck.png",
           "soundCue": "Truck starts with T. We will practise its sound team later.",
           "soundPracticeEligible": false,
@@ -1822,7 +1822,7 @@
       "uppercase": "U",
       "lowercase": "u",
       "word": "Umbrella",
-      "picture": "☂️",
+      "picture": "umbrella",
       "soundCue": "short u as in umbrella",
       "review": {
         "status": "needsReview",
@@ -1834,7 +1834,7 @@
       "examples": [
         {
           "word": "Umbrella",
-          "picture": "☂️",
+          "picture": "umbrella",
           "assetPath": "assets/nursery/letter_cards/u_1_umbrella.png",
           "soundCue": "Listen to the first sound in umbrella.",
           "soundPracticeEligible": true,
@@ -1843,7 +1843,7 @@
         },
         {
           "word": "Up",
-          "picture": "⬆️",
+          "picture": "up",
           "assetPath": "assets/nursery/letter_cards/u_2_up.png",
           "soundCue": "Listen to the first sound in up.",
           "soundPracticeEligible": true,
@@ -1852,7 +1852,7 @@
         },
         {
           "word": "Under",
-          "picture": "⬇️",
+          "picture": "under",
           "assetPath": "assets/nursery/letter_cards/u_3_under.png",
           "soundCue": "Listen to the first sound in under.",
           "soundPracticeEligible": true,
@@ -1861,7 +1861,7 @@
         },
         {
           "word": "Unicorn",
-          "picture": "🦄",
+          "picture": "unicorn",
           "assetPath": "assets/nursery/letter_cards/u_4_unicorn.png",
           "soundCue": "Unicorn starts with U. Listen: unicorn sounds different from up.",
           "soundPracticeEligible": false,
@@ -1870,7 +1870,7 @@
         },
         {
           "word": "Uniform",
-          "picture": "👕",
+          "picture": "uniform",
           "assetPath": "assets/nursery/letter_cards/u_5_uniform.png",
           "soundCue": "Uniform starts with U. Listen: uniform sounds different from up.",
           "soundPracticeEligible": false,
@@ -1879,7 +1879,7 @@
         },
         {
           "word": "Utensils",
-          "picture": "🍴",
+          "picture": "utensils",
           "assetPath": "assets/nursery/letter_cards/u_6_utensils.png",
           "soundCue": "Utensils starts with U. Listen: utensils sounds different from up.",
           "soundPracticeEligible": false,
@@ -1888,7 +1888,7 @@
         },
         {
           "word": "Urn",
-          "picture": "🏺",
+          "picture": "urn",
           "assetPath": "assets/nursery/letter_cards/u_7_urn.png",
           "soundCue": "Urn starts with U. Listen: urn sounds different from up.",
           "soundPracticeEligible": false,
@@ -1897,7 +1897,7 @@
         },
         {
           "word": "Ukulele",
-          "picture": "Ukulele",
+          "picture": "ukulele",
           "assetPath": "assets/nursery/letter_cards/u_8_ukulele.png",
           "soundCue": "Ukulele starts with U. Listen: ukulele sounds different from up.",
           "soundPracticeEligible": false,
@@ -1910,7 +1910,7 @@
       "uppercase": "V",
       "lowercase": "v",
       "word": "Van",
-      "picture": "🚐",
+      "picture": "van",
       "soundCue": "v as in van",
       "review": {
         "status": "needsReview",
@@ -1922,7 +1922,7 @@
       "examples": [
         {
           "word": "Van",
-          "picture": "🚐",
+          "picture": "van",
           "assetPath": "assets/nursery/letter_cards/v_1_van.png",
           "soundCue": "Listen to the first sound in van.",
           "soundPracticeEligible": true,
@@ -1931,7 +1931,7 @@
         },
         {
           "word": "Violin",
-          "picture": "🎻",
+          "picture": "violin",
           "assetPath": "assets/nursery/letter_cards/v_2_violin.png",
           "soundCue": "Listen to the first sound in violin.",
           "soundPracticeEligible": true,
@@ -1940,7 +1940,7 @@
         },
         {
           "word": "Vegetable",
-          "picture": "🥕",
+          "picture": "vegetable",
           "assetPath": "assets/nursery/letter_cards/v_3_vegetable.png",
           "soundCue": "Listen to the first sound in vegetable.",
           "soundPracticeEligible": true,
@@ -1949,7 +1949,7 @@
         },
         {
           "word": "Vase",
-          "picture": "🏺",
+          "picture": "vase",
           "assetPath": "assets/nursery/letter_cards/v_4_vase.png",
           "soundCue": "Listen to the first sound in vase.",
           "soundPracticeEligible": true,
@@ -1958,7 +1958,7 @@
         },
         {
           "word": "Volcano",
-          "picture": "🌋",
+          "picture": "volcano",
           "assetPath": "assets/nursery/letter_cards/v_5_volcano.png",
           "soundCue": "Listen to the first sound in volcano.",
           "soundPracticeEligible": true,
@@ -1967,7 +1967,7 @@
         },
         {
           "word": "Vest",
-          "picture": "🦺",
+          "picture": "vest",
           "assetPath": "assets/nursery/letter_cards/v_6_vest.png",
           "soundCue": "Listen to the first sound in vest.",
           "soundPracticeEligible": true,
@@ -1976,7 +1976,7 @@
         },
         {
           "word": "Vacuum",
-          "picture": "Vacuum",
+          "picture": "vacuum",
           "assetPath": "assets/nursery/letter_cards/v_7_vacuum.png",
           "soundCue": "Listen to the first sound in vacuum.",
           "soundPracticeEligible": true,
@@ -1985,7 +1985,7 @@
         },
         {
           "word": "Vulture",
-          "picture": "Vulture",
+          "picture": "vulture",
           "assetPath": "assets/nursery/letter_cards/v_8_vulture.png",
           "soundCue": "Listen to the first sound in vulture.",
           "soundPracticeEligible": true,
@@ -1998,7 +1998,7 @@
       "uppercase": "W",
       "lowercase": "w",
       "word": "Watch",
-      "picture": "⌚",
+      "picture": "watch",
       "soundCue": "w as in watch",
       "review": {
         "status": "needsReview",
@@ -2010,7 +2010,7 @@
       "examples": [
         {
           "word": "Watch",
-          "picture": "⌚",
+          "picture": "watch",
           "assetPath": "assets/nursery/letter_cards/w_1_watch.png",
           "soundCue": "Listen to the first sound in watch.",
           "soundPracticeEligible": true,
@@ -2019,7 +2019,7 @@
         },
         {
           "word": "Water",
-          "picture": "💧",
+          "picture": "water",
           "assetPath": "assets/nursery/letter_cards/w_2_water.png",
           "soundCue": "Listen to the first sound in water.",
           "soundPracticeEligible": true,
@@ -2028,7 +2028,7 @@
         },
         {
           "word": "Whale",
-          "picture": "🐳",
+          "picture": "whale",
           "assetPath": "assets/nursery/letter_cards/w_3_whale.png",
           "soundCue": "Listen to the first sound in whale.",
           "soundPracticeEligible": true,
@@ -2037,7 +2037,7 @@
         },
         {
           "word": "Window",
-          "picture": "🪟",
+          "picture": "window",
           "assetPath": "assets/nursery/letter_cards/w_4_window.png",
           "soundCue": "Listen to the first sound in window.",
           "soundPracticeEligible": true,
@@ -2046,7 +2046,7 @@
         },
         {
           "word": "Watermelon",
-          "picture": "🍉",
+          "picture": "watermelon",
           "assetPath": "assets/nursery/letter_cards/w_5_watermelon.png",
           "soundCue": "Listen to the first sound in watermelon.",
           "soundPracticeEligible": true,
@@ -2055,7 +2055,7 @@
         },
         {
           "word": "Wheel",
-          "picture": "🛞",
+          "picture": "wheel",
           "assetPath": "assets/nursery/letter_cards/w_6_wheel.png",
           "soundCue": "Listen to the first sound in wheel.",
           "soundPracticeEligible": true,
@@ -2064,7 +2064,7 @@
         },
         {
           "word": "Worm",
-          "picture": "🪱",
+          "picture": "worm",
           "assetPath": "assets/nursery/letter_cards/w_7_worm.png",
           "soundCue": "Listen to the first sound in worm.",
           "soundPracticeEligible": true,
@@ -2073,7 +2073,7 @@
         },
         {
           "word": "Wagon",
-          "picture": "Wagon",
+          "picture": "wagon",
           "assetPath": "assets/nursery/letter_cards/w_8_wagon.png",
           "soundCue": "Listen to the first sound in wagon.",
           "soundPracticeEligible": true,
@@ -2086,7 +2086,7 @@
       "uppercase": "X",
       "lowercase": "x",
       "word": "X-ray",
-      "picture": "🩻",
+      "picture": "x-ray",
       "soundCue": "letter name x at the start of X-ray",
       "review": {
         "status": "needsReview",
@@ -2098,7 +2098,7 @@
       "examples": [
         {
           "word": "X-ray",
-          "picture": "🩻",
+          "picture": "x-ray",
           "assetPath": "assets/nursery/letter_cards/x_1_x_ray.png",
           "soundCue": "X-ray starts with X. Listen to the letter name at the start.",
           "soundPracticeEligible": false,
@@ -2107,7 +2107,7 @@
         },
         {
           "word": "Xylophone",
-          "picture": "🎼",
+          "picture": "xylophone",
           "assetPath": "assets/nursery/letter_cards/x_2_xylophone.png",
           "soundCue": "Xylophone starts with X, but its first sound is different from the X in box.",
           "soundPracticeEligible": false,
@@ -2116,7 +2116,7 @@
         },
         {
           "word": "Box",
-          "picture": "📦",
+          "picture": "box",
           "assetPath": "assets/nursery/letter_cards/x_3_box.png",
           "soundCue": "Box has X at the end. We will learn its ending sound pattern later.",
           "soundPracticeEligible": false,
@@ -2125,7 +2125,7 @@
         },
         {
           "word": "Fox",
-          "picture": "🦊",
+          "picture": "fox",
           "assetPath": "assets/nursery/letter_cards/x_4_fox.png",
           "soundCue": "Fox has X at the end. We will learn its ending sound pattern later.",
           "soundPracticeEligible": false,
@@ -2134,7 +2134,7 @@
         },
         {
           "word": "Ox",
-          "picture": "🐂",
+          "picture": "ox",
           "assetPath": "assets/nursery/letter_cards/x_5_ox.png",
           "soundCue": "Ox has X at the end. We will learn its ending sound pattern later.",
           "soundPracticeEligible": false,
@@ -2143,7 +2143,7 @@
         },
         {
           "word": "Wax",
-          "picture": "🕯️",
+          "picture": "wax",
           "assetPath": "assets/nursery/letter_cards/x_6_wax.png",
           "soundCue": "Wax has X at the end. We will learn its ending sound pattern later.",
           "soundPracticeEligible": false,
@@ -2152,7 +2152,7 @@
         },
         {
           "word": "Six",
-          "picture": "6️⃣",
+          "picture": "six",
           "assetPath": "assets/nursery/letter_cards/x_7_six.png",
           "soundCue": "Six has X at the end. We will learn its ending sound pattern later.",
           "soundPracticeEligible": false,
@@ -2161,7 +2161,7 @@
         },
         {
           "word": "Taxi",
-          "picture": "🚕",
+          "picture": "taxi",
           "assetPath": "assets/nursery/letter_cards/x_8_taxi.png",
           "soundCue": "Taxi has X in the middle. We will learn its sound pattern later.",
           "soundPracticeEligible": false,
@@ -2174,7 +2174,7 @@
       "uppercase": "Y",
       "lowercase": "y",
       "word": "Yak",
-      "picture": "🐂",
+      "picture": "yak",
       "soundCue": "y as in yak",
       "review": {
         "status": "needsReview",
@@ -2186,7 +2186,7 @@
       "examples": [
         {
           "word": "Yak",
-          "picture": "Yak",
+          "picture": "yak",
           "assetPath": "assets/nursery/letter_cards/y_1_yak.png",
           "soundCue": "Listen to the first sound in yak.",
           "soundPracticeEligible": true,
@@ -2195,7 +2195,7 @@
         },
         {
           "word": "Yellow",
-          "picture": "🟡",
+          "picture": "yellow",
           "assetPath": "assets/nursery/letter_cards/y_2_yellow.png",
           "soundCue": "Listen to the first sound in yellow.",
           "soundPracticeEligible": true,
@@ -2204,7 +2204,7 @@
         },
         {
           "word": "Yo-yo",
-          "picture": "🪀",
+          "picture": "yo-yo",
           "assetPath": "assets/nursery/letter_cards/y_3_yo_yo.png",
           "soundCue": "Listen to the first sound in yo-yo.",
           "soundPracticeEligible": true,
@@ -2213,7 +2213,7 @@
         },
         {
           "word": "Yacht",
-          "picture": "🛥️",
+          "picture": "yacht",
           "assetPath": "assets/nursery/letter_cards/y_4_yacht.png",
           "soundCue": "Listen to the first sound in yacht.",
           "soundPracticeEligible": true,
@@ -2222,7 +2222,7 @@
         },
         {
           "word": "Yarn",
-          "picture": "🧶",
+          "picture": "yarn",
           "assetPath": "assets/nursery/letter_cards/y_5_yarn.png",
           "soundCue": "Listen to the first sound in yarn.",
           "soundPracticeEligible": true,
@@ -2231,7 +2231,7 @@
         },
         {
           "word": "Yogurt",
-          "picture": "🥣",
+          "picture": "yogurt",
           "assetPath": "assets/nursery/letter_cards/y_6_yogurt.png",
           "soundCue": "Listen to the first sound in yogurt.",
           "soundPracticeEligible": true,
@@ -2240,7 +2240,7 @@
         },
         {
           "word": "Yolk",
-          "picture": "🍳",
+          "picture": "yolk",
           "assetPath": "assets/nursery/letter_cards/y_7_yolk.png",
           "soundCue": "Listen to the first sound in yolk.",
           "soundPracticeEligible": true,
@@ -2249,7 +2249,7 @@
         },
         {
           "word": "Yam",
-          "picture": "🍠",
+          "picture": "yam",
           "assetPath": "assets/nursery/letter_cards/y_8_yam.png",
           "soundCue": "Listen to the first sound in yam.",
           "soundPracticeEligible": true,
@@ -2262,7 +2262,7 @@
       "uppercase": "Z",
       "lowercase": "z",
       "word": "Zebra",
-      "picture": "🦓",
+      "picture": "zebra",
       "soundCue": "z as in zebra",
       "review": {
         "status": "needsReview",
@@ -2274,7 +2274,7 @@
       "examples": [
         {
           "word": "Zebra",
-          "picture": "🦓",
+          "picture": "zebra",
           "assetPath": "assets/nursery/letter_cards/z_1_zebra.png",
           "soundCue": "Listen to the first sound in zebra.",
           "soundPracticeEligible": true,
@@ -2283,7 +2283,7 @@
         },
         {
           "word": "Zero",
-          "picture": "0️⃣",
+          "picture": "zero",
           "assetPath": "assets/nursery/letter_cards/z_2_zero.png",
           "soundCue": "Listen to the first sound in zero.",
           "soundPracticeEligible": true,
@@ -2292,7 +2292,7 @@
         },
         {
           "word": "Zoo",
-          "picture": "🦁",
+          "picture": "zoo",
           "assetPath": "assets/nursery/letter_cards/z_3_zoo.png",
           "soundCue": "Listen to the first sound in zoo.",
           "soundPracticeEligible": true,
@@ -2301,7 +2301,7 @@
         },
         {
           "word": "Zip",
-          "picture": "🤐",
+          "picture": "zip",
           "assetPath": "assets/nursery/letter_cards/z_4_zip.png",
           "soundCue": "Listen to the first sound in zip.",
           "soundPracticeEligible": true,
@@ -2310,7 +2310,7 @@
         },
         {
           "word": "Zucchini",
-          "picture": "🥒",
+          "picture": "zucchini",
           "assetPath": "assets/nursery/letter_cards/z_5_zucchini.png",
           "soundCue": "Listen to the first sound in zucchini.",
           "soundPracticeEligible": true,
@@ -2319,7 +2319,7 @@
         },
         {
           "word": "Zigzag",
-          "picture": "〰️",
+          "picture": "zigzag",
           "assetPath": "assets/nursery/letter_cards/z_6_zigzag.png",
           "soundCue": "Listen to the first sound in zigzag.",
           "soundPracticeEligible": true,
@@ -2328,7 +2328,7 @@
         },
         {
           "word": "Zeppelin",
-          "picture": "Zeppelin",
+          "picture": "zeppelin",
           "assetPath": "assets/nursery/letter_cards/z_7_zeppelin.png",
           "soundCue": "Listen to the first sound in zeppelin.",
           "soundPracticeEligible": true,
@@ -2337,7 +2337,7 @@
         },
         {
           "word": "Zoom",
-          "picture": "🔍",
+          "picture": "zoom",
           "assetPath": "assets/nursery/letter_cards/z_8_zoom.png",
           "soundCue": "Listen to the first sound in zoom.",
           "soundPracticeEligible": true,
@@ -2358,7 +2358,7 @@
         "headline": "Meet a big letter",
         "visuals": [
           "A",
-          "🍎"
+          "apple"
         ],
         "caption": "This is uppercase A. A can begin Apple."
       },
@@ -2388,7 +2388,7 @@
         "headline": "Meet a small letter",
         "visuals": [
           "a",
-          "🍎"
+          "apple"
         ],
         "caption": "This is lowercase a. It is the small partner of A."
       },
@@ -2418,7 +2418,7 @@
         "headline": "Partners belong together",
         "visuals": [
           "A",
-          "↔",
+          "matches",
           "a"
         ],
         "caption": "A and a are two forms of the same letter."
@@ -2449,7 +2449,7 @@
         "headline": "A for Apple",
         "visuals": [
           "A",
-          "🍎",
+          "apple",
           "Apple"
         ],
         "caption": "A is for Apple. Apple begins with A."
@@ -2480,7 +2480,7 @@
         "headline": "Listen to Mango",
         "visuals": [
           "M",
-          "🥭",
+          "mango",
           "Mango"
         ],
         "caption": "Mango starts with a clear beginning sound linked to M."
@@ -2541,7 +2541,7 @@
       "workedExample": {
         "headline": "Listen to Ball",
         "visuals": [
-          "⚽",
+          "ball",
           "B",
           "Ball"
         ],
@@ -2603,7 +2603,7 @@
         "headline": "Follow the A path",
         "visuals": [
           "A",
-          "✋"
+          "hand"
         ],
         "caption": "Start at the dot and move through the guide points in order."
       },
@@ -2635,7 +2635,7 @@
         "headline": "Follow the a path",
         "visuals": [
           "a",
-          "✋"
+          "hand"
         ],
         "caption": "Move through the guide points gently and in order."
       },
@@ -2756,9 +2756,9 @@
       "workedExample": {
         "headline": "Count the apples",
         "visuals": [
-          "🍎",
-          "🍎",
-          "🍎"
+          "apple",
+          "apple",
+          "apple"
         ],
         "caption": "One, two, three apples."
       },
@@ -2787,12 +2787,12 @@
       "workedExample": {
         "headline": "Count in a row",
         "visuals": [
-          "⭐",
-          "⭐",
-          "⭐",
-          "⭐",
-          "⭐",
-          "⭐"
+          "star",
+          "star",
+          "star",
+          "star",
+          "star",
+          "star"
         ],
         "caption": "There are six stars."
       },
@@ -2822,7 +2822,7 @@
         "headline": "3 matches three dots",
         "visuals": [
           "3",
-          "↔",
+          "matches",
           "●●●"
         ],
         "caption": "The number 3 and three dots are partners."
@@ -2946,11 +2946,11 @@
       "workedExample": {
         "headline": "1 apple + 1 apple",
         "visuals": [
-          "🍎",
+          "apple",
           "+",
-          "🍎",
+          "apple",
           "=",
-          "🍎🍎"
+          "2 apples"
         ],
         "caption": "One and one more makes two."
       },
@@ -3012,7 +3012,7 @@
       "workedExample": {
         "headline": "Find red",
         "visuals": [
-          "🔴",
+          "red",
           "red"
         ],
         "caption": "A red circle is red."
@@ -3042,7 +3042,7 @@
       "workedExample": {
         "headline": "Meet a triangle",
         "visuals": [
-          "🔺",
+          "triangle",
           "3 sides"
         ],
         "caption": "A triangle has three straight sides."
@@ -3072,7 +3072,7 @@
       "workedExample": {
         "headline": "Meet a dog",
         "visuals": [
-          "🐶",
+          "dog",
           "dog"
         ],
         "caption": "This familiar animal is a dog."
@@ -3102,8 +3102,8 @@
       "workedExample": {
         "headline": "Apple and carrot",
         "visuals": [
-          "🍎",
-          "🥕"
+          "apple",
+          "carrot"
         ],
         "caption": "Apple is a fruit; carrot is a vegetable in this activity."
       },
@@ -3132,7 +3132,7 @@
       "workedExample": {
         "headline": "A cup is for drinking",
         "visuals": [
-          "🥤",
+          "cup",
           "drink"
         ],
         "caption": "We can use a cup for drinking."
@@ -3162,7 +3162,7 @@
       "workedExample": {
         "headline": "Eyes help us see",
         "visuals": [
-          "👀",
+          "eyes",
           "eyes"
         ],
         "caption": "These are eyes."
@@ -3192,9 +3192,9 @@
       "workedExample": {
         "headline": "Wash, then eat",
         "visuals": [
-          "🧼",
-          "➡",
-          "🍽️"
+          "soap",
+          "then",
+          "meal"
         ],
         "caption": "We wash hands before eating."
       },
@@ -3223,10 +3223,10 @@
       "workedExample": {
         "headline": "Red, blue, red, blue",
         "visuals": [
-          "🔴",
-          "🔵",
-          "🔴",
-          "🔵"
+          "red",
+          "blue",
+          "red",
+          "blue"
         ],
         "caption": "The next colour would be red."
       },
@@ -3255,9 +3255,9 @@
       "workedExample": {
         "headline": "Find the same",
         "visuals": [
-          "🍎",
-          "↔",
-          "🍎"
+          "apple",
+          "matches",
+          "apple"
         ],
         "caption": "The two apples match."
       },
@@ -3286,8 +3286,8 @@
       "workedExample": {
         "headline": "Fruit or animal?",
         "visuals": [
-          "🍎",
-          "🐶"
+          "apple",
+          "dog"
         ],
         "caption": "Apple goes with fruit; dog goes with animal."
       },
@@ -3316,8 +3316,8 @@
       "workedExample": {
         "headline": "Remember: star, ball",
         "visuals": [
-          "⭐",
-          "⚽"
+          "star",
+          "ball"
         ],
         "caption": "After a short look, we can recall what we saw."
       },
@@ -3803,22 +3803,22 @@
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
       "options": [
         {
-          "id": "🍎 Apple",
-          "label": "🍎 Apple"
+          "id": "apple",
+          "label": "apple"
         },
         {
-          "id": "🐶 Dog",
-          "label": "🐶 Dog"
+          "id": "dog",
+          "label": "dog"
         },
         {
-          "id": "☀️ Sun",
-          "label": "☀️ Sun"
+          "id": "sun",
+          "label": "sun"
         }
       ],
       "payload": {},
       "correctResponseRule": {
         "type": "choice",
-        "value": "🍎 Apple"
+        "value": "apple"
       },
       "masteryEligible": true,
       "review": {
@@ -3879,22 +3879,22 @@
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
       "options": [
         {
-          "id": "🥭 Mango",
-          "label": "🥭 Mango"
+          "id": "mango",
+          "label": "mango"
         },
         {
-          "id": "🐰 Rabbit",
-          "label": "🐰 Rabbit"
+          "id": "rabbit",
+          "label": "rabbit"
         },
         {
-          "id": "🪁 Kite",
-          "label": "🪁 Kite"
+          "id": "kite",
+          "label": "kite"
         }
       ],
       "payload": {},
       "correctResponseRule": {
         "type": "choice",
-        "value": "🥭 Mango"
+        "value": "mango"
       },
       "masteryEligible": true,
       "review": {
@@ -3917,22 +3917,22 @@
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
       "options": [
         {
-          "id": "☀️ Sun",
-          "label": "☀️ Sun"
+          "id": "sun",
+          "label": "sun"
         },
         {
-          "id": "🐐 Goat",
-          "label": "🐐 Goat"
+          "id": "goat",
+          "label": "goat"
         },
         {
-          "id": "🍊 Orange",
-          "label": "🍊 Orange"
+          "id": "orange",
+          "label": "orange"
         }
       ],
       "payload": {},
       "correctResponseRule": {
         "type": "choice",
-        "value": "☀️ Sun"
+        "value": "sun"
       },
       "masteryEligible": true,
       "review": {
@@ -4336,15 +4336,15 @@
       "options": [
         {
           "id": "Duck",
-          "label": "🦆 Duck"
+          "label": "Duck"
         },
         {
           "id": "Sun",
-          "label": "☀️ Sun"
+          "label": "Sun"
         },
         {
           "id": "Fish",
-          "label": "🐟 Fish"
+          "label": "Fish"
         }
       ],
       "payload": {},
@@ -4374,15 +4374,15 @@
       "options": [
         {
           "id": "Kite",
-          "label": "🪁 Kite"
+          "label": "Kite"
         },
         {
           "id": "Fish",
-          "label": "🐟 Fish"
+          "label": "Fish"
         },
         {
           "id": "Mango",
-          "label": "🥭 Mango"
+          "label": "Mango"
         }
       ],
       "payload": {},
@@ -5316,8 +5316,8 @@
       "skillId": "math_count_0_5",
       "phase": "guided",
       "interaction": "choice",
-      "prompt": "How many apples? 🍎🍎",
-      "narration": "How many apples? 🍎🍎",
+      "prompt": "How many apples are shown?",
+      "narration": "How many apples are shown?",
       "hint": "Point to each apple once.",
       "successFeedback": "Great noticing! You found the answer.",
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
@@ -5335,7 +5335,12 @@
           "label": "3"
         }
       ],
-      "payload": {},
+      "payload": {
+        "visualTokens": [
+          "apple",
+          "apple"
+        ]
+      },
       "correctResponseRule": {
         "type": "choice",
         "value": "2"
@@ -5392,8 +5397,8 @@
       "skillId": "math_count_0_5",
       "phase": "independent",
       "interaction": "choice",
-      "prompt": "How many balls? ⚽⚽⚽⚽",
-      "narration": "How many balls? ⚽⚽⚽⚽",
+      "prompt": "How many balls are shown?",
+      "narration": "How many balls are shown?",
       "hint": "Count each ball once.",
       "successFeedback": "Great noticing! You found the answer.",
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
@@ -5411,7 +5416,14 @@
           "label": "5"
         }
       ],
-      "payload": {},
+      "payload": {
+        "visualTokens": [
+          "ball",
+          "ball",
+          "ball",
+          "ball"
+        ]
+      },
       "correctResponseRule": {
         "type": "choice",
         "value": "4"
@@ -5430,8 +5442,8 @@
       "skillId": "math_count_0_5",
       "phase": "transfer",
       "interaction": "choice",
-      "prompt": "How many fish? 🐟🐟🐟🐟🐟",
-      "narration": "How many fish? 🐟🐟🐟🐟🐟",
+      "prompt": "How many fish are shown?",
+      "narration": "How many fish are shown?",
       "hint": "Count slowly from one to five.",
       "successFeedback": "Great noticing! You found the answer.",
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
@@ -5449,7 +5461,15 @@
           "label": "6"
         }
       ],
-      "payload": {},
+      "payload": {
+        "visualTokens": [
+          "fish",
+          "fish",
+          "fish",
+          "fish",
+          "fish"
+        ]
+      },
       "correctResponseRule": {
         "type": "choice",
         "value": "5"
@@ -5506,8 +5526,8 @@
       "skillId": "math_count_6_10",
       "phase": "independent",
       "interaction": "choice",
-      "prompt": "How many apples? 🍎🍎🍎🍎🍎🍎🍎",
-      "narration": "How many apples? 🍎🍎🍎🍎🍎🍎🍎",
+      "prompt": "How many apples are shown?",
+      "narration": "How many apples are shown?",
       "hint": "Count left to right.",
       "successFeedback": "Great noticing! You found the answer.",
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
@@ -5525,7 +5545,17 @@
           "label": "8"
         }
       ],
-      "payload": {},
+      "payload": {
+        "visualTokens": [
+          "apple",
+          "apple",
+          "apple",
+          "apple",
+          "apple",
+          "apple",
+          "apple"
+        ]
+      },
       "correctResponseRule": {
         "type": "choice",
         "value": "7"
@@ -5582,8 +5612,8 @@
       "skillId": "math_count_6_10",
       "phase": "transfer",
       "interaction": "choice",
-      "prompt": "How many fish? 🐟🐟🐟🐟🐟🐟🐟🐟🐟",
-      "narration": "How many fish? 🐟🐟🐟🐟🐟🐟🐟🐟🐟",
+      "prompt": "How many fish are shown?",
+      "narration": "How many fish are shown?",
       "hint": "Count carefully; stop after the last fish.",
       "successFeedback": "Great noticing! You found the answer.",
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
@@ -5601,7 +5631,19 @@
           "label": "10"
         }
       ],
-      "payload": {},
+      "payload": {
+        "visualTokens": [
+          "fish",
+          "fish",
+          "fish",
+          "fish",
+          "fish",
+          "fish",
+          "fish",
+          "fish",
+          "fish"
+        ]
+      },
       "correctResponseRule": {
         "type": "choice",
         "value": "9"
@@ -5961,18 +6003,18 @@
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
       "options": [
         {
-          "id": "⭐⭐",
-          "label": "⭐⭐"
+          "id": "2 stars",
+          "label": "2 stars"
         },
         {
-          "id": "⭐⭐⭐⭐",
-          "label": "⭐⭐⭐⭐"
+          "id": "4 stars",
+          "label": "4 stars"
         }
       ],
       "payload": {},
       "correctResponseRule": {
         "type": "choice",
-        "value": "⭐⭐"
+        "value": "2 stars"
       },
       "masteryEligible": true,
       "review": {
@@ -6029,18 +6071,18 @@
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
       "options": [
         {
-          "id": "🍎🍎🍎🍎",
-          "label": "🍎🍎🍎🍎"
+          "id": "4 apples",
+          "label": "4 apples"
         },
         {
-          "id": "🍎🍎🍎",
-          "label": "🍎🍎🍎"
+          "id": "3 apples",
+          "label": "3 apples"
         }
       ],
       "payload": {},
       "correctResponseRule": {
         "type": "choice",
-        "value": "🍎🍎🍎"
+        "value": "3 apples"
       },
       "masteryEligible": true,
       "review": {
@@ -6192,8 +6234,8 @@
       "skillId": "math_add_objects",
       "phase": "guided",
       "interaction": "choice",
-      "prompt": "🍎 + 🍎 = how many apples?",
-      "narration": "🍎 + 🍎 = how many apples?",
+      "prompt": "Add the two apple groups. How many apples altogether?",
+      "narration": "Add the two apple groups. How many apples altogether?",
       "hint": "Bring both apples together and count.",
       "successFeedback": "Great noticing! You found the answer.",
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
@@ -6211,7 +6253,13 @@
           "label": "3"
         }
       ],
-      "payload": {},
+      "payload": {
+        "visualTokens": [
+          "apple",
+          "+",
+          "apple"
+        ]
+      },
       "correctResponseRule": {
         "type": "choice",
         "value": "2"
@@ -6306,8 +6354,8 @@
       "skillId": "math_add_objects",
       "phase": "transfer",
       "interaction": "choice",
-      "prompt": "🍊🍊🍊 + 🍊🍊 = how many oranges?",
-      "narration": "🍊🍊🍊 + 🍊🍊 = how many oranges?",
+      "prompt": "Add the two orange groups. How many oranges altogether?",
+      "narration": "Add the two orange groups. How many oranges altogether?",
       "hint": "Count all oranges after joining the groups.",
       "successFeedback": "Great noticing! You found the answer.",
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
@@ -6325,7 +6373,13 @@
           "label": "6"
         }
       ],
-      "payload": {},
+      "payload": {
+        "visualTokens": [
+          "3 oranges",
+          "+",
+          "2 oranges"
+        ]
+      },
       "correctResponseRule": {
         "type": "choice",
         "value": "5"
@@ -6496,8 +6550,8 @@
       "skillId": "knowledge_colours",
       "phase": "guided",
       "interaction": "choice",
-      "prompt": "Which colour word matches 🔴?",
-      "narration": "Which colour word matches 🔴?",
+      "prompt": "Which colour word matches this colour?",
+      "narration": "Which colour word matches this colour?",
       "hint": "Look at the red circle.",
       "successFeedback": "Great noticing! You found the answer.",
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
@@ -6515,7 +6569,11 @@
           "label": "green"
         }
       ],
-      "payload": {},
+      "payload": {
+        "visualTokens": [
+          "colour:red"
+        ]
+      },
       "correctResponseRule": {
         "type": "choice",
         "value": "red"
@@ -6534,8 +6592,8 @@
       "skillId": "knowledge_colours",
       "phase": "independent",
       "interaction": "choice",
-      "prompt": "Which colour word matches 🔵?",
-      "narration": "Which colour word matches 🔵?",
+      "prompt": "Which colour word matches this colour?",
+      "narration": "Which colour word matches this colour?",
       "hint": "Blue matches the blue circle.",
       "successFeedback": "Great noticing! You found the answer.",
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
@@ -6553,7 +6611,11 @@
           "label": "orange"
         }
       ],
-      "payload": {},
+      "payload": {
+        "visualTokens": [
+          "colour:blue"
+        ]
+      },
       "correctResponseRule": {
         "type": "choice",
         "value": "blue"
@@ -6579,22 +6641,22 @@
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
       "options": [
         {
-          "id": "🟢",
-          "label": "🟢"
+          "id": "green",
+          "label": "green"
         },
         {
-          "id": "🟡",
-          "label": "🟡"
+          "id": "yellow",
+          "label": "yellow"
         },
         {
-          "id": "🟣",
-          "label": "🟣"
+          "id": "purple",
+          "label": "purple"
         }
       ],
       "payload": {},
       "correctResponseRule": {
         "type": "choice",
-        "value": "🟢"
+        "value": "green"
       },
       "masteryEligible": true,
       "review": {
@@ -6807,22 +6869,22 @@
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
       "options": [
         {
-          "id": "🐱",
-          "label": "🐱"
+          "id": "cat",
+          "label": "cat"
         },
         {
-          "id": "🐶",
-          "label": "🐶"
+          "id": "dog",
+          "label": "dog"
         },
         {
-          "id": "🐟",
-          "label": "🐟"
+          "id": "fish",
+          "label": "fish"
         }
       ],
       "payload": {},
       "correctResponseRule": {
         "type": "choice",
-        "value": "🐱"
+        "value": "cat"
       },
       "masteryEligible": true,
       "review": {
@@ -6883,22 +6945,22 @@
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
       "options": [
         {
-          "id": "🐰",
-          "label": "🐰"
+          "id": "rabbit",
+          "label": "rabbit"
         },
         {
-          "id": "🐯",
-          "label": "🐯"
+          "id": "tiger",
+          "label": "tiger"
         },
         {
-          "id": "🐐",
-          "label": "🐐"
+          "id": "goat",
+          "label": "goat"
         }
       ],
       "payload": {},
       "correctResponseRule": {
         "type": "choice",
-        "value": "🐰"
+        "value": "rabbit"
       },
       "masteryEligible": true,
       "review": {
@@ -6959,22 +7021,22 @@
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
       "options": [
         {
-          "id": "🍎 apple",
-          "label": "🍎 apple"
+          "id": "apple",
+          "label": "apple"
         },
         {
-          "id": "🥕 carrot",
-          "label": "🥕 carrot"
+          "id": "carrot",
+          "label": "carrot"
         },
         {
-          "id": "🥔 potato",
-          "label": "🥔 potato"
+          "id": "potato",
+          "label": "potato"
         }
       ],
       "payload": {},
       "correctResponseRule": {
         "type": "choice",
-        "value": "🍎 apple"
+        "value": "apple"
       },
       "masteryEligible": true,
       "review": {
@@ -7035,22 +7097,22 @@
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
       "options": [
         {
-          "id": "🥭",
-          "label": "🥭"
+          "id": "mango",
+          "label": "mango"
         },
         {
-          "id": "🍊",
-          "label": "🍊"
+          "id": "orange",
+          "label": "orange"
         },
         {
-          "id": "🍎",
-          "label": "🍎"
+          "id": "apple",
+          "label": "apple"
         }
       ],
       "payload": {},
       "correctResponseRule": {
         "type": "choice",
-        "value": "🥭"
+        "value": "mango"
       },
       "masteryEligible": true,
       "review": {
@@ -7187,22 +7249,22 @@
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
       "options": [
         {
-          "id": "⚽",
-          "label": "⚽"
+          "id": "ball",
+          "label": "ball"
         },
         {
-          "id": "📘",
-          "label": "📘"
+          "id": "book",
+          "label": "book"
         },
         {
-          "id": "👟",
-          "label": "👟"
+          "id": "shoe",
+          "label": "shoe"
         }
       ],
       "payload": {},
       "correctResponseRule": {
         "type": "choice",
-        "value": "⚽"
+        "value": "ball"
       },
       "masteryEligible": true,
       "review": {
@@ -7560,29 +7622,36 @@
       "skillId": "thinking_patterns",
       "phase": "guided",
       "interaction": "choice",
-      "prompt": "What comes next? 🔴 🔵 🔴 __",
-      "narration": "What comes next? 🔴 🔵 🔴 __",
+      "prompt": "What comes next in this colour pattern?",
+      "narration": "What comes next in this colour pattern?",
       "hint": "Repeat red, blue.",
       "successFeedback": "Great noticing! You found the answer.",
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
       "options": [
         {
-          "id": "🔵",
-          "label": "🔵"
+          "id": "blue",
+          "label": "blue"
         },
         {
-          "id": "🔴",
-          "label": "🔴"
+          "id": "red",
+          "label": "red"
         },
         {
-          "id": "🟢",
-          "label": "🟢"
+          "id": "green",
+          "label": "green"
         }
       ],
-      "payload": {},
+      "payload": {
+        "visualTokens": [
+          "red",
+          "blue",
+          "red",
+          "?"
+        ]
+      },
       "correctResponseRule": {
         "type": "choice",
-        "value": "🔵"
+        "value": "blue"
       },
       "masteryEligible": true,
       "review": {
@@ -7636,29 +7705,38 @@
       "skillId": "thinking_patterns",
       "phase": "independent",
       "interaction": "choice",
-      "prompt": "What comes next? 🍎 🍎 🍌 🍎 🍎 __",
-      "narration": "What comes next? 🍎 🍎 🍌 🍎 🍎 __",
+      "prompt": "What comes next in this picture pattern?",
+      "narration": "What comes next in this picture pattern?",
       "hint": "The group is apple, apple, banana.",
       "successFeedback": "Great noticing! You found the answer.",
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
       "options": [
         {
-          "id": "🍌",
-          "label": "🍌"
+          "id": "banana",
+          "label": "banana"
         },
         {
-          "id": "🍎",
-          "label": "🍎"
+          "id": "apple",
+          "label": "apple"
         },
         {
-          "id": "🍊",
-          "label": "🍊"
+          "id": "orange",
+          "label": "orange"
         }
       ],
-      "payload": {},
+      "payload": {
+        "visualTokens": [
+          "apple",
+          "apple",
+          "banana",
+          "apple",
+          "apple",
+          "?"
+        ]
+      },
       "correctResponseRule": {
         "type": "choice",
-        "value": "🍌"
+        "value": "banana"
       },
       "masteryEligible": true,
       "review": {
@@ -7720,19 +7798,19 @@
       "options": [],
       "payload": {
         "left": [
-          "🍎",
-          "⚽"
+          "apple",
+          "ball"
         ],
         "right": [
-          "⚽",
-          "🍎"
+          "ball",
+          "apple"
         ]
       },
       "correctResponseRule": {
         "type": "pairMatch",
         "pairs": {
-          "🍎": "🍎",
-          "⚽": "⚽"
+          "apple": "apple",
+          "ball": "ball"
         }
       },
       "masteryEligible": true,
@@ -7831,19 +7909,19 @@
       "options": [],
       "payload": {
         "left": [
-          "🐱",
-          "🐟"
+          "cat",
+          "fish"
         ],
         "right": [
-          "🐟",
-          "🐱"
+          "fish",
+          "cat"
         ]
       },
       "correctResponseRule": {
         "type": "pairMatch",
         "pairs": {
-          "🐱": "🐱",
-          "🐟": "🐟"
+          "cat": "cat",
+          "fish": "fish"
         }
       },
       "masteryEligible": true,
@@ -7868,8 +7946,8 @@
       "options": [],
       "payload": {
         "items": [
-          "🍎",
-          "🐶"
+          "apple",
+          "dog"
         ],
         "buckets": [
           "fruit",
@@ -7879,8 +7957,8 @@
       "correctResponseRule": {
         "type": "sortBuckets",
         "assignments": {
-          "🍎": "fruit",
-          "🐶": "animal"
+          "apple": "fruit",
+          "dog": "animal"
         }
       },
       "masteryEligible": true,
@@ -7905,8 +7983,8 @@
       "options": [],
       "payload": {
         "items": [
-          "🔴",
-          "🔵"
+          "red",
+          "blue"
         ],
         "buckets": [
           "red",
@@ -7916,8 +7994,8 @@
       "correctResponseRule": {
         "type": "sortBuckets",
         "assignments": {
-          "🔴": "red",
-          "🔵": "blue"
+          "red": "red",
+          "blue": "blue"
         }
       },
       "masteryEligible": true,
@@ -7979,8 +8057,8 @@
       "options": [],
       "payload": {
         "items": [
-          "🥭",
-          "📘"
+          "mango",
+          "book"
         ],
         "buckets": [
           "food",
@@ -7990,8 +8068,8 @@
       "correctResponseRule": {
         "type": "sortBuckets",
         "assignments": {
-          "🥭": "food",
-          "📘": "object"
+          "mango": "food",
+          "book": "object"
         }
       },
       "masteryEligible": true,
@@ -8008,29 +8086,34 @@
       "skillId": "thinking_observation_listening",
       "phase": "guided",
       "interaction": "choice",
-      "prompt": "Remember the pair ⭐ ⚽. Which pair did you see?",
-      "narration": "Remember the pair ⭐ ⚽. Which pair did you see?",
+      "prompt": "Look carefully at the pair. Which pair did you see?",
+      "narration": "Look carefully at the pair. Which pair did you see?",
       "hint": "Picture the two items in the same order.",
       "successFeedback": "Great noticing! You found the answer.",
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
       "options": [
         {
-          "id": "⭐ ⚽",
-          "label": "⭐ ⚽"
+          "id": "star & ball",
+          "label": "star & ball"
         },
         {
-          "id": "🍎 🐟",
-          "label": "🍎 🐟"
+          "id": "apple & fish",
+          "label": "apple & fish"
         },
         {
-          "id": "🔺 🔵",
-          "label": "🔺 🔵"
+          "id": "triangle & blue",
+          "label": "triangle & blue"
         }
       ],
-      "payload": {},
+      "payload": {
+        "visualTokens": [
+          "star",
+          "ball"
+        ]
+      },
       "correctResponseRule": {
         "type": "choice",
-        "value": "⭐ ⚽"
+        "value": "star & ball"
       },
       "masteryEligible": true,
       "review": {
@@ -8046,29 +8129,35 @@
       "skillId": "thinking_observation_listening",
       "phase": "independent",
       "interaction": "choice",
-      "prompt": "Look: 🍎 🍎 🍌. Which item is different?",
-      "narration": "Look: 🍎 🍎 🍌. Which item is different?",
+      "prompt": "Look carefully. Which picture is different?",
+      "narration": "Look carefully. Which picture is different?",
       "hint": "Two are apples; one is a banana.",
       "successFeedback": "Great noticing! You found the answer.",
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
       "options": [
         {
-          "id": "🍎",
-          "label": "🍎"
+          "id": "apple",
+          "label": "apple"
         },
         {
-          "id": "🍌",
-          "label": "🍌"
+          "id": "banana",
+          "label": "banana"
         },
         {
-          "id": "⚽",
-          "label": "⚽"
+          "id": "ball",
+          "label": "ball"
         }
       ],
-      "payload": {},
+      "payload": {
+        "visualTokens": [
+          "apple",
+          "apple",
+          "banana"
+        ]
+      },
       "correctResponseRule": {
         "type": "choice",
-        "value": "🍌"
+        "value": "banana"
       },
       "masteryEligible": true,
       "review": {
@@ -8091,22 +8180,22 @@
       "wrongFeedback": "Good try. Look or listen once more, then try again.",
       "options": [
         {
-          "id": "🔵",
-          "label": "🔵"
+          "id": "blue",
+          "label": "blue"
         },
         {
-          "id": "🔴",
-          "label": "🔴"
+          "id": "red",
+          "label": "red"
         },
         {
-          "id": "🟢",
-          "label": "🟢"
+          "id": "green",
+          "label": "green"
         }
       ],
       "payload": {},
       "correctResponseRule": {
         "type": "choice",
-        "value": "🔵"
+        "value": "blue"
       },
       "masteryEligible": true,
       "review": {

@@ -4,15 +4,24 @@ import '../../app/brightquest_scope.dart';
 import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
 import '../../core/learning/game_evidence_adapter.dart';
+import '../../core/learning/endless_practice_coordinator.dart';
+import '../../core/learning/mission_run_game_content.dart';
+import '../../core/learning/mission_run_models.dart';
+import '../../core/learning/mission_run_session_coordinator.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
 import '../../core/session/game_session_models.dart';
 import '../../widgets/bright_widgets.dart';
 
 class RecyclingChallengeScreen extends StatefulWidget {
-  const RecyclingChallengeScreen({this.learningLevel, super.key});
+  const RecyclingChallengeScreen({
+    this.learningLevel,
+    this.endlessPractice = false,
+    super.key,
+  });
 
   final LearningLevel? learningLevel;
+  final bool endlessPractice;
 
   @override
   State<RecyclingChallengeScreen> createState() =>
@@ -32,6 +41,8 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
   int _attemptSerial = 0;
   bool _answerInFlight = false;
   bool _sessionConfigured = false;
+  MissionRunPlan? _missionRunPlan;
+  List<RecyclingItem> _items = const <RecyclingItem>[];
 
   @override
   void didChangeDependencies() {
@@ -43,21 +54,65 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
     _difficulty = controller.resumableDifficulty(
       gameId: 'recycling_challenge',
       classNumber: _classNumber,
-      fallbackDifficulty: widget.learningLevel?.difficulty ??
-          controller.recommendedDifficulty('recycling_challenge'),
+      fallbackDifficulty: widget.endlessPractice
+          ? 3
+          : widget.learningLevel?.difficulty ??
+              controller.recommendedDifficulty('recycling_challenge'),
       learningLevelId: widget.learningLevel?.id,
     );
-    final items = BrightQuestScope.contentOf(context)
-        .recyclingItemsForClass(_classNumber, difficulty: _difficulty);
+    final repository = BrightQuestScope.contentOf(context);
+    final existingCheckpoint = controller.gameSessionFor(
+      gameId: 'recycling_challenge',
+      classNumber: _classNumber,
+      learningLevelId: widget.learningLevel?.id,
+    );
+    final level = widget.learningLevel;
+    if (level != null) {
+      _missionRunPlan = const MissionRunSessionCoordinator().restore(
+        repository: repository,
+        level: level,
+        data: existingCheckpoint?.data ?? const <String, Object?>{},
+      );
+    } else if (widget.endlessPractice) {
+      _missionRunPlan = const EndlessPracticeCoordinator().createOrRestore(
+        repository: repository,
+        classNumber: _classNumber,
+        gameId: 'recycling_challenge',
+        checkpoint: existingCheckpoint,
+        history: controller.missionExposureHistoryForGame(
+          classNumber: _classNumber,
+          gameId: 'recycling_challenge',
+        ),
+        learningState: controller.learningState,
+        gameProgress: controller.statsFor('recycling_challenge'),
+      );
+    }
+    _items = _missionRunPlan == null
+        ? repository.recyclingItemsForClass(
+            _classNumber,
+            difficulty: _difficulty,
+          )
+        : const MissionRunGameContent().recyclingItems(
+            repository: repository,
+            plan: _missionRunPlan!,
+          );
+    if (_items.isEmpty) {
+      throw StateError('Recycling Challenge cannot start without items.');
+    }
     final checkpoint = controller.beginOrResumeGameSession(
       gameId: 'recycling_challenge',
       classNumber: _classNumber,
       difficulty: _difficulty,
-      maxScore: items.length,
+      maxScore: _items.length,
       learningLevel: widget.learningLevel,
+      sessionData: _missionRunPlan == null
+          ? const <String, Object?>{}
+          : const MissionRunSessionCoordinator().sessionDataFor(
+              _missionRunPlan!,
+            ),
     );
-    index = checkpoint.cursor.clamp(0, items.length - 1).toInt();
-    score = checkpoint.score.clamp(0, items.length).toInt();
+    index = checkpoint.cursor.clamp(0, _items.length - 1).toInt();
+    score = checkpoint.score.clamp(0, _items.length).toInt();
     selectedBin = checkpoint.data['selectedBin'] as String?;
     correct = checkpoint.data['correct'] as bool?;
     _attemptSerial = (checkpoint.data['attemptSerial'] as num?)?.toInt() ?? 0;
@@ -129,9 +184,11 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
       final controller = BrightQuestScope.of(context);
       final reward = await controller.completeRunSafely(
         gameId: 'recycling_challenge',
-        fallbackMissionId:
-            'recycling_challenge:c$classNumber:d$_difficulty:core_run',
+        fallbackMissionId: widget.endlessPractice
+            ? 'endless_practice:c$classNumber:recycling_challenge'
+            : 'recycling_challenge:c$classNumber:d$_difficulty:core_run',
         learningLevel: widget.learningLevel,
+        practiceOnly: widget.endlessPractice,
         score: score,
         maxScore: items.length,
       );
@@ -153,16 +210,59 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
   }
 
   void _restart() {
-    final items = BrightQuestScope.contentOf(context)
-        .recyclingItemsForClass(_classNumber, difficulty: _difficulty);
-    BrightQuestScope.of(context).restartActiveGameSession(
+    final repository = BrightQuestScope.contentOf(context);
+    final controller = BrightQuestScope.of(context);
+    var nextPlan = _missionRunPlan;
+    var nextItems = _items;
+    final level = widget.learningLevel;
+    if (level != null && _missionRunPlan != null) {
+      nextPlan = const MissionRunSessionCoordinator().createWorldReplay(
+        repository: repository,
+        level: level,
+        previousPlan: _missionRunPlan!,
+        history: controller.missionExposureHistoryFor(level),
+        learningState: controller.learningState,
+        levelProgress: controller.levelStatsFor(level.id),
+        gameProgress: controller.statsFor(level.gameId),
+      );
+      nextItems = const MissionRunGameContent().recyclingItems(
+        repository: repository,
+        plan: nextPlan,
+      );
+    } else if (widget.endlessPractice && _missionRunPlan != null) {
+      nextPlan = const EndlessPracticeCoordinator().createNextRound(
+        repository: repository,
+        previousPlan: _missionRunPlan!,
+        history: controller.missionExposureHistoryForGame(
+          classNumber: _classNumber,
+          gameId: 'recycling_challenge',
+        ),
+        learningState: controller.learningState,
+        gameProgress: controller.statsFor('recycling_challenge'),
+      );
+      nextItems = const MissionRunGameContent().recyclingItems(
+        repository: repository,
+        plan: nextPlan,
+      );
+    } else {
+      nextItems = repository.recyclingItemsForClass(
+        _classNumber,
+        difficulty: _difficulty,
+      );
+    }
+    controller.restartActiveGameSession(
       gameId: 'recycling_challenge',
       classNumber: _classNumber,
       difficulty: _difficulty,
-      maxScore: items.length,
+      maxScore: nextItems.length,
       learningLevel: widget.learningLevel,
+      sessionData: nextPlan == null
+          ? const <String, Object?>{}
+          : const MissionRunSessionCoordinator().sessionDataFor(nextPlan),
     );
     setState(() {
+      _missionRunPlan = nextPlan;
+      _items = nextItems;
       index = 0;
       score = 0;
       _attemptSerial = 0;
@@ -175,15 +275,13 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
   }
 
   void _checkpoint() {
-    final items = BrightQuestScope.contentOf(context)
-        .recyclingItemsForClass(_classNumber, difficulty: _difficulty);
     BrightQuestScope.of(context).checkpointGameSession(
       gameId: 'recycling_challenge',
       classNumber: _classNumber,
       difficulty: _difficulty,
       cursor: index,
       score: score,
-      maxScore: items.length,
+      maxScore: _items.length,
       learningLevel: widget.learningLevel,
       data: <String, Object?>{
         'attemptSerial': _attemptSerial,
@@ -196,16 +294,17 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
   @override
   Widget build(BuildContext context) {
     final classNumber = _classNumber;
-    final items = BrightQuestScope.contentOf(context)
-        .recyclingItemsForClass(classNumber, difficulty: _difficulty);
+    final items = _items;
     final item = items[index];
 
     return GameScaffold(
       learningLevel: widget.learningLevel,
       title: 'Recycling Challenge',
-      subtitle: widget.learningLevel == null
-          ? 'Class $classNumber • Adaptive level $_difficulty • Sort It Right'
-          : 'Class $classNumber • ${widget.learningLevel!.typeLabel} • ${widget.learningLevel!.title}',
+      subtitle: widget.endlessPractice
+          ? 'Class $classNumber • ∞ Endless Practice • 10 rotating missions'
+          : widget.learningLevel == null
+              ? 'Class $classNumber • Adaptive level $_difficulty • Sort It Right'
+              : 'Class $classNumber • ${widget.learningLevel!.typeLabel} • ${widget.learningLevel!.title}',
       color: const Color(0xFF4BAF52),
       voicePrompt:
           'For this material-sorting practice, which group should ${item.name} go into?',
@@ -278,6 +377,7 @@ class _RecyclingChallengeScreenState extends State<RecyclingChallengeScreen> {
               maxScore: items.length,
               reward: missionReward,
               onReplay: _restart,
+              replayLabel: widget.endlessPractice ? 'Next 10 Missions' : null,
             )
           else
             Align(

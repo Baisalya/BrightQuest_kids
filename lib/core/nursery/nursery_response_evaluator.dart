@@ -1,4 +1,5 @@
 import 'nursery_content.dart';
+import 'nursery_legacy_visual_aliases.dart';
 import 'nursery_practice_generator.dart';
 
 class NurseryEvaluation {
@@ -12,6 +13,7 @@ class NurseryEvaluation {
   final Object? response;
   final String? misconceptionId;
 }
+
 
 class NurseryActivityExplanation {
   const NurseryActivityExplanation({
@@ -104,7 +106,7 @@ class NurseryResponseEvaluator {
         final cueWord = sameFirstSoundMatch.group(1)!;
         return NurseryActivityExplanation(
           text: '$cueWord and $answer start with the same first sound.',
-          visualTokens: <String>[cueWord, '↔', answer],
+          visualTokens: <String>[cueWord, 'matches', answer],
         );
       }
 
@@ -158,8 +160,8 @@ class NurseryResponseEvaluator {
 
       if (activity.skillId == 'math_add_objects' ||
           activity.skillId == 'math_add_numerals') {
-        final numericAddition =
-            RegExp(r'(\d+)\s*\+\s*(\d+)').firstMatch(activity.prompt);
+        final numericAddition = RegExp(r'(\d+)\s*\+\s*(\d+)')
+            .firstMatch(activity.prompt);
         if (numericAddition != null) {
           final left = numericAddition.group(1)!;
           final right = numericAddition.group(2)!;
@@ -190,8 +192,7 @@ class NurseryResponseEvaluator {
 
       if (activity.skillId == 'math_same_different') {
         return NurseryActivityExplanation(
-          text:
-              'The two things are $answer in the way this question asks us to compare them.',
+          text: 'The two things are $answer in the way this question asks us to compare them.',
           visualTokens: <String>[answer],
         );
       }
@@ -284,16 +285,26 @@ class NurseryResponseEvaluator {
   }
 
   bool _sameText(Object? left, Object? right) =>
-      left is String && right is String && left.trim() == right.trim();
+      left is String &&
+      right is String &&
+      nurseryCanonicalLegacyVisualValue(left) ==
+          nurseryCanonicalLegacyVisualValue(right);
 
   bool _sameStringMap(Object? response, Object? expected) {
-    if (response is! Map ||
-        expected is! Map ||
-        response.length != expected.length) {
+    if (response is! Map || expected is! Map || response.length != expected.length) {
       return false;
     }
+    final normalizedResponse = <String, String>{};
+    for (final entry in response.entries) {
+      if (entry.key is! String || entry.value is! String) return false;
+      normalizedResponse[nurseryCanonicalLegacyVisualValue(entry.key as String)] =
+          nurseryCanonicalLegacyVisualValue(entry.value as String);
+    }
     for (final entry in expected.entries) {
-      if (!_sameText(response[entry.key], entry.value)) return false;
+      if (entry.key is! String || entry.value is! String) return false;
+      final key = nurseryCanonicalLegacyVisualValue(entry.key as String);
+      final value = nurseryCanonicalLegacyVisualValue(entry.value as String);
+      if (normalizedResponse[key] != value) return false;
     }
     return true;
   }
@@ -303,8 +314,7 @@ class NurseryResponseEvaluator {
       return false;
     }
     for (var index = 0; index < count; index += 1) {
-      if (response[index] is! num ||
-          (response[index] as num).toInt() != index) {
+      if (response[index] is! num || (response[index] as num).toInt() != index) {
         return false;
       }
     }

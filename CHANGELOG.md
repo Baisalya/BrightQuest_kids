@@ -1,5 +1,11 @@
 ## Unreleased — Nursery learning pack implementation
 
+- Step 13 adds one shared child-visible non-repeat signature across Learning Worlds, Endless Practice, Class Skill Studio and restarted Discovery Checks while preserving existing correctness, mastery, rewards and save ownership.
+- Mission selection now ranks unseen visible prompt fingerprints ahead of stable activity identity, then keeps existing adaptive weak-skill/spaced-review demand plus topic, competency, archetype and mechanic balance.
+- Mission exposure memory stays schema v1/backward readable and gains optional fingerprint/topic/competency/difficulty metadata; class/profile isolation and bounded persistence are preserved.
+- Class Skill Studio now allocates one four-question fresh response set per competency (guided, independent, transfer, exit), keeps the worked example teaching-only, records only questions actually shown and offers another fresh/spaced-review set without leaving the competency.
+- Discovery Check still resumes an in-progress persisted list exactly, while a new/restarted check rotates recent diagnostic items and shared visible prompts when scorable alternatives exist.
+- Added Step 13 focused regressions and QA runners. “Unlimited practice” remains a claim about unlimited sessions with controlled spaced reuse, not infinitely many unique authored curriculum questions.
 - Step 12 adds a root lifecycle persistence boundary that flushes authoritative progress and independent resumable mission slots on background/hidden/detached states, memory pressure and root disposal, including non-game screens.
 - System accessibility text scaling is now preserved instead of being replaced by the in-app text-size setting; the larger requested scale is respected up to the Step 12 tested 2x layout ceiling.
 - Very-short Android free-form/Windows surfaces prioritize the five navigation destinations and suppress only decorative/profile sidebar chrome below 460 logical pixels of height.

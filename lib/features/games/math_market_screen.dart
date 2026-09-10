@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
+import '../../core/content/content_activity.dart';
+import '../../core/content/content_repository.dart';
 import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
 import '../../core/learning/adaptive_difficulty_models.dart';
 import '../../core/learning/game_evidence_adapter.dart';
+import '../../core/learning/endless_practice_coordinator.dart';
+import '../../core/learning/mission_run_models.dart';
+import '../../core/learning/mission_run_planner.dart';
+import '../../core/learning/mission_run_session_coordinator.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
 import '../../core/session/game_session_models.dart';
@@ -15,8 +21,13 @@ import '../../widgets/bright_motion.dart';
 import '../../widgets/bright_widgets.dart';
 
 class MathMarketScreen extends StatefulWidget {
-  const MathMarketScreen({this.learningLevel, super.key});
+  const MathMarketScreen({
+    this.learningLevel,
+    this.endlessPractice = false,
+    super.key,
+  });
   final LearningLevel? learningLevel;
+  final bool endlessPractice;
 
   @override
   State<MathMarketScreen> createState() => _MathMarketScreenState();
@@ -35,7 +46,12 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
   int _attemptSerial = 0;
   bool _answerInFlight = false;
   bool _sessionConfigured = false;
+  MissionRunPlan? _missionRunPlan;
+  List<MathQuestion> _questions = const <MathQuestion>[];
   DateTime _itemStarted = DateTime.now();
+
+  static const int _trainingItemCount = 5;
+  static const int _gameItemCount = 5;
 
   @override
   void didChangeDependencies() {
@@ -47,21 +63,62 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
     _difficulty = controller.resumableDifficulty(
       gameId: 'math_market',
       classNumber: _classNumber,
-      fallbackDifficulty: widget.learningLevel?.difficulty ??
-          controller.recommendedDifficulty('math_market'),
+      fallbackDifficulty: widget.endlessPractice
+          ? 3
+          : widget.learningLevel?.difficulty ??
+              controller.recommendedDifficulty('math_market'),
       learningLevelId: widget.learningLevel?.id,
     );
-    final questions = BrightQuestScope.contentOf(context)
-        .mathQuestionsForClass(_classNumber, difficulty: _difficulty);
+    final repository = BrightQuestScope.contentOf(context);
+    final existingCheckpoint = controller.gameSessionFor(
+      gameId: 'math_market',
+      classNumber: _classNumber,
+      learningLevelId: widget.learningLevel?.id,
+    );
+    final level = widget.learningLevel;
+    if (level != null) {
+      _missionRunPlan = const MissionRunSessionCoordinator().restore(
+        repository: repository,
+        level: level,
+        data: existingCheckpoint?.data ?? const <String, Object?>{},
+      );
+    } else if (widget.endlessPractice) {
+      _missionRunPlan = const EndlessPracticeCoordinator().createOrRestore(
+        repository: repository,
+        classNumber: _classNumber,
+        gameId: 'math_market',
+        checkpoint: existingCheckpoint,
+        history: controller.missionExposureHistoryForGame(
+          classNumber: _classNumber,
+          gameId: 'math_market',
+        ),
+        learningState: controller.learningState,
+        gameProgress: controller.statsFor('math_market'),
+      );
+    }
+    _questions = _missionRunPlan == null
+        ? repository.mathQuestionsForClass(
+            _classNumber,
+            difficulty: _difficulty,
+          )
+        : _questionsForPlan(repository, _missionRunPlan!);
+    if (_questions.isEmpty) {
+      throw StateError('Math Market cannot start without questions.');
+    }
     final checkpoint = controller.beginOrResumeGameSession(
       gameId: 'math_market',
       classNumber: _classNumber,
       difficulty: _difficulty,
-      maxScore: questions.length,
+      maxScore: _questions.length,
       learningLevel: widget.learningLevel,
+      sessionData: _missionRunPlan == null
+          ? const <String, Object?>{}
+          : const MissionRunSessionCoordinator().sessionDataFor(
+              _missionRunPlan!,
+            ),
     );
-    questionIndex = checkpoint.cursor.clamp(0, questions.length - 1).toInt();
-    score = checkpoint.score.clamp(0, questions.length).toInt();
+    questionIndex = checkpoint.cursor.clamp(0, _questions.length - 1).toInt();
+    score = checkpoint.score.clamp(0, _questions.length).toInt();
     selected = (checkpoint.data['selected'] as num?)?.toInt();
     wasCorrect = checkpoint.data['wasCorrect'] as bool?;
     hint = checkpoint.data['hint'] as String?;
@@ -120,11 +177,7 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
         wasCorrect = correct;
         if (correct) score += 1;
       });
-      _checkpoint(
-        questionsLength: BrightQuestScope.contentOf(context)
-            .mathQuestionsForClass(_classNumber, difficulty: _difficulty)
-            .length,
-      );
+      _checkpoint(questionsLength: _questions.length);
     } finally {
       _answerInFlight = false;
     }
@@ -136,8 +189,11 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
       final controller = BrightQuestScope.of(context);
       final reward = await controller.completeRunSafely(
         gameId: 'math_market',
-        fallbackMissionId: 'math_market:c$classNumber:d$_difficulty:core_run',
+        fallbackMissionId: widget.endlessPractice
+            ? 'endless_practice:c$classNumber:math_market'
+            : 'math_market:c$classNumber:d$_difficulty:core_run',
         learningLevel: widget.learningLevel,
+        practiceOnly: widget.endlessPractice,
         score: score,
         maxScore: questions.length,
       );
@@ -176,24 +232,63 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
       return;
     }
     setState(() => hint = question.hint);
-    _checkpoint(
-        questionsLength: BrightQuestScope.contentOf(context)
-            .mathQuestionsForClass(_classNumber, difficulty: _difficulty)
-            .length);
+    _checkpoint(questionsLength: _questions.length);
     FeedbackService.hint(controller, question.hint);
   }
 
   void _restart() {
-    final questions = BrightQuestScope.contentOf(context)
-        .mathQuestionsForClass(_classNumber, difficulty: _difficulty);
-    BrightQuestScope.of(context).restartActiveGameSession(
+    final repository = BrightQuestScope.contentOf(context);
+    final controller = BrightQuestScope.of(context);
+    var nextPlan = _missionRunPlan;
+    var nextQuestions = _questions;
+    final level = widget.learningLevel;
+    if (level != null && _missionRunPlan != null) {
+      nextPlan = const MissionRunSessionCoordinator().createReplay(
+        repository: repository,
+        level: level,
+        previousPlan: _missionRunPlan!,
+        history: controller.missionExposureHistoryFor(level),
+        learningState: controller.learningState,
+        levelProgress: controller.levelStatsFor(level.id),
+        gameProgress: controller.statsFor(level.gameId),
+        trainingItemCount: _trainingItemCount,
+        gameItemCount: _gameItemCount,
+      );
+      if (nextPlan.hasContentShortfall || nextPlan.hasTrainingGameOverlap) {
+        throw StateError('Fresh Math Market replay allocation is invalid.');
+      }
+      nextQuestions = _questionsForPlan(repository, nextPlan);
+    } else if (widget.endlessPractice && _missionRunPlan != null) {
+      nextPlan = const EndlessPracticeCoordinator().createNextRound(
+        repository: repository,
+        previousPlan: _missionRunPlan!,
+        history: controller.missionExposureHistoryForGame(
+          classNumber: _classNumber,
+          gameId: 'math_market',
+        ),
+        learningState: controller.learningState,
+        gameProgress: controller.statsFor('math_market'),
+      );
+      nextQuestions = _questionsForPlan(repository, nextPlan);
+    } else {
+      nextQuestions = repository.mathQuestionsForClass(
+        _classNumber,
+        difficulty: _difficulty,
+      );
+    }
+    controller.restartActiveGameSession(
       gameId: 'math_market',
       classNumber: _classNumber,
       difficulty: _difficulty,
-      maxScore: questions.length,
+      maxScore: nextQuestions.length,
       learningLevel: widget.learningLevel,
+      sessionData: nextPlan == null
+          ? const <String, Object?>{}
+          : const MissionRunSessionCoordinator().sessionDataFor(nextPlan),
     );
     setState(() {
+      _missionRunPlan = nextPlan;
+      _questions = nextQuestions;
       questionIndex = 0;
       score = 0;
       _attemptSerial = 0;
@@ -224,19 +319,57 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
     );
   }
 
+  List<MathQuestion> _questionsForPlan(
+    ContentRepository repository,
+    MissionRunPlan plan,
+  ) {
+    const planner = MissionRunPlanner();
+    return List<MathQuestion>.unmodifiable(
+      plan.gameItems.map((item) {
+        final activity = planner.resolveCandidateActivity(
+          repository: repository,
+          candidate: item.candidate,
+        );
+        return _mathQuestionFromActivity(activity);
+      }),
+    );
+  }
+
+  MathQuestion _mathQuestionFromActivity(ContentActivity activity) {
+    if (activity.gameId != 'math_market') {
+      throw StateError('${activity.id} is not Math Market content.');
+    }
+    final answer = activity.payload['answer'];
+    final choices = activity.payload['choices'];
+    final hint = activity.payload['hint'];
+    if (answer is! int || choices is! List || hint is! String) {
+      throw StateError('Invalid Math Market payload for ${activity.id}.');
+    }
+    return MathQuestion(
+      activity.prompt,
+      answer,
+      choices.whereType<num>().map((value) => value.toInt()).toList(),
+      hint,
+      id: activity.legacyContentId,
+      topicId: activity.topicId,
+      difficulty: activity.difficulty,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final classNumber = _classNumber;
-    final questions = BrightQuestScope.contentOf(context)
-        .mathQuestionsForClass(classNumber, difficulty: _difficulty);
+    final questions = _questions;
     final question = questions[questionIndex];
 
     return GameScaffold(
       learningLevel: widget.learningLevel,
       title: 'Math Market',
-      subtitle: widget.learningLevel == null
-          ? 'Class $classNumber • Adaptive level $_difficulty • Solve and shop'
-          : 'Class $classNumber • ${widget.learningLevel!.typeLabel} • ${widget.learningLevel!.title}',
+      subtitle: widget.endlessPractice
+          ? 'Class $classNumber • ∞ Endless Practice • 10 rotating missions'
+          : widget.learningLevel == null
+              ? 'Class $classNumber • Adaptive level $_difficulty • Solve and shop'
+              : 'Class $classNumber • ${widget.learningLevel!.typeLabel} • ${widget.learningLevel!.title}',
       color: const Color(0xFF3E88F7),
       voicePrompt: question.text,
       voiceChoices: question.choices,
@@ -290,11 +423,13 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
           if (finished) ...[
             const SizedBox(height: 14),
             MissionSummaryCard(
-                learningLevel: widget.learningLevel,
-                score: score,
-                maxScore: questions.length,
-                reward: missionReward,
-                onReplay: _restart),
+              learningLevel: widget.learningLevel,
+              score: score,
+              maxScore: questions.length,
+              reward: missionReward,
+              onReplay: _restart,
+              replayLabel: widget.endlessPractice ? 'Next 10 Missions' : null,
+            ),
           ] else ...[
             const SizedBox(height: 14),
             Wrap(
@@ -413,6 +548,7 @@ class _QuestionBoard extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(question.text,
+                        key: const Key('math_market_question_prompt'),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.white,

@@ -6,6 +6,10 @@ import '../../app/brightquest_scope.dart';
 import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
 import '../../core/learning/game_evidence_adapter.dart';
+import '../../core/learning/endless_practice_coordinator.dart';
+import '../../core/learning/mission_run_game_content.dart';
+import '../../core/learning/mission_run_models.dart';
+import '../../core/learning/mission_run_session_coordinator.dart';
 import '../../core/learning/learning_models.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
@@ -17,8 +21,13 @@ import '../../widgets/bright_motion.dart';
 import '../../widgets/bright_widgets.dart';
 
 class ScienceLabScreen extends StatefulWidget {
-  const ScienceLabScreen({this.learningLevel, super.key});
+  const ScienceLabScreen({
+    this.learningLevel,
+    this.endlessPractice = false,
+    super.key,
+  });
   final LearningLevel? learningLevel;
+  final bool endlessPractice;
 
   @override
   State<ScienceLabScreen> createState() => _ScienceLabScreenState();
@@ -39,6 +48,12 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
   int _attemptSerial = 0;
   bool _answerInFlight = false;
   bool _sessionConfigured = false;
+  MissionRunPlan? _missionRunPlan;
+  List<ScienceQuizQuestion> _questions = const <ScienceQuizQuestion>[];
+
+  bool get _experimentRequired => !widget.endlessPractice;
+
+  int get _maxScore => _questions.length + (_experimentRequired ? 1 : 0);
 
   @override
   void didChangeDependencies() {
@@ -50,20 +65,64 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
     _difficulty = controller.resumableDifficulty(
       gameId: 'science_lab',
       classNumber: _classNumber,
-      fallbackDifficulty: widget.learningLevel?.difficulty ??
-          controller.recommendedDifficulty('science_lab'),
+      fallbackDifficulty: widget.endlessPractice
+          ? 3
+          : widget.learningLevel?.difficulty ??
+              controller.recommendedDifficulty('science_lab'),
       learningLevelId: widget.learningLevel?.id,
     );
-    final questions = BrightQuestScope.contentOf(context)
-        .scienceQuestionsForClass(_classNumber, difficulty: _difficulty);
+    final repository = BrightQuestScope.contentOf(context);
+    final existingCheckpoint = controller.gameSessionFor(
+      gameId: 'science_lab',
+      classNumber: _classNumber,
+      learningLevelId: widget.learningLevel?.id,
+    );
+    final level = widget.learningLevel;
+    if (level != null) {
+      _missionRunPlan = const MissionRunSessionCoordinator().restore(
+        repository: repository,
+        level: level,
+        data: existingCheckpoint?.data ?? const <String, Object?>{},
+      );
+    } else if (widget.endlessPractice) {
+      _missionRunPlan = const EndlessPracticeCoordinator().createOrRestore(
+        repository: repository,
+        classNumber: _classNumber,
+        gameId: 'science_lab',
+        checkpoint: existingCheckpoint,
+        history: controller.missionExposureHistoryForGame(
+          classNumber: _classNumber,
+          gameId: 'science_lab',
+        ),
+        learningState: controller.learningState,
+        gameProgress: controller.statsFor('science_lab'),
+      );
+    }
+    _questions = _missionRunPlan == null
+        ? repository.scienceQuestionsForClass(
+            _classNumber,
+            difficulty: _difficulty,
+          )
+        : const MissionRunGameContent().scienceQuestions(
+            repository: repository,
+            plan: _missionRunPlan!,
+          );
+    if (_questions.isEmpty) {
+      throw StateError('Science Lab cannot start without quiz questions.');
+    }
     final checkpoint = controller.beginOrResumeGameSession(
       gameId: 'science_lab',
       classNumber: _classNumber,
       difficulty: _difficulty,
-      maxScore: questions.length + 1,
+      maxScore: _maxScore,
       learningLevel: widget.learningLevel,
+      sessionData: _missionRunPlan == null
+          ? const <String, Object?>{}
+          : const MissionRunSessionCoordinator().sessionDataFor(
+              _missionRunPlan!,
+            ),
     );
-    quizIndex = checkpoint.cursor.clamp(0, questions.length - 1).toInt();
+    quizIndex = checkpoint.cursor.clamp(0, _questions.length - 1).toInt();
     quizScore = (checkpoint.data['quizScore'] as num?)?.toInt() ?? 0;
     ingredients
       ..clear()
@@ -213,20 +272,24 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
   ) async {
     if (selectedQuiz == null) return;
     if (quizIndex == questions.length - 1) {
-      if (!experimentRecorded) {
+      if (_experimentRequired && !experimentRecorded) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text(
                 'Complete the fizzing experiment before finishing the lab.')));
         return;
       }
-      final totalScore = quizScore + 1;
+      final totalScore =
+          quizScore + (_experimentRequired && experimentRecorded ? 1 : 0);
       final controller = BrightQuestScope.of(context);
       final reward = await controller.completeRunSafely(
         gameId: 'science_lab',
-        fallbackMissionId: 'science_lab:c$classNumber:d$_difficulty:core_run',
+        fallbackMissionId: widget.endlessPractice
+            ? 'endless_practice:c$classNumber:science_lab'
+            : 'science_lab:c$classNumber:d$_difficulty:core_run',
         learningLevel: widget.learningLevel,
+        practiceOnly: widget.endlessPractice,
         score: totalScore,
-        maxScore: questions.length + 1,
+        maxScore: questions.length + (_experimentRequired ? 1 : 0),
       );
       if (!mounted) return;
       FeedbackService.complete(controller, reward: reward);
@@ -246,16 +309,59 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
   }
 
   void _restart() {
-    final questions = BrightQuestScope.contentOf(context)
-        .scienceQuestionsForClass(_classNumber, difficulty: _difficulty);
-    BrightQuestScope.of(context).restartActiveGameSession(
+    final repository = BrightQuestScope.contentOf(context);
+    final controller = BrightQuestScope.of(context);
+    var nextPlan = _missionRunPlan;
+    var nextQuestions = _questions;
+    final level = widget.learningLevel;
+    if (level != null && _missionRunPlan != null) {
+      nextPlan = const MissionRunSessionCoordinator().createWorldReplay(
+        repository: repository,
+        level: level,
+        previousPlan: _missionRunPlan!,
+        history: controller.missionExposureHistoryFor(level),
+        learningState: controller.learningState,
+        levelProgress: controller.levelStatsFor(level.id),
+        gameProgress: controller.statsFor(level.gameId),
+      );
+      nextQuestions = const MissionRunGameContent().scienceQuestions(
+        repository: repository,
+        plan: nextPlan,
+      );
+    } else if (widget.endlessPractice && _missionRunPlan != null) {
+      nextPlan = const EndlessPracticeCoordinator().createNextRound(
+        repository: repository,
+        previousPlan: _missionRunPlan!,
+        history: controller.missionExposureHistoryForGame(
+          classNumber: _classNumber,
+          gameId: 'science_lab',
+        ),
+        learningState: controller.learningState,
+        gameProgress: controller.statsFor('science_lab'),
+      );
+      nextQuestions = const MissionRunGameContent().scienceQuestions(
+        repository: repository,
+        plan: nextPlan,
+      );
+    } else {
+      nextQuestions = repository.scienceQuestionsForClass(
+        _classNumber,
+        difficulty: _difficulty,
+      );
+    }
+    controller.restartActiveGameSession(
       gameId: 'science_lab',
       classNumber: _classNumber,
       difficulty: _difficulty,
-      maxScore: questions.length + 1,
+      maxScore: nextQuestions.length + (_experimentRequired ? 1 : 0),
       learningLevel: widget.learningLevel,
+      sessionData: nextPlan == null
+          ? const <String, Object?>{}
+          : const MissionRunSessionCoordinator().sessionDataFor(nextPlan),
     );
     setState(() {
+      _missionRunPlan = nextPlan;
+      _questions = nextQuestions;
       ingredients.clear();
       quizIndex = 0;
       quizScore = 0;
@@ -270,15 +376,13 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
   }
 
   void _checkpoint() {
-    final questions = BrightQuestScope.contentOf(context)
-        .scienceQuestionsForClass(_classNumber, difficulty: _difficulty);
     BrightQuestScope.of(context).checkpointGameSession(
       gameId: 'science_lab',
       classNumber: _classNumber,
       difficulty: _difficulty,
       cursor: quizIndex,
-      score: quizScore + (experimentRecorded ? 1 : 0),
-      maxScore: questions.length + 1,
+      score: quizScore + (_experimentRequired && experimentRecorded ? 1 : 0),
+      maxScore: _maxScore,
       learningLevel: widget.learningLevel,
       data: <String, Object?>{
         'attemptSerial': _attemptSerial,
@@ -294,8 +398,7 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
   @override
   Widget build(BuildContext context) {
     final classNumber = _classNumber;
-    final questions = BrightQuestScope.contentOf(context)
-        .scienceQuestionsForClass(classNumber, difficulty: _difficulty);
+    final questions = _questions;
     final reaction = BrightQuestScope.contentOf(context)
         .scienceReactionForIngredients(classNumber, ingredients);
     final question = questions[quizIndex];
@@ -303,50 +406,61 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
     return GameScaffold(
       learningLevel: widget.learningLevel,
       title: 'Science Lab',
-      subtitle: widget.learningLevel == null
-          ? 'Class $classNumber • Adaptive level $_difficulty • Mix & Discover'
-          : 'Class $classNumber • ${widget.learningLevel!.typeLabel} • ${widget.learningLevel!.title}',
+      subtitle: widget.endlessPractice
+          ? 'Class $classNumber • ∞ Endless Practice • 10 rotating missions'
+          : widget.learningLevel == null
+              ? 'Class $classNumber • Adaptive level $_difficulty • Mix & Discover'
+              : 'Class $classNumber • ${widget.learningLevel!.typeLabel} • ${widget.learningLevel!.title}',
       color: const Color(0xFF7B4EEB),
       voicePrompt: question.question,
       voiceChoices: question.choices,
       child: ListView(
         padding: const EdgeInsets.fromLTRB(18, 10, 18, 28),
         children: [
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final wide = constraints.maxWidth >= 760;
-              final experiment = _ExperimentPanel(
-                ingredients: ingredients,
-                reactionEmoji: reaction.emoji,
-                recorded: experimentRecorded,
-                onAdd: _addIngredient,
-                onClear: _clearExperiment,
-              );
-              final result = _ExperimentResult(
-                title: reaction.title,
-                explanation: reaction.explanation,
-                emoji: reaction.emoji,
-                success: reaction.id == 'fizz',
-                recorded: experimentRecorded,
-              );
-              if (!wide)
-                return Column(
-                    children: [experiment, const SizedBox(height: 12), result]);
-              return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: experiment),
-                    const SizedBox(width: 14),
-                    Expanded(child: result)
-                  ]);
-            },
-          ),
-          const SizedBox(height: 16),
           GameProgressStrip(
               current: quizIndex + 1,
               total: questions.length,
               score: quizScore),
           const SizedBox(height: 14),
+          if (_experimentRequired) ...[
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final wide = constraints.maxWidth >= 760;
+                final experiment = _ExperimentPanel(
+                  ingredients: ingredients,
+                  reactionEmoji: reaction.emoji,
+                  recorded: experimentRecorded,
+                  onAdd: _addIngredient,
+                  onClear: _clearExperiment,
+                );
+                final result = _ExperimentResult(
+                  title: reaction.title,
+                  explanation: reaction.explanation,
+                  emoji: reaction.emoji,
+                  success: reaction.id == 'fizz',
+                  recorded: experimentRecorded,
+                );
+                if (!wide) {
+                  return Column(
+                    children: [
+                      experiment,
+                      const SizedBox(height: 12),
+                      result,
+                    ],
+                  );
+                }
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: experiment),
+                    const SizedBox(width: 14),
+                    Expanded(child: result),
+                  ],
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+          ],
           BrightSurface(
             borderColor: const Color(0xFF7B4EEB).withValues(alpha: 0.16),
             child: Column(
@@ -454,11 +568,14 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
           const SizedBox(height: 16),
           if (finished)
             MissionSummaryCard(
-                learningLevel: widget.learningLevel,
-                score: quizScore + 1,
-                maxScore: questions.length + 1,
-                reward: missionReward,
-                onReplay: _restart)
+              learningLevel: widget.learningLevel,
+              score: quizScore +
+                  (_experimentRequired && experimentRecorded ? 1 : 0),
+              maxScore: questions.length + (_experimentRequired ? 1 : 0),
+              reward: missionReward,
+              onReplay: _restart,
+              replayLabel: widget.endlessPractice ? 'Next 10 Missions' : null,
+            )
           else
             Align(
               alignment: Alignment.centerRight,
@@ -493,6 +610,26 @@ String _scienceChoiceEmoji(String value) {
   return '🔬';
 }
 
+({Color? coat, Color? goggles}) _scienceMascotSkin(BuildContext context) {
+  final cosmetic =
+      BrightQuestScope.of(context).equippedCosmeticForGame('science_lab');
+  return switch (cosmetic?.id) {
+    'lion_lab_coat' => (
+        coat: const Color(0xFFDCEEFF),
+        goggles: const Color(0xFF2368B3),
+      ),
+    'science_nebula_coat' => (
+        coat: const Color(0xFF574590),
+        goggles: const Color(0xFF64DCEB),
+      ),
+    'science_rainbow_goggles' => (
+        coat: const Color(0xFFFFEFF9),
+        goggles: const Color(0xFFE33C9A),
+      ),
+    _ => (coat: null, goggles: null),
+  };
+}
+
 class _ExperimentPanel extends StatelessWidget {
   const _ExperimentPanel(
       {required this.ingredients,
@@ -508,6 +645,7 @@ class _ExperimentPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mascotSkin = _scienceMascotSkin(context);
     const choices = <({String label, String emoji})>[
       (label: 'Water', emoji: '💧'),
       (label: 'Salt', emoji: '🧂'),
@@ -558,12 +696,17 @@ class _ExperimentPanel extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Positioned(
+                Positioned(
                     right: 6,
                     bottom: -3,
                     child: SizedBox(
                         width: 95,
-                        child: BrightLionMascot(size: 90, scientist: true))),
+                        child: BrightLionMascot(
+                          size: 90,
+                          scientist: true,
+                          scientistCoatColor: mascotSkin.coat,
+                          scientistGoggleColor: mascotSkin.goggles,
+                        ))),
               ],
             ),
           ),
@@ -618,61 +761,68 @@ class _ExperimentResult extends StatelessWidget {
   final bool recorded;
 
   @override
-  Widget build(BuildContext context) => BrightSurface(
-        color: success ? const Color(0xFFF2EBFF) : Colors.white,
-        borderColor:
-            success ? const Color(0xFFB8A4FF) : const Color(0x14000000),
-        child: Column(
-          children: [
-            const BrightPill(
-                icon: Icons.auto_awesome_rounded,
-                label: 'EXPERIMENT RESULT',
-                color: Color(0xFF2C8A4C),
-                background: Color(0xFFE7F7EC)),
-            const SizedBox(height: 16),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                      colors: [Color(0xFFE8D8FF), Color(0xFFF8ECFF)]),
-                  borderRadius: BorderRadius.circular(22)),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: BrightValuePop(
-                      value: emoji,
-                      child: Text(emoji,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 64)),
-                    ),
+  Widget build(BuildContext context) {
+    final mascotSkin = _scienceMascotSkin(context);
+    return BrightSurface(
+      color: success ? const Color(0xFFF2EBFF) : Colors.white,
+      borderColor: success ? const Color(0xFFB8A4FF) : const Color(0x14000000),
+      child: Column(
+        children: [
+          const BrightPill(
+              icon: Icons.auto_awesome_rounded,
+              label: 'EXPERIMENT RESULT',
+              color: Color(0xFF2C8A4C),
+              background: Color(0xFFE7F7EC)),
+          const SizedBox(height: 16),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                    colors: [Color(0xFFE8D8FF), Color(0xFFF8ECFF)]),
+                borderRadius: BorderRadius.circular(22)),
+            child: Row(
+              children: [
+                Expanded(
+                  child: BrightValuePop(
+                    value: emoji,
+                    child: Text(emoji,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 64)),
                   ),
-                  const SizedBox(width: 8),
-                  const SizedBox(
-                      width: 92,
-                      child: BrightLionMascot(size: 88, scientist: true)),
-                ],
-              ),
+                ),
+                const SizedBox(width: 8),
+                SizedBox(
+                    width: 92,
+                    child: BrightLionMascot(
+                      size: 88,
+                      scientist: true,
+                      scientistCoatColor: mascotSkin.coat,
+                      scientistGoggleColor: mascotSkin.goggles,
+                    )),
+              ],
             ),
-            const SizedBox(height: 10),
-            Text(title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    fontSize: 21,
-                    fontWeight: FontWeight.w900,
-                    color: AppTheme.navy)),
-            const SizedBox(height: 7),
-            Text(explanation,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: AppTheme.inkMuted, height: 1.4)),
-            const SizedBox(height: 12),
-            BrightMascotBubble(
-                message: recorded
-                    ? 'Great discovery! Now finish the quiz.'
-                    : 'Try different pairs and watch what changes!',
-                emoji: '🧪',
-                compact: true),
-          ],
-        ),
-      );
+          ),
+          const SizedBox(height: 10),
+          Text(title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  fontSize: 21,
+                  fontWeight: FontWeight.w900,
+                  color: AppTheme.navy)),
+          const SizedBox(height: 7),
+          Text(explanation,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: AppTheme.inkMuted, height: 1.4)),
+          const SizedBox(height: 12),
+          BrightMascotBubble(
+              message: recorded
+                  ? 'Great discovery! Now finish the quiz.'
+                  : 'Try different pairs and watch what changes!',
+              emoji: '🧪',
+              compact: true),
+        ],
+      ),
+    );
+  }
 }

@@ -80,9 +80,13 @@ class ClassSkillStudioScreen extends StatelessWidget {
                       competency: competency,
                       activities: repository
                           .activitiesForCompetency(classNumber, competency.id)
-                          .where(
-                              (activity) => activity.gameId == 'skill_studio')
+                          .where((activity) => activity.gameId == 'skill_studio')
                           .toList(growable: false),
+                      extendedPractice: repository
+                          .supportsGeneratedSkillStudioPractice(
+                        classNumber,
+                        competency.id,
+                      ),
                     ),
                 ],
               ],
@@ -126,11 +130,13 @@ class _CompetencyCard extends StatelessWidget {
     required this.classNumber,
     required this.competency,
     required this.activities,
+    required this.extendedPractice,
   });
 
   final int classNumber;
   final CompetencyContract competency;
   final List<ContentActivity> activities;
+  final bool extendedPractice;
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +154,7 @@ class _CompetencyCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       child: Semantics(
         button: true,
-        label: '${competency.title}. $studioLabel',
+        label: '${competency.title}. $studioLabel${extendedPractice ? '. Extended fresh practice available.' : ''}',
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
           onTap: () => Navigator.of(context).push(
@@ -179,10 +185,9 @@ class _CompetencyCard extends StatelessWidget {
                     children: [
                       Text(
                         competency.title,
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w900,
+                            ),
                       ),
                       const SizedBox(height: 5),
                       Text(competency.objective),
@@ -200,6 +205,11 @@ class _CompetencyCard extends StatelessWidget {
                             ),
                             label: Text(studioLabel),
                           ),
+                          if (extendedPractice)
+                            const Chip(
+                              avatar: Icon(Icons.all_inclusive_rounded, size: 18),
+                              label: Text('Extended fresh practice'),
+                            ),
                           if (competency.review.status !=
                               ContentReviewState.approved)
                             const Chip(

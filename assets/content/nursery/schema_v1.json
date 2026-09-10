@@ -36,7 +36,10 @@
     "Tracing is non-mastery motor practice and does not claim handwriting correctness.",
     "Paid eligibility must remain false until external release gates are recorded.",
     "Letter discovery uses short one-shot motion with a static reduced-motion fallback.",
-    "Multiple picture words per letter are authored content; deterministic review may select among them."
+    "Multiple picture words per letter are authored content; deterministic review may select among them.",
+    "Nursery domain visuals use semantic visualKey values; raw emoji are not authored content.",
+    "Visual-heavy activities store semantic payload.visualTokens separately from child-facing prompt text.",
+    "Canonical option IDs and correctness rules use semantic values; legacy pictograms are accepted only by the compatibility adapter."
   ],
   "letterAssociationContract": {
     "requiredExamplesPerLetter": 8,
@@ -53,7 +56,7 @@
     "notes": [
       "Each A-Z letter keeps at least eight authored discovery examples in the current v1 pack.",
       "The v1 Nursery pack must contain at least 200 unique local picture-card assets in total.",
-      "Picture-card assets are bundled locally; picture text remains a fallback.",
+      "Picture-card assets are bundled locally; picture text is a semantic lowercase fallback, never an emoji.",
       "Beginning-sound generators only use examples explicitly marked eligible.",
       "Discovery browsing is teaching-only and never contributes mastery evidence.",
       "soundPracticeEligible and beginningSoundEligible are evidence gates, not automatic consequences of spelling.",

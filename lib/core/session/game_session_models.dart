@@ -148,6 +148,14 @@ class GameSessionCheckpoint {
 
   bool get isResumable => stage != GameSessionStage.result || reward != null;
 
+  /// True only while the child is actively inside a lesson/game transaction.
+  ///
+  /// Completed result checkpoints remain resumable from the dedicated resume
+  /// surface so the reward/result screen can be restored after process death,
+  /// but an explicit World-stage launch must treat them as finished and create
+  /// a fresh encounter instead of reopening the previous result.
+  bool get isInProgress => stage != GameSessionStage.result;
+
   GameSessionCheckpoint copyWith({
     int? classNumber,
     String? gameId,

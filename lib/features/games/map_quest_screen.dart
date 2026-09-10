@@ -5,15 +5,24 @@ import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
 import '../../core/learning/adaptive_difficulty_models.dart';
 import '../../core/learning/game_evidence_adapter.dart';
+import '../../core/learning/endless_practice_coordinator.dart';
+import '../../core/learning/mission_run_game_content.dart';
+import '../../core/learning/mission_run_models.dart';
+import '../../core/learning/mission_run_session_coordinator.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
 import '../../core/session/game_session_models.dart';
 import '../../widgets/bright_widgets.dart';
 
 class MapQuestScreen extends StatefulWidget {
-  const MapQuestScreen({this.learningLevel, super.key});
+  const MapQuestScreen({
+    this.learningLevel,
+    this.endlessPractice = false,
+    super.key,
+  });
 
   final LearningLevel? learningLevel;
+  final bool endlessPractice;
 
   @override
   State<MapQuestScreen> createState() => _MapQuestScreenState();
@@ -34,6 +43,8 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
   int _attemptSerial = 0;
   bool _answerInFlight = false;
   bool _sessionConfigured = false;
+  MissionRunPlan? _missionRunPlan;
+  List<MapQuestion> _questions = const <MapQuestion>[];
 
   @override
   void didChangeDependencies() {
@@ -45,21 +56,65 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
     _difficulty = controller.resumableDifficulty(
       gameId: 'map_quest',
       classNumber: _classNumber,
-      fallbackDifficulty: widget.learningLevel?.difficulty ??
-          controller.recommendedDifficulty('map_quest'),
+      fallbackDifficulty: widget.endlessPractice
+          ? 3
+          : widget.learningLevel?.difficulty ??
+              controller.recommendedDifficulty('map_quest'),
       learningLevelId: widget.learningLevel?.id,
     );
-    final questions = BrightQuestScope.contentOf(context)
-        .mapQuestionsForClass(_classNumber, difficulty: _difficulty);
+    final repository = BrightQuestScope.contentOf(context);
+    final existingCheckpoint = controller.gameSessionFor(
+      gameId: 'map_quest',
+      classNumber: _classNumber,
+      learningLevelId: widget.learningLevel?.id,
+    );
+    final level = widget.learningLevel;
+    if (level != null) {
+      _missionRunPlan = const MissionRunSessionCoordinator().restore(
+        repository: repository,
+        level: level,
+        data: existingCheckpoint?.data ?? const <String, Object?>{},
+      );
+    } else if (widget.endlessPractice) {
+      _missionRunPlan = const EndlessPracticeCoordinator().createOrRestore(
+        repository: repository,
+        classNumber: _classNumber,
+        gameId: 'map_quest',
+        checkpoint: existingCheckpoint,
+        history: controller.missionExposureHistoryForGame(
+          classNumber: _classNumber,
+          gameId: 'map_quest',
+        ),
+        learningState: controller.learningState,
+        gameProgress: controller.statsFor('map_quest'),
+      );
+    }
+    _questions = _missionRunPlan == null
+        ? repository.mapQuestionsForClass(
+            _classNumber,
+            difficulty: _difficulty,
+          )
+        : const MissionRunGameContent().mapQuestions(
+            repository: repository,
+            plan: _missionRunPlan!,
+          );
+    if (_questions.isEmpty) {
+      throw StateError('Map Quest cannot start without questions.');
+    }
     final checkpoint = controller.beginOrResumeGameSession(
       gameId: 'map_quest',
       classNumber: _classNumber,
       difficulty: _difficulty,
-      maxScore: questions.length,
+      maxScore: _questions.length,
       learningLevel: widget.learningLevel,
+      sessionData: _missionRunPlan == null
+          ? const <String, Object?>{}
+          : const MissionRunSessionCoordinator().sessionDataFor(
+              _missionRunPlan!,
+            ),
     );
-    questionIndex = checkpoint.cursor.clamp(0, questions.length - 1).toInt();
-    score = checkpoint.score.clamp(0, questions.length).toInt();
+    questionIndex = checkpoint.cursor.clamp(0, _questions.length - 1).toInt();
+    score = checkpoint.score.clamp(0, _questions.length).toInt();
     selected = checkpoint.data['selected'] as String?;
     checked = checkpoint.data['checked'] as bool? ?? false;
     correct = checkpoint.data['correct'] as bool?;
@@ -134,8 +189,11 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
       final controller = BrightQuestScope.of(context);
       final reward = await controller.completeRunSafely(
         gameId: 'map_quest',
-        fallbackMissionId: 'map_quest:c$classNumber:d$_difficulty:core_run',
+        fallbackMissionId: widget.endlessPractice
+            ? 'endless_practice:c$classNumber:map_quest'
+            : 'map_quest:c$classNumber:d$_difficulty:core_run',
         learningLevel: widget.learningLevel,
+        practiceOnly: widget.endlessPractice,
         score: score,
         maxScore: questions.length,
       );
@@ -159,16 +217,59 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
   }
 
   void _restart() {
-    final questions = BrightQuestScope.contentOf(context)
-        .mapQuestionsForClass(_classNumber, difficulty: _difficulty);
-    BrightQuestScope.of(context).restartActiveGameSession(
+    final repository = BrightQuestScope.contentOf(context);
+    final controller = BrightQuestScope.of(context);
+    var nextPlan = _missionRunPlan;
+    var nextQuestions = _questions;
+    final level = widget.learningLevel;
+    if (level != null && _missionRunPlan != null) {
+      nextPlan = const MissionRunSessionCoordinator().createWorldReplay(
+        repository: repository,
+        level: level,
+        previousPlan: _missionRunPlan!,
+        history: controller.missionExposureHistoryFor(level),
+        learningState: controller.learningState,
+        levelProgress: controller.levelStatsFor(level.id),
+        gameProgress: controller.statsFor(level.gameId),
+      );
+      nextQuestions = const MissionRunGameContent().mapQuestions(
+        repository: repository,
+        plan: nextPlan,
+      );
+    } else if (widget.endlessPractice && _missionRunPlan != null) {
+      nextPlan = const EndlessPracticeCoordinator().createNextRound(
+        repository: repository,
+        previousPlan: _missionRunPlan!,
+        history: controller.missionExposureHistoryForGame(
+          classNumber: _classNumber,
+          gameId: 'map_quest',
+        ),
+        learningState: controller.learningState,
+        gameProgress: controller.statsFor('map_quest'),
+      );
+      nextQuestions = const MissionRunGameContent().mapQuestions(
+        repository: repository,
+        plan: nextPlan,
+      );
+    } else {
+      nextQuestions = repository.mapQuestionsForClass(
+        _classNumber,
+        difficulty: _difficulty,
+      );
+    }
+    controller.restartActiveGameSession(
       gameId: 'map_quest',
       classNumber: _classNumber,
       difficulty: _difficulty,
-      maxScore: questions.length,
+      maxScore: nextQuestions.length,
       learningLevel: widget.learningLevel,
+      sessionData: nextPlan == null
+          ? const <String, Object?>{}
+          : const MissionRunSessionCoordinator().sessionDataFor(nextPlan),
     );
     setState(() {
+      _missionRunPlan = nextPlan;
+      _questions = nextQuestions;
       questionIndex = 0;
       score = 0;
       _attemptSerial = 0;
@@ -183,15 +284,13 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
   }
 
   void _checkpoint() {
-    final questions = BrightQuestScope.contentOf(context)
-        .mapQuestionsForClass(_classNumber, difficulty: _difficulty);
     BrightQuestScope.of(context).checkpointGameSession(
       gameId: 'map_quest',
       classNumber: _classNumber,
       difficulty: _difficulty,
       cursor: questionIndex,
       score: score,
-      maxScore: questions.length,
+      maxScore: _questions.length,
       learningLevel: widget.learningLevel,
       data: <String, Object?>{
         'attemptSerial': _attemptSerial,
@@ -206,16 +305,17 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
   @override
   Widget build(BuildContext context) {
     final classNumber = _classNumber;
-    final questions = BrightQuestScope.contentOf(context)
-        .mapQuestionsForClass(classNumber, difficulty: _difficulty);
+    final questions = _questions;
     final question = questions[questionIndex];
 
     return GameScaffold(
       learningLevel: widget.learningLevel,
       title: 'Map Quest',
-      subtitle: widget.learningLevel == null
-          ? 'Class $classNumber • Adaptive level $_difficulty • Explore India'
-          : 'Class $classNumber • ${widget.learningLevel!.typeLabel} • ${widget.learningLevel!.title}',
+      subtitle: widget.endlessPractice
+          ? 'Class $classNumber • ∞ Endless Practice • 10 rotating missions'
+          : widget.learningLevel == null
+              ? 'Class $classNumber • Adaptive level $_difficulty • Explore India'
+              : 'Class $classNumber • ${widget.learningLevel!.typeLabel} • ${widget.learningLevel!.title}',
       color: const Color(0xFF2B96E9),
       voicePrompt: question.question,
       voiceChoices: question.choices,
@@ -298,6 +398,7 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
               maxScore: questions.length,
               reward: missionReward,
               onReplay: _restart,
+              replayLabel: widget.endlessPractice ? 'Next 10 Missions' : null,
             )
           else
             Row(

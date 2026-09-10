@@ -19,8 +19,9 @@ NurseryContentPack _pack() => NurseryContentPack.fromJson(
       ),
     );
 
-Widget _host(GameController controller, Widget child) => MaterialApp(
-      home: buildTestScope(controller: controller, child: child),
+Widget _host(GameController controller, Widget child) => buildTestScope(
+      controller: controller,
+      child: MaterialApp(home: child),
     );
 
 void main() {
@@ -60,7 +61,7 @@ void main() {
       expect(next?.id, activities[2].id);
     });
 
-    testWidgets('skill opens with one obvious play action', (tester) async {
+    testWidgets('skill opens with a clear three-step learning journey', (tester) async {
       await tester.binding.setSurfaceSize(const Size(420, 760));
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -73,6 +74,10 @@ void main() {
       await tester.pump();
 
       expect(find.text('Let’s play!'), findsOneWidget);
+      expect(find.text('3 easy steps'), findsOneWidget);
+      expect(find.text('Study'), findsOneWidget);
+      expect(find.text('Guided Play'), findsOneWidget);
+      expect(find.text('Independent Game'), findsOneWidget);
       expect(find.text('Play Now'), findsOneWidget);
       expect(find.text('Learn First'), findsOneWidget);
       expect(find.text('More games'), findsOneWidget);
@@ -81,8 +86,7 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('correct answer continues straight to Next Game',
-        (tester) async {
+    testWidgets('correct answer continues straight to Next Game', (tester) async {
       await tester.binding.setSurfaceSize(const Size(420, 780));
       addTearDown(() => tester.binding.setSurfaceSize(null));
       final controller = GameController();
@@ -95,6 +99,7 @@ void main() {
         ),
       );
       await tester.pump();
+      await tester.ensureVisible(find.text('Play Now'));
       await tester.tap(find.text('Play Now'));
       await tester.pump(const Duration(milliseconds: 350));
 
@@ -103,7 +108,7 @@ void main() {
       await tester.ensureVisible(answer);
       await tester.tap(answer);
       await tester.pump();
-      expect(find.text('Great job! ⭐'), findsOneWidget);
+      expect(find.text('Great job!'), findsOneWidget);
       expect(find.text('Next Game'), findsOneWidget);
 
       final nextGame = find.text('Next Game');
@@ -119,23 +124,48 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(420, 760));
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
-      await tester
-          .pumpWidget(_host(GameController(), const NurseryHomeScreen()));
+      await tester.pumpWidget(_host(GameController(), const NurseryHomeScreen()));
       await tester.pump();
 
-      expect(find.text('Pick a picture and play!'), findsOneWidget);
-      expect(find.text('Pick a game world'), findsOneWidget);
+      expect(find.text('Ready to play?'), findsOneWidget);
+      expect(find.text('Choose a world'), findsOneWidget);
       expect(find.text('ABC & Sounds'), findsOneWidget);
       expect(find.text('Numbers'), findsOneWidget);
       expect(find.text('My World'), findsOneWidget);
       expect(find.text('Match & Think'), findsOneWidget);
       expect(find.text('Big letters A–Z'), findsNothing);
-      await tester.scrollUntilVisible(
-        find.text('ABC Picture Book'),
-        240,
-        scrollable: find.byType(Scrollable).first,
+      expect(find.text('ABC Picture Book'), findsNothing);
+
+      await tester.tap(find.byKey(const Key('nursery-world-alphabet')));
+      await tester.pumpAndSettle();
+
+      final worldList = find.byKey(
+        const PageStorageKey<String>('nursery-world-alphabet-paths'),
       );
-      expect(find.text('ABC Picture Book'), findsOneWidget);
+      expect(worldList, findsOneWidget);
+
+      final pictureBook = find.text('ABC Picture Book');
+      final worldScrollable = find.descendant(
+        of: worldList,
+        matching: find.byType(Scrollable),
+      );
+      expect(worldScrollable, findsOneWidget);
+
+      final scrollState = tester.state<ScrollableState>(worldScrollable);
+      for (var attempt = 0;
+          attempt < 6 && pictureBook.evaluate().isEmpty;
+          attempt += 1) {
+        final position = scrollState.position;
+        final remaining = position.maxScrollExtent - position.pixels;
+        if (remaining <= 0) {
+          break;
+        }
+        final delta = remaining < 220.0 ? remaining : 220.0;
+        position.jumpTo(position.pixels + delta);
+        await tester.pump();
+      }
+      await tester.pumpAndSettle();
+      expect(pictureBook, findsOneWidget);
       expect(find.textContaining('does not claim to score'), findsNothing);
       expect(find.text('A for Apple'), findsNothing);
       expect(tester.takeException(), isNull);

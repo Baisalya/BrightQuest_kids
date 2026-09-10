@@ -2,6 +2,7 @@ import '../content/content_activity.dart';
 import '../content/content_repository.dart';
 import 'evidence_engine.dart';
 import 'learning_models.dart';
+import 'mission_content_signature.dart';
 
 class DiagnosticEngine {
   const DiagnosticEngine({this.targetItemCount = 12});
@@ -12,8 +13,15 @@ class DiagnosticEngine {
     required ContentRepository repository,
     required int classNumber,
     required DateTime now,
+    Iterable<String> recentItemIds = const <String>[],
+    Iterable<String> recentContentFingerprints = const <String>[],
   }) {
-    final activities = _selectActivities(repository, classNumber);
+    final activities = _selectActivities(
+      repository,
+      classNumber,
+      recentItemIds: recentItemIds,
+      recentContentFingerprints: recentContentFingerprints,
+    );
     return DiagnosticProgress(
       classNumber: classNumber,
       itemIds: activities.map((item) => item.id).toList(growable: false),
@@ -24,8 +32,10 @@ class DiagnosticEngine {
 
   List<ContentActivity> _selectActivities(
     ContentRepository repository,
-    int classNumber,
-  ) {
+    int classNumber, {
+    required Iterable<String> recentItemIds,
+    required Iterable<String> recentContentFingerprints,
+  }) {
     final all = repository
         .activitiesForClass(classNumber)
         .where(_supportsDiagnosticInteraction)
@@ -40,22 +50,77 @@ class DiagnosticEngine {
       return a.id.compareTo(b.id);
     });
 
+    final recentIds = recentItemIds.toList(growable: false);
+    final recentFingerprints =
+        recentContentFingerprints.toList(growable: false);
     final chosen = <ContentActivity>[];
-    final seenCompetencies = <String>{};
+    final competencyOrder = <String>[];
     for (final activity in all) {
-      if (seenCompetencies.add(activity.competencyId)) {
-        chosen.add(activity);
-        if (chosen.length >= targetItemCount) break;
+      if (!competencyOrder.contains(activity.competencyId)) {
+        competencyOrder.add(activity.competencyId);
       }
     }
+    for (final competencyId in competencyOrder) {
+      final options = all
+          .where((activity) => activity.competencyId == competencyId)
+          .toList(growable: true)
+        ..sort((a, b) => _freshnessCompare(
+              a,
+              b,
+              recentIds: recentIds,
+              recentFingerprints: recentFingerprints,
+            ));
+      if (options.isNotEmpty) chosen.add(options.first);
+      if (chosen.length >= targetItemCount) break;
+    }
     if (chosen.length < targetItemCount) {
-      for (final activity in all) {
-        if (chosen.any((candidate) => candidate.id == activity.id)) continue;
+      final remainder = all
+          .where((activity) =>
+              !chosen.any((candidate) => candidate.id == activity.id))
+          .toList(growable: true)
+        ..sort((a, b) => _freshnessCompare(
+              a,
+              b,
+              recentIds: recentIds,
+              recentFingerprints: recentFingerprints,
+            ));
+      for (final activity in remainder) {
         chosen.add(activity);
         if (chosen.length >= targetItemCount) break;
       }
     }
     return List<ContentActivity>.unmodifiable(chosen);
+  }
+
+  int _freshnessCompare(
+    ContentActivity a,
+    ContentActivity b, {
+    required List<String> recentIds,
+    required List<String> recentFingerprints,
+  }) {
+    final visible = _recentPenalty(
+      recentFingerprints,
+      missionActivityFingerprint(a),
+    ).compareTo(
+      _recentPenalty(recentFingerprints, missionActivityFingerprint(b)),
+    );
+    if (visible != 0) return visible;
+    final exact = _recentPenalty(recentIds, a.id).compareTo(
+      _recentPenalty(recentIds, b.id),
+    );
+    if (exact != 0) return exact;
+    final subject = a.subject.compareTo(b.subject);
+    if (subject != 0) return subject;
+    final competency = a.competencyId.compareTo(b.competencyId);
+    if (competency != 0) return competency;
+    final difficulty = a.difficulty.compareTo(b.difficulty);
+    if (difficulty != 0) return difficulty;
+    return a.id.compareTo(b.id);
+  }
+
+  int _recentPenalty<T>(List<T> mostRecentFirst, T value) {
+    final index = mostRecentFirst.indexOf(value);
+    return index < 0 ? 0 : 100000 - index.clamp(0, 99999).toInt();
   }
 
   bool _supportsDiagnosticInteraction(ContentActivity activity) {

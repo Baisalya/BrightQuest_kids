@@ -1,4 +1,5 @@
 import '../curriculum/content_contract.dart';
+import 'nursery_legacy_visual_aliases.dart';
 
 class NurseryContentFormatException implements Exception {
   const NurseryContentFormatException(this.issues);
@@ -34,8 +35,8 @@ class NurseryCommercialContract {
         paidEligibility: json['paidEligibility'] as bool,
         paidEligibilityReason: json['paidEligibilityReason'] as String,
         plannedProductId: json['plannedProductId'] as String,
-        freeSampleActivityIds: List<String>.unmodifiable(
-            List<String>.from(json['freeSampleActivityIds'] as List)),
+        freeSampleActivityIds:
+            List<String>.unmodifiable(List<String>.from(json['freeSampleActivityIds'] as List)),
       );
 }
 
@@ -78,19 +79,21 @@ class NurseryDomain {
     required this.id,
     required this.title,
     required this.description,
-    required this.emoji,
+    required this.visualKey,
   });
 
   final String id;
   final String title;
   final String description;
-  final String emoji;
+  final String visualKey;
 
   factory NurseryDomain.fromJson(Map<String, dynamic> json) => NurseryDomain(
         id: json['id'] as String,
         title: json['title'] as String,
         description: json['description'] as String,
-        emoji: json['emoji'] as String,
+        // Legacy packs used an `emoji` field. Step 8 content writes only the
+        // semantic visual key, while the fallback keeps older fixtures readable.
+        visualKey: (json['visualKey'] ?? json['emoji'] ?? json['id']) as String,
       );
 }
 
@@ -119,11 +122,12 @@ class NurseryLetterExample {
         picture: json['picture'] as String,
         assetPath: json['assetPath'] as String? ?? '',
         soundCue: json['soundCue'] as String,
-        soundPracticeEligible: json['soundPracticeEligible'] as bool? ?? false,
+        soundPracticeEligible:
+            json['soundPracticeEligible'] as bool? ?? false,
         beginningSoundEligible:
             json['beginningSoundEligible'] as bool? ?? false,
-        displayPhrase:
-            json['displayPhrase'] as String? ?? "${json['word'] as String}",
+        displayPhrase: json['displayPhrase'] as String? ??
+            "${json['word'] as String}",
       );
 }
 
@@ -305,8 +309,13 @@ class NurseryActivity {
   bool get isTransfer => phase == 'transfer';
   bool get isTrace => interaction == 'trace';
 
-  factory NurseryActivity.fromJson(Map<String, dynamic> json) =>
-      NurseryActivity(
+  List<String> get visualTokens {
+    final raw = payload['visualTokens'];
+    if (raw is! List) return const <String>[];
+    return List<String>.unmodifiable(raw.whereType<String>());
+  }
+
+  factory NurseryActivity.fromJson(Map<String, dynamic> json) => NurseryActivity(
         id: json['id'] as String,
         skillId: json['skillId'] as String,
         phase: json['phase'] as String,
@@ -526,12 +535,10 @@ class NurseryContentValidator {
         error('Nursery purchaseModel must be oneTimePack.');
       }
       if (commercial['plannedProductId'] != NurseryContentPack.nurseryPackId) {
-        error(
-            'Nursery planned product ID must stay ${NurseryContentPack.nurseryPackId}.');
+        error('Nursery planned product ID must stay ${NurseryContentPack.nurseryPackId}.');
       }
       if (commercial['paidEligibility'] != false) {
-        error(
-            'Nursery paidEligibility must remain false until external gates pass.');
+        error('Nursery paidEligibility must remain false until external gates pass.');
       }
       final samples = commercial['freeSampleActivityIds'];
       if (samples is! List || samples.length != 4) {
@@ -543,8 +550,7 @@ class NurseryContentValidator {
     if (releaseGates is! Map) {
       error('releaseGates is required.');
     } else if (releaseGates.values.any((value) => value == true)) {
-      error(
-          'External Nursery release gates may not be pre-approved in source.');
+      error('External Nursery release gates may not be pre-approved in source.');
     }
 
     final domains = json['domains'];
@@ -559,11 +565,13 @@ class NurseryContentValidator {
         } else if (!domainIds.add(id)) {
           error('Duplicate Nursery domain: $id.');
         }
+        final visualKey = raw['visualKey'];
+        if (visualKey is! String || visualKey.trim().isEmpty) {
+          error('Nursery domain $id requires a semantic visualKey.');
+        }
       }
-      if (!domainIds.containsAll(_domains) ||
-          !_domains.containsAll(domainIds)) {
-        error(
-            'Nursery domains must contain alphabet, math, knowledge and thinking exactly once.');
+      if (!domainIds.containsAll(_domains) || !_domains.containsAll(domainIds)) {
+        error('Nursery domains must contain alphabet, math, knowledge and thinking exactly once.');
       }
     }
 
@@ -584,8 +592,7 @@ class NurseryContentValidator {
         final letter = raw['uppercase'];
         final examples = raw['examples'];
         if (letter is! String || examples is! List || examples.length < 8) {
-          error(
-              'Letter $letter must define at least eight discovery examples.');
+          error('Letter $letter must define at least eight discovery examples.');
           continue;
         }
         for (final example in examples.whereType<Map>()) {
@@ -620,16 +627,14 @@ class NurseryContentValidator {
           }
           if (assetPath is! String ||
               !assetPath.startsWith('assets/nursery/letter_cards/')) {
-            error(
-                'Letter $letter example $word requires a bundled Nursery asset path.');
+            error('Letter $letter example $word requires a bundled Nursery asset path.');
           } else if (!assetPaths.add(assetPath)) {
             error('Duplicate Nursery letter asset path: $assetPath.');
           }
         }
       }
       if (assetPaths.length < 200) {
-        error(
-            'Nursery A–Z discovery must provide at least 200 unique picture cards.');
+        error('Nursery A–Z discovery must provide at least 200 unique picture cards.');
       }
     }
 
@@ -676,10 +681,9 @@ class NurseryContentValidator {
     final activityIds = <String>{};
     final phasesBySkill = <String, List<String>>{};
     final activityPhaseById = <String, String>{};
-    final samples =
-        commercial is Map && commercial['freeSampleActivityIds'] is List
-            ? Set<String>.from(commercial['freeSampleActivityIds'] as List)
-            : <String>{};
+    final samples = commercial is Map && commercial['freeSampleActivityIds'] is List
+        ? Set<String>.from(commercial['freeSampleActivityIds'] as List)
+        : <String>{};
     if (activitiesRaw is! List || activitiesRaw.length < 128) {
       error('Nursery requires at least 128 authored activities.');
     } else {
@@ -753,32 +757,46 @@ class NurseryContentValidator {
       }
       final skillRaw = skillsRaw is List
           ? skillsRaw.whereType<Map>().cast<Map>().firstWhere(
-                (raw) => raw['id'] == skillId,
-                orElse: () => const <Object?, Object?>{},
-              )
+              (raw) => raw['id'] == skillId,
+              orElse: () => const <Object?, Object?>{},
+            )
           : const <Object?, Object?>{};
       final reviewActivityId = skillRaw['reviewActivityId'];
       if (reviewActivityId is! String || !refs.contains(reviewActivityId)) {
-        error(
-            'Skill $skillId reviewActivityId must reference one of its activities.');
+        error('Skill $skillId reviewActivityId must reference one of its activities.');
       } else if (activityPhaseById[reviewActivityId] != 'transfer') {
-        error(
-            'Skill $skillId reviewActivityId must point to its transfer activity.');
+        error('Skill $skillId reviewActivityId must point to its transfer activity.');
       }
       final phases = phasesBySkill[skillId] ?? const <String>[];
-      if (!phases.contains('guided'))
-        error('Skill $skillId has no guided activity.');
+      if (!phases.contains('guided')) error('Skill $skillId has no guided activity.');
       if (phases.where((phase) => phase == 'independent').length < 2) {
         error('Skill $skillId needs two independent activities.');
       }
-      if (!phases.contains('transfer'))
-        error('Skill $skillId has no transfer activity.');
+      if (!phases.contains('transfer')) error('Skill $skillId has no transfer activity.');
     }
     for (final id in samples) {
-      if (!activityIds.contains(id))
-        error('Free sample activity $id does not exist.');
+      if (!activityIds.contains(id)) error('Free sample activity $id does not exist.');
+    }
+
+    if (_containsLegacyEmojiDeep(json)) {
+      error(
+        'Nursery Step 8 content must use semantic visual tokens, not legacy emoji.',
+      );
     }
 
     return List<String>.unmodifiable(issues);
+  }
+
+  static bool _containsLegacyEmojiDeep(Object? value) {
+    if (value is String) return nurseryContainsLegacyEmoji(value);
+    if (value is List) return value.any(_containsLegacyEmojiDeep);
+    if (value is Map) {
+      return value.entries.any(
+        (entry) =>
+            _containsLegacyEmojiDeep(entry.key) ||
+            _containsLegacyEmojiDeep(entry.value),
+      );
+    }
+    return false;
   }
 }

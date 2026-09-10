@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import 'nursery_motion.dart';
+
 enum NurseryAssetReactionKind {
   pop,
   wag,
@@ -97,6 +99,10 @@ class NurseryAnimatedAsset extends StatefulWidget {
 class _NurseryAnimatedAssetState extends State<NurseryAnimatedAsset>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
+  bool _systemReducedMotion = false;
+  bool _dependenciesReady = false;
+
+  bool get _reduceMotion => widget.reducedMotion || _systemReducedMotion;
 
   @override
   void initState() {
@@ -105,7 +111,20 @@ class _NurseryAnimatedAssetState extends State<NurseryAnimatedAsset>
       vsync: this,
       duration: const Duration(milliseconds: 900),
     );
-    _playIfAllowed();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final nextSystemReducedMotion =
+        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    final preferenceChanged =
+        nextSystemReducedMotion != _systemReducedMotion;
+    _systemReducedMotion = nextSystemReducedMotion;
+    if (!_dependenciesReady || preferenceChanged) {
+      _dependenciesReady = true;
+      _playIfAllowed();
+    }
   }
 
   @override
@@ -119,7 +138,7 @@ class _NurseryAnimatedAssetState extends State<NurseryAnimatedAsset>
   }
 
   void _playIfAllowed() {
-    if (widget.reducedMotion) {
+    if (_reduceMotion) {
       _controller.value = 1;
       return;
     }
@@ -130,7 +149,7 @@ class _NurseryAnimatedAssetState extends State<NurseryAnimatedAsset>
   }
 
   void _replay() {
-    if (widget.reducedMotion) return;
+    if (_reduceMotion) return;
     _controller
       ..stop()
       ..value = 0
@@ -146,14 +165,17 @@ class _NurseryAnimatedAssetState extends State<NurseryAnimatedAsset>
   @override
   Widget build(BuildContext context) {
     final kind = nurseryReactionForWord(widget.word);
+    final calmMotion = NurseryMotionPolicy.reduce(context, widget.reducedMotion);
+    final avoidGeometry =
+        NurseryMotionPolicy.avoidGeometry(context, widget.reducedMotion);
     return Semantics(
       container: true,
-      button: !widget.reducedMotion,
-      label: widget.reducedMotion
+      button: !calmMotion,
+      label: calmMotion
           ? '${widget.word} picture'
           : '${widget.word} picture. Tap to animate.',
       child: GestureDetector(
-        onTap: widget.reducedMotion ? null : _replay,
+        onTap: calmMotion ? null : _replay,
         behavior: HitTestBehavior.opaque,
         child: AnimatedBuilder(
           animation: _controller,
@@ -162,12 +184,21 @@ class _NurseryAnimatedAssetState extends State<NurseryAnimatedAsset>
               : Image.asset(
                   widget.assetPath,
                   fit: BoxFit.cover,
+                  cacheWidth: 128,
+                  cacheHeight: 128,
                   excludeFromSemantics: true,
                   errorBuilder: (context, error, stackTrace) => widget.fallback,
                 ),
           builder: (context, child) {
-            if (widget.reducedMotion) return child!;
+            if (calmMotion) return child!;
             final t = Curves.easeOut.transform(_controller.value);
+            if (avoidGeometry) {
+              return Opacity(
+                opacity: (0.88 + (0.12 * t)).clamp(0.0, 1.0).toDouble(),
+                alwaysIncludeSemantics: true,
+                child: child!,
+              );
+            }
             return Stack(
               fit: StackFit.expand,
               children: [
@@ -254,12 +285,12 @@ class _OneShotSparkle extends StatelessWidget {
             Positioned(
               top: 18,
               right: 28,
-              child: Text('✨', style: TextStyle(fontSize: 26)),
+              child: Icon(Icons.auto_awesome_rounded, size: 26),
             ),
             Positioned(
               bottom: 24,
               left: 24,
-              child: Text('⭐', style: TextStyle(fontSize: 21)),
+              child: Icon(Icons.star_rounded, size: 21),
             ),
           ],
         ),
@@ -283,9 +314,13 @@ class _DrumBeatLines extends StatelessWidget {
           alignment: Alignment.topCenter,
           child: Padding(
             padding: EdgeInsets.only(top: 12),
-            child: Text(
-              '♪  ♫  ♪',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.music_note_rounded, size: 22),
+                Icon(Icons.music_note_rounded, size: 28),
+                Icon(Icons.music_note_rounded, size: 22),
+              ],
             ),
           ),
         ),

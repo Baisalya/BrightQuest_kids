@@ -24,7 +24,8 @@ AttemptEvidence _evidence({
     );
 
 void main() {
-  test('mastery review lifecycle finishes instead of rescheduling forever', () {
+  test('mastery review lifecycle continues into bounded maintenance review',
+      () {
     const engine = LearningProgressEngine();
     final learnedAt = DateTime(2026, 8, 20, 10);
     var state = const LearningProfileState();
@@ -89,15 +90,22 @@ void main() {
       state.skillMastery[competency]!.state,
       LearningEvidenceState.secure,
     );
-    expect(state.skillMastery[competency]!.nextReviewIso, isNull);
-    expect(state.reviewTasks.single.completed, isTrue);
+    expect(state.skillMastery[competency]!.nextReviewIso, isNotNull);
+    expect(state.reviewTasks.single.completed, isFalse);
+
+    final maintenanceDue = state.reviewTasks.single.dueAt!;
+    state = engine.refreshReviewStates(state, maintenanceDue);
+    expect(
+      state.skillMastery[competency]!.state,
+      LearningEvidenceState.reviewDue,
+    );
     expect(
       engine.dueReviewTasks(
         state,
         classNumber: 3,
-        now: dueAt.add(const Duration(days: 365)),
+        now: maintenanceDue,
       ),
-      isEmpty,
+      hasLength(1),
     );
   });
 }

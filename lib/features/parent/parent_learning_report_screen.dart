@@ -77,13 +77,21 @@ class ParentLearningReportScreen extends StatelessWidget {
                   leading: Icon(_stateIcon(row.state)),
                   title: Text(row.title),
                   subtitle: Text(
-                    '${_stateLabel(row.state)} • ${row.evidenceCount} evidence item${row.evidenceCount == 1 ? '' : 's'}',
+                    '${row.longTermLabel} • ${row.evidenceCount} evidence item${row.evidenceCount == 1 ? '' : 's'}',
                   ),
                   childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   children: [
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(row.parentNote),
+                    ),
+                    const SizedBox(height: 6),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Evidence confidence ${(row.longTermConfidence * 100).round()}% • ${row.longTermReason}',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                     ),
                     if (row.lastPracticeIso != null)
                       Align(

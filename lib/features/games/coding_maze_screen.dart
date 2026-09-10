@@ -5,15 +5,24 @@ import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
 import '../../core/gameplay/game_logic.dart';
 import '../../core/learning/game_evidence_adapter.dart';
+import '../../core/learning/endless_practice_coordinator.dart';
+import '../../core/learning/mission_run_game_content.dart';
+import '../../core/learning/mission_run_models.dart';
+import '../../core/learning/mission_run_session_coordinator.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/feedback_service.dart';
 import '../../core/session/game_session_models.dart';
 import '../../widgets/bright_widgets.dart';
 
 class CodingMazeScreen extends StatefulWidget {
-  const CodingMazeScreen({this.learningLevel, super.key});
+  const CodingMazeScreen({
+    this.learningLevel,
+    this.endlessPractice = false,
+    super.key,
+  });
 
   final LearningLevel? learningLevel;
+  final bool endlessPractice;
 
   @override
   State<CodingMazeScreen> createState() => _CodingMazeScreenState();
@@ -33,6 +42,8 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
   int _attemptSerial = 0;
   bool _answerInFlight = false;
   bool _sessionConfigured = false;
+  MissionRunPlan? _missionRunPlan;
+  List<CodingMission> _missions = const <CodingMission>[];
 
   @override
   void didChangeDependencies() {
@@ -44,21 +55,65 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
     _difficulty = controller.resumableDifficulty(
       gameId: 'coding_maze',
       classNumber: _classNumber,
-      fallbackDifficulty: widget.learningLevel?.difficulty ??
-          controller.recommendedDifficulty('coding_maze'),
+      fallbackDifficulty: widget.endlessPractice
+          ? 3
+          : widget.learningLevel?.difficulty ??
+              controller.recommendedDifficulty('coding_maze'),
       learningLevelId: widget.learningLevel?.id,
     );
-    final missions = BrightQuestScope.contentOf(context)
-        .codingMissionsForClass(_classNumber, difficulty: _difficulty);
+    final repository = BrightQuestScope.contentOf(context);
+    final existingCheckpoint = controller.gameSessionFor(
+      gameId: 'coding_maze',
+      classNumber: _classNumber,
+      learningLevelId: widget.learningLevel?.id,
+    );
+    final level = widget.learningLevel;
+    if (level != null) {
+      _missionRunPlan = const MissionRunSessionCoordinator().restore(
+        repository: repository,
+        level: level,
+        data: existingCheckpoint?.data ?? const <String, Object?>{},
+      );
+    } else if (widget.endlessPractice) {
+      _missionRunPlan = const EndlessPracticeCoordinator().createOrRestore(
+        repository: repository,
+        classNumber: _classNumber,
+        gameId: 'coding_maze',
+        checkpoint: existingCheckpoint,
+        history: controller.missionExposureHistoryForGame(
+          classNumber: _classNumber,
+          gameId: 'coding_maze',
+        ),
+        learningState: controller.learningState,
+        gameProgress: controller.statsFor('coding_maze'),
+      );
+    }
+    _missions = _missionRunPlan == null
+        ? repository.codingMissionsForClass(
+            _classNumber,
+            difficulty: _difficulty,
+          )
+        : const MissionRunGameContent().codingMissions(
+            repository: repository,
+            plan: _missionRunPlan!,
+          );
+    if (_missions.isEmpty) {
+      throw StateError('Coding Maze cannot start without missions.');
+    }
     final checkpoint = controller.beginOrResumeGameSession(
       gameId: 'coding_maze',
       classNumber: _classNumber,
       difficulty: _difficulty,
-      maxScore: missions.length,
+      maxScore: _missions.length,
       learningLevel: widget.learningLevel,
+      sessionData: _missionRunPlan == null
+          ? const <String, Object?>{}
+          : const MissionRunSessionCoordinator().sessionDataFor(
+              _missionRunPlan!,
+            ),
     );
-    missionIndex = checkpoint.cursor.clamp(0, missions.length - 1).toInt();
-    score = checkpoint.score.clamp(0, missions.length).toInt();
+    missionIndex = checkpoint.cursor.clamp(0, _missions.length - 1).toInt();
+    score = checkpoint.score.clamp(0, _missions.length).toInt();
     commands
       ..clear()
       ..addAll((checkpoint.data['commands'] as List?)
@@ -69,7 +124,7 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
     missionHadFailure = checkpoint.data['missionHadFailure'] as bool? ?? false;
     _attemptSerial = (checkpoint.data['attemptSerial'] as num?)?.toInt() ?? 0;
     if (checkpoint.data['ran'] == true && commands.isNotEmpty) {
-      result = runCodingMission(missions[missionIndex], commands);
+      result = runCodingMission(_missions[missionIndex], commands);
     }
     if (checkpoint.stage == GameSessionStage.result &&
         checkpoint.reward != null) {
@@ -163,8 +218,11 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
       final controller = BrightQuestScope.of(context);
       final reward = await controller.completeRunSafely(
         gameId: 'coding_maze',
-        fallbackMissionId: 'coding_maze:c$classNumber:d$_difficulty:core_run',
+        fallbackMissionId: widget.endlessPractice
+            ? 'endless_practice:c$classNumber:coding_maze'
+            : 'coding_maze:c$classNumber:d$_difficulty:core_run',
         learningLevel: widget.learningLevel,
+        practiceOnly: widget.endlessPractice,
         score: score,
         maxScore: missions.length,
       );
@@ -196,16 +254,59 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
   }
 
   void _restart() {
-    final missions = BrightQuestScope.contentOf(context)
-        .codingMissionsForClass(_classNumber, difficulty: _difficulty);
-    BrightQuestScope.of(context).restartActiveGameSession(
+    final repository = BrightQuestScope.contentOf(context);
+    final controller = BrightQuestScope.of(context);
+    var nextPlan = _missionRunPlan;
+    var nextMissions = _missions;
+    final level = widget.learningLevel;
+    if (level != null && _missionRunPlan != null) {
+      nextPlan = const MissionRunSessionCoordinator().createWorldReplay(
+        repository: repository,
+        level: level,
+        previousPlan: _missionRunPlan!,
+        history: controller.missionExposureHistoryFor(level),
+        learningState: controller.learningState,
+        levelProgress: controller.levelStatsFor(level.id),
+        gameProgress: controller.statsFor(level.gameId),
+      );
+      nextMissions = const MissionRunGameContent().codingMissions(
+        repository: repository,
+        plan: nextPlan,
+      );
+    } else if (widget.endlessPractice && _missionRunPlan != null) {
+      nextPlan = const EndlessPracticeCoordinator().createNextRound(
+        repository: repository,
+        previousPlan: _missionRunPlan!,
+        history: controller.missionExposureHistoryForGame(
+          classNumber: _classNumber,
+          gameId: 'coding_maze',
+        ),
+        learningState: controller.learningState,
+        gameProgress: controller.statsFor('coding_maze'),
+      );
+      nextMissions = const MissionRunGameContent().codingMissions(
+        repository: repository,
+        plan: nextPlan,
+      );
+    } else {
+      nextMissions = repository.codingMissionsForClass(
+        _classNumber,
+        difficulty: _difficulty,
+      );
+    }
+    controller.restartActiveGameSession(
       gameId: 'coding_maze',
       classNumber: _classNumber,
       difficulty: _difficulty,
-      maxScore: missions.length,
+      maxScore: nextMissions.length,
       learningLevel: widget.learningLevel,
+      sessionData: nextPlan == null
+          ? const <String, Object?>{}
+          : const MissionRunSessionCoordinator().sessionDataFor(nextPlan),
     );
     setState(() {
+      _missionRunPlan = nextPlan;
+      _missions = nextMissions;
       missionIndex = 0;
       score = 0;
       _attemptSerial = 0;
@@ -219,15 +320,13 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
   }
 
   void _checkpoint({bool ran = false}) {
-    final missions = BrightQuestScope.contentOf(context)
-        .codingMissionsForClass(_classNumber, difficulty: _difficulty);
     BrightQuestScope.of(context).checkpointGameSession(
       gameId: 'coding_maze',
       classNumber: _classNumber,
       difficulty: _difficulty,
       cursor: missionIndex,
       score: score,
-      maxScore: missions.length,
+      maxScore: _missions.length,
       learningLevel: widget.learningLevel,
       data: <String, Object?>{
         'attemptSerial': _attemptSerial,
@@ -262,16 +361,19 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
   @override
   Widget build(BuildContext context) {
     final classNumber = _classNumber;
-    final missions = BrightQuestScope.contentOf(context)
-        .codingMissionsForClass(classNumber, difficulty: _difficulty);
+    final missions = _missions;
     final mission = missions[missionIndex];
+    final botSkin =
+        BrightQuestScope.of(context).equippedCosmeticForGame('coding_maze');
 
     return GameScaffold(
       learningLevel: widget.learningLevel,
       title: 'Coding Maze',
-      subtitle: widget.learningLevel == null
-          ? 'Class $classNumber • Adaptive level $_difficulty • Sequence and logic'
-          : 'Class $classNumber • ${widget.learningLevel!.typeLabel} • ${widget.learningLevel!.title}',
+      subtitle: widget.endlessPractice
+          ? 'Class $classNumber • ∞ Endless Practice • 10 rotating missions'
+          : widget.learningLevel == null
+              ? 'Class $classNumber • Adaptive level $_difficulty • Sequence and logic'
+              : 'Class $classNumber • ${widget.learningLevel!.typeLabel} • ${widget.learningLevel!.title}',
       color: const Color(0xFF6652D9),
       voicePrompt:
           'Guide the robot to the goal using no more than ${mission.maxCommands} commands.',
@@ -291,7 +393,13 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
                   'Build a command sequence and guide your robot to the goal.',
               accent: Color(0xFF6652D9)),
           const SizedBox(height: 16),
-          _MazeGrid(mission: mission, result: result),
+          _MazeGrid(
+            mission: mission,
+            result: result,
+            robotSkinId: botSkin?.id,
+            robotAccentColor:
+                botSkin == null ? null : Color(botSkin.accentColorValue),
+          ),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -364,6 +472,7 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
               maxScore: missions.length,
               reward: missionReward,
               onReplay: _restart,
+              replayLabel: widget.endlessPractice ? 'Next 10 Missions' : null,
             )
           else
             Row(
@@ -404,9 +513,16 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
 }
 
 class _MazeGrid extends StatelessWidget {
-  const _MazeGrid({required this.mission, required this.result});
+  const _MazeGrid({
+    required this.mission,
+    required this.result,
+    required this.robotSkinId,
+    required this.robotAccentColor,
+  });
   final CodingMission mission;
   final CodingRunResult? result;
+  final String? robotSkinId;
+  final Color? robotAccentColor;
 
   @override
   Widget build(BuildContext context) {
@@ -441,16 +557,49 @@ class _MazeGrid extends StatelessWidget {
                 var label = '';
                 if (mission.obstacles.contains(key)) label = '🪨';
                 if (x == mission.goalX && y == mission.goalY) label = '⭐';
-                if (x == robotX && y == robotY) label = '🤖';
+                final isRobot = x == robotX && y == robotY;
+                if (isRobot) {
+                  label = switch (robotSkinId) {
+                    'galaxy_bot_skin' => '🤖🌌',
+                    'neon_bot_skin' => '🤖⚡',
+                    'solar_bot_skin' => '🤖☀️',
+                    _ => '🤖',
+                  };
+                }
                 return Container(
                   margin: const EdgeInsets.all(3),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.12),
+                    color: isRobot && robotAccentColor != null
+                        ? robotAccentColor!.withValues(alpha: .48)
+                        : Colors.white.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.white24),
+                    border: Border.all(
+                      color: isRobot && robotAccentColor != null
+                          ? Colors.white70
+                          : Colors.white24,
+                      width: isRobot && robotAccentColor != null ? 2 : 1,
+                    ),
+                    boxShadow: isRobot && robotAccentColor != null
+                        ? [
+                            BoxShadow(
+                              color: robotAccentColor!.withValues(alpha: .38),
+                              blurRadius: 10,
+                            ),
+                          ]
+                        : null,
                   ),
-                  child: Text(label, style: const TextStyle(fontSize: 28)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(3),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        label,
+                        key: isRobot ? const Key('coding_robot_marker') : null,
+                        style: const TextStyle(fontSize: 28),
+                      ),
+                    ),
+                  ),
                 );
               },
             ),

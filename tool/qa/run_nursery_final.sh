@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo 'BrightQuest Nursery final release qualification'
+flutter analyze
+
+tests=(
+  test/nursery_final_release_gate_test.dart
+  test/nursery_emoji_content_migration_test.dart
+  test/nursery_motion_feedback_polish_test.dart
+  test/nursery_lesson_architecture_test.dart
+  test/nursery_picture_first_games_test.dart
+  test/nursery_study_guided_independent_flow_test.dart
+  test/nursery_simple_game_flow_test.dart
+  test/nursery_layout_test.dart
+  test/phase_a_teaching_correctness_audit_test.dart
+  test/phase_b_phonics_correctness_test.dart
+  test/phase_c_count_quiz_integration_test.dart
+  test/phase_c_math_world_correctness_test.dart
+  test/phase_d_accessibility_polish_test.dart
+  test/phase_d_release_candidate_test.dart
+)
+
+for test_path in "${tests[@]}"; do
+  echo "Running $test_path"
+  flutter test "$test_path"
+done
+
+echo 'Running full Flutter suite'
+flutter test

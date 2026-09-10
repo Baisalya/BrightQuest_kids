@@ -22,6 +22,20 @@ class ReviewScheduler {
     );
   }
 
+  ReviewTask scheduleMaintenance({
+    required String competencyId,
+    required int classNumber,
+    required DateTime from,
+    String? sourceItemId,
+  }) =>
+      _task(
+        competencyId: competencyId,
+        classNumber: classNumber,
+        now: from,
+        intervalIndex: intervalsDays.length - 1,
+        sourceItemId: sourceItemId,
+      );
+
   ReviewTask reschedule({
     required ReviewTask task,
     required DateTime now,

@@ -1,10 +1,14 @@
 import '../content/content_activity.dart';
 import '../content/content_repository.dart';
 import '../curriculum/content_contract.dart';
+import '../curriculum/curriculum_catalog.dart';
 import '../curriculum/curriculum_models.dart';
 import 'activity_response_evaluator.dart';
 import 'contextual_feedback_engine.dart';
 import 'gameplay_activity_resolver.dart';
+import 'mission_run_models.dart';
+import 'mission_run_planner.dart';
+import 'skill_studio_practice_planner.dart';
 
 /// The teaching sequence deliberately separates explanation from assessment.
 enum LessonStepKind {
@@ -75,6 +79,7 @@ class LessonEngine {
   LessonFlow buildForLevel({
     required ContentRepository repository,
     required LearningLevel level,
+    MissionRunPlan? missionRunPlan,
   }) {
     final gameCandidates = repository.activitiesForGame(
       level.classNumber,
@@ -94,11 +99,18 @@ class LessonEngine {
         'difficulty ${level.difficulty}.',
       );
     }
-    return buildForCompetency(
+    final base = buildForCompetency(
       repository: repository,
       classNumber: level.classNumber,
       competencyId: levelCandidates.first.competencyId,
       targetDifficulty: level.difficulty,
+    );
+    if (missionRunPlan == null) return base;
+    return _applyMissionTrainingAllocation(
+      repository: repository,
+      level: level,
+      base: base,
+      plan: missionRunPlan,
     );
   }
 
@@ -107,6 +119,7 @@ class LessonEngine {
     required int classNumber,
     required String competencyId,
     int? targetDifficulty,
+    SkillStudioPracticePlan? practicePlan,
   }) {
     final contract = repository.curriculum.classPack(classNumber);
     if (contract == null) {
@@ -155,6 +168,19 @@ class LessonEngine {
       );
     }
     final activities = cappedActivities;
+    ContentActivity? plannedActivityAt(int index) {
+      if (practicePlan == null || targetDifficulty != null) return null;
+      final id = practicePlan.activityIdAt(index);
+      if (id == null) return null;
+      final activity = repository.activityById(id);
+      if (activity == null ||
+          activity.classNumber != classNumber ||
+          !activity.allCompetencyIds.contains(competencyId)) {
+        return null;
+      }
+      return activity;
+    }
+
     final targetActivities = targetDifficulty == null
         ? const <ContentActivity>[]
         : activities
@@ -168,9 +194,11 @@ class LessonEngine {
     }
 
     final example = targetDifficulty == null
-        ? (activities.isEmpty ? null : activities.first)
+        ? (plannedActivityAt(0) ?? (activities.isEmpty ? null : activities.first))
         : _teachingExample(activities, targetDifficulty);
-    final guidedActivity = example;
+    final guidedActivity = targetDifficulty == null
+        ? (plannedActivityAt(0) ?? example)
+        : example;
     final blueprintActivities = blueprint?.independentSourceActivityIds
             .map(repository.activityById)
             .whereType<ContentActivity>()
@@ -183,21 +211,25 @@ class LessonEngine {
             .where((activity) => activity.difficulty == targetDifficulty)
             .toList(growable: false);
     final independent = targetDifficulty == null
-        ? (blueprintActivities.isNotEmpty
-            ? blueprintActivities.first
-            : activities.isEmpty
-                ? null
-                : activities[activities.length ~/ 2])
+        ? (plannedActivityAt(1) ??
+            (blueprintActivities.isNotEmpty
+                ? blueprintActivities.first
+                : activities.isEmpty
+                    ? null
+                    : activities[activities.length ~/ 2]))
         : (targetBlueprintActivities.firstOrNull ??
             targetActivities.firstOrNull);
     final transfer = targetDifficulty == null
-        ? (activities.length < 2 ? independent : activities.last)
+        ? (plannedActivityAt(2) ??
+            (activities.length < 2 ? independent : activities.last))
         : (targetActivities
                 .where((activity) => activity.id != independent?.id)
                 .firstOrNull ??
             independent);
-    ContentActivity? exitTicket;
-    if (targetDifficulty == null) {
+    ContentActivity? exitTicket = targetDifficulty == null
+        ? plannedActivityAt(3)
+        : null;
+    if (targetDifficulty == null && exitTicket == null) {
       for (final candidate in activities.reversed) {
         if (candidate.id != independent?.id && candidate.id != transfer?.id) {
           exitTicket = candidate;
@@ -240,7 +272,10 @@ class LessonEngine {
         kind: LessonStepKind.workedExample,
         title: 'Worked example',
         body: blueprint?.workedExample ?? _workedExample(example, objective),
-        activityId: example?.id,
+        // Direct Skill Studio reserves the four authored response items for
+        // guided/independent/transfer/exit so a single fresh set never asks
+        // the same question twice. The worked example remains teaching-only.
+        activityId: practicePlan == null ? example?.id : null,
       ),
       LessonStep(
         id: '$competencyId:guided',
@@ -305,6 +340,217 @@ class LessonEngine {
       steps: List<LessonStep>.unmodifiable(steps),
       reviewStatus:
           blueprint?.review.status.name ?? competency.review.status.name,
+    );
+  }
+
+  LessonFlow _applyMissionTrainingAllocation({
+    required ContentRepository repository,
+    required LearningLevel level,
+    required LessonFlow base,
+    required MissionRunPlan plan,
+  }) {
+    if (plan.levelId != level.id ||
+        plan.classNumber != level.classNumber ||
+        plan.gameId != level.gameId ||
+        plan.difficulty != level.difficulty) {
+      throw StateError('Mission run plan does not match ${level.id}.');
+    }
+    if (plan.hasTrainingGameOverlap ||
+        plan.hasVisibleContentOverlap ||
+        plan.hasInternalContentRepeat) {
+      throw StateError(
+        'Mission run plan for ${level.id} contains repeated mission content.',
+      );
+    }
+
+    final allocatedKinds = _trainingKindsForCount(plan.trainingItems.length);
+
+    const planner = MissionRunPlanner();
+    final allocated = <LessonStepKind, ContentActivity>{};
+    for (var index = 0; index < allocatedKinds.length; index += 1) {
+      final item = plan.trainingItems[index];
+      final activity = planner.resolveCandidateActivity(
+        repository: repository,
+        candidate: item.candidate,
+      );
+      if (activity.classNumber != level.classNumber ||
+          activity.gameId != level.gameId ||
+          activity.difficulty != level.difficulty) {
+        throw StateError(
+          'Training allocation ${activity.id} escaped ${level.id}.',
+        );
+      }
+      allocated[allocatedKinds[index]] = activity;
+    }
+
+    final allocatedIds = allocated.values.map((activity) => activity.id).toSet();
+    if (allocatedIds.length != allocated.length) {
+      throw StateError('Mission training allocation contains a repeated item.');
+    }
+
+    final topic = _curriculumTopicForLevel(level);
+    final plannedObjective = topic?.summary ?? level.summary;
+    final firstAllocated = allocated.values.firstOrNull;
+    const allocatableKinds = <LessonStepKind>{
+      LessonStepKind.workedExample,
+      LessonStepKind.guidedTry,
+      LessonStepKind.independentPractice,
+      LessonStepKind.transfer,
+      LessonStepKind.exitTicket,
+    };
+    final steps = <LessonStep>[
+      for (final step in base.steps)
+        if (allocated[step.kind] case final activity?)
+          _stepForAllocatedActivity(step, activity)
+        else if (step.kind == LessonStepKind.objective ||
+            step.kind == LessonStepKind.explanation)
+          _copyLessonStep(step, body: plannedObjective)
+        else if (allocatableKinds.contains(step.kind))
+          _stepWithoutAllocatedActivity(
+            step,
+            plannedObjective: plannedObjective,
+          )
+        else if (step.kind == LessonStepKind.reteach)
+          _copyLessonStep(
+            step,
+            body: firstAllocated?.explanation ?? plannedObjective,
+            hints: firstAllocated?.hints.map((hint) => hint.text).toList(),
+          )
+        else
+          step,
+    ];
+    return LessonFlow(
+      classNumber: base.classNumber,
+      competencyId: base.competencyId,
+      unitId: base.unitId,
+      objective: plannedObjective,
+      steps: List<LessonStep>.unmodifiable(steps),
+      reviewStatus: base.reviewStatus,
+    );
+  }
+
+  List<LessonStepKind> _trainingKindsForCount(int count) {
+    if (count <= 0) return const <LessonStepKind>[];
+    if (count == 1) {
+      return const <LessonStepKind>[LessonStepKind.workedExample];
+    }
+    if (count == 2) {
+      return const <LessonStepKind>[
+        LessonStepKind.workedExample,
+        LessonStepKind.independentPractice,
+      ];
+    }
+    if (count == 3) {
+      return const <LessonStepKind>[
+        LessonStepKind.workedExample,
+        LessonStepKind.guidedTry,
+        LessonStepKind.independentPractice,
+      ];
+    }
+    if (count == 4) {
+      return const <LessonStepKind>[
+        LessonStepKind.workedExample,
+        LessonStepKind.guidedTry,
+        LessonStepKind.independentPractice,
+        LessonStepKind.exitTicket,
+      ];
+    }
+    return const <LessonStepKind>[
+      LessonStepKind.workedExample,
+      LessonStepKind.guidedTry,
+      LessonStepKind.independentPractice,
+      LessonStepKind.transfer,
+      LessonStepKind.exitTicket,
+    ];
+  }
+
+  LessonStep _stepWithoutAllocatedActivity(
+    LessonStep step, {
+    required String plannedObjective,
+  }) {
+    final body = switch (step.kind) {
+      LessonStepKind.workedExample =>
+        'Review the mission goal before the real game: $plannedObjective',
+      LessonStepKind.guidedTry =>
+        'Say which clue or strategy would help with this mission goal: $plannedObjective',
+      LessonStepKind.independentPractice =>
+        'Without a clue, explain one step you would use for this mission goal: $plannedObjective',
+      LessonStepKind.transfer =>
+        'Name a different situation where this mission goal could be useful: $plannedObjective',
+      LessonStepKind.exitTicket =>
+        'Before the game, say the key idea you will remember: $plannedObjective',
+      LessonStepKind.objective ||
+      LessonStepKind.explanation ||
+      LessonStepKind.reteach ||
+      LessonStepKind.review =>
+        step.body,
+    };
+    return LessonStep(
+      id: step.id,
+      kind: step.kind,
+      title: step.title,
+      body: body,
+      activityId: null,
+      hints: step.hints,
+      requiresIndependentResponse: false,
+    );
+  }
+
+  CurriculumTopic? _curriculumTopicForLevel(LearningLevel level) {
+    for (final topic in curriculumTopics) {
+      if (topic.id == level.curriculumTopicId &&
+          topic.classNumber == level.classNumber &&
+          topic.gameIds.contains(level.gameId)) {
+        return topic;
+      }
+    }
+    return null;
+  }
+
+  LessonStep _copyLessonStep(
+    LessonStep step, {
+    required String body,
+    List<String>? hints,
+  }) {
+    return LessonStep(
+      id: step.id,
+      kind: step.kind,
+      title: step.title,
+      body: body,
+      activityId: step.activityId,
+      hints: hints == null || hints.isEmpty ? step.hints : hints,
+      requiresIndependentResponse: step.requiresIndependentResponse,
+    );
+  }
+
+  LessonStep _stepForAllocatedActivity(
+    LessonStep step,
+    ContentActivity activity,
+  ) {
+    final activityHints = activity.hints.map((hint) => hint.text).toList();
+    final body = switch (step.kind) {
+      LessonStepKind.workedExample =>
+        '${activity.prompt} ${activity.explanation}'.trim(),
+      LessonStepKind.guidedTry ||
+      LessonStepKind.independentPractice ||
+      LessonStepKind.exitTicket =>
+        activity.prompt,
+      LessonStepKind.transfer =>
+        'Solve this fresh mission without a clue, then explain why your method works: ${activity.prompt}',
+      LessonStepKind.objective ||
+      LessonStepKind.explanation ||
+      LessonStepKind.reteach ||
+      LessonStepKind.review =>
+        step.body,
+    };
+    return LessonStep(
+      id: step.id,
+      kind: step.kind,
+      title: step.title,
+      body: body,
+      activityId: activity.id,
+      hints: activityHints.isEmpty ? step.hints : activityHints,
+      requiresIndependentResponse: step.requiresIndependentResponse,
     );
   }
 
@@ -410,4 +656,6 @@ class LessonEngine {
         : 'Return to this example: ${activity.prompt}';
     return '$exampleText Point to the important information, say the rule aloud, then try one changed example. Goal: $objective';
   }
+
+
 }

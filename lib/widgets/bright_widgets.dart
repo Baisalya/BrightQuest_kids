@@ -510,6 +510,14 @@ class GameScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sceneId = _gameIdFromTitle(title);
+    final controller = BrightQuestScope.of(context);
+    final equippedCosmetic = controller.equippedCosmeticForGame(sceneId);
+    final cosmeticColor = equippedCosmetic == null
+        ? color
+        : Color(equippedCosmetic.accentColorValue);
+    final effectiveColor = equippedCosmetic == null
+        ? color
+        : Color.lerp(color, cosmeticColor, .42)!;
     final narrationCue = voicePrompt == null
         ? null
         : const LearningAudioDirector().forGamePrompt(
@@ -524,7 +532,7 @@ class GameScaffold extends StatelessWidget {
     final compactHeight = layout.shortViewport;
     return Scaffold(
       body: BrightPageBackground(
-        primary: Color.lerp(color, Colors.white, 0.90)!,
+        primary: Color.lerp(effectiveColor, Colors.white, 0.90)!,
         secondary: const Color(0xFFFFFBEC),
         child: Column(
           children: [
@@ -599,8 +607,8 @@ class GameScaffold extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          color,
-                          Color.lerp(color, Colors.black, 0.18)!,
+                          effectiveColor,
+                          Color.lerp(effectiveColor, Colors.black, 0.18)!,
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -609,7 +617,7 @@ class GameScaffold extends StatelessWidget {
                       border: Border.all(color: Colors.white, width: 2),
                       boxShadow: [
                         BoxShadow(
-                          color: color.withValues(alpha: 0.28),
+                          color: effectiveColor.withValues(alpha: 0.28),
                           blurRadius: 22,
                           offset: const Offset(0, 9),
                         ),
@@ -634,7 +642,7 @@ class GameScaffold extends StatelessWidget {
                           left: compact ? 12 : 18,
                           top: compactHeight ? 11 : (compact ? 17 : 20),
                           child: _GameMedallion(
-                            color: color,
+                            color: effectiveColor,
                             emoji: _titleEmoji(title),
                             compact: compact || compactHeight,
                           ),
@@ -650,48 +658,62 @@ class GameScaffold extends StatelessWidget {
                             compact ? 68 : 150,
                             compactHeight ? 10 : (compact ? 13 : 18),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                title,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: compactHeight
-                                      ? 21
-                                      : compact
-                                          ? 23
-                                          : 30,
-                                  fontWeight: FontWeight.w900,
-                                  shadows: const [
-                                    Shadow(
-                                      color: Color(0x33000000),
-                                      blurRadius: 3,
-                                      offset: Offset(0, 2),
-                                    ),
-                                  ],
+                          child: LayoutBuilder(
+                            builder: (context, constraints) => Align(
+                              alignment: Alignment.centerLeft,
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: SizedBox(
+                                  width: constraints.maxWidth,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        title,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: compactHeight
+                                              ? 21
+                                              : compact
+                                                  ? 23
+                                                  : 30,
+                                          fontWeight: FontWeight.w900,
+                                          shadows: const [
+                                            Shadow(
+                                              color: Color(0x33000000),
+                                              blurRadius: 3,
+                                              offset: Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        subtitle,
+                                        maxLines: compact ? 2 : 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: Colors.white
+                                              .withValues(alpha: .94),
+                                          fontSize: compactHeight
+                                              ? 10.5
+                                              : compact
+                                                  ? 11
+                                                  : 13,
+                                          fontWeight: FontWeight.w800,
+                                          height: 1.2,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                subtitle,
-                                maxLines: compact ? 2 : 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.white.withValues(alpha: .94),
-                                  fontSize: compactHeight
-                                      ? 10.5
-                                      : compact
-                                          ? 11
-                                          : 13,
-                                  fontWeight: FontWeight.w800,
-                                  height: 1.2,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                         if (!compactHeight)
@@ -699,18 +721,69 @@ class GameScaffold extends StatelessWidget {
                             right: compact ? 10 : 16,
                             bottom: compact ? 10 : 14,
                             child: Container(
+                              constraints: BoxConstraints(
+                                maxWidth: compact ? 58 : 220,
+                              ),
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 9,
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: .90),
+                                color: Colors.white.withValues(alpha: .92),
                                 borderRadius: BorderRadius.circular(14),
+                                border: equippedCosmetic == null
+                                    ? null
+                                    : Border.all(
+                                        color: cosmeticColor.withValues(
+                                            alpha: .26),
+                                      ),
                               ),
-                              child: Text(
-                                _titleEmoji(title),
-                                style: TextStyle(fontSize: compact ? 22 : 27),
-                              ),
+                              child: equippedCosmetic == null || compact
+                                  ? Text(
+                                      equippedCosmetic?.emoji ??
+                                          _titleEmoji(title),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: compact ? 22 : 27),
+                                    )
+                                  : Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          equippedCosmetic.emoji,
+                                          style: const TextStyle(fontSize: 23),
+                                        ),
+                                        const SizedBox(width: 7),
+                                        Flexible(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Text(
+                                                'EQUIPPED',
+                                                style: TextStyle(
+                                                  color: AppTheme.inkMuted,
+                                                  fontSize: 8,
+                                                  fontWeight: FontWeight.w900,
+                                                  letterSpacing: .8,
+                                                ),
+                                              ),
+                                              Text(
+                                                equippedCosmetic.title,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                  color: AppTheme.navy,
+                                                  fontSize: 10.5,
+                                                  fontWeight: FontWeight.w900,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                             ),
                           ),
                       ],
@@ -1074,6 +1147,7 @@ class MissionSummaryCard extends StatelessWidget {
     required this.reward,
     required this.onReplay,
     this.learningLevel,
+    this.replayLabel,
     super.key,
   });
 
@@ -1082,6 +1156,7 @@ class MissionSummaryCard extends StatelessWidget {
   final MissionReward? reward;
   final VoidCallback onReplay;
   final LearningLevel? learningLevel;
+  final String? replayLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -1092,6 +1167,7 @@ class MissionSummaryCard extends StatelessWidget {
             maxScore: maxScore,
             reward: reward,
             onReplay: onReplay,
+            replayLabel: replayLabel,
           )
         : _AdventureMissionSummary(
             moment: AdventureRewardEngine.summarize(
@@ -1598,12 +1674,14 @@ class _GenericMissionSummary extends StatelessWidget {
     required this.maxScore,
     required this.reward,
     required this.onReplay,
+    this.replayLabel,
   });
 
   final int score;
   final int maxScore;
   final MissionReward? reward;
   final VoidCallback onReplay;
+  final String? replayLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -1676,7 +1754,7 @@ class _GenericMissionSummary extends StatelessWidget {
           FilledButton.icon(
             onPressed: onReplay,
             icon: const Icon(Icons.replay_rounded),
-            label: Text(cleared ? 'Play Again' : 'Try Again'),
+            label: Text(replayLabel ?? (cleared ? 'Play Again' : 'Try Again')),
           ),
         ],
       ),

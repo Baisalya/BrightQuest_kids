@@ -10,8 +10,7 @@ Widget _host(GameController controller, Widget child) => MaterialApp(
     );
 
 void main() {
-  testWidgets(
-      'Count game scores the visible objects and explains the same answer',
+  testWidgets('Count game scores the visible objects and explains the same answer',
       (tester) async {
     await tester.binding.setSurfaceSize(const Size(420, 780));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -30,7 +29,7 @@ void main() {
     await tester.tap(playNow);
     await tester.pump(const Duration(milliseconds: 500));
 
-    expect(find.text('How many apples? 🍎🍎'), findsOneWidget);
+    expect(find.text('How many apples are shown?'), findsOneWidget);
     expect(find.text('Next'), findsNothing);
     expect(find.bySemanticsLabel('Answer 2'), findsOneWidget);
 
@@ -66,6 +65,7 @@ void main() {
 
     const prompt =
         'When crossing a road with an adult, which choice is safest?';
+    await tester.ensureVisible(find.text('More games'));
     await tester.tap(find.text('More games'));
     await tester.pumpAndSettle();
     final starGame = find.text('Star Game');
@@ -81,8 +81,7 @@ void main() {
     await tester.pump();
 
     expect(find.text('Why: $answer'), findsOneWidget);
-    expect(
-        find.text('The helpful or safer routine is $answer.'), findsOneWidget);
+    expect(find.text('The helpful or safer routine is $answer.'), findsOneWidget);
     expect(controller.nurseryAttemptEvidence.last.correct, isTrue);
     expect(
       controller.nurseryAttemptEvidence.last.skillId,
@@ -91,8 +90,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets(
-      'Math and My World boards remain usable at phone and Windows sizes',
+  testWidgets('Math and My World boards remain usable at phone and Windows sizes',
       (tester) async {
     addTearDown(() => tester.binding.setSurfaceSize(null));
     const sizes = <Size>[

@@ -125,6 +125,8 @@ class BrightLionMascot extends StatelessWidget {
     this.scientist = false,
     this.mood = BrightMascotMood.cheerful,
     this.animated = true,
+    this.scientistCoatColor,
+    this.scientistGoggleColor,
     super.key,
   });
 
@@ -132,6 +134,8 @@ class BrightLionMascot extends StatelessWidget {
   final bool scientist;
   final BrightMascotMood mood;
   final bool animated;
+  final Color? scientistCoatColor;
+  final Color? scientistGoggleColor;
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +143,12 @@ class BrightLionMascot extends StatelessWidget {
       width: size,
       height: size * 1.08,
       child: CustomPaint(
-        painter: _LionPainter(scientist: scientist, mood: mood),
+        painter: _LionPainter(
+          scientist: scientist,
+          mood: mood,
+          scientistCoatColor: scientistCoatColor,
+          scientistGoggleColor: scientistGoggleColor,
+        ),
       ),
     );
     if (!animated) return mascot;
@@ -162,9 +171,16 @@ BrightMomentKind _momentKindForMascotMood(BrightMascotMood mood) =>
     };
 
 class _LionPainter extends CustomPainter {
-  const _LionPainter({required this.scientist, required this.mood});
+  const _LionPainter({
+    required this.scientist,
+    required this.mood,
+    required this.scientistCoatColor,
+    required this.scientistGoggleColor,
+  });
   final bool scientist;
   final BrightMascotMood mood;
+  final Color? scientistCoatColor;
+  final Color? scientistGoggleColor;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -179,6 +195,7 @@ class _LionPainter extends CustomPainter {
     final light = Paint()..color = const Color(0xFFFFD18B);
     final navy = Paint()..color = const Color(0xFF1F4D8F);
     final white = Paint()..color = Colors.white;
+    final scientistCoat = Paint()..color = scientistCoatColor ?? Colors.white;
     final black = Paint()..color = const Color(0xFF2B1B15);
 
     // tail
@@ -198,7 +215,7 @@ class _LionPainter extends CustomPainter {
     canvas.drawRRect(
         RRect.fromRectAndRadius(
             const Rect.fromLTWH(43, 95, 70, 58), const Radius.circular(24)),
-        scientist ? white : navy);
+        scientist ? scientistCoat : navy);
     if (scientist) {
       canvas.drawRect(const Rect.fromLTWH(72, 101, 3, 48),
           Paint()..color = const Color(0xFFBED5EA));
@@ -359,7 +376,7 @@ class _LionPainter extends CustomPainter {
     if (scientist) {
       // goggles
       final goggle = Paint()
-        ..color = const Color(0xFF36B7F0)
+        ..color = scientistGoggleColor ?? const Color(0xFF36B7F0)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 4;
       canvas.drawCircle(const Offset(59, 49), 10, goggle);
@@ -381,7 +398,10 @@ class _LionPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _LionPainter oldDelegate) =>
-      oldDelegate.scientist != scientist || oldDelegate.mood != mood;
+      oldDelegate.scientist != scientist ||
+      oldDelegate.mood != mood ||
+      oldDelegate.scientistCoatColor != scientistCoatColor ||
+      oldDelegate.scientistGoggleColor != scientistGoggleColor;
 }
 
 class BrightAdventureLandscape extends StatelessWidget {
