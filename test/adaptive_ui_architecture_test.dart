@@ -22,6 +22,15 @@ void main() {
     expect(desktop.windowClass, BrightWindowClass.desktop);
     expect(desktop.usesExpandedNavigation, isTrue);
     expect(shortDesktop.shortViewport, isTrue);
+    for (final metrics in <BrightLayoutMetrics>[
+      phone,
+      tablet,
+      freeform,
+      desktop,
+      shortDesktop,
+    ]) {
+      expect(metrics.minimumTapTarget, 48);
+    }
   });
 
   testWidgets('adaptive shell stays overflow-free across resize classes',
@@ -43,8 +52,9 @@ void main() {
       await tester.pumpWidget(buildTestApp(GameController()));
       await tester.pumpAndSettle();
 
-      expect(find.text('Choose Your Adventure!'), findsOneWidget);
-      expect(find.bySemanticsLabel('Home'), findsOneWidget);
+      expect(find.byKey(const Key('home_primary_action')), findsOneWidget);
+      expect(find.bySemanticsLabel('Today'), findsOneWidget);
+      expect(find.bySemanticsLabel('Grown-up area'), findsOneWidget);
       expect(tester.takeException(), isNull,
           reason: 'Unexpected adaptive layout exception at $size');
 
@@ -61,16 +71,49 @@ void main() {
     await tester.pumpWidget(buildTestApp(GameController()));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.bySemanticsLabel('Progress'));
+    await tester.tap(find.bySemanticsLabel('Journey'));
     await tester.pumpAndSettle();
-    expect(find.text('My Progress'), findsOneWidget);
+    expect(find.text('My Journey'), findsOneWidget);
 
     await tester.binding.setSurfaceSize(const Size(700, 800));
     await tester.pumpAndSettle();
-    expect(find.text('My Progress'), findsOneWidget);
-    expect(find.bySemanticsLabel('Progress'), findsOneWidget);
+    expect(find.text('My Journey'), findsOneWidget);
+    expect(find.bySemanticsLabel('Journey'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('parent controls are a guarded utility route, not a learner tab',
+      (tester) async {
+    await tester.pumpWidget(buildTestApp(GameController()));
+    await tester.pumpAndSettle();
+
+    expect(find.bySemanticsLabel('Grown-up area'), findsOneWidget);
+    expect(find.bySemanticsLabel('Parents'), findsNothing);
+
+    await tester.tap(find.bySemanticsLabel('Grown-up area'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Parents'), findsOneWidget);
+    expect(find.text('Create a parent PIN'), findsOneWidget);
+    expect(find.byIcon(Icons.arrow_back_rounded), findsOneWidget);
+  });
+
+  testWidgets('Class 3 moves profile out of the primary learner navigation',
+      (tester) async {
+    final controller = GameController();
+    controller.setClass(3);
+
+    await tester.pumpWidget(buildTestApp(controller));
+    await tester.pumpAndSettle();
+
+    expect(find.bySemanticsLabel('Today'), findsOneWidget);
+    expect(find.bySemanticsLabel('Worlds'), findsOneWidget);
+    expect(find.bySemanticsLabel('Journey'), findsOneWidget);
+    expect(find.bySemanticsLabel('Me'), findsOneWidget);
+    expect(find.bySemanticsLabel('Grown-up area'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('world grid adapts across tablet free-form and short desktop',
       (tester) async {
     addTearDown(() => tester.binding.setSurfaceSize(null));

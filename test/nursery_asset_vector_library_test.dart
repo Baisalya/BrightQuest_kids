@@ -58,7 +58,8 @@ void main() {
     expect(triangle.variant, 'triangle');
   });
 
-  test('semantic counted visuals keep quantity without raw emoji rendering', () {
+  test('semantic counted visuals keep quantity without raw emoji rendering',
+      () {
     final apples = NurseryVisualResolver.forInteractionValue('3 apples');
     expect(apples.source, NurseryVisualSource.localAsset);
     expect(apples.count, 3);
@@ -71,7 +72,8 @@ void main() {
     expect(dots.variant, 'dot');
   });
 
-  test('repeated semantic generated visuals compact into calm picture groups', () {
+  test('repeated semantic generated visuals compact into calm picture groups',
+      () {
     expect(
       NurseryVisualResolver.compactVisualTokens(
         const <String>[
@@ -107,7 +109,9 @@ void main() {
     expect(nurseryVisualFreeText(observation.prompt), observation.prompt);
   });
 
-  test('Nursery presentation layer contains no hard-coded legacy emoji UI glyphs', () {
+  test(
+      'Nursery presentation layer contains no hard-coded legacy emoji UI glyphs',
+      () {
     final source = Directory('lib/features/nursery')
         .listSync(recursive: true)
         .whereType<File>()

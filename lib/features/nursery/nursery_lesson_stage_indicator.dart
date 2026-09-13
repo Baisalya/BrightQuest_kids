@@ -21,7 +21,8 @@ class NurseryLessonStageIndicator extends StatelessWidget {
     final number = nurseryJourneyStageNumber(stage);
     return Semantics(
       header: true,
-      label: 'Step $number of 3. $title${subtitle == null ? '' : '. $subtitle'}',
+      label:
+          'Step $number of 3. $title${subtitle == null ? '' : '. $subtitle'}',
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: compact ? 12 : 16,

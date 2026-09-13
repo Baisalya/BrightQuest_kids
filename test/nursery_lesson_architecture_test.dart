@@ -41,19 +41,16 @@ void main() {
   });
 
   test('stage responsibilities are separated into explicit components', () {
-    final teaching =
-        File('lib/features/nursery/nursery_lesson_teaching.dart')
-            .readAsStringSync();
-    final activity =
-        File('lib/features/nursery/nursery_lesson_activity.dart')
-            .readAsStringSync();
+    final teaching = File('lib/features/nursery/nursery_lesson_teaching.dart')
+        .readAsStringSync();
+    final activity = File('lib/features/nursery/nursery_lesson_activity.dart')
+        .readAsStringSync();
     final review = File('lib/features/nursery/nursery_lesson_review.dart')
         .readAsStringSync();
-    final feedback =
-        File('lib/features/nursery/nursery_lesson_feedback.dart')
-            .readAsStringSync();
-    final motion = File('lib/features/nursery/nursery_motion.dart')
+    final feedback = File('lib/features/nursery/nursery_lesson_feedback.dart')
         .readAsStringSync();
+    final motion =
+        File('lib/features/nursery/nursery_motion.dart').readAsStringSync();
 
     expect(teaching, contains('class NurseryTeachingStage'));
     expect(teaching, contains('class NurseryLetterDiscoveryShowcase'));

@@ -133,8 +133,8 @@ void main() {
   });
 
   test('interaction dispatcher stays thin and game-specific', () {
-    final dispatcher =
-        File('lib/features/nursery/nursery_interactions.dart').readAsStringSync();
+    final dispatcher = File('lib/features/nursery/nursery_interactions.dart')
+        .readAsStringSync();
     expect(dispatcher.split('\n').length, lessThan(100));
     expect(dispatcher, contains('NurseryChoiceGame('));
     expect(dispatcher, contains('NurseryPairMatchGame('));

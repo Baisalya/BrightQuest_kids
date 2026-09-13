@@ -7,6 +7,7 @@ import '../../app/study_session_tracker.dart';
 import '../../core/curriculum/curriculum_catalog.dart';
 import '../../core/curriculum/curriculum_models.dart';
 import '../../core/session/game_session_models.dart';
+import '../../core/session/learning_session_exit.dart';
 import '../../core/curriculum/world_mission_catalog.dart';
 import '../../core/learning/endless_practice_coordinator.dart';
 import '../../core/services/bright_audio_service.dart';
@@ -312,8 +313,10 @@ void _openGameInternal(
     unawaited(_startGameAudio(audio, id));
   }
   Navigator.of(context)
-      .push(MaterialPageRoute<void>(builder: (_) => routedScreen))
-      .whenComplete(() {
+      .push<LearningSessionExit>(
+    MaterialPageRoute<LearningSessionExit>(builder: (_) => routedScreen),
+  )
+      .then((exit) {
     unawaited(audio.stopVoice());
     final finishedSession = controller.gameSessionFor(
       gameId: id,
@@ -325,6 +328,20 @@ void _openGameInternal(
     }
     if (controller.soundEnabled) {
       unawaited(audio.playMenuMusic(restart: true));
+    }
+
+    final nextLevelId = exit?.nextLevelId;
+    final nextLevel =
+        nextLevelId == null ? null : learningLevelById(nextLevelId);
+    if (exit?.action == LearningSessionExitAction.continueNext &&
+        nextLevel != null &&
+        nextLevel.classNumber == controller.selectedClass &&
+        controller.isLevelUnlocked(nextLevel) &&
+        context.mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!context.mounted) return;
+        openLearningLevel(context, nextLevel);
+      });
     }
   });
 }

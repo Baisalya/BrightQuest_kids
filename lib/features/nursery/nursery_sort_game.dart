@@ -30,7 +30,8 @@ class _NurserySortBucketsGameState extends State<NurserySortBucketsGame> {
   @override
   Widget build(BuildContext context) {
     final items = List<String>.from(widget.activity.payload['items'] as List);
-    final buckets = List<String>.from(widget.activity.payload['buckets'] as List);
+    final buckets =
+        List<String>.from(widget.activity.payload['buckets'] as List);
 
     return Column(
       children: [

@@ -160,8 +160,9 @@ class NurseryPlayBoard extends StatelessWidget {
                       : '${plan.independentCompletedCount} of '
                           '${plan.independentActivities.length} played',
                   reducedMotion: reducedMotion,
-                  onTap:
-                      independent == null ? null : () => onActivity(independent),
+                  onTap: independent == null
+                      ? null
+                      : () => onActivity(independent),
                 ),
                 if (activities.length > 1) ...[
                   const SizedBox(height: 14),
@@ -242,9 +243,8 @@ class _JourneyStepCard extends StatelessWidget {
     final card = Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: recommended
-            ? scheme.primaryContainer
-            : scheme.surfaceContainerLow,
+        color:
+            recommended ? scheme.primaryContainer : scheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(28),
         border: Border.all(
           color: recommended ? scheme.primary : scheme.outlineVariant,

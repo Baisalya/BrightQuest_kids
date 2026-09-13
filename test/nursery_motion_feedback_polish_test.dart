@@ -15,8 +15,8 @@ void main() {
       );
     }
 
-    final source = File('lib/features/nursery/nursery_motion.dart')
-        .readAsStringSync();
+    final source =
+        File('lib/features/nursery/nursery_motion.dart').readAsStringSync();
     expect(source, isNot(contains('.repeat(')));
     expect(source, isNot(contains('Timer.periodic')));
     expect(source, isNot(contains('repeat(reverse:')));

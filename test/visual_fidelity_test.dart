@@ -16,7 +16,7 @@ void main() {
 
     expect(find.byType(BrightQuestLogo), findsWidgets);
     expect(find.byType(BrightLionMascot), findsOneWidget);
-    expect(find.text('Choose Your Adventure!'), findsOneWidget);
+    expect(find.byKey(const Key('home_primary_action')), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -30,7 +30,7 @@ void main() {
 
     expect(find.byType(BrightQuestLogo), findsOneWidget);
     expect(find.byType(BrightLionMascot), findsOneWidget);
-    expect(find.text('Choose Your Adventure!'), findsOneWidget);
+    expect(find.byKey(const Key('home_primary_action')), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

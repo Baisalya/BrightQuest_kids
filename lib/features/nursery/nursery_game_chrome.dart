@@ -175,9 +175,7 @@ class NurserySelectionCard extends StatelessWidget {
     );
     return NurseryMotionReaction(
       trigger: '$selected:$completed',
-      cue: completed
-          ? NurseryMotionCue.success
-          : NurseryMotionCue.selection,
+      cue: completed ? NurseryMotionCue.success : NurseryMotionCue.selection,
       reducedMotion: reducedMotion,
       animateOnMount: false,
       child: card,

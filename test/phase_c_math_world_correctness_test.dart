@@ -78,7 +78,8 @@ void main() {
       }
     });
 
-    test('My World generated visuals match the independent vocabulary catalog', () {
+    test('My World generated visuals match the independent vocabulary catalog',
+        () {
       const generator = NurseryPracticeGenerator();
       final pack = _pack();
       for (final entry in nurseryPhaseCWorldGeneratedCatalog.entries) {
@@ -118,9 +119,11 @@ void main() {
     test('review seed planner advances from the latest generated review', () {
       const planner = NurseryReviewSeedPlanner();
       const skillId = 'math_count_0_5';
-      final first = planner.nextSeed(skillId: skillId, evidence: const <NurseryAttemptEvidence>[]);
+      final first = planner.nextSeed(
+          skillId: skillId, evidence: const <NurseryAttemptEvidence>[]);
       expect(
-        planner.nextSeed(skillId: skillId, evidence: const <NurseryAttemptEvidence>[]),
+        planner.nextSeed(
+            skillId: skillId, evidence: const <NurseryAttemptEvidence>[]),
         first,
       );
 

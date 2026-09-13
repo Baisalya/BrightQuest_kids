@@ -101,7 +101,8 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
                 reducedMotion: _reduceMotion,
                 onRead: () => _readGenerated(review),
                 onHint: () => _useGeneratedHint(review),
-                onSubmit: (response) => _submitGenerated(skill, review, response),
+                onSubmit: (response) =>
+                    _submitGenerated(skill, review, response),
                 onDone: _correct ? () => Navigator.of(context).pop() : null,
               ),
       );
@@ -110,8 +111,7 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
     final activities = pack.activitiesForSkill(skill.id);
     final controller = BrightQuestScope.of(context);
     final completedActivityIds = controller.nurseryAttemptEvidence
-        .where((evidence) =>
-            evidence.skillId == skill.id && evidence.correct)
+        .where((evidence) => evidence.skillId == skill.id && evidence.correct)
         .map((evidence) => evidence.itemId)
         .toSet();
     final completedCount = activities
@@ -211,12 +211,10 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
     NurseryLetterAssociation? letter;
     NurseryLetterExample? example;
     if (skill.domainId == 'alphabet' && letterAssociations.isNotEmpty) {
-      letter = letterAssociations[
-        _discoveryLetterIndex % letterAssociations.length
-      ];
-      example = letter.examples[
-        _discoveryExampleIndex % letter.examples.length
-      ];
+      letter =
+          letterAssociations[_discoveryLetterIndex % letterAssociations.length];
+      example =
+          letter.examples[_discoveryExampleIndex % letter.examples.length];
     }
 
     VoidCallback onHearLetter = () {};
@@ -285,7 +283,8 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
     List<NurseryActivity> activities,
     Set<String> completedActivityIds,
   ) {
-    final activityIndex = activities.indexWhere((item) => item.id == activity.id);
+    final activityIndex =
+        activities.indexWhere((item) => item.id == activity.id);
     final safeIndex = activityIndex < 0 ? 0 : activityIndex;
     final nextActivity = nurseryNextUnplayedActivity(
       activities,
@@ -341,7 +340,8 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
         correct: evaluation.correct,
         hintLevel: _hintLevel,
         retries: _retries,
-        responseTimeMs: now.difference(_startedAt).inMilliseconds.clamp(0, 3600000).toInt(),
+        responseTimeMs:
+            now.difference(_startedAt).inMilliseconds.clamp(0, 3600000).toInt(),
         recordedAtIso: now.toIso8601String(),
         contributesToMastery: activity.masteryEligible,
         misconceptionId: evaluation.misconceptionId,
@@ -404,7 +404,8 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
         correct: evaluation.correct,
         hintLevel: _hintLevel,
         retries: _retries,
-        responseTimeMs: now.difference(_startedAt).inMilliseconds.clamp(0, 3600000).toInt(),
+        responseTimeMs:
+            now.difference(_startedAt).inMilliseconds.clamp(0, 3600000).toInt(),
         recordedAtIso: now.toIso8601String(),
         contributesToMastery: true,
         misconceptionId: evaluation.misconceptionId,
@@ -457,7 +458,8 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
     required List<NurseryActivity> activities,
     required NurseryActivity activity,
   }) {
-    final index = activities.indexWhere((candidate) => candidate.id == activity.id);
+    final index =
+        activities.indexWhere((candidate) => candidate.id == activity.id);
     if (index < 0) return;
     setState(() {
       _pageIndex = index + 3;
@@ -542,8 +544,7 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
       final pack = BrightQuestScope.contentOf(context).nurseryPack;
       if (pack != null && pack.letterAssociations.isNotEmpty) {
         final letter = pack.letterAssociations[
-          _discoveryLetterIndex % pack.letterAssociations.length
-        ];
+            _discoveryLetterIndex % pack.letterAssociations.length];
         final example =
             letter.examples[_discoveryExampleIndex % letter.examples.length];
         return '${letter.uppercase}, ${letter.lowercase}. '
@@ -604,5 +605,4 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
         'review' => LearningAttemptKind.review,
         _ => LearningAttemptKind.independent,
       };
-
 }

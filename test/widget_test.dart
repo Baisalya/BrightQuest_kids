@@ -1,4 +1,5 @@
 import 'package:brightquest_kids/core/state/game_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'support/app_fixture.dart';
@@ -9,7 +10,8 @@ void main() {
     await tester.pumpWidget(buildTestApp(GameController()));
     await tester.pumpAndSettle();
 
-    expect(find.text('Choose Your Adventure!'), findsOneWidget);
-    expect(find.bySemanticsLabel('Home'), findsOneWidget);
+    expect(find.byKey(const Key('home_primary_action')), findsOneWidget);
+    expect(find.bySemanticsLabel('Today'), findsOneWidget);
+    expect(find.bySemanticsLabel('Grown-up area'), findsOneWidget);
   });
 }

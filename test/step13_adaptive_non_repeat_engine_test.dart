@@ -12,7 +12,8 @@ import 'support/content_fixture.dart';
 
 void main() {
   group('Step 13 adaptive non-repeat engine', () {
-    test('schema-v1 legacy exposure remains readable with new advisory fields', () {
+    test('schema-v1 legacy exposure remains readable with new advisory fields',
+        () {
       final restored = MissionExposureMemory.fromJson(<String, Object?>{
         'schemaVersion': 1,
         'byClass': <String, Object?>{
@@ -81,14 +82,12 @@ void main() {
     test('world planner treats same visible prompt as recent across IDs', () {
       final repository = buildContentRepository();
       const coordinator = MissionRunSessionCoordinator();
-      final level = coordinator
-          .planner
-          .candidatesForLevel(
-            repository: repository,
-            level: learningLevelById(
-              'c4_math_operations:math_market:l2',
-            )!,
-          );
+      final level = coordinator.planner.candidatesForLevel(
+        repository: repository,
+        level: learningLevelById(
+          'c4_math_operations:math_market:l2',
+        )!,
+      );
       expect(level.length, greaterThan(10));
       final recentFingerprint = level.first.contentFingerprint;
       final learningLevel = learningLevelById(

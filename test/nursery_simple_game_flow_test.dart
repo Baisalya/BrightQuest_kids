@@ -61,7 +61,8 @@ void main() {
       expect(next?.id, activities[2].id);
     });
 
-    testWidgets('skill opens with a clear three-step learning journey', (tester) async {
+    testWidgets('skill opens with a clear three-step learning journey',
+        (tester) async {
       await tester.binding.setSurfaceSize(const Size(420, 760));
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -86,7 +87,8 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('correct answer continues straight to Next Game', (tester) async {
+    testWidgets('correct answer continues straight to Next Game',
+        (tester) async {
       await tester.binding.setSurfaceSize(const Size(420, 780));
       addTearDown(() => tester.binding.setSurfaceSize(null));
       final controller = GameController();
@@ -124,7 +126,8 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(420, 760));
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
-      await tester.pumpWidget(_host(GameController(), const NurseryHomeScreen()));
+      await tester
+          .pumpWidget(_host(GameController(), const NurseryHomeScreen()));
       await tester.pump();
 
       expect(find.text('Ready to play?'), findsOneWidget);

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../capabilities/learner_capability_boundary.dart';
 import '../curriculum/content_contract.dart';
 import '../nursery/nursery_content.dart';
 import 'content_activity.dart';
@@ -47,7 +48,7 @@ class DevelopmentPackAccessPolicy {
         .split(',')
         .map((value) => int.tryParse(value.trim()))
         .whereType<int>()
-        .where((value) => value >= 3 && value <= 5)
+        .where(LearnerCapabilityBoundary.isSupportedSchoolClass)
         .toSet();
     return DevelopmentPackAccessPolicy(
       enabled: true,
@@ -502,8 +503,7 @@ class ContentRepository {
     return false;
   }
 
-  static bool _supportsGeneratedWorldFamily(String gameId) =>
-      const <String>{
+  static bool _supportsGeneratedWorldFamily(String gameId) => const <String>{
         'math_market',
         'fraction_pizza',
         'grammar_puzzle',
@@ -1180,7 +1180,8 @@ class ContentRepository {
         hints = const <ContentHint>[
           ContentHint(
             step: 1,
-            text: 'Find the opening idea first, then place words so the sentence sounds complete.',
+            text:
+                'Find the opening idea first, then place words so the sentence sounds complete.',
           ),
         ];
         break;
@@ -1241,7 +1242,8 @@ class ContentRepository {
         hints = const <ContentHint>[
           ContentHint(
             step: 1,
-            text: 'Plan the turns before adding moves, then check the command limit.',
+            text:
+                'Plan the turns before adding moves, then check the command limit.',
           ),
         ];
         break;
@@ -1272,7 +1274,8 @@ class ContentRepository {
         hints = const <ContentHint>[
           ContentHint(
             step: 1,
-            text: 'Think about the main material, or whether the item is food or plant waste.',
+            text:
+                'Think about the main material, or whether the item is food or plant waste.',
           ),
         ];
         break;

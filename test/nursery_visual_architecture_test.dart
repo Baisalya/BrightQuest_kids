@@ -38,7 +38,8 @@ void main() {
     }
   });
 
-  test('every authored Nursery activity can use the semantic visual boundary', () {
+  test('every authored Nursery activity can use the semantic visual boundary',
+      () {
     final pack = _pack();
 
     for (final skill in pack.skills) {
@@ -76,7 +77,8 @@ void main() {
     expect(assetBackedExamples, greaterThanOrEqualTo(200));
   });
 
-  test('semantic Nursery tokens resolve without pictographic source values', () {
+  test('semantic Nursery tokens resolve without pictographic source values',
+      () {
     const semanticTokens = <String>[
       'alphabet',
       'numbers',
@@ -111,13 +113,14 @@ void main() {
     );
   });
 
-  test('migrated Nursery navigation does not render legacy emoji contracts', () {
+  test('migrated Nursery navigation does not render legacy emoji contracts',
+      () {
     final home = File('lib/features/nursery/nursery_home_screen.dart')
         .readAsStringSync();
     final world = File('lib/features/nursery/nursery_world_screen.dart')
         .readAsStringSync();
-    final playBoard = File('lib/features/nursery/nursery_play_board.dart')
-        .readAsStringSync();
+    final playBoard =
+        File('lib/features/nursery/nursery_play_board.dart').readAsStringSync();
     final lesson = File('lib/features/nursery/nursery_lesson_screen.dart')
         .readAsStringSync();
     final activityStage =

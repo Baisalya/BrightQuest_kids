@@ -191,6 +191,10 @@ class _LearningNarrationBarState extends State<LearningNarrationBar> {
                   onPressed: canRead ? _readAloud : null,
                   icon: const Icon(Icons.volume_up_rounded),
                   visualDensity: VisualDensity.compact,
+                  constraints: const BoxConstraints(
+                    minWidth: 48,
+                    minHeight: 48,
+                  ),
                 ),
               ),
               if (canRead)
@@ -203,6 +207,10 @@ class _LearningNarrationBarState extends State<LearningNarrationBar> {
                     ),
                     icon: const Icon(Icons.stop_circle_outlined),
                     visualDensity: VisualDensity.compact,
+                    constraints: const BoxConstraints(
+                      minWidth: 48,
+                      minHeight: 48,
+                    ),
                   ),
                 ),
             ],
@@ -289,7 +297,7 @@ class _LearningNarrationBarState extends State<LearningNarrationBar> {
               onPressed: canRead ? _readAloud : null,
               icon: const Icon(Icons.volume_up_rounded, size: 18),
               visualDensity: VisualDensity.compact,
-              constraints: const BoxConstraints.tightFor(width: 34, height: 34),
+              constraints: const BoxConstraints.tightFor(width: 48, height: 48),
               padding: EdgeInsets.zero,
             ),
             if (canRead)
@@ -302,7 +310,7 @@ class _LearningNarrationBarState extends State<LearningNarrationBar> {
                 icon: const Icon(Icons.stop_circle_outlined, size: 18),
                 visualDensity: VisualDensity.compact,
                 constraints:
-                    const BoxConstraints.tightFor(width: 34, height: 34),
+                    const BoxConstraints.tightFor(width: 48, height: 48),
                 padding: EdgeInsets.zero,
               ),
           ],

@@ -89,12 +89,12 @@ class SkillStudioPracticePlanner {
       ),
     ]
         .where(
-          (activity) =>
-              activity.classNumber == classNumber &&
-              activity.allCompetencyIds.contains(competencyId) &&
-              !_isFallbackExperiment(activity) &&
-              activityResolver.resolve(activity).isSupported,
-        )
+      (activity) =>
+          activity.classNumber == classNumber &&
+          activity.allCompetencyIds.contains(competencyId) &&
+          !_isFallbackExperiment(activity) &&
+          activityResolver.resolve(activity).isSupported,
+    )
         .fold<List<ContentActivity>>(<ContentActivity>[], (result, activity) {
       if (!result.any((candidate) => candidate.id == activity.id)) {
         result.add(activity);
@@ -206,8 +206,7 @@ class SkillStudioPracticePlanner {
         );
         if (topicDiversity != 0) return topicDiversity;
         final mechanicDiversity =
-            (selectedMechanics.contains(aSpec.mechanic.name) ? 1 : 0)
-                .compareTo(
+            (selectedMechanics.contains(aSpec.mechanic.name) ? 1 : 0).compareTo(
           selectedMechanics.contains(bSpec.mechanic.name) ? 1 : 0,
         );
         if (mechanicDiversity != 0) return mechanicDiversity;
@@ -227,8 +226,9 @@ class SkillStudioPracticePlanner {
       selectedMechanics.add(activityResolver.resolve(chosen).mechanic.name);
     }
 
-    final generatedCandidateCount =
-        candidates.where((activity) => activity.generation.mode == 'generated').length;
+    final generatedCandidateCount = candidates
+        .where((activity) => activity.generation.mode == 'generated')
+        .length;
     final reason = freshCandidateCount > 0
         ? generatedCandidateCount > 0
             ? 'Fresh competency examples first; safe generated drills extend this skill while recent wording stays spaced.'

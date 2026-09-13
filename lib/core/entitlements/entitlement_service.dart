@@ -1,3 +1,4 @@
+import '../capabilities/learner_capability_boundary.dart';
 import 'entitlement_models.dart';
 import 'store_billing_gateway.dart';
 
@@ -26,10 +27,12 @@ class EntitlementService {
       _gateway.queryProducts(classPackProductIds.values);
 
   Future<ClassEntitlement> purchaseClass(int classNumber) async {
+    LearnerCapabilityBoundary.requireSupportedSchoolClass(classNumber);
     final productId = classPackProductIds[classNumber];
     if (productId == null) {
-      throw ArgumentError.value(
-          classNumber, 'classNumber', 'Must be 3, 4 or 5');
+      throw StateError(
+        'Missing product ID for supported Class $classNumber.',
+      );
     }
     final result = await _gateway.purchase(productId);
     final entitlement = _fromResult(classNumber, result);

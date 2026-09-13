@@ -72,7 +72,8 @@ class NurseryMathWorldAudit {
               severity: TeachingAuditSeverity.high,
               code: 'phase_c.math.prompt_narration_drift',
               location: location,
-              message: 'Visible prompt and spoken narration describe different content.',
+              message:
+                  'Visible prompt and spoken narration describe different content.',
             ),
           );
         }
@@ -156,7 +157,8 @@ class NurseryMathWorldAudit {
 
         if (skillId == 'math_add_numerals') {
           checks += 1;
-          final match = RegExp(r'(\d+)\s*\+\s*(\d+)').firstMatch(activity.prompt);
+          final match =
+              RegExp(r'(\d+)\s*\+\s*(\d+)').firstMatch(activity.prompt);
           final answer = int.tryParse('${rule['value']}');
           final sum = match == null
               ? null
@@ -222,7 +224,8 @@ class NurseryMathWorldAudit {
             severity: TeachingAuditSeverity.high,
             code: 'phase_c.world.prompt_narration_drift',
             location: entry.key,
-            message: 'Visible prompt and spoken narration are not synchronized.',
+            message:
+                'Visible prompt and spoken narration are not synchronized.',
           ),
         );
       }
@@ -254,7 +257,8 @@ class NurseryMathWorldAudit {
           severity: TeachingAuditSeverity.high,
           code: 'phase_c.world.shape_3d_2d_ambiguity',
           location: 'nursery.knowledge_shapes.t1',
-          message: 'Door example must refer to its 2D front face, not the whole 3D object.',
+          message:
+              'Door example must refer to its 2D front face, not the whole 3D object.',
         ),
       );
     }
@@ -278,7 +282,8 @@ class NurseryMathWorldAudit {
           severity: TeachingAuditSeverity.high,
           code: 'phase_c.world.body_part_ambiguity',
           location: 'nursery.knowledge_body.t1',
-          message: 'Body-part transfer must identify feet without relying on shoes or ground contact.',
+          message:
+              'Body-part transfer must identify feet without relying on shoes or ground contact.',
         ),
       );
     }
@@ -291,7 +296,8 @@ class NurseryMathWorldAudit {
           severity: TeachingAuditSeverity.blocker,
           code: 'phase_c.world.road_safety_answer_drift',
           location: 'nursery.knowledge_routines.t1',
-          message: 'Road-safety transfer must keep the child with the adult and waiting for a safe crossing.',
+          message:
+              'Road-safety transfer must keep the child with the adult and waiting for a safe crossing.',
         ),
       );
     }
@@ -311,7 +317,8 @@ class NurseryMathWorldAudit {
       final skill = pack.skillById(skillId);
       if (skill == null) continue;
       for (var seed = 0; seed < generatedSeedsPerSkill; seed += 1) {
-        final practice = generator.generate(pack: pack, skill: skill, seed: seed);
+        final practice =
+            generator.generate(pack: pack, skill: skill, seed: seed);
         final location = '$skillId/seed:$seed';
         final answerText = '${practice.correctResponseRule['value']}';
 
@@ -339,7 +346,8 @@ class NurseryMathWorldAudit {
                 severity: TeachingAuditSeverity.blocker,
                 code: 'phase_c.math.generated_count_mismatch',
                 location: location,
-                message: 'Generated count shows $visualCount but scores $answerText.',
+                message:
+                    'Generated count shows $visualCount but scores $answerText.',
               ),
             );
           }
@@ -373,15 +381,13 @@ class NurseryMathWorldAudit {
             if (plus > 0 && equals > plus) {
               final left = _visualQuantity(practice.visualTokens.take(plus));
               final right = _visualQuantity(
-                practice.visualTokens
-                    .skip(plus + 1)
-                    .take(equals - plus - 1),
+                practice.visualTokens.skip(plus + 1).take(equals - plus - 1),
               );
               sum = left + right;
             }
           } else {
-            final match = RegExp(r'(\d+)\s*\+\s*(\d+)')
-                .firstMatch(practice.prompt);
+            final match =
+                RegExp(r'(\d+)\s*\+\s*(\d+)').firstMatch(practice.prompt);
             if (match != null) {
               sum = int.parse(match.group(1)!) + int.parse(match.group(2)!);
             }
@@ -415,26 +421,28 @@ class NurseryMathWorldAudit {
       final skill = pack.skillById(skillId);
       if (skill == null) continue;
       for (var seed = 0; seed < generatedSeedsPerSkill; seed += 1) {
-        final practice = generator.generate(pack: pack, skill: skill, seed: seed);
+        final practice =
+            generator.generate(pack: pack, skill: skill, seed: seed);
         final location = '$skillId/seed:$seed';
         final answer = '${practice.correctResponseRule['value']}';
 
         checks += 1;
         final spokenNarration = nurserySpeakableText(practice.narration);
-        if (spokenNarration.isEmpty || nurseryContainsRawVisualToken(spokenNarration)) {
+        if (spokenNarration.isEmpty ||
+            nurseryContainsRawVisualToken(spokenNarration)) {
           findings.add(
             TeachingAuditFinding(
               severity: TeachingAuditSeverity.high,
               code: 'phase_c.world.generated_audio_not_normalized',
               location: location,
-              message: 'Generated My World narration still depends on raw visual symbols.',
+              message:
+                  'Generated My World narration still depends on raw visual symbols.',
             ),
           );
         }
 
-        final visual = practice.visualTokens.isEmpty
-            ? null
-            : practice.visualTokens.first;
+        final visual =
+            practice.visualTokens.isEmpty ? null : practice.visualTokens.first;
         final expectedCatalog = nurseryPhaseCWorldGeneratedCatalog[skillId] ??
             nurseryPhaseCColourCatalog[skillId] ??
             nurseryPhaseCShapeCatalog[skillId];
@@ -447,7 +455,8 @@ class NurseryMathWorldAudit {
                 severity: TeachingAuditSeverity.blocker,
                 code: 'phase_c.world.generated_visual_answer_mismatch',
                 location: location,
-                message: 'Visual $visual should map to $expected but scores $answer.',
+                message:
+                    'Visual $visual should map to $expected but scores $answer.',
               ),
             );
           }
@@ -489,7 +498,8 @@ class NurseryMathWorldAudit {
             severity: TeachingAuditSeverity.high,
             code: 'phase_c.non_repeat.skill_not_referenced',
             location: skill.id,
-            message: 'No Phase-C non-repetition window is defined for this skill.',
+            message:
+                'No Phase-C non-repetition window is defined for this skill.',
           ),
         );
         continue;
@@ -497,7 +507,8 @@ class NurseryMathWorldAudit {
       final window = requested.clamp(2, 64).toInt();
       final signatures = <String>{};
       for (var seed = 0; seed < window; seed += 1) {
-        final practice = generator.generate(pack: pack, skill: skill, seed: seed);
+        final practice =
+            generator.generate(pack: pack, skill: skill, seed: seed);
         final signature =
             '${practice.prompt}|${practice.correctResponseRule['value']}';
         checks += 1;
@@ -570,7 +581,8 @@ class NurseryMathWorldAudit {
     final end = equals > plus ? equals : tokens.length;
     if (plus <= 0 || end <= plus) return null;
     final leftCount = _visualQuantity(tokens.take(plus));
-    final rightCount = _visualQuantity(tokens.skip(plus + 1).take(end - plus - 1));
+    final rightCount =
+        _visualQuantity(tokens.skip(plus + 1).take(end - plus - 1));
     if (leftCount == 0 || rightCount == 0) return null;
     return leftCount + rightCount;
   }

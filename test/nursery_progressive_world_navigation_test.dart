@@ -37,7 +37,8 @@ Widget _host(GameController controller, Widget child) => buildTestScope(
     );
 
 void main() {
-  test('every authored Nursery skill appears in exactly one progressive path', () {
+  test('every authored Nursery skill appears in exactly one progressive path',
+      () {
     final pack = _pack();
     final expectedPathCounts = <String, int>{
       'alphabet': 4,
@@ -73,7 +74,8 @@ void main() {
     }
   });
 
-  test('world planner resumes the path containing the most recent active skill', () {
+  test('world planner resumes the path containing the most recent active skill',
+      () {
     final pack = _pack();
     final masteries = <String, NurserySkillMastery>{
       'math_numbers_0_5': _mastery(
@@ -132,10 +134,14 @@ void main() {
 
     expect(find.text('Pick a learning path'), findsOneWidget);
     expect(find.byKey(const Key('nursery-world-next-path')), findsOneWidget);
-    expect(find.byKey(const Key('nursery-path-math_meet_numbers')), findsOneWidget);
-    expect(find.byKey(const Key('nursery-path-math_count_match')), findsOneWidget);
-    expect(find.byKey(const Key('nursery-path-math_compare_find')), findsOneWidget);
-    expect(find.byKey(const Key('nursery-path-math_add_together')), findsOneWidget);
+    expect(find.byKey(const Key('nursery-path-math_meet_numbers')),
+        findsOneWidget);
+    expect(
+        find.byKey(const Key('nursery-path-math_count_match')), findsOneWidget);
+    expect(find.byKey(const Key('nursery-path-math_compare_find')),
+        findsOneWidget);
+    expect(find.byKey(const Key('nursery-path-math_add_together')),
+        findsOneWidget);
     expect(find.text('Numbers 0–5'), findsNothing);
     expect(tester.takeException(), isNull);
 
@@ -146,9 +152,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Choose a little game'), findsOneWidget);
-    expect(find.byKey(const Key('nursery-skill-math_numbers_0_5')), findsOneWidget);
-    expect(find.byKey(const Key('nursery-skill-math_numbers_6_10')), findsOneWidget);
-    expect(find.byKey(const Key('nursery-skill-math_numbers_11_20')), findsOneWidget);
+    expect(find.byKey(const Key('nursery-skill-math_numbers_0_5')),
+        findsOneWidget);
+    expect(find.byKey(const Key('nursery-skill-math_numbers_6_10')),
+        findsOneWidget);
+    expect(find.byKey(const Key('nursery-skill-math_numbers_11_20')),
+        findsOneWidget);
     expect(find.byKey(const Key('nursery-skill-math_count_0_5')), findsNothing);
     expect(tester.takeException(), isNull);
   });

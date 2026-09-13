@@ -273,9 +273,12 @@ abstract final class NurseryWorldPlanner {
     final recentActiveSkill = _mostRecentActiveSkill(domainSkills, masteryFor);
     final recentActivePath = recentActiveSkill == null
         ? null
-        : paths.where(
-            (path) => path.skills.any((skill) => skill.id == recentActiveSkill.id),
-          ).firstOrNull;
+        : paths
+            .where(
+              (path) =>
+                  path.skills.any((skill) => skill.id == recentActiveSkill.id),
+            )
+            .firstOrNull;
     final unfinishedPath = paths.where((path) => !path.complete);
     final recommendedPath = duePath.firstOrNull ??
         recentActivePath ??
@@ -293,7 +296,8 @@ abstract final class NurseryWorldPlanner {
     String domainId,
     List<NurserySkill> domainSkills,
   ) {
-    final authored = _catalog[domainId] ?? const <NurseryLearningPathDefinition>[];
+    final authored =
+        _catalog[domainId] ?? const <NurseryLearningPathDefinition>[];
     final mapped = authored.expand((path) => path.skillIds).toSet();
     final uncatalogued = domainSkills
         .where((skill) => !mapped.contains(skill.id))
@@ -371,7 +375,9 @@ abstract final class NurseryWorldPlanner {
         LearningEvidenceState.reviewDue ||
         LearningEvidenceState.needsSupport =>
           true,
-        LearningEvidenceState.notStarted || LearningEvidenceState.secure => false,
+        LearningEvidenceState.notStarted ||
+        LearningEvidenceState.secure =>
+          false,
       };
 
   static bool _isMoreRecent(DateTime? candidate, DateTime? current) {

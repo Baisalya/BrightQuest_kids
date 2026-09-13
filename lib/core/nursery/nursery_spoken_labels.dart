@@ -157,7 +157,8 @@ bool nurseryContainsRawVisualToken(String value) {
 }
 
 (int, String)? _parseCountedSemantic(String value) {
-  final match = RegExp(r'^(\d+)\s+(.+)$').firstMatch(value.trim().toLowerCase());
+  final match =
+      RegExp(r'^(\d+)\s+(.+)$').firstMatch(value.trim().toLowerCase());
   if (match == null) return null;
   final count = int.tryParse(match.group(1)!);
   if (count == null) return null;

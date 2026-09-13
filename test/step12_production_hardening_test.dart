@@ -13,7 +13,8 @@ import 'support/app_fixture.dart';
 
 void main() {
   group('Step 12 production hardening', () {
-    test('system accessibility text scale is never suppressed by app setting', () {
+    test('system accessibility text scale is never suppressed by app setting',
+        () {
       expect(
         brightEffectiveTextScale(systemTextScale: 1, appTextScale: 1.3),
         1.3,
@@ -105,7 +106,8 @@ void main() {
       );
     });
 
-    testWidgets('shell survives phone landscape and very short free-form windows',
+    testWidgets(
+        'shell survives phone landscape and very short free-form windows',
         (tester) async {
       addTearDown(() => tester.binding.setSurfaceSize(null));
       const sizes = <Size>[
@@ -126,7 +128,7 @@ void main() {
         await tester.pumpWidget(buildTestApp(controller));
         await tester.pumpAndSettle();
 
-        expect(find.bySemanticsLabel('Home'), findsOneWidget);
+        expect(find.bySemanticsLabel('Today'), findsOneWidget);
         expect(tester.takeException(), isNull,
             reason: 'Unexpected shell exception at $size');
 
@@ -161,8 +163,8 @@ void main() {
       final app = File('lib/app/brightquest_app.dart').readAsStringSync();
       final boundary =
           File('lib/app/app_persistence_boundary.dart').readAsStringSync();
-      final audio =
-          File('lib/core/services/bright_audio_service.dart').readAsStringSync();
+      final audio = File('lib/core/services/bright_audio_service.dart')
+          .readAsStringSync();
       final main = File('lib/main.dart').readAsStringSync();
       final registrant = File('windows/flutter/generated_plugin_registrant.cc')
           .readAsStringSync();
@@ -180,11 +182,13 @@ void main() {
     });
 
     test('Step 12 release runner and audit remain fail-closed', () {
-      final audit =
-          File('tool/qa/step12_production_readiness_audit.dart').readAsStringSync();
+      final audit = File('tool/qa/step12_production_readiness_audit.dart')
+          .readAsStringSync();
       final runner = File('tool/qa/run_step12.ps1').readAsStringSync();
-      final docs = File('docs/STEP12_PRODUCTION_HARDENING.md').readAsStringSync();
-      expect(audit, contains('Commercial shipping eligibility remains BLOCKED'));
+      final docs =
+          File('docs/STEP12_PRODUCTION_HARDENING.md').readAsStringSync();
+      expect(
+          audit, contains('Commercial shipping eligibility remains BLOCKED'));
       expect(runner, contains('flutter test'));
       expect(runner, contains('flutter analyze'));
       expect(docs, contains('real-device'));

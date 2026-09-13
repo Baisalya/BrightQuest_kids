@@ -18,7 +18,8 @@ void main() {
       const evaluator = ActivityResponseEvaluator();
       const resolver = GameplayActivityResolver();
 
-      expect(SkillStudioPracticeGenerators.supportedCompetencyIds, hasLength(16));
+      expect(
+          SkillStudioPracticeGenerators.supportedCompetencyIds, hasLength(16));
       for (final competencyId
           in SkillStudioPracticeGenerators.supportedCompetencyIds) {
         final classNumber = int.parse(competencyId.substring(1, 2));
@@ -70,7 +71,9 @@ void main() {
       }
     });
 
-    test('Skill Studio reuses audited World generation only for the exact competency', () {
+    test(
+        'Skill Studio reuses audited World generation only for the exact competency',
+        () {
       final repository = buildContentRepository();
       const competencyId = 'c3_math_multiplication_facts';
       expect(
@@ -99,7 +102,8 @@ void main() {
       );
     });
 
-    test('generated Skill Studio runs stay fresh across 200 response items', () {
+    test('generated Skill Studio runs stay fresh across 200 response items',
+        () {
       final repository = buildContentRepository();
       const planner = SkillStudioPracticePlanner();
       final memory = MissionExposureMemory();

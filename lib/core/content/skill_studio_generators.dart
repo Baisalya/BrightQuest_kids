@@ -64,7 +64,8 @@ class SkillStudioPracticeGenerators {
       'c5_math_large_numbers_100000' => _placeValue(seed, digits: 5),
       'c5_math_estimation' => _estimationC5(seed),
       'c5_math_factors_multiples' => _factorsMultiplesC5(seed),
-      'c5_math_geometry_angles_symmetry' => _angleClassification(seed, classNumber: 5),
+      'c5_math_geometry_angles_symmetry' =>
+        _angleClassification(seed, classNumber: 5),
       'c5_math_measure_conversion_volume' => _measurementVolumeC5(seed),
       'c5_math_data' => _dataC5(seed),
       _ => null,
@@ -162,7 +163,8 @@ class SkillStudioPracticeGenerators {
       answer: answer,
       choices: <Object?>[answer, digit, largerPlace, smallerPlace, number],
       hint: 'Name the place of the digit first, then write its value.',
-      explanation: 'The digit $digit is in the ${_placeName(place)} place, so its value is $answer.',
+      explanation:
+          'The digit $digit is in the ${_placeName(place)} place, so its value is $answer.',
     );
   }
 
@@ -307,7 +309,8 @@ class SkillStudioPracticeGenerators {
       final duration = 1 + (_mix(seed, 26) % 4);
       final end = start + duration;
       return _GeneratedQuestion(
-        prompt: 'An activity starts at $start:00 and ends at $end:00. How much time passes?',
+        prompt:
+            'An activity starts at $start:00 and ends at $end:00. How much time passes?',
         answer: '$duration hours',
         choices: <Object?>[
           '$duration hours',
@@ -364,7 +367,8 @@ class SkillStudioPracticeGenerators {
       }
       final answer = labels[best];
       return _GeneratedQuestion(
-        prompt: 'A table shows Red: $first, Blue: $second, Green: $third. Which colour has the greatest count?',
+        prompt:
+            'A table shows Red: $first, Blue: $second, Green: $third. Which colour has the greatest count?',
         answer: answer,
         choices: const <Object?>['Red', 'Blue', 'Green', 'All are equal'],
         hint: 'Compare the three counts.',
@@ -468,7 +472,8 @@ class SkillStudioPracticeGenerators {
       final addMinutes = <int>[45, 60, 90, 120][(seed ~/ 16) % 4];
       final answer = _formatClock(startHour * 60 + startMinute + addMinutes);
       return _GeneratedQuestion(
-        prompt: 'What time is $addMinutes minutes after ${_formatClock(startHour * 60 + startMinute)}?',
+        prompt:
+            'What time is $addMinutes minutes after ${_formatClock(startHour * 60 + startMinute)}?',
         answer: answer,
         choices: <Object?>[
           answer,
@@ -513,7 +518,8 @@ class SkillStudioPracticeGenerators {
         'Straight angle',
       ],
       hint: 'Compare the angle with 90°.',
-      explanation: '$degree° is ${acute ? 'less than' : 'greater than'} 90°, so it is an ${acute ? 'acute' : 'obtuse'} angle.',
+      explanation:
+          '$degree° is ${acute ? 'less than' : 'greater than'} 90°, so it is an ${acute ? 'acute' : 'obtuse'} angle.',
     );
   }
 
@@ -667,13 +673,21 @@ class SkillStudioPracticeGenerators {
     }
     if (mode == 0) {
       final values = <String, int>{'Team A': a, 'Team B': b, 'Team C': c};
-      final answer = values.entries.reduce(
-        (left, right) => left.value > right.value ? left : right,
-      ).key;
+      final answer = values.entries
+          .reduce(
+            (left, right) => left.value > right.value ? left : right,
+          )
+          .key;
       return _GeneratedQuestion(
-        prompt: 'A table shows Team A: $a points, Team B: $b, Team C: $c. Which team has the most points?',
+        prompt:
+            'A table shows Team A: $a points, Team B: $b, Team C: $c. Which team has the most points?',
         answer: answer,
-        choices: const <Object?>['Team A', 'Team B', 'Team C', 'They are equal'],
+        choices: const <Object?>[
+          'Team A',
+          'Team B',
+          'Team C',
+          'They are equal'
+        ],
         hint: 'Compare the three values.',
         explanation: '$answer has the greatest value.',
       );
@@ -700,7 +714,8 @@ class SkillStudioPracticeGenerators {
     final low = a > b ? b : a;
     final difference = high - low;
     return _GeneratedQuestion(
-      prompt: 'Plant A grew $low cm and Plant B grew $high cm. Which statement is supported?',
+      prompt:
+          'Plant A grew $low cm and Plant B grew $high cm. Which statement is supported?',
       answer: 'Plant B grew $difference cm more than Plant A',
       choices: <Object?>[
         'Plant B grew $difference cm more than Plant A',
@@ -709,7 +724,8 @@ class SkillStudioPracticeGenerators {
         'Plant B grew ${high + low} cm more than Plant A',
       ],
       hint: 'Compare the two measurements by subtraction.',
-      explanation: '$high − $low = $difference, so Plant B grew $difference cm more.',
+      explanation:
+          '$high − $low = $difference, so Plant B grew $difference cm more.',
     );
   }
 
@@ -719,7 +735,11 @@ class SkillStudioPracticeGenerators {
     String hint,
     String explanation,
   ) {
-    final delta = answer.abs() < 10 ? 1 : answer.abs() < 100 ? 5 : 10;
+    final delta = answer.abs() < 10
+        ? 1
+        : answer.abs() < 100
+            ? 5
+            : 10;
     return _GeneratedQuestion(
       prompt: prompt,
       answer: answer,

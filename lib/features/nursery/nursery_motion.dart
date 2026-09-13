@@ -13,7 +13,8 @@ class NurseryMotionPolicy {
   const NurseryMotionPolicy._();
 
   static bool reduce(BuildContext context, bool reducedMotion) =>
-      reducedMotion || (MediaQuery.maybeOf(context)?.disableAnimations ?? false);
+      reducedMotion ||
+      (MediaQuery.maybeOf(context)?.disableAnimations ?? false);
 
   static bool avoidGeometry(BuildContext context, bool reducedMotion) =>
       reduce(context, reducedMotion) || Platform.isWindows;
@@ -219,7 +220,8 @@ class NurseryMotionReveal extends StatelessWidget {
     );
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(begin: 0, end: 1),
-      duration: duration ?? NurseryMotionPolicy.duration(NurseryMotionCue.reveal),
+      duration:
+          duration ?? NurseryMotionPolicy.duration(NurseryMotionCue.reveal),
       curve: curve,
       child: child,
       builder: (context, value, animatedChild) {

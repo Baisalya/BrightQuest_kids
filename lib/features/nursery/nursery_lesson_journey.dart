@@ -50,7 +50,8 @@ class NurseryLessonJourneyPlanner {
 
     final independentActivities = <NurseryActivity>[
       for (final activity in activities)
-        if (guidedActivity == null || activity.id != guidedActivity.id) activity,
+        if (guidedActivity == null || activity.id != guidedActivity.id)
+          activity,
     ];
 
     final guidedComplete = guidedActivity != null &&
@@ -74,8 +75,8 @@ class NurseryLessonJourneyPlanner {
     final completedAuthoredCount = activities
         .where((activity) => completedActivityIds.contains(activity.id))
         .length;
-    final allActivitiesComplete = activities.isNotEmpty &&
-        completedAuthoredCount == activities.length;
+    final allActivitiesComplete =
+        activities.isNotEmpty && completedAuthoredCount == activities.length;
     final hasAnyCompletedActivity = completedAuthoredCount > 0;
 
     final recommendedStage = !studyVisited && !hasAnyCompletedActivity
@@ -105,7 +106,8 @@ String nurseryJourneyStageTitle(NurseryLessonJourneyStage stage) =>
       NurseryLessonJourneyStage.independentGame => 'Independent Game',
     };
 
-int nurseryJourneyStageNumber(NurseryLessonJourneyStage stage) => switch (stage) {
+int nurseryJourneyStageNumber(NurseryLessonJourneyStage stage) =>
+    switch (stage) {
       NurseryLessonJourneyStage.study => 1,
       NurseryLessonJourneyStage.guidedPlay => 2,
       NurseryLessonJourneyStage.independentGame => 3,

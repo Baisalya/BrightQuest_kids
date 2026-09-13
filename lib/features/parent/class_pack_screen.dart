@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
+import '../../core/capabilities/learner_capability_boundary.dart';
 import '../../core/content/content_repository.dart';
 import '../../core/entitlements/entitlement_models.dart';
 
@@ -76,7 +77,8 @@ class _ClassPackScreenState extends State<ClassPackScreen> {
             ),
             const SizedBox(height: 10),
           ],
-          for (final classNumber in const <int>[3, 4, 5])
+          for (final classNumber
+              in LearnerCapabilityBoundary.supportedSchoolClasses)
             Builder(
               builder: (context) {
                 final pack = repository.packForClass(classNumber);

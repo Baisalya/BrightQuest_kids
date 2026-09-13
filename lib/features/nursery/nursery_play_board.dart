@@ -77,9 +77,8 @@ NurseryPlayPortalStyle nurseryPortalStyleFor(
         activity.phase == 'transfer' ? 'Picture Challenge' : 'Picture Pairs',
       'alpha_uppercase' ||
       'alpha_lowercase' ||
-      'alpha_visual_discrimination' => activity.phase == 'transfer'
-          ? 'Letter Challenge'
-          : 'Letter Hunt',
+      'alpha_visual_discrimination' =>
+        activity.phase == 'transfer' ? 'Letter Challenge' : 'Letter Hunt',
       _ => 'Letter Pop',
     };
     return _portalStyle(
@@ -94,8 +93,7 @@ NurseryPlayPortalStyle nurseryPortalStyleFor(
     'math' => activity.phase == 'transfer' ? 'Math Mission' : 'Number Hunt',
     'knowledge' =>
       activity.phase == 'transfer' ? 'World Quest' : 'Picture Hunt',
-    'thinking' =>
-      activity.phase == 'transfer' ? 'Brain Boost' : 'Puzzle Pop',
+    'thinking' => activity.phase == 'transfer' ? 'Brain Boost' : 'Puzzle Pop',
     _ => activity.phase == 'transfer' ? 'Sound Quest' : 'Letter Pop',
   };
   return _portalStyle(
@@ -131,7 +129,8 @@ NurseryActivity? nurseryNextUnplayedActivity(
   final completed = <String>{...completedActivityIds, current.id};
   final currentIndex = activities.indexWhere((item) => item.id == current.id);
   for (var offset = 1; offset <= activities.length; offset += 1) {
-    final index = ((currentIndex < 0 ? -1 : currentIndex) + offset) % activities.length;
+    final index =
+        ((currentIndex < 0 ? -1 : currentIndex) + offset) % activities.length;
     final candidate = activities[index];
     if (!completed.contains(candidate.id)) return candidate;
   }
@@ -154,7 +153,7 @@ String nurserySimpleGameHint(NurseryActivity activity) {
   return switch (activity.interaction) {
     'pairMatch' => 'Find the pairs',
     'sortBuckets' => 'Put each one in its group',
-    _ => activity.phase == 'guided' ? 'Let’s do one together' : 'Tap the answer',
+    _ =>
+      activity.phase == 'guided' ? 'Let’s do one together' : 'Tap the answer',
   };
 }
-

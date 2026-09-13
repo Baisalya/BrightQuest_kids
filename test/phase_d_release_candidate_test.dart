@@ -36,8 +36,7 @@ void main() {
         final blueprints = _json(
           'assets/content/class_$classNumber/learning_blueprints.json',
         );
-        for (final raw
-            in (blueprints['blueprints'] as List).whereType<Map>()) {
+        for (final raw in (blueprints['blueprints'] as List).whereType<Map>()) {
           final id = raw['id'] ?? raw['competencyId'];
           expect(raw['locale'], 'en-IN', reason: '$id');
           expect(

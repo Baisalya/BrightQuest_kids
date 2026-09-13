@@ -218,9 +218,8 @@ class NurseryGameAnswerCard extends StatelessWidget {
       enabled: enabled,
       label: 'Answer $spoken',
       child: Material(
-        color: enabled
-            ? scheme.tertiaryContainer
-            : scheme.surfaceContainerHighest,
+        color:
+            enabled ? scheme.tertiaryContainer : scheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(24),
         clipBehavior: Clip.antiAlias,
         child: InkWell(

@@ -1,0 +1,35 @@
+diff --git a/lib/features/home/home_screen.dart b/lib/features/home/home_screen.dart
+--- a/lib/features/home/home_screen.dart
++++ b/lib/features/home/home_screen.dart
+@@
+-import '../../widgets/bright_adaptive.dart';
+ import '../../widgets/bright_design_system.dart';
+
+diff --git a/test/game_session_resume_safety_test.dart b/test/game_session_resume_safety_test.dart
+--- a/test/game_session_resume_safety_test.dart
++++ b/test/game_session_resume_safety_test.dart
+@@
++      final homeSource =
++          File('lib/features/home/home_screen.dart').readAsStringSync();
++      expect(homeSource, contains('controller.resumableGameSessions'));
++      expect(homeSource, contains('resumeGameSession(context, session)'));
++
+       final adventuresSource =
+           File('lib/features/adventures/adventures_screen.dart')
+               .readAsStringSync();
+       expect(adventuresSource, contains('controller.resumableGameSessions'));
+-      expect(adventuresSource, contains('resumeGameSession(context, session)'));
+       expect(
+-          adventuresSource, contains('controller.discardGameSession(session)'));
++        adventuresSource,
++        isNot(contains('resumeGameSession(context, session)')),
++      );
++
++      final worldSource =
++          File('lib/features/adventures/learning_world_screen.dart')
++              .readAsStringSync();
++      expect(worldSource, contains('resumeGameSession(context, session)'));
++      expect(
++        worldSource,
++        contains('onDiscardSaved: controller.discardGameSession'),
++      );

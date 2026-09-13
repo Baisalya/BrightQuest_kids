@@ -85,8 +85,7 @@ void main() {
     final plan = NurseryHomePlanner.build(
       pack: pack,
       dueTasks: const <NurseryReviewTask>[],
-      masteryFor: (id) =>
-          masteries[id] ?? NurserySkillMastery(skillId: id),
+      masteryFor: (id) => masteries[id] ?? NurserySkillMastery(skillId: id),
     );
 
     expect(plan.primaryAction.kind, NurseryHomeActionKind.continueLearning);

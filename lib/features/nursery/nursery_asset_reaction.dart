@@ -118,8 +118,7 @@ class _NurseryAnimatedAssetState extends State<NurseryAnimatedAsset>
     super.didChangeDependencies();
     final nextSystemReducedMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    final preferenceChanged =
-        nextSystemReducedMotion != _systemReducedMotion;
+    final preferenceChanged = nextSystemReducedMotion != _systemReducedMotion;
     _systemReducedMotion = nextSystemReducedMotion;
     if (!_dependenciesReady || preferenceChanged) {
       _dependenciesReady = true;
@@ -165,7 +164,8 @@ class _NurseryAnimatedAssetState extends State<NurseryAnimatedAsset>
   @override
   Widget build(BuildContext context) {
     final kind = nurseryReactionForWord(widget.word);
-    final calmMotion = NurseryMotionPolicy.reduce(context, widget.reducedMotion);
+    final calmMotion =
+        NurseryMotionPolicy.reduce(context, widget.reducedMotion);
     final avoidGeometry =
         NurseryMotionPolicy.avoidGeometry(context, widget.reducedMotion);
     return Semantics(

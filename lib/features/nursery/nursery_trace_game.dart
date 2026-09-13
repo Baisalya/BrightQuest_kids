@@ -42,7 +42,8 @@ class _NurseryTraceGameState extends State<NurseryTraceGame> {
     final tolerance =
         (widget.activity.payload['tolerance'] as num?)?.toDouble() ?? 0.14;
     final label = widget.activity.payload['label'] as String? ?? '';
-    final nextNumber = points.isEmpty ? 0 : math.min(reached.length + 1, points.length);
+    final nextNumber =
+        points.isEmpty ? 0 : math.min(reached.length + 1, points.length);
 
     return Column(
       children: [
@@ -213,8 +214,7 @@ class _TraceGuidePainter extends CustomPainter {
       canvas.drawCircle(
         point,
         isNext ? 16 : 14,
-        Paint()
-          ..color = isReached ? colorScheme.primary : colorScheme.surface,
+        Paint()..color = isReached ? colorScheme.primary : colorScheme.surface,
       );
       if (!isReached) {
         canvas.drawCircle(

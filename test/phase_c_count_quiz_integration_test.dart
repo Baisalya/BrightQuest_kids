@@ -10,7 +10,8 @@ Widget _host(GameController controller, Widget child) => MaterialApp(
     );
 
 void main() {
-  testWidgets('Count game scores the visible objects and explains the same answer',
+  testWidgets(
+      'Count game scores the visible objects and explains the same answer',
       (tester) async {
     await tester.binding.setSurfaceSize(const Size(420, 780));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -81,7 +82,8 @@ void main() {
     await tester.pump();
 
     expect(find.text('Why: $answer'), findsOneWidget);
-    expect(find.text('The helpful or safer routine is $answer.'), findsOneWidget);
+    expect(
+        find.text('The helpful or safer routine is $answer.'), findsOneWidget);
     expect(controller.nurseryAttemptEvidence.last.correct, isTrue);
     expect(
       controller.nurseryAttemptEvidence.last.skillId,
@@ -90,7 +92,8 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Math and My World boards remain usable at phone and Windows sizes',
+  testWidgets(
+      'Math and My World boards remain usable at phone and Windows sizes',
       (tester) async {
     addTearDown(() => tester.binding.setSurfaceSize(null));
     const sizes = <Size>[

@@ -24,7 +24,8 @@ class NurseryChoiceGame extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final width = constraints.hasBoundedWidth ? constraints.maxWidth : 680.0;
+        final width =
+            constraints.hasBoundedWidth ? constraints.maxWidth : 680.0;
         final hasLongAnswer = activity.options.any(
           (option) => nurserySpokenLabel(option.label).length > 28,
         );
@@ -37,9 +38,8 @@ class NurseryChoiceGame extends StatelessWidget {
                     : math.min(3, activity.options.length);
         const gap = 12.0;
         final available = math.max(0.0, width - gap * (columns - 1));
-        final cardWidth = columns <= 1
-            ? math.min(width, 520.0)
-            : available / columns;
+        final cardWidth =
+            columns <= 1 ? math.min(width, 520.0) : available / columns;
 
         return Wrap(
           alignment: WrapAlignment.center,

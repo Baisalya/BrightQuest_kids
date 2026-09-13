@@ -13,6 +13,31 @@ double brightEffectiveTextScale({
   return (system > app ? system : app).clamp(0.9, 2.0).toDouble();
 }
 
+/// Large text needs more horizontal room per tile even when the physical
+/// viewport has not changed. This helper lets adaptive grids reduce column
+/// count before text starts fighting the card layout.
+double brightReadableMinTileWidth({
+  required double baseMinWidth,
+  required double textScale,
+}) {
+  final safeBase = baseMinWidth < 1 ? 1.0 : baseMinWidth;
+  final scale = textScale.clamp(1.0, 2.0).toDouble();
+  final expansion = 1 + (scale - 1) * .35;
+  return safeBase * expansion;
+}
+
+/// A width-only breakpoint is not enough when the user has requested large
+/// system text. Surfaces using this helper stack earlier at >= 1.35x text.
+bool brightShouldStackForReadability({
+  required BuildContext context,
+  required double availableWidth,
+  required double compactWidth,
+  double largeTextThreshold = 1.35,
+}) {
+  final textScale = MediaQuery.of(context).textScaler.scale(1);
+  return availableWidth < compactWidth || textScale >= largeTextThreshold;
+}
+
 /// High-level viewport intent. This is deliberately based on the usable Flutter
 /// surface rather than an OS check so Android free-form windows behave like the
 /// space they actually have.
@@ -55,7 +80,7 @@ class BrightLayoutMetrics {
       },
       sectionGap: shortViewport ? 12 : 16,
       contentMaxWidth: windowClass == BrightWindowClass.desktop ? 1480 : 1320,
-      minimumTapTarget: windowClass == BrightWindowClass.phone ? 48 : 44,
+      minimumTapTarget: 48,
       navigationWidth: switch (windowClass) {
         BrightWindowClass.phone => 0,
         BrightWindowClass.tablet => 78,
@@ -130,7 +155,10 @@ class BrightLayout {
 }
 
 class _BrightLayoutScope extends InheritedWidget {
-  const _BrightLayoutScope({required this.metrics, required super.child});
+  const _BrightLayoutScope({
+    required this.metrics,
+    required super.child,
+  });
 
   final BrightLayoutMetrics metrics;
 
@@ -157,7 +185,12 @@ class BrightAdaptivePadding extends StatelessWidget {
   Widget build(BuildContext context) {
     final layout = BrightLayout.of(context);
     return Padding(
-      padding: EdgeInsets.fromLTRB(layout.gutter, top, layout.gutter, bottom),
+      padding: EdgeInsets.fromLTRB(
+        layout.gutter,
+        top,
+        layout.gutter,
+        bottom,
+      ),
       child: child,
     );
   }

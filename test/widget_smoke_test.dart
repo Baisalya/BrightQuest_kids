@@ -1,27 +1,26 @@
 import 'package:brightquest_kids/core/state/game_controller.dart';
+import 'package:brightquest_kids/features/games/game_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'support/app_fixture.dart';
 
-Future<void> _scrollHomeUntilVisible(
-  WidgetTester tester,
-  Finder target,
-) async {
-  final homeScroll = find.byType(CustomScrollView);
-  expect(homeScroll, findsOneWidget);
-
-  for (var attempt = 0;
-      attempt < 12 && target.evaluate().isEmpty;
-      attempt += 1) {
-    await tester.drag(homeScroll, const Offset(0, -320));
-    await tester.pumpAndSettle();
-  }
-
-  expect(target, findsWidgets);
-  await tester.ensureVisible(target.first);
-  await tester.pumpAndSettle();
-}
+Widget _gameLaunchHost(GameController controller) => buildTestScope(
+      controller: controller,
+      child: MaterialApp(
+        home: Builder(
+          builder: (context) => Scaffold(
+            body: Center(
+              child: FilledButton(
+                key: const Key('launch_math_market'),
+                onPressed: () => openGame(context, 'math_market'),
+                child: const Text('Launch Math Market'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
 
 Future<void> _scrollGameUntilVisible(
   WidgetTester tester,
@@ -43,32 +42,35 @@ Future<void> _scrollGameUntilVisible(
 }
 
 void main() {
-  testWidgets('app shell renders core navigation and daily quests',
+  testWidgets(
+      'app shell renders one focused Home action and learner navigation',
       (tester) async {
     await tester.pumpWidget(buildTestApp(GameController()));
     await tester.pumpAndSettle();
 
-    expect(find.text('Choose Your Adventure!'), findsOneWidget);
-    expect(find.bySemanticsLabel('Home'), findsOneWidget);
+    expect(find.byKey(const Key('home_primary_action')), findsOneWidget);
+    expect(find.byKey(const Key('home_primary_action_button')), findsOneWidget);
+    expect(find.byKey(const Key('home_daily_wins')), findsOneWidget);
+    expect(find.bySemanticsLabel('Today'), findsOneWidget);
     expect(find.bySemanticsLabel('Worlds'), findsOneWidget);
-    expect(find.bySemanticsLabel('Progress'), findsOneWidget);
-    expect(find.bySemanticsLabel('Parents'), findsOneWidget);
-    expect(find.bySemanticsLabel('Profile'), findsOneWidget);
+    expect(find.bySemanticsLabel('Journey'), findsOneWidget);
+    expect(find.bySemanticsLabel('Me'), findsOneWidget);
+    expect(find.bySemanticsLabel('Grown-up area'), findsOneWidget);
+    expect(find.bySemanticsLabel('Parents'), findsNothing);
 
-    final dailyQuests = find.text('Daily learning quests');
-    await _scrollHomeUntilVisible(tester, dailyQuests);
-    expect(dailyQuests, findsOneWidget);
+    // The old competing Home catalogs are intentionally gone.
+    expect(find.text('Explorer shortcuts'), findsNothing);
+    expect(find.text('Explore by Subject / World'), findsNothing);
+    expect(find.text('All Adventures'), findsNothing);
   });
 
   testWidgets(
-      'Math Market opens from Quick Play and locks adaptive level for the run',
+      'Math Market still opens through the shared game router and locks adaptive level',
       (tester) async {
-    await tester.pumpWidget(buildTestApp(GameController()));
+    await tester.pumpWidget(_gameLaunchHost(GameController()));
     await tester.pumpAndSettle();
 
-    final mathMarket = find.byKey(const Key('adventure_card_math_market'));
-    await _scrollHomeUntilVisible(tester, mathMarket);
-    await tester.tap(mathMarket);
+    await tester.tap(find.byKey(const Key('launch_math_market')));
     await tester.pumpAndSettle();
 
     expect(find.text('Math Market'), findsWidgets);
@@ -86,30 +88,28 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(800, 600));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    await tester.pumpWidget(buildTestApp(GameController()));
+    await tester.pumpWidget(_gameLaunchHost(GameController()));
     await tester.pumpAndSettle();
-
-    final mathMarket = find.byKey(const Key('adventure_card_math_market'));
-    await _scrollHomeUntilVisible(tester, mathMarket);
-    await tester.tap(mathMarket);
+    await tester.tap(find.byKey(const Key('launch_math_market')));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('math_market_guide')), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Parents tab starts behind a PIN gate', (tester) async {
+  testWidgets('grown-up utility starts behind the existing PIN gate',
+      (tester) async {
     await tester.pumpWidget(buildTestApp(GameController()));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.bySemanticsLabel('Parents'));
+    await tester.tap(find.bySemanticsLabel('Grown-up area'));
     await tester.pumpAndSettle();
 
     expect(find.text('Create a parent PIN'), findsOneWidget);
     expect(find.text('4-digit PIN'), findsOneWidget);
   });
 
-  testWidgets('home cards remain overflow-free at a compact viewport',
+  testWidgets('simplified Home remains overflow-free at a compact viewport',
       (tester) async {
     await tester.binding.setSurfaceSize(const Size(390, 700));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -117,12 +117,13 @@ void main() {
     await tester.pumpWidget(buildTestApp(GameController()));
     await tester.pumpAndSettle();
 
-    final mathMarket = find.byKey(const Key('adventure_card_math_market'));
-    await _scrollHomeUntilVisible(tester, mathMarket);
+    expect(find.byKey(const Key('home_primary_action')), findsOneWidget);
+    expect(find.byKey(const Key('home_daily_wins')), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('daily limit blocks learning game launch', (tester) async {
+  testWidgets('daily limit still blocks direct learning game launch',
+      (tester) async {
     final controller = GameController();
     controller.setDailyTimeLimitMinutes(15);
     controller.setTimeLimitEnabled(true);
@@ -130,12 +131,9 @@ void main() {
     controller.addStudySeconds(300);
     controller.addStudySeconds(300);
 
-    await tester.pumpWidget(buildTestApp(controller));
+    await tester.pumpWidget(_gameLaunchHost(controller));
     await tester.pumpAndSettle();
-
-    final mathMarket = find.byKey(const Key('adventure_card_math_market'));
-    await _scrollHomeUntilVisible(tester, mathMarket);
-    await tester.tap(mathMarket);
+    await tester.tap(find.byKey(const Key('launch_math_market')));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('time_limit_break_title')), findsOneWidget);
@@ -156,7 +154,7 @@ void main() {
       await tester.binding.setSurfaceSize(size);
       await tester.pumpWidget(buildTestApp(GameController()));
       await tester.pumpAndSettle();
-      expect(find.text('Choose Your Adventure!'), findsOneWidget);
+      expect(find.byKey(const Key('home_primary_action')), findsOneWidget);
       expect(tester.takeException(), isNull,
           reason: 'Unexpected layout exception at $size');
       await tester.pumpWidget(const SizedBox.shrink());
@@ -174,7 +172,7 @@ void main() {
 
     await tester.pumpWidget(buildTestApp(GameController()));
     await tester.pumpAndSettle();
-    await tester.tap(find.bySemanticsLabel('Profile'));
+    await tester.tap(find.bySemanticsLabel('Me'));
     await tester.pumpAndSettle();
 
     expect(find.text('Comfort & accessibility'), findsOneWidget);

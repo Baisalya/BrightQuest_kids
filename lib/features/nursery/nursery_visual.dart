@@ -86,7 +86,9 @@ class NurseryVisual extends StatelessWidget {
   static String _animationWord(String semanticLabel) {
     final normalized = semanticLabel.trim();
     final pictureIndex = normalized.toLowerCase().indexOf(' picture');
-    return pictureIndex <= 0 ? normalized : normalized.substring(0, pictureIndex);
+    return pictureIndex <= 0
+        ? normalized
+        : normalized.substring(0, pictureIndex);
   }
 }
 
@@ -231,7 +233,11 @@ class _RepeatedAssetVisual extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final columns = count <= 4 ? 2 : count <= 9 ? 3 : 4;
+    final columns = count <= 4
+        ? 2
+        : count <= 9
+            ? 3
+            : 4;
     return GridView.count(
       crossAxisCount: columns,
       physics: const NeverScrollableScrollPhysics(),
@@ -280,7 +286,9 @@ class NurseryProgressStars extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 1.5),
             child: Icon(
-              index < safeFilled ? Icons.star_rounded : Icons.star_border_rounded,
+              index < safeFilled
+                  ? Icons.star_rounded
+                  : Icons.star_border_rounded,
               size: size,
               color: color,
             ),
@@ -445,7 +453,8 @@ class NurseryVisualPainter extends CustomPainter {
       for (var i = 0; i < 10; i += 1) {
         final radius = i.isEven ? outerRadius : outerRadius * .45;
         final angle = -math.pi / 2 + (math.pi * i / 5);
-        final point = center + Offset(math.cos(angle), math.sin(angle)) * radius;
+        final point =
+            center + Offset(math.cos(angle), math.sin(angle)) * radius;
         if (i == 0) {
           path.moveTo(point.dx, point.dy);
         } else {
@@ -456,7 +465,8 @@ class NurseryVisualPainter extends CustomPainter {
       canvas.drawPath(path, Paint()..color = color);
     }
 
-    void playTriangle({Offset center = const Offset(52, 50), double radius = 25}) {
+    void playTriangle(
+        {Offset center = const Offset(52, 50), double radius = 25}) {
       final path = Path()
         ..moveTo(center.dx - radius * .55, center.dy - radius)
         ..lineTo(center.dx + radius, center.dy)
@@ -584,8 +594,18 @@ class NurseryVisualPainter extends CustomPainter {
           ..lineTo(62, 38)
           ..close();
         canvas.drawPath(triangle, Paint()..color = orange);
-        strokePath(Path()..moveTo(27, 40)..lineTo(27, 52), pink, 3);
-        strokePath(Path()..moveTo(73, 40)..lineTo(73, 52), orange, 3);
+        strokePath(
+            Path()
+              ..moveTo(27, 40)
+              ..lineTo(27, 52),
+            pink,
+            3);
+        strokePath(
+            Path()
+              ..moveTo(73, 40)
+              ..lineTo(73, 52),
+            orange,
+            3);
         break;
       case NurseryVisualConcept.pictureWords:
       case NurseryVisualConcept.localPicture:
@@ -602,7 +622,11 @@ class NurseryVisualPainter extends CustomPainter {
         break;
       case NurseryVisualConcept.counting:
         final safeCount = count.clamp(1, 10).toInt();
-        final columns = safeCount <= 4 ? 2 : safeCount <= 9 ? 3 : 4;
+        final columns = safeCount <= 4
+            ? 2
+            : safeCount <= 9
+                ? 3
+                : 4;
         final rows = (safeCount / columns).ceil();
         final cellWidth = 72 / columns;
         final cellHeight = 68 / rows;
@@ -699,13 +723,28 @@ class NurseryVisualPainter extends CustomPainter {
         circle(const Offset(40, 51), 3.5, ink);
         circle(const Offset(60, 51), 3.5, ink);
         circle(const Offset(50, 61), 4, pink);
-        strokePath(Path()..moveTo(50, 65)..quadraticBezierTo(45, 71, 40, 67), ink, 2.5);
-        strokePath(Path()..moveTo(50, 65)..quadraticBezierTo(55, 71, 60, 67), ink, 2.5);
+        strokePath(
+            Path()
+              ..moveTo(50, 65)
+              ..quadraticBezierTo(45, 71, 40, 67),
+            ink,
+            2.5);
+        strokePath(
+            Path()
+              ..moveTo(50, 65)
+              ..quadraticBezierTo(55, 71, 60, 67),
+            ink,
+            2.5);
         break;
       case NurseryVisualConcept.food:
         circle(const Offset(46, 55), 26, pink);
         circle(const Offset(59, 55), 26, pink);
-        strokePath(Path()..moveTo(53, 31)..quadraticBezierTo(55, 18, 63, 14), green, 6);
+        strokePath(
+            Path()
+              ..moveTo(53, 31)
+              ..quadraticBezierTo(55, 18, 63, 14),
+            green,
+            6);
         final leaf = Path()
           ..moveTo(60, 21)
           ..quadraticBezierTo(76, 13, 78, 28)
@@ -717,15 +756,45 @@ class NurseryVisualPainter extends CustomPainter {
         rounded(const Rect.fromLTWH(15, 50, 31, 31), 7, purple);
         text('A', const Offset(30.5, 65.5), 18, Colors.white);
         circle(const Offset(70, 61), 20, blue);
-        strokePath(Path()..moveTo(52, 61)..quadraticBezierTo(70, 43, 88, 61), Colors.white, 3);
+        strokePath(
+            Path()
+              ..moveTo(52, 61)
+              ..quadraticBezierTo(70, 43, 88, 61),
+            Colors.white,
+            3);
         break;
       case NurseryVisualConcept.body:
         circle(const Offset(50, 27), 13, orange);
-        strokePath(Path()..moveTo(50, 42)..lineTo(50, 68), purple, 8);
-        strokePath(Path()..moveTo(50, 49)..lineTo(30, 58), purple, 7);
-        strokePath(Path()..moveTo(50, 49)..lineTo(70, 58), purple, 7);
-        strokePath(Path()..moveTo(50, 66)..lineTo(36, 84), purple, 7);
-        strokePath(Path()..moveTo(50, 66)..lineTo(64, 84), purple, 7);
+        strokePath(
+            Path()
+              ..moveTo(50, 42)
+              ..lineTo(50, 68),
+            purple,
+            8);
+        strokePath(
+            Path()
+              ..moveTo(50, 49)
+              ..lineTo(30, 58),
+            purple,
+            7);
+        strokePath(
+            Path()
+              ..moveTo(50, 49)
+              ..lineTo(70, 58),
+            purple,
+            7);
+        strokePath(
+            Path()
+              ..moveTo(50, 66)
+              ..lineTo(36, 84),
+            purple,
+            7);
+        strokePath(
+            Path()
+              ..moveTo(50, 66)
+              ..lineTo(64, 84),
+            purple,
+            7);
         break;
       case NurseryVisualConcept.routines:
         circle(const Offset(33, 34), 17, yellow);
@@ -740,8 +809,18 @@ class NurseryVisualPainter extends CustomPainter {
           );
         }
         circle(const Offset(67, 65), 23, soft);
-        strokePath(Path()..moveTo(67, 65)..lineTo(67, 51), purple, 4);
-        strokePath(Path()..moveTo(67, 65)..lineTo(77, 70), purple, 4);
+        strokePath(
+            Path()
+              ..moveTo(67, 65)
+              ..lineTo(67, 51),
+            purple,
+            4);
+        strokePath(
+            Path()
+              ..moveTo(67, 65)
+              ..lineTo(77, 70),
+            purple,
+            4);
         break;
       case NurseryVisualConcept.patterns:
         circle(const Offset(18, 50), 8, purple);

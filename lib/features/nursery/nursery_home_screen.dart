@@ -16,7 +16,14 @@ import 'nursery_visual.dart';
 import 'nursery_world_screen.dart';
 
 class NurseryHomeScreen extends StatelessWidget {
-  const NurseryHomeScreen({super.key});
+  const NurseryHomeScreen({
+    this.rootMode = false,
+    this.onOpenGrownUpArea,
+    super.key,
+  });
+
+  final bool rootMode;
+  final VoidCallback? onOpenGrownUpArea;
 
   @override
   Widget build(BuildContext context) {
@@ -42,17 +49,29 @@ class NurseryHomeScreen extends StatelessWidget {
         child: Column(
           children: [
             BrightHeader(
-              showBack: true,
+              showBack: !rootMode,
               title: 'Nursery Learning Garden',
-              trailing: IconButton(
-                tooltip: 'Hear welcome',
-                onPressed: () => unawaited(
-                  BrightAudioService.instance.speak(
-                    'Welcome to Nursery Play. Tap the big play button, or choose a world.',
-                    manual: true,
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    tooltip: 'Hear welcome',
+                    onPressed: () => unawaited(
+                      BrightAudioService.instance.speak(
+                        'Welcome to Nursery Play. Tap the big play button, or choose a world.',
+                        manual: true,
+                      ),
+                    ),
+                    icon: const Icon(Icons.volume_up_rounded),
                   ),
-                ),
-                icon: const Icon(Icons.volume_up_rounded),
+                  if (rootMode && onOpenGrownUpArea != null)
+                    IconButton(
+                      key: const Key('nursery_grown_up_area'),
+                      tooltip: 'Grown-up area',
+                      onPressed: onOpenGrownUpArea,
+                      icon: const Icon(Icons.supervisor_account_rounded),
+                    ),
+                ],
               ),
             ),
             Expanded(
@@ -135,8 +154,9 @@ class _NextPlayCard extends StatelessWidget {
               ),
             );
             final message = Column(
-              crossAxisAlignment:
-                  horizontal ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+              crossAxisAlignment: horizontal
+                  ? CrossAxisAlignment.start
+                  : CrossAxisAlignment.center,
               children: [
                 Text(
                   'Ready to play?',
@@ -280,7 +300,8 @@ class _WorldCard extends StatelessWidget {
     final status = _domainProgressLabel(progress);
     return Semantics(
       button: true,
-      label: '${nurseryDomainTitle(domain)}. ${nurseryDomainSubtitle(domain.id)}. '
+      label:
+          '${nurseryDomainTitle(domain)}. ${nurseryDomainSubtitle(domain.id)}. '
           '${progress.startedSkills} of ${progress.totalSkills} activities started. Tap to open.',
       child: BrightPressableScale(
         hoverScale: 1.012,
@@ -338,9 +359,10 @@ class _WorldCard extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w900,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w900,
+                                ),
                       ),
                       if (!compact) ...[
                         const SizedBox(height: 4),
@@ -349,9 +371,10 @@ class _WorldCard extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                fontWeight: FontWeight.w700,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                  ),
                         ),
                       ],
                       const SizedBox(height: 9),
@@ -369,10 +392,11 @@ class _WorldCard extends StatelessWidget {
                         status,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                              color: color,
-                              fontWeight: FontWeight.w900,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.labelMedium?.copyWith(
+                                  color: color,
+                                  fontWeight: FontWeight.w900,
+                                ),
                       ),
                     ],
                   );
@@ -387,7 +411,8 @@ class _WorldCard extends StatelessWidget {
 }
 
 String _domainProgressLabel(NurseryDomainProgress progress) {
-  if (progress.totalSkills > 0 && progress.secureSkills == progress.totalSkills) {
+  if (progress.totalSkills > 0 &&
+      progress.secureSkills == progress.totalSkills) {
     return 'All explored';
   }
   if (progress.startedSkills > 0) return 'Keep going';

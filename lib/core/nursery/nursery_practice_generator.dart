@@ -88,7 +88,8 @@ class NurseryPracticeGenerator {
     final distractor1 = pack.letterAssociations[
         (answerIndex + 5 + random.nextInt(7)) % pack.letterAssociations.length];
     final distractor2 = pack.letterAssociations[
-        (answerIndex + 13 + random.nextInt(5)) % pack.letterAssociations.length];
+        (answerIndex + 13 + random.nextInt(5)) %
+            pack.letterAssociations.length];
     final choices = <String>{
       target,
       lowercase ? distractor1.lowercase : distractor1.uppercase,
@@ -122,8 +123,10 @@ class NurseryPracticeGenerator {
       length: pack.letterAssociations.length,
     );
     final answer = pack.letterAssociations[index];
-    final d1 = pack.letterAssociations[(index + 8) % pack.letterAssociations.length];
-    final d2 = pack.letterAssociations[(index + 17) % pack.letterAssociations.length];
+    final d1 =
+        pack.letterAssociations[(index + 8) % pack.letterAssociations.length];
+    final d2 =
+        pack.letterAssociations[(index + 17) % pack.letterAssociations.length];
     return _choicePractice(
       skill: skill,
       seed: seed,
@@ -148,16 +151,15 @@ class NurseryPracticeGenerator {
           if (example.word.toUpperCase().startsWith(letter.uppercase))
             (letter, example),
     ];
-    final selected = pool[
-      _cycleIndex(seed: seed, salt: skill.id, length: pool.length)
-    ];
+    final selected =
+        pool[_cycleIndex(seed: seed, salt: skill.id, length: pool.length)];
     final answer = selected.$1;
     final example = selected.$2;
     final index = pack.letterAssociations.indexOf(answer);
-    final d1 = pack.letterAssociations[
-        (index + 6) % pack.letterAssociations.length];
-    final d2 = pack.letterAssociations[
-        (index + 14) % pack.letterAssociations.length];
+    final d1 =
+        pack.letterAssociations[(index + 6) % pack.letterAssociations.length];
+    final d2 =
+        pack.letterAssociations[(index + 14) % pack.letterAssociations.length];
     final d1Example = d1.examples[random.nextInt(d1.examples.length)];
     final d2Example = d2.examples[random.nextInt(d2.examples.length)];
     return _choicePractice(
@@ -167,8 +169,7 @@ class NurseryPracticeGenerator {
           'Look at the picture. Which word belongs with ${answer.uppercase}?',
       answer: example.word,
       choices: <String>[example.word, d1Example.word, d2Example.word],
-      explanation:
-          '${answer.uppercase} is for ${example.word}.',
+      explanation: '${answer.uppercase} is for ${example.word}.',
       visualTokens: <String>[answer.uppercase, example.word],
     );
   }
@@ -184,15 +185,14 @@ class NurseryPracticeGenerator {
         for (final example in letter.soundPracticeExamples) (letter, example),
     ];
     final selected = eligible[
-      _cycleIndex(seed: seed, salt: skill.id, length: eligible.length)
-    ];
+        _cycleIndex(seed: seed, salt: skill.id, length: eligible.length)];
     final answer = selected.$1;
     final example = selected.$2;
     final index = pack.letterAssociations.indexOf(answer);
-    final d1 = pack.letterAssociations[
-        (index + 9) % pack.letterAssociations.length];
-    final d2 = pack.letterAssociations[
-        (index + 18) % pack.letterAssociations.length];
+    final d1 =
+        pack.letterAssociations[(index + 9) % pack.letterAssociations.length];
+    final d2 =
+        pack.letterAssociations[(index + 18) % pack.letterAssociations.length];
     return _choicePractice(
       skill: skill,
       seed: seed,
@@ -219,8 +219,10 @@ class NurseryPracticeGenerator {
       length: pack.letterAssociations.length,
     );
     final answer = pack.letterAssociations[index];
-    final d1 = pack.letterAssociations[(index + 4) % pack.letterAssociations.length];
-    final d2 = pack.letterAssociations[(index + 11) % pack.letterAssociations.length];
+    final d1 =
+        pack.letterAssociations[(index + 4) % pack.letterAssociations.length];
+    final d2 =
+        pack.letterAssociations[(index + 11) % pack.letterAssociations.length];
     return _choicePractice(
       skill: skill,
       seed: seed,
@@ -243,15 +245,14 @@ class NurseryPracticeGenerator {
         for (final example in letter.beginningSoundExamples) (letter, example),
     ];
     final selected = eligible[
-      _cycleIndex(seed: seed, salt: skill.id, length: eligible.length)
-    ];
+        _cycleIndex(seed: seed, salt: skill.id, length: eligible.length)];
     final answer = selected.$1;
     final example = selected.$2;
     final index = pack.letterAssociations.indexOf(answer);
-    final d1 = pack.letterAssociations[
-        (index + 7) % pack.letterAssociations.length];
-    final d2 = pack.letterAssociations[
-        (index + 15) % pack.letterAssociations.length];
+    final d1 =
+        pack.letterAssociations[(index + 7) % pack.letterAssociations.length];
+    final d2 =
+        pack.letterAssociations[(index + 15) % pack.letterAssociations.length];
     return _choicePractice(
       skill: skill,
       seed: seed,
@@ -278,11 +279,12 @@ class NurseryPracticeGenerator {
     };
     final min = bounds.$1;
     final max = bounds.$2;
-    final answer = min + _cycleIndex(
-      seed: seed,
-      salt: '${skill.id}:number',
-      length: max - min + 1,
-    );
+    final answer = min +
+        _cycleIndex(
+          seed: seed,
+          salt: '${skill.id}:number',
+          length: max - min + 1,
+        );
     final choices = _nearbyNumberChoices(answer, min, max);
     return _choicePractice(
       skill: skill,
@@ -436,9 +438,8 @@ class NurseryPracticeGenerator {
       prompt: 'Which number is ${askMore ? 'more' : 'less'}: $left or $right?',
       answer: '$answer',
       choices: <String>['$left', '$right'],
-      explanation: askMore
-          ? '$right is more than $left.'
-          : '$left is less than $right.',
+      explanation:
+          askMore ? '$right is more than $left.' : '$left is less than $right.',
     );
   }
 
@@ -495,7 +496,14 @@ class NurseryPracticeGenerator {
     int seed,
     _NurseryStableRandom random,
   ) {
-    const catalog = <String>['red', 'blue', 'green', 'yellow', 'orange', 'purple'];
+    const catalog = <String>[
+      'red',
+      'blue',
+      'green',
+      'yellow',
+      'orange',
+      'purple'
+    ];
     final index = _cycleIndex(
       seed: seed,
       salt: '${skill.id}:colour',
@@ -549,17 +557,42 @@ class NurseryPracticeGenerator {
   ) {
     final catalog = switch (skill.id) {
       'knowledge_animals' => const <String>[
-          'cat', 'dog', 'fish', 'rabbit', 'goat', 'cow', 'tiger', 'bird',
+          'cat',
+          'dog',
+          'fish',
+          'rabbit',
+          'goat',
+          'cow',
+          'tiger',
+          'bird',
         ],
       'knowledge_foods' => const <String>[
-          'apple', 'mango', 'carrot', 'orange', 'banana', 'potato', 'pear',
+          'apple',
+          'mango',
+          'carrot',
+          'orange',
+          'banana',
+          'potato',
+          'pear',
           'broccoli',
         ],
       'knowledge_objects' => const <String>[
-          'ball', 'book', 'shoe', 'cup', 'spoon', 'pencil', 'hat', 'key',
+          'ball',
+          'book',
+          'shoe',
+          'cup',
+          'spoon',
+          'pencil',
+          'hat',
+          'key',
         ],
       'knowledge_body' => const <String>[
-          'eyes', 'hands', 'feet', 'ears', 'nose', 'mouth',
+          'eyes',
+          'hands',
+          'feet',
+          'ears',
+          'nose',
+          'mouth',
         ],
       _ => const <String>['cat', 'ball', 'apple', 'book'],
     };
@@ -768,8 +801,10 @@ class NurseryPracticeGenerator {
     return _choicePractice(
       skill: skill,
       seed: seed,
-      prompt: 'Look carefully at the ${item.$1.first} picture row. Which picture is different?',
-      narration: 'Look carefully at the ${item.$1.first} picture row. Which picture is different?',
+      prompt:
+          'Look carefully at the ${item.$1.first} picture row. Which picture is different?',
+      narration:
+          'Look carefully at the ${item.$1.first} picture row. Which picture is different?',
       answer: item.$2,
       choices: <String>[item.$2, repeated, 'dog'],
       explanation: '${item.$3} is the one that is different.',
@@ -846,7 +881,6 @@ class NurseryPracticeGenerator {
     final offset = seed.abs() % values.length;
     return <String>[...values.skip(offset), ...values.take(offset)];
   }
-
 
   int _cycleIndex({
     required int seed,

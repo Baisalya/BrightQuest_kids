@@ -1,11 +1,25 @@
 import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
+import '../../core/models/game_models.dart';
 import '../../core/learning/learning_models.dart';
 import '../../core/learning/parent_report_engine.dart';
 
 class ParentLearningReportScreen extends StatelessWidget {
   const ParentLearningReportScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = BrightQuestScope.of(context);
+    if (controller.isNurseryLearner) {
+      return const _NurseryLearningReport();
+    }
+    return const _SchoolLearningReport();
+  }
+}
+
+class _SchoolLearningReport extends StatelessWidget {
+  const _SchoolLearningReport();
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +31,7 @@ class ParentLearningReportScreen extends StatelessWidget {
       classNumber: controller.selectedClass,
       now: DateTime.now(),
     );
+
     final bySubject = <String, List<ParentCompetencyRow>>{};
     for (final row in report.rows) {
       bySubject
@@ -27,6 +42,7 @@ class ParentLearningReportScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Learning evidence')),
       body: ListView(
+        key: const Key('parent_school_learning_report'),
         padding: const EdgeInsets.all(20),
         children: [
           Card(
@@ -45,12 +61,17 @@ class ParentLearningReportScreen extends StatelessWidget {
                     runSpacing: 8,
                     children: [
                       Chip(
-                          label: Text(
-                              '${report.weekly.learned} skills practised')),
-                      Chip(label: Text('${report.weekly.retained} secure')),
+                        label:
+                            Text('${report.weekly.learned} skills practised'),
+                      ),
                       Chip(
-                          label: Text(
-                              '${report.weekly.needsSupport} need support')),
+                        label: Text('${report.weekly.retained} secure'),
+                      ),
+                      Chip(
+                        label: Text(
+                          '${report.weekly.needsSupport} need support',
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -64,6 +85,18 @@ class ParentLearningReportScreen extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(height: 18),
+          Text(
+            'Adventure diagnostics',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'Parent-only signals from the learning games. Adaptive level is an internal challenge setting, not a grade or label for the child.',
+          ),
+          const SizedBox(height: 10),
+          for (final game in games.where((game) => game.id != 'rewards_room'))
+            _AdventureDiagnosticCard(game: game),
           const SizedBox(height: 18),
           for (final entry in bySubject.entries) ...[
             Text(
@@ -97,13 +130,15 @@ class ParentLearningReportScreen extends StatelessWidget {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                            'Last evidence: ${_date(row.lastPracticeIso!)}'),
+                          'Last evidence: ${_date(row.lastPracticeIso!)}',
+                        ),
                       ),
                     if (row.nextReviewIso != null)
                       Align(
                         alignment: Alignment.centerLeft,
-                        child:
-                            Text('Next review: ${_date(row.nextReviewIso!)}'),
+                        child: Text(
+                          'Next review: ${_date(row.nextReviewIso!)}',
+                        ),
                       ),
                   ],
                 ),
@@ -111,8 +146,10 @@ class ParentLearningReportScreen extends StatelessWidget {
             const SizedBox(height: 14),
           ],
           if (report.projectEvidence.isNotEmpty) ...[
-            Text('Applied missions',
-                style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              'Applied missions',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             const SizedBox(height: 8),
             for (final evidence in report.projectEvidence)
               Card(
@@ -124,17 +161,142 @@ class ParentLearningReportScreen extends StatelessWidget {
                 ),
               ),
           ],
-          if (repository.nurseryPack case final nursery?) ...[
+          const SizedBox(height: 12),
+          const Card(
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                'PDF/print export remains disabled until its layout and privacy review is signed off. This prevents hidden identifiers or purchase information from leaking into a report.',
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AdventureDiagnosticCard extends StatelessWidget {
+  const _AdventureDiagnosticCard({required this.game});
+
+  final AdventureGame game;
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = BrightQuestScope.of(context);
+    final stats = controller.statsFor(game.id);
+    final difficulty = controller.recommendedDifficulty(game.id);
+    final weakTopics = stats.topicProgress.entries
+        .where((entry) => entry.value.attempts >= 2)
+        .toList()
+      ..sort(
+        (a, b) => a.value.accuracy.compareTo(b.value.accuracy),
+      );
+    final focusTopics = weakTopics
+        .take(2)
+        .map((entry) => _prettyTopic(entry.key))
+        .toList(growable: false);
+
+    return Card(
+      child: ExpansionTile(
+        key: Key('parent_adventure_diagnostic_${game.id}'),
+        leading: CircleAvatar(
+          backgroundColor: game.color.withValues(alpha: .12),
+          child: Icon(game.icon, color: game.color),
+        ),
+        title: Text(
+          game.title,
+          style: const TextStyle(fontWeight: FontWeight.w900),
+        ),
+        subtitle: Text(
+          '${(stats.mastery * 100).round()}% mastery • ${(stats.accuracy * 100).round()}% accuracy',
+        ),
+        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              '${stats.correctAnswers}/${stats.attempts} correct • ${stats.hintsUsed} hints • adaptive level $difficulty',
+            ),
+          ),
+          const SizedBox(height: 6),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              focusTopics.isEmpty
+                  ? 'Focus next: more play evidence needed'
+                  : 'Focus next: ${focusTopics.join(' • ')}',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NurseryLearningReport extends StatelessWidget {
+  const _NurseryLearningReport();
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = BrightQuestScope.of(context);
+    final repository = BrightQuestScope.contentOf(context);
+    final nursery = repository.nurseryPack;
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Nursery learning evidence')),
+      body: ListView(
+        key: const Key('parent_nursery_learning_report'),
+        padding: const EdgeInsets.all(20),
+        children: [
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Nursery overview',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      Chip(
+                        label: Text(
+                          '${controller.nurseryAttemptEvidence.length} activities recorded',
+                        ),
+                      ),
+                      Chip(
+                        label: Text(
+                          '${controller.dueNurseryReviewTasks(limit: 50).length} review ready',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Nursery evidence stays separate from School Class 3–5 records. Passive teaching screens and tracing do not establish mastery.',
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (nursery == null) ...[
+            const SizedBox(height: 14),
+            const Card(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  'Nursery content is unavailable in this build.',
+                ),
+              ),
+            ),
+          ] else ...[
             const SizedBox(height: 18),
-            Text(
-              'Nursery Learning Garden',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Nursery evidence is kept separate from the selected Class 3–5 record. Passive teaching screens and tracing do not establish mastery.',
-            ),
-            const SizedBox(height: 8),
             for (final domain in nursery.domains) ...[
               Text(
                 domain.title,
@@ -161,54 +323,50 @@ class ParentLearningReportScreen extends StatelessWidget {
               const SizedBox(height: 10),
             ],
           ],
-          const SizedBox(height: 12),
-          const Card(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Text(
-                'PDF/print export remains disabled until its layout and privacy review is signed off. This prevents hidden identifiers or purchase information from leaking into a report.',
-              ),
-            ),
-          ),
         ],
       ),
     );
   }
+}
 
-  static String _subjectTitle(String value) => switch (value) {
-        'maths' => 'Maths',
-        'english' => 'English',
-        'science' => 'Science',
-        'evs' => 'EVS',
-        'social' => 'Social & maps',
-        'coding' => 'Coding',
-        _ => value,
-      };
+String _prettyTopic(String value) => value
+    .split('_')
+    .where((part) => part.isNotEmpty)
+    .map((part) => '${part[0].toUpperCase()}${part.substring(1)}')
+    .join(' ');
 
-  static String _stateLabel(LearningEvidenceState state) => switch (state) {
-        LearningEvidenceState.notStarted => 'Not started',
-        LearningEvidenceState.introduced => 'Introduced',
-        LearningEvidenceState.practising => 'Learning',
-        LearningEvidenceState.masteredNow => 'Mastered now',
-        LearningEvidenceState.reviewDue => 'Review due',
-        LearningEvidenceState.secure => 'Secure',
-        LearningEvidenceState.needsSupport => 'Needs support',
-      };
+String _subjectTitle(String value) => switch (value) {
+      'maths' => 'Maths',
+      'english' => 'English',
+      'science' => 'Science',
+      'evs' => 'EVS',
+      'social' => 'Social & maps',
+      'coding' => 'Coding',
+      _ => value,
+    };
 
-  static IconData _stateIcon(LearningEvidenceState state) => switch (state) {
-        LearningEvidenceState.notStarted =>
-          Icons.radio_button_unchecked_rounded,
-        LearningEvidenceState.introduced => Icons.lightbulb_outline_rounded,
-        LearningEvidenceState.practising => Icons.school_rounded,
-        LearningEvidenceState.masteredNow => Icons.star_rounded,
-        LearningEvidenceState.reviewDue => Icons.update_rounded,
-        LearningEvidenceState.secure => Icons.verified_rounded,
-        LearningEvidenceState.needsSupport => Icons.volunteer_activism_rounded,
-      };
+String _stateLabel(LearningEvidenceState state) => switch (state) {
+      LearningEvidenceState.notStarted => 'Not started',
+      LearningEvidenceState.introduced => 'Introduced',
+      LearningEvidenceState.practising => 'Learning',
+      LearningEvidenceState.masteredNow => 'Mastered now',
+      LearningEvidenceState.reviewDue => 'Review due',
+      LearningEvidenceState.secure => 'Secure',
+      LearningEvidenceState.needsSupport => 'Needs support',
+    };
 
-  static String _date(String iso) {
-    final value = DateTime.tryParse(iso);
-    if (value == null) return iso;
-    return '${value.day.toString().padLeft(2, '0')}/${value.month.toString().padLeft(2, '0')}/${value.year}';
-  }
+IconData _stateIcon(LearningEvidenceState state) => switch (state) {
+      LearningEvidenceState.notStarted => Icons.radio_button_unchecked_rounded,
+      LearningEvidenceState.introduced => Icons.lightbulb_outline_rounded,
+      LearningEvidenceState.practising => Icons.school_rounded,
+      LearningEvidenceState.masteredNow => Icons.star_rounded,
+      LearningEvidenceState.reviewDue => Icons.update_rounded,
+      LearningEvidenceState.secure => Icons.verified_rounded,
+      LearningEvidenceState.needsSupport => Icons.volunteer_activism_rounded,
+    };
+
+String _date(String iso) {
+  final value = DateTime.tryParse(iso);
+  if (value == null) return iso;
+  return '${value.day.toString().padLeft(2, '0')}/${value.month.toString().padLeft(2, '0')}/${value.year}';
 }

@@ -130,8 +130,7 @@ abstract final class NurseryHomePlanner {
     }
 
     final newSkill = pack.skills.firstWhere(
-      (skill) =>
-          masteryFor(skill.id).state == LearningEvidenceState.notStarted,
+      (skill) => masteryFor(skill.id).state == LearningEvidenceState.notStarted,
       orElse: () => pack.skills.first,
     );
     final allSecure = pack.skills.every(
@@ -184,7 +183,9 @@ abstract final class NurseryHomePlanner {
         LearningEvidenceState.reviewDue ||
         LearningEvidenceState.needsSupport =>
           true,
-        LearningEvidenceState.notStarted || LearningEvidenceState.secure => false,
+        LearningEvidenceState.notStarted ||
+        LearningEvidenceState.secure =>
+          false,
       };
 
   static bool _isMoreRecent(DateTime? candidate, DateTime? current) {

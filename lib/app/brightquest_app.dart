@@ -4,17 +4,20 @@ import 'package:flutter/material.dart';
 
 import '../core/content/content_repository.dart';
 import '../core/entitlements/entitlement_service.dart';
+import '../core/models/learner_stage.dart';
 import '../core/services/bright_audio_service.dart';
 import '../core/state/game_controller.dart';
 import '../core/theme/app_theme.dart';
 import '../features/adventures/adventures_screen.dart';
 import '../features/home/home_screen.dart';
+import '../features/nursery/nursery_home_screen.dart';
 import '../features/parent/parent_gate_screen.dart';
 import '../features/profile/profile_screen.dart';
 import '../features/progress/progress_screen.dart';
 import '../widgets/bright_adaptive.dart';
 import 'app_persistence_boundary.dart';
 import 'brightquest_scope.dart';
+import 'learner_shell_policy.dart';
 
 class BrightQuestApp extends StatelessWidget {
   BrightQuestApp({
@@ -79,27 +82,56 @@ class MainShell extends StatefulWidget {
 }
 
 class _MainShellState extends State<MainShell> {
-  int index = 0;
+  LearnerShellDestination _selectedDestination = LearnerShellDestination.home;
   bool? _lastAudioEnabled;
+  int? _lastClassNumber;
+  LearnerStage? _lastLearnerStage;
 
-  final Map<int, Widget> _mountedPages = <int, Widget>{};
+  final Map<LearnerShellDestination, Widget> _mountedPages =
+      <LearnerShellDestination, Widget>{};
 
-  Widget _pageFor(int pageIndex) => _mountedPages.putIfAbsent(
-        pageIndex,
-        () => switch (pageIndex) {
-          0 => const HomeScreen(),
-          1 => const AdventuresScreen(),
-          2 => const ProgressScreen(),
-          3 => const ParentGateScreen(),
-          4 => const ProfileScreen(),
-          _ => const HomeScreen(),
+  Widget _pageFor(LearnerShellDestination destination) =>
+      _mountedPages.putIfAbsent(
+        destination,
+        () => switch (destination) {
+          LearnerShellDestination.home => const HomeScreen(),
+          LearnerShellDestination.worlds => const AdventuresScreen(),
+          LearnerShellDestination.journey => const ProgressScreen(),
+          LearnerShellDestination.profile => const ProfileScreen(),
         },
       );
+
+  void _selectDestination(LearnerShellDestination destination) {
+    if (_selectedDestination == destination) return;
+    setState(() => _selectedDestination = destination);
+  }
+
+  void _openParentArea() {
+    unawaited(BrightAudioService.instance.playSfx(BrightSfx.tap));
+    Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(builder: (_) => const ParentGateScreen()),
+    );
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final enabled = BrightQuestScope.of(context).soundEnabled;
+    final controller = BrightQuestScope.of(context);
+
+    if (_lastLearnerStage != controller.learnerStage) {
+      _lastLearnerStage = controller.learnerStage;
+      _selectedDestination = LearnerShellDestination.home;
+    }
+
+    if (_lastClassNumber != controller.selectedClass) {
+      _lastClassNumber = controller.selectedClass;
+      final policy = LearnerShellPolicy.forClass(controller.selectedClass);
+      if (!policy.contains(_selectedDestination)) {
+        _selectedDestination = LearnerShellDestination.home;
+      }
+    }
+
+    final enabled = controller.soundEnabled;
     if (_lastAudioEnabled == enabled) return;
     _lastAudioEnabled = enabled;
     unawaited(BrightAudioService.instance.setSessionEnabled(enabled));
@@ -111,18 +143,30 @@ class _MainShellState extends State<MainShell> {
   @override
   Widget build(BuildContext context) {
     final layout = BrightLayout.of(context);
-    // Keep only the active destination in the widget tree. This preserves the
-    // Windows crash-isolation contract by avoiding offstage page semantics
-    // while the shell's own State keeps the selected destination stable
-    // across free-form window resizing.
-    final page = _pageFor(index);
+    final controller = BrightQuestScope.of(context);
 
+    if (controller.learnerStage == LearnerStage.nursery) {
+      return NurseryHomeScreen(
+        rootMode: true,
+        onOpenGrownUpArea: _openParentArea,
+      );
+    }
+
+    final policy = LearnerShellPolicy.forClass(controller.selectedClass);
+    final page = _pageFor(_selectedDestination);
+
+    // Keep only the active learner destination mounted in the widget tree.
+    // This preserves the existing Windows semantics crash-isolation boundary
+    // while the State keeps the selected destination stable during free-form
+    // window resizing.
     if (layout.usesBottomNavigation) {
       return Scaffold(
         body: page,
         bottomNavigationBar: _BrightBottomNavigation(
-          selectedIndex: index,
-          onSelected: (value) => setState(() => index = value),
+          policy: policy,
+          selectedDestination: _selectedDestination,
+          onSelected: _selectDestination,
+          onParentSelected: _openParentArea,
         ),
       );
     }
@@ -131,11 +175,13 @@ class _MainShellState extends State<MainShell> {
       body: Row(
         children: [
           _BrightSideNavigation(
-            selectedIndex: index,
+            policy: policy,
+            selectedDestination: _selectedDestination,
             expanded: layout.usesExpandedNavigation,
             width: layout.navigationWidth,
             compactHeight: layout.shortViewport,
-            onSelected: (value) => setState(() => index = value),
+            onSelected: _selectDestination,
+            onParentSelected: _openParentArea,
           ),
           Expanded(child: page),
         ],
@@ -145,34 +191,53 @@ class _MainShellState extends State<MainShell> {
 }
 
 class _ShellItem {
-  const _ShellItem(this.icon, this.label, this.emoji);
+  const _ShellItem({
+    required this.icon,
+    required this.label,
+  });
+
   final IconData icon;
   final String label;
-  final String emoji;
 }
 
-const _shellItems = <_ShellItem>[
-  _ShellItem(Icons.home_rounded, 'Home', '🏡'),
-  _ShellItem(Icons.explore_rounded, 'Worlds', '🗺️'),
-  _ShellItem(Icons.auto_graph_rounded, 'Progress', '⭐'),
-  _ShellItem(Icons.family_restroom_rounded, 'Parents', '👨‍👩‍👧'),
-  _ShellItem(Icons.face_rounded, 'Profile', '🦁'),
-];
+const Map<LearnerShellDestination, _ShellItem> _shellItems =
+    <LearnerShellDestination, _ShellItem>{
+  LearnerShellDestination.home: _ShellItem(
+    icon: Icons.home_rounded,
+    label: 'Today',
+  ),
+  LearnerShellDestination.worlds: _ShellItem(
+    icon: Icons.explore_rounded,
+    label: 'Worlds',
+  ),
+  LearnerShellDestination.journey: _ShellItem(
+    icon: Icons.route_rounded,
+    label: 'Journey',
+  ),
+  LearnerShellDestination.profile: _ShellItem(
+    icon: Icons.face_rounded,
+    label: 'Me',
+  ),
+};
 
 class _BrightSideNavigation extends StatelessWidget {
   const _BrightSideNavigation({
-    required this.selectedIndex,
+    required this.policy,
+    required this.selectedDestination,
     required this.expanded,
     required this.width,
     required this.compactHeight,
     required this.onSelected,
+    required this.onParentSelected,
   });
 
-  final int selectedIndex;
+  final LearnerShellPolicy policy;
+  final LearnerShellDestination selectedDestination;
   final bool expanded;
   final double width;
   final bool compactHeight;
-  final ValueChanged<int> onSelected;
+  final ValueChanged<LearnerShellDestination> onSelected;
+  final VoidCallback onParentSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -204,21 +269,24 @@ class _BrightSideNavigation extends StatelessWidget {
           const Positioned(
             top: 84,
             right: -26,
-            child:
-                Icon(Icons.cloud_rounded, size: 90, color: Color(0x16FFFFFF)),
+            child: Icon(
+              Icons.cloud_rounded,
+              size: 90,
+              color: Color(0x16FFFFFF),
+            ),
           ),
           const Positioned(
             bottom: 120,
             left: -20,
-            child: Icon(Icons.auto_awesome_rounded,
-                size: 62, color: Color(0x14FFE36F)),
+            child: Icon(
+              Icons.auto_awesome_rounded,
+              size: 62,
+              color: Color(0x14FFE36F),
+            ),
           ),
           SafeArea(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                // Android free-form and desktop windows can become extremely
-                // short. Preserve the five navigation targets first and drop
-                // only decorative/profile chrome when vertical space is tight.
                 final severelyShort = constraints.maxHeight < 460;
                 return Padding(
                   padding: EdgeInsets.symmetric(
@@ -235,28 +303,59 @@ class _BrightSideNavigation extends StatelessWidget {
                         SizedBox(height: compactHeight ? 10 : 18),
                       ],
                       Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children:
-                              List.generate(_shellItems.length, (itemIndex) {
-                            final item = _shellItems[itemIndex];
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                bottom: compactHeight ? 5 : 8,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              for (final destination
+                                  in policy.primaryDestinations) ...[
+                                _SideNavDestination(
+                                  item: _shellItems[destination]!,
+                                  selected: selectedDestination == destination,
+                                  expanded: expanded,
+                                  compactHeight: compactHeight,
+                                  onTap: () {
+                                    unawaited(BrightAudioService.instance
+                                        .playSfx(BrightSfx.tap));
+                                    onSelected(destination);
+                                  },
+                                ),
+                                SizedBox(height: compactHeight ? 5 : 8),
+                              ],
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: compactHeight ? 3 : 6,
+                                ),
+                                child: Divider(
+                                  height: 1,
+                                  color: Colors.white.withValues(alpha: .16),
+                                ),
                               ),
-                              child: _SideNavDestination(
-                                item: item,
-                                selected: selectedIndex == itemIndex,
+                              for (final destination
+                                  in policy.utilityDestinations) ...[
+                                _SideUtilityDestination(
+                                  icon: _shellItems[destination]!.icon,
+                                  label: _shellItems[destination]!.label,
+                                  selected: selectedDestination == destination,
+                                  expanded: expanded,
+                                  compactHeight: compactHeight,
+                                  onTap: () {
+                                    unawaited(BrightAudioService.instance
+                                        .playSfx(BrightSfx.tap));
+                                    onSelected(destination);
+                                  },
+                                ),
+                                SizedBox(height: compactHeight ? 5 : 8),
+                              ],
+                              _SideUtilityDestination(
+                                icon: Icons.admin_panel_settings_rounded,
+                                label: 'Grown-up area',
+                                selected: false,
                                 expanded: expanded,
                                 compactHeight: compactHeight,
-                                onTap: () {
-                                  unawaited(BrightAudioService.instance
-                                      .playSfx(BrightSfx.tap));
-                                  onSelected(itemIndex);
-                                },
+                                onTap: onParentSelected,
                               ),
-                            );
-                          }),
+                            ],
+                          ),
                         ),
                       ),
                       if (!severelyShort)
@@ -406,6 +505,87 @@ class _SideNavDestinationState extends State<_SideNavDestination> {
   }
 }
 
+class _SideUtilityDestination extends StatelessWidget {
+  const _SideUtilityDestination({
+    required this.icon,
+    required this.label,
+    required this.selected,
+    required this.expanded,
+    required this.compactHeight,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final bool expanded;
+  final bool compactHeight;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      container: true,
+      excludeSemantics: true,
+      selected: selected,
+      button: true,
+      label: label,
+      child: Tooltip(
+        message: label,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(18),
+            onTap: onTap,
+            child: Container(
+              width: double.infinity,
+              constraints: BoxConstraints(
+                minHeight: 48,
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: expanded ? 10 : 0,
+                vertical: compactHeight ? 6 : 8,
+              ),
+              decoration: BoxDecoration(
+                color: selected
+                    ? Colors.white.withValues(alpha: .22)
+                    : Colors.white.withValues(alpha: .08),
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: selected ? .30 : .10),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: expanded
+                    ? MainAxisAlignment.start
+                    : MainAxisAlignment.center,
+                children: [
+                  Icon(icon, color: Colors.white, size: 20),
+                  if (expanded) ...[
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _ExplorerDock extends StatelessWidget {
   const _ExplorerDock({
     required this.expanded,
@@ -464,8 +644,10 @@ class _ExplorerDock extends StatelessWidget {
                   color: Colors.white,
                   shape: BoxShape.circle,
                 ),
-                child: Text(avatar,
-                    style: TextStyle(fontSize: compactHeight ? 22 : 26)),
+                child: Text(
+                  avatar,
+                  style: TextStyle(fontSize: compactHeight ? 22 : 26),
+                ),
               ),
               const SizedBox(width: 9),
               Expanded(
@@ -521,167 +703,280 @@ class _ExplorerDock extends StatelessWidget {
 
 class _BrandMark extends StatelessWidget {
   const _BrandMark({required this.expanded, required this.compact});
+
   final bool expanded;
   final bool compact;
 
   @override
-  Widget build(BuildContext context) => Row(
-        mainAxisAlignment:
-            expanded ? MainAxisAlignment.start : MainAxisAlignment.center,
-        children: [
-          Container(
-            width: compact ? 42 : 48,
-            height: compact ? 42 : 48,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Colors.white, Color(0xFFFFF1B7)],
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment:
+          expanded ? MainAxisAlignment.start : MainAxisAlignment.center,
+      children: [
+        Container(
+          width: compact ? 42 : 48,
+          height: compact ? 42 : 48,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Colors.white, Color(0xFFFFF1B7)],
+            ),
+            borderRadius: BorderRadius.circular(17),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x28000000),
+                blurRadius: 12,
+                offset: Offset(0, 5),
               ),
-              borderRadius: BorderRadius.circular(17),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x28000000),
-                  blurRadius: 12,
-                  offset: Offset(0, 5),
+            ],
+          ),
+          child: Text('🦁', style: TextStyle(fontSize: compact ? 25 : 29)),
+        ),
+        if (expanded) ...[
+          const SizedBox(width: 10),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'BrightQuest',
+                  maxLines: 1,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 18,
+                  ),
+                ),
+                Text(
+                  'KIDS • ADVENTURE LEARNING',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Color(0xFFFFE36F),
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: .7,
+                    fontSize: 8.5,
+                  ),
                 ),
               ],
             ),
-            child: Text('🦁', style: TextStyle(fontSize: compact ? 25 : 29)),
           ),
-          if (expanded) ...[
-            const SizedBox(width: 10),
-            const Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        ],
+      ],
+    );
+  }
+}
+
+class _BrightBottomNavigation extends StatelessWidget {
+  const _BrightBottomNavigation({
+    required this.policy,
+    required this.selectedDestination,
+    required this.onSelected,
+    required this.onParentSelected,
+  });
+
+  final LearnerShellPolicy policy;
+  final LearnerShellDestination selectedDestination;
+  final ValueChanged<LearnerShellDestination> onSelected;
+  final VoidCallback onParentSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final utilityCount = policy.utilityDestinations.length + 1;
+    return SafeArea(
+      top: false,
+      minimum: const EdgeInsets.only(bottom: 6),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: .97),
+          borderRadius: BorderRadius.circular(27),
+          border: Border.all(color: Colors.white, width: 1.5),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x2A0C3356),
+              blurRadius: 26,
+              offset: Offset(0, 9),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Row(
                 children: [
-                  Text(
-                    'BrightQuest',
-                    maxLines: 1,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 18,
+                  for (final destination in policy.primaryDestinations)
+                    Expanded(
+                      child: _BottomPrimaryDestination(
+                        item: _shellItems[destination]!,
+                        selected: selectedDestination == destination,
+                        onTap: () {
+                          unawaited(BrightAudioService.instance
+                              .playSfx(BrightSfx.tap));
+                          onSelected(destination);
+                        },
+                      ),
                     ),
-                  ),
-                  Text(
-                    'KIDS • ADVENTURE LEARNING',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Color(0xFFFFE36F),
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: .7,
-                      fontSize: 8.5,
+                ],
+              ),
+            ),
+            Container(
+              width: 1,
+              height: 40,
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              color: AppTheme.inkMuted.withValues(alpha: .10),
+            ),
+            SizedBox(
+              width: utilityCount * 48.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  for (final destination in policy.utilityDestinations)
+                    _BottomUtilityDestination(
+                      icon: _shellItems[destination]!.icon,
+                      label: _shellItems[destination]!.label,
+                      selected: selectedDestination == destination,
+                      onTap: () {
+                        unawaited(
+                            BrightAudioService.instance.playSfx(BrightSfx.tap));
+                        onSelected(destination);
+                      },
                     ),
+                  _BottomUtilityDestination(
+                    icon: Icons.admin_panel_settings_rounded,
+                    label: 'Grown-up area',
+                    selected: false,
+                    onTap: onParentSelected,
                   ),
                 ],
               ),
             ),
           ],
-        ],
-      );
+        ),
+      ),
+    );
+  }
 }
 
-class _BrightBottomNavigation extends StatelessWidget {
-  const _BrightBottomNavigation({
-    required this.selectedIndex,
-    required this.onSelected,
+class _BottomPrimaryDestination extends StatelessWidget {
+  const _BottomPrimaryDestination({
+    required this.item,
+    required this.selected,
+    required this.onTap,
   });
-  final int selectedIndex;
-  final ValueChanged<int> onSelected;
+
+  final _ShellItem item;
+  final bool selected;
+  final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) => SafeArea(
-        top: false,
-        minimum: const EdgeInsets.only(bottom: 6),
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 10),
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+  Widget build(BuildContext context) {
+    return Semantics(
+      container: true,
+      excludeSemantics: true,
+      selected: selected,
+      button: true,
+      label: item.label,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          constraints: const BoxConstraints(minHeight: 48),
+          padding: const EdgeInsets.symmetric(vertical: 7),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: .97),
-            borderRadius: BorderRadius.circular(27),
-            border: Border.all(color: Colors.white, width: 1.5),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x2A0C3356),
-                blurRadius: 26,
-                offset: Offset(0, 9),
+            gradient: selected
+                ? const LinearGradient(
+                    colors: [Color(0xFFEDE7FF), Color(0xFFEAF6FF)],
+                  )
+                : null,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 180),
+                width: 31,
+                height: 29,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: selected
+                      ? AppTheme.purple.withValues(alpha: .12)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  item.icon,
+                  color: selected ? AppTheme.purpleDeep : AppTheme.inkMuted,
+                  size: 21,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                item.label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: selected ? AppTheme.purpleDeep : AppTheme.inkMuted,
+                  fontWeight: selected ? FontWeight.w900 : FontWeight.w700,
+                  fontSize: 9.5,
+                ),
               ),
             ],
           ),
-          child: Row(
-            children: List.generate(_shellItems.length, (itemIndex) {
-              final item = _shellItems[itemIndex];
-              final selected = itemIndex == selectedIndex;
-              return Expanded(
-                child: Semantics(
-                  container: true,
-                  excludeSemantics: true,
-                  selected: selected,
-                  button: true,
-                  label: item.label,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(20),
-                    onTap: () {
-                      unawaited(
-                          BrightAudioService.instance.playSfx(BrightSfx.tap));
-                      onSelected(itemIndex);
-                    },
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 180),
-                      padding: const EdgeInsets.symmetric(vertical: 7),
-                      decoration: BoxDecoration(
-                        gradient: selected
-                            ? const LinearGradient(
-                                colors: [Color(0xFFEDE7FF), Color(0xFFEAF6FF)],
-                              )
-                            : null,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 180),
-                            width: 31,
-                            height: 29,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: selected
-                                  ? AppTheme.purple.withValues(alpha: .12)
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(
-                              item.icon,
-                              color: selected
-                                  ? AppTheme.purpleDeep
-                                  : AppTheme.inkMuted,
-                              size: 21,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            item.label,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: selected
-                                  ? AppTheme.purpleDeep
-                                  : AppTheme.inkMuted,
-                              fontWeight:
-                                  selected ? FontWeight.w900 : FontWeight.w700,
-                              fontSize: 9.5,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }),
+        ),
+      ),
+    );
+  }
+}
+
+class _BottomUtilityDestination extends StatelessWidget {
+  const _BottomUtilityDestination({
+    required this.icon,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      container: true,
+      excludeSemantics: true,
+      selected: selected,
+      button: true,
+      label: label,
+      child: Tooltip(
+        message: label,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: onTap,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            width: 48,
+            height: 48,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: selected
+                  ? AppTheme.purple.withValues(alpha: .10)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Icon(
+              icon,
+              size: 20,
+              color: selected ? AppTheme.purpleDeep : AppTheme.inkMuted,
+            ),
           ),
         ),
-      );
+      ),
+    );
+  }
 }

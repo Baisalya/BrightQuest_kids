@@ -79,9 +79,14 @@ class BrightAdaptiveGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final possible =
-            ((constraints.maxWidth + spacing) / (minChildWidth + spacing))
-                .floor();
+        final textScale = MediaQuery.of(context).textScaler.scale(1);
+        final readableMinChildWidth = brightReadableMinTileWidth(
+          baseMinWidth: minChildWidth,
+          textScale: textScale,
+        );
+        final possible = ((constraints.maxWidth + spacing) /
+                (readableMinChildWidth + spacing))
+            .floor();
         final columns = possible.clamp(1, maxColumns).toInt();
         final width =
             (constraints.maxWidth - spacing * (columns - 1)) / columns;

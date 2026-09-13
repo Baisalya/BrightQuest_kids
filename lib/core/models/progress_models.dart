@@ -1,7 +1,9 @@
+import '../capabilities/learner_capability_boundary.dart';
 import '../entitlements/entitlement_models.dart';
 import '../learning/learning_models.dart';
 import '../learning/mission_exposure_memory.dart';
 import '../nursery/nursery_learning_models.dart';
+import 'learner_stage.dart';
 
 class TopicProgress {
   TopicProgress({
@@ -143,6 +145,7 @@ class ChildProfileSnapshot {
     required this.id,
     required this.name,
     this.avatarEmoji = '🧒',
+    this.learnerStage = LearnerStage.school,
     this.selectedClass = 4,
     this.coins = 250,
     this.stars = 0,
@@ -187,6 +190,7 @@ class ChildProfileSnapshot {
   String id;
   String name;
   String avatarEmoji;
+  LearnerStage learnerStage;
   int selectedClass;
   int coins;
   int stars;
@@ -221,6 +225,7 @@ class ChildProfileSnapshot {
         'id': id,
         'name': name,
         'avatarEmoji': avatarEmoji,
+        'learnerStage': learnerStage.name,
         'selectedClass': selectedClass,
         'coins': coins,
         'stars': stars,
@@ -285,7 +290,8 @@ class ChildProfileSnapshot {
       id: json['id'] as String? ?? 'child-1',
       name: json['name'] as String? ?? 'Explorer',
       avatarEmoji: json['avatarEmoji'] as String? ?? '🧒',
-      selectedClass: (json['selectedClass'] as num?)?.toInt() ?? 4,
+      learnerStage: learnerStageFromStorage(json['learnerStage']),
+      selectedClass: _supportedClassFromStorage(json['selectedClass']),
       coins: (json['coins'] as num?)?.toInt() ?? 250,
       stars: (json['stars'] as num?)?.toInt() ?? 0,
       streak: (json['streak'] as num?)?.toInt() ?? 0,
@@ -336,6 +342,13 @@ class ChildProfileSnapshot {
       ..['name'] = 'Explorer'
       ..['avatarEmoji'] = '🧒';
     return ChildProfileSnapshot.fromJson(copy);
+  }
+
+  static int _supportedClassFromStorage(Object? value) {
+    final classNumber = (value as num?)?.toInt() ?? 4;
+    return LearnerCapabilityBoundary.isSupportedSchoolClass(classNumber)
+        ? classNumber
+        : 4;
   }
 
   static Set<String> _stringSet(Object? value) {
@@ -422,7 +435,9 @@ class PlayerSnapshot {
           final profile = ChildProfileSnapshot.fromJson(
             Map<String, Object?>.from(entry.value as Map),
           );
-          profiles[entry.key as String] = profile;
+          final profileId = entry.key as String;
+          profile.id = profileId;
+          profiles[profileId] = profile;
         }
       }
       final entitlements = <int, ClassEntitlement>{};
@@ -430,10 +445,15 @@ class PlayerSnapshot {
       if (rawEntitlements is Map) {
         for (final entry in rawEntitlements.entries) {
           final classNumber = int.tryParse(entry.key.toString());
-          if (classNumber != null && entry.value is Map) {
-            entitlements[classNumber] = ClassEntitlement.fromJson(
+          if (classNumber != null &&
+              LearnerCapabilityBoundary.isSupportedSchoolClass(classNumber) &&
+              entry.value is Map) {
+            final entitlement = ClassEntitlement.fromJson(
               Map<String, Object?>.from(entry.value as Map),
             );
+            if (entitlement.classNumber == classNumber) {
+              entitlements[classNumber] = entitlement;
+            }
           }
         }
       }

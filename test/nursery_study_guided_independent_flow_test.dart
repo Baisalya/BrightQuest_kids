@@ -25,7 +25,8 @@ Widget _host(GameController controller, Widget child) => buildTestScope(
     );
 
 void main() {
-  test('every Nursery skill maps cleanly into guided then independent play', () {
+  test('every Nursery skill maps cleanly into guided then independent play',
+      () {
     final pack = _pack();
     for (final skill in pack.skills) {
       final activities = pack.activitiesForSkill(skill.id);
@@ -47,7 +48,10 @@ void main() {
         reason: skill.id,
       );
       expect(
-        plan.independentActivities.map((activity) => activity.id).toSet().length,
+        plan.independentActivities
+            .map((activity) => activity.id)
+            .toSet()
+            .length,
         plan.independentActivities.length,
         reason: skill.id,
       );
@@ -56,7 +60,8 @@ void main() {
 
   test('journey recommendation advances study to guided to independent', () {
     final activities = _pack().activitiesForSkill('math_count_0_5');
-    final guided = activities.firstWhere((activity) => activity.phase == 'guided');
+    final guided =
+        activities.firstWhere((activity) => activity.phase == 'guided');
 
     final firstVisit = NurseryLessonJourneyPlanner.build(
       activities: activities,
@@ -90,7 +95,8 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
     final controller = GameController();
     final activities = _pack().activitiesForSkill('math_count_0_5');
-    final guided = activities.firstWhere((activity) => activity.phase == 'guided');
+    final guided =
+        activities.firstWhere((activity) => activity.phase == 'guided');
     final independent = activities.firstWhere(
       (activity) => activity.phase == 'independent',
     );
@@ -122,7 +128,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Guided Play'), findsOneWidget);
     expect(find.text(nurseryVisualFreeText(guided.prompt)), findsOneWidget);
-    expect(find.text('Try it with me. You can tap Help anytime.'), findsOneWidget);
+    expect(
+        find.text('Try it with me. You can tap Help anytime.'), findsOneWidget);
 
     final correct = guided.correctResponseRule['value'] as String;
     final answer = find.bySemanticsLabel('Answer $correct');
@@ -135,7 +142,8 @@ void main() {
     await tester.tap(find.text('Next Game'));
     await tester.pumpAndSettle();
     expect(find.text('Independent Game'), findsOneWidget);
-    expect(find.text(nurseryVisualFreeText(independent.prompt)), findsOneWidget);
+    expect(
+        find.text(nurseryVisualFreeText(independent.prompt)), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

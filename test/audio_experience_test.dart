@@ -101,7 +101,16 @@ void main() {
     if (Platform.isWindows) {
       final speech = WindowsSpeechBackend();
       await speech.initialize();
-      expect(speech.available, isTrue);
+
+      // System.Speech voice installation is a machine-level capability, not an
+      // app invariant. The backend is intentionally allowed to remain
+      // unavailable and keep the learning flow running. When the host exposes
+      // voices, their parsed/default-voice contract is still verified.
+      if (!speech.available) {
+        expect(speech.voices, isEmpty);
+        return;
+      }
+
       expect(speech.voices, isNotEmpty);
       if (speech.voices.any((voice) => voice.isFemale)) {
         expect(speech.defaultVoice?.isFemale, isTrue);

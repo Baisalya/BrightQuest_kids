@@ -10,7 +10,8 @@ Widget _host(GameController controller, Widget child) => MaterialApp(
     );
 
 void main() {
-  testWidgets('SUN transfer feedback explains S and never falls back to A/Apple',
+  testWidgets(
+      'SUN transfer feedback explains S and never falls back to A/Apple',
       (tester) async {
     await tester.binding.setSurfaceSize(const Size(900, 700));
     addTearDown(() => tester.binding.setSurfaceSize(null));

@@ -194,11 +194,11 @@ class LessonEngine {
     }
 
     final example = targetDifficulty == null
-        ? (plannedActivityAt(0) ?? (activities.isEmpty ? null : activities.first))
+        ? (plannedActivityAt(0) ??
+            (activities.isEmpty ? null : activities.first))
         : _teachingExample(activities, targetDifficulty);
-    final guidedActivity = targetDifficulty == null
-        ? (plannedActivityAt(0) ?? example)
-        : example;
+    final guidedActivity =
+        targetDifficulty == null ? (plannedActivityAt(0) ?? example) : example;
     final blueprintActivities = blueprint?.independentSourceActivityIds
             .map(repository.activityById)
             .whereType<ContentActivity>()
@@ -226,9 +226,8 @@ class LessonEngine {
                 .where((activity) => activity.id != independent?.id)
                 .firstOrNull ??
             independent);
-    ContentActivity? exitTicket = targetDifficulty == null
-        ? plannedActivityAt(3)
-        : null;
+    ContentActivity? exitTicket =
+        targetDifficulty == null ? plannedActivityAt(3) : null;
     if (targetDifficulty == null && exitTicket == null) {
       for (final candidate in activities.reversed) {
         if (candidate.id != independent?.id && candidate.id != transfer?.id) {
@@ -383,7 +382,8 @@ class LessonEngine {
       allocated[allocatedKinds[index]] = activity;
     }
 
-    final allocatedIds = allocated.values.map((activity) => activity.id).toSet();
+    final allocatedIds =
+        allocated.values.map((activity) => activity.id).toSet();
     if (allocatedIds.length != allocated.length) {
       throw StateError('Mission training allocation contains a repeated item.');
     }
@@ -656,6 +656,4 @@ class LessonEngine {
         : 'Return to this example: ${activity.prompt}';
     return '$exampleText Point to the important information, say the rule aloud, then try one changed example. Goal: $objective';
   }
-
-
 }

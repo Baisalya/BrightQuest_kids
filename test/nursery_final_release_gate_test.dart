@@ -176,8 +176,10 @@ void main() {
       for (final skill in pack.skills) {
         expect(skill.generatorFamily, isNotNull, reason: skill.id);
         for (var seed = 0; seed < 64; seed += 1) {
-          final first = generator.generate(pack: pack, skill: skill, seed: seed);
-          final second = generator.generate(pack: pack, skill: skill, seed: seed);
+          final first =
+              generator.generate(pack: pack, skill: skill, seed: seed);
+          final second =
+              generator.generate(pack: pack, skill: skill, seed: seed);
 
           expect(second.id, first.id, reason: '${skill.id}/$seed id');
           expect(second.prompt, first.prompt,
@@ -210,7 +212,8 @@ void main() {
       }
     });
 
-    test('asset, architecture and motion release boundaries remain bounded', () {
+    test('asset, architecture and motion release boundaries remain bounded',
+        () {
       final assets = Directory('assets/nursery/letter_cards')
           .listSync()
           .whereType<File>()
@@ -241,15 +244,15 @@ void main() {
       expect(nurseryPresentation, isNot(contains('Timer.periodic(')));
       expect(nurseryPresentation, isNot(contains('.repeat(')));
 
-      final motion = File('lib/features/nursery/nursery_motion.dart')
-          .readAsStringSync();
+      final motion =
+          File('lib/features/nursery/nursery_motion.dart').readAsStringSync();
       expect(motion, contains('disableAnimations'));
       expect(motion, contains('Platform.isWindows'));
       expect(motion, isNot(contains('BrightQuestScope')));
       expect(motion, isNot(contains('recordNurseryEvidence')));
 
-      final visual = File('lib/features/nursery/nursery_visual.dart')
-          .readAsStringSync();
+      final visual =
+          File('lib/features/nursery/nursery_visual.dart').readAsStringSync();
       final reaction = File('lib/features/nursery/nursery_asset_reaction.dart')
           .readAsStringSync();
       for (final source in <String>[visual, reaction]) {

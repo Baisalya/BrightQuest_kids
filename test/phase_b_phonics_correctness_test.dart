@@ -39,7 +39,8 @@ void main() {
       );
     });
 
-    test('irregular vowels remain discovery-only, not simple phonics mastery', () {
+    test('irregular vowels remain discovery-only, not simple phonics mastery',
+        () {
       final pack = _pack();
       for (final pair in <(String, String)>[
         ('E', 'Eye'),
@@ -112,7 +113,8 @@ void main() {
       );
     });
 
-    test('corrected vocabulary cards use dedicated assets with safe fallbacks', () {
+    test('corrected vocabulary cards use dedicated assets with safe fallbacks',
+        () {
       final pack = _pack();
       const corrected = <(String, String)>[
         ('I', 'Igloo'),
@@ -132,7 +134,8 @@ void main() {
       for (final pair in corrected) {
         final example = _example(pack, pair.$1, pair.$2);
         expect(File(example.assetPath).existsSync(), isTrue, reason: pair.$2);
-        expect(example.picture, pair.$2.toLowerCase(), reason: '${pair.$2} fallback');
+        expect(example.picture, pair.$2.toLowerCase(),
+            reason: '${pair.$2} fallback');
       }
     });
 
@@ -178,7 +181,8 @@ void main() {
       final skill = pack.skillById('alpha_letter_sounds')!;
       final seen = <String>{};
       for (var seed = 0; seed < 512; seed += 1) {
-        final practice = generator.generate(pack: pack, skill: skill, seed: seed);
+        final practice =
+            generator.generate(pack: pack, skill: skill, seed: seed);
         final answer = practice.correctResponseRule['value'] as String;
         final word = practice.visualTokens.firstWhere(
           (token) => pack.letterAssociations.any(
@@ -197,7 +201,8 @@ void main() {
       expect(seen.length, 157);
     });
 
-    test('beginning-sound generator covers every approved pair before cycling', () {
+    test('beginning-sound generator covers every approved pair before cycling',
+        () {
       final pack = _pack();
       final skill = pack.skillById('alpha_beginning_sound')!;
       final expected = <String>{
@@ -206,7 +211,8 @@ void main() {
       };
       final seen = <String>{};
       for (var seed = 0; seed < expected.length; seed += 1) {
-        final practice = generator.generate(pack: pack, skill: skill, seed: seed);
+        final practice =
+            generator.generate(pack: pack, skill: skill, seed: seed);
         final answer = practice.correctResponseRule['value'] as String;
         final word = practice.visualTokens.firstWhere(
           (token) => pack.letterAssociations.any(

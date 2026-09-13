@@ -18,7 +18,8 @@ import 'nursery_visual.dart';
 import 'nursery_world_plan.dart';
 
 class NurseryWorldScreen extends StatelessWidget {
-  const NurseryWorldScreen({required this.pack, required this.domain, super.key});
+  const NurseryWorldScreen(
+      {required this.pack, required this.domain, super.key});
 
   final NurseryContentPack pack;
   final NurseryDomain domain;
@@ -26,9 +27,8 @@ class NurseryWorldScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = BrightQuestScope.of(context);
-    final dueSkillIds = controller
-        .dueNurseryReviewTasks(limit: 20)
-        .map((task) => task.skillId);
+    final dueSkillIds =
+        controller.dueNurseryReviewTasks(limit: 20).map((task) => task.skillId);
     final worldPlan = NurseryWorldPlanner.build(
       pack: pack,
       domainId: domain.id,
@@ -132,11 +132,14 @@ class _WorldNextPathCard extends StatelessWidget {
             ),
           );
           final details = Column(
-            crossAxisAlignment:
-                horizontal ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+            crossAxisAlignment: horizontal
+                ? CrossAxisAlignment.start
+                : CrossAxisAlignment.center,
             children: [
               Text(
-                path.recommendedReviewMode ? 'Ready to play again' : 'Your next path',
+                path.recommendedReviewMode
+                    ? 'Ready to play again'
+                    : 'Your next path',
                 textAlign: horizontal ? TextAlign.left : TextAlign.center,
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: color,
@@ -231,7 +234,10 @@ class _LearningPathSection extends StatelessWidget {
           'Small steps make learning easy',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .66),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: .66),
                 fontWeight: FontWeight.w700,
               ),
         ),
@@ -255,8 +261,8 @@ class _LearningPathSection extends StatelessWidget {
                       domain: domain,
                       path: plan.paths[index],
                       step: index + 1,
-                      recommended:
-                          plan.paths[index].definition.id == plan.recommendedPathId,
+                      recommended: plan.paths[index].definition.id ==
+                          plan.recommendedPathId,
                       color: color,
                     ),
                   ),
@@ -381,19 +387,21 @@ class _LearningPathCard extends StatelessWidget {
                       if (recommended)
                         Text(
                           'NEXT',
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: color,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: .8,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: color,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: .8,
+                                  ),
                         ),
                       Text(
                         path.definition.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w900,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w900,
+                                ),
                       ),
                       const SizedBox(height: 3),
                       Text(
@@ -414,14 +422,18 @@ class _LearningPathCard extends StatelessWidget {
                                 value: path.progress,
                                 minHeight: 6,
                                 backgroundColor: color.withValues(alpha: .10),
-                                valueColor: AlwaysStoppedAnimation<Color>(color),
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(color),
                               ),
                             ),
                           ),
                           const SizedBox(width: 9),
                           Text(
                             status,
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall
+                                ?.copyWith(
                                   color: color,
                                   fontWeight: FontWeight.w900,
                                 ),
@@ -507,7 +519,10 @@ class _NurseryLearningPathScreen extends StatelessWidget {
                         Text(
                           'Choose a little game',
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
                                 fontWeight: FontWeight.w900,
                               ),
                         ),
@@ -523,7 +538,8 @@ class _NurseryLearningPathScreen extends StatelessWidget {
                                 color: color,
                                 skill: skill,
                                 mastery: controller.nurseryMasteryFor(skill.id),
-                                recommended: skill.id == path.recommendedSkill.id,
+                                recommended:
+                                    skill.id == path.recommendedSkill.id,
                                 reviewMode: path.recommendedReviewMode &&
                                     skill.id == path.recommendedSkill.id,
                               ),
@@ -629,7 +645,8 @@ class _SkillCardState extends State<_SkillCard> {
         hoverScale: 1.012,
         child: Semantics(
           button: true,
-          label: '${widget.skill.title}. ${_stateSemantics(state)}. Tap to play.',
+          label:
+              '${widget.skill.title}. ${_stateSemantics(state)}. Tap to play.',
           child: Material(
             color: Colors.transparent,
             child: InkWell(
@@ -701,7 +718,10 @@ class _SkillCardState extends State<_SkillCard> {
                           if (widget.recommended)
                             Text(
                               widget.reviewMode ? 'PLAY AGAIN' : 'PLAY NEXT',
-                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
                                     color: color,
                                     fontWeight: FontWeight.w900,
                                     letterSpacing: .6,
@@ -711,7 +731,10 @@ class _SkillCardState extends State<_SkillCard> {
                             widget.skill.title,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
                                   fontWeight: FontWeight.w900,
                                 ),
                           ),
@@ -833,12 +856,14 @@ class _LetterBookState extends State<_LetterBook> {
             children: [
               Text(
                 '${letter.uppercase} ${letter.lowercase}',
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+                style:
+                    const TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
               ),
               const SizedBox(height: 5),
               AnimatedSwitcher(
-                duration:
-                    reducedMotion ? Duration.zero : const Duration(milliseconds: 300),
+                duration: reducedMotion
+                    ? Duration.zero
+                    : const Duration(milliseconds: 300),
                 child: ClipRRect(
                   key: ValueKey('${letter.uppercase}:${example.word}'),
                   borderRadius: BorderRadius.circular(12),
@@ -861,7 +886,8 @@ class _LetterBookState extends State<_LetterBook> {
                 example.word,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
+                style:
+                    const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
               ),
             ],
           ),
@@ -871,12 +897,12 @@ class _LetterBookState extends State<_LetterBook> {
   }
 }
 
-
 int _stateStarCount(LearningEvidenceState state) => switch (state) {
       LearningEvidenceState.notStarted => 0,
       LearningEvidenceState.introduced ||
       LearningEvidenceState.practising ||
-      LearningEvidenceState.needsSupport => 1,
+      LearningEvidenceState.needsSupport =>
+        1,
       LearningEvidenceState.masteredNow || LearningEvidenceState.reviewDue => 2,
       LearningEvidenceState.secure => 3,
     };
@@ -890,4 +916,3 @@ String _stateSemantics(LearningEvidenceState state) => switch (state) {
       LearningEvidenceState.secure => 'Remembered',
       LearningEvidenceState.needsSupport => 'Ready to try together',
     };
-

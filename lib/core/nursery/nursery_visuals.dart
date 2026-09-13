@@ -810,8 +810,8 @@ abstract final class NurseryVisualResolver {
     String value,
     String spoken,
   ) {
-    final match = RegExp(r'^(\d+)\s+(.+)$')
-        .firstMatch(value.trim().toLowerCase());
+    final match =
+        RegExp(r'^(\d+)\s+(.+)$').firstMatch(value.trim().toLowerCase());
     if (match == null) return null;
     final count = int.tryParse(match.group(1)!);
     if (count == null || count < 1) return null;
@@ -865,7 +865,8 @@ abstract final class NurseryVisualResolver {
   }
 
   static NurseryVisualConcept _typographyConcept(String value) {
-    if (RegExp(r'^[A-Za-z]$').hasMatch(value)) return NurseryVisualConcept.letter;
+    if (RegExp(r'^[A-Za-z]$').hasMatch(value))
+      return NurseryVisualConcept.letter;
     if (RegExp(r'^\d+$').hasMatch(value)) return NurseryVisualConcept.number;
     return NurseryVisualConcept.text;
   }
@@ -893,7 +894,9 @@ abstract final class NurseryVisualResolver {
     if (hint.contains('number') || hint.contains('math')) {
       return NurseryVisualConcept.maths;
     }
-    if (hint.contains('listen') || hint.contains('sound') || hint.contains('ear')) {
+    if (hint.contains('listen') ||
+        hint.contains('sound') ||
+        hint.contains('ear')) {
       return NurseryVisualConcept.listening;
     }
     if (hint.contains('trace') || hint.contains('pencil')) {
@@ -904,7 +907,9 @@ abstract final class NurseryVisualResolver {
     if (hint.contains('colour') || hint.contains('color')) {
       return NurseryVisualConcept.colours;
     }
-    if (hint.contains('shape') || hint.contains('circle') || hint.contains('triangle')) {
+    if (hint.contains('shape') ||
+        hint.contains('circle') ||
+        hint.contains('triangle')) {
       return NurseryVisualConcept.shapes;
     }
     if (hint.contains('cat') ||

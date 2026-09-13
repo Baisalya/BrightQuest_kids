@@ -967,13 +967,28 @@ void main() {
       expect(routerSource, contains('resumeGameSession'));
       expect(routerSource, isNot(contains('You already have a saved mission')));
       expect(routerSource, contains('GameSessionStage.completing'));
+      final homeSource =
+          File('lib/features/home/home_screen.dart').readAsStringSync();
+      expect(homeSource, contains('controller.resumableGameSessions'));
+      expect(homeSource, contains('resumeGameSession(context, session)'));
+
       final adventuresSource =
           File('lib/features/adventures/adventures_screen.dart')
               .readAsStringSync();
       expect(adventuresSource, contains('controller.resumableGameSessions'));
-      expect(adventuresSource, contains('resumeGameSession(context, session)'));
       expect(
-          adventuresSource, contains('controller.discardGameSession(session)'));
+        adventuresSource,
+        isNot(contains('resumeGameSession(context, session)')),
+      );
+
+      final worldSource =
+          File('lib/features/adventures/learning_world_screen.dart')
+              .readAsStringSync();
+      expect(worldSource, contains('resumeGameSession(context, session)'));
+      expect(
+        worldSource,
+        contains('onDiscardSaved: controller.discardGameSession'),
+      );
       final lessonSource = File(
         'lib/features/learning/lesson_flow_screen.dart',
       ).readAsStringSync();

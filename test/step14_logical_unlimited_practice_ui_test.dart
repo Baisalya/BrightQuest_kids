@@ -82,7 +82,10 @@ void main() {
     expect(controller.diagnosticProgress.itemIds, hasLength(12));
     expect(controller.diagnosticProgress.itemIds, isNot(firstIds));
     expect(
-      controller.diagnosticProgress.itemIds.toSet().intersection(firstIds.toSet()).length,
+      controller.diagnosticProgress.itemIds
+          .toSet()
+          .intersection(firstIds.toSet())
+          .length,
       lessThan(12),
     );
     expect(find.textContaining('Question 1 of'), findsOneWidget);

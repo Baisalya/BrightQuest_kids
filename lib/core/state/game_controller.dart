@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../capabilities/learner_capability_boundary.dart';
 import '../content/achievement_catalog.dart';
 import '../content/cosmetic_catalog.dart';
 import '../content/content_repository.dart';
@@ -18,6 +19,7 @@ import '../learning/world_progression_policy.dart';
 import '../curriculum/curriculum_catalog.dart';
 import '../curriculum/curriculum_models.dart';
 import '../models/game_models.dart';
+import '../models/learner_stage.dart';
 import '../models/progress_models.dart';
 import '../nursery/nursery_learning_models.dart';
 import '../nursery/nursery_progress_engine.dart';
@@ -58,6 +60,8 @@ class GameController extends ChangeNotifier {
   int get stars => _profile.stars;
   int get streak => _profile.streak;
   int get selectedClass => _profile.selectedClass;
+  LearnerStage get learnerStage => _profile.learnerStage;
+  bool get isNurseryLearner => learnerStage == LearnerStage.nursery;
   int get xp => _profile.xp;
   int get correctAnswers => _profile.correctAnswers;
   int get totalAnswers => _profile.totalAnswers;
@@ -698,14 +702,35 @@ class GameController extends ChangeNotifier {
   }
 
   void cacheEntitlement(ClassEntitlement entitlement) {
+    if (!LearnerCapabilityBoundary.isSupportedSchoolClass(
+      entitlement.classNumber,
+    )) {
+      return;
+    }
     _snapshot.entitlementCache[entitlement.classNumber] = entitlement;
     _changed();
   }
 
   void setClass(int value) {
-    if (value < 3 || value > 5 || value == _profile.selectedClass) return;
+    if (!LearnerCapabilityBoundary.isSupportedSchoolClass(value) ||
+        value == _profile.selectedClass) {
+      return;
+    }
     _foregroundSessionKeys.remove(activeProfileId);
     _profile.selectedClass = value;
+    _changed();
+  }
+
+  void setLearnerStage(LearnerStage value) {
+    if (_profile.learnerStage == value) return;
+    _foregroundSessionKeys.remove(activeProfileId);
+    _profile.learnerStage = value;
+    if (value == LearnerStage.nursery) {
+      _profile.nurseryLearning = _nurseryProgress.refreshReviewStates(
+        _profile.nurseryLearning,
+        DateTime.now(),
+      );
+    }
     _changed();
   }
 
@@ -769,16 +794,21 @@ class GameController extends ChangeNotifier {
   String createProfile({
     required String name,
     required int classNumber,
+    LearnerStage learnerStage = LearnerStage.school,
     String avatarEmoji = '🧒',
   }) {
     final trimmed = name.trim();
-    if (trimmed.isEmpty) return '';
-    final normalizedClass = classNumber.clamp(3, 5).toInt();
+    if (trimmed.isEmpty ||
+        !LearnerCapabilityBoundary.isSupportedSchoolClass(classNumber)) {
+      return '';
+    }
+    final normalizedClass = classNumber;
     final id = 'child-${DateTime.now().microsecondsSinceEpoch}';
     _snapshot.profiles[id] = ChildProfileSnapshot(
       id: id,
       name: trimmed.length > 24 ? trimmed.substring(0, 24) : trimmed,
       avatarEmoji: avatarEmoji,
+      learnerStage: learnerStage,
       selectedClass: normalizedClass,
     );
     _snapshot.activeProfileId = id;
@@ -796,6 +826,10 @@ class GameController extends ChangeNotifier {
     _normalizeToday();
     _profile.learning = _learningProgress.refreshReviewStates(
       _profile.learning,
+      DateTime.now(),
+    );
+    _profile.nurseryLearning = _nurseryProgress.refreshReviewStates(
+      _profile.nurseryLearning,
       DateTime.now(),
     );
     _changed();
@@ -2188,7 +2222,10 @@ class GameController extends ChangeNotifier {
       }
       var invalid = slotKey != checkpoint.slotKey ||
           !checkpoint.isResumable ||
-          !knownGameIds.contains(checkpoint.gameId);
+          !knownGameIds.contains(checkpoint.gameId) ||
+          !LearnerCapabilityBoundary.isSupportedSchoolClass(
+            checkpoint.classNumber,
+          );
       if (!invalid && checkpoint.stage == GameSessionStage.completing) {
         final fallbackMissionId =
             checkpoint.data['fallbackMissionId'] as String?;
@@ -2249,6 +2286,7 @@ class GameController extends ChangeNotifier {
       id: current.id,
       name: current.name,
       avatarEmoji: current.avatarEmoji,
+      learnerStage: current.learnerStage,
       selectedClass: current.selectedClass,
       dailyMinutesGoal: current.dailyMinutesGoal,
       dailyTimeLimitMinutes: current.dailyTimeLimitMinutes,

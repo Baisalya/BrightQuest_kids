@@ -36,9 +36,7 @@ class NurseryLessonFeedbackPanel extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              correct
-                  ? Icons.check_circle_rounded
-                  : Icons.refresh_rounded,
+              correct ? Icons.check_circle_rounded : Icons.refresh_rounded,
               size: 22,
             ),
             const SizedBox(width: 8),

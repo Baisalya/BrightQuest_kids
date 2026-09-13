@@ -35,10 +35,12 @@ void main() {
     expect(_containsLegacyDeep(raw), isFalse);
 
     final domains = List<Map<String, dynamic>>.from(
-      (raw['domains'] as List).map((value) => Map<String, dynamic>.from(value as Map)),
+      (raw['domains'] as List)
+          .map((value) => Map<String, dynamic>.from(value as Map)),
     );
     for (final domain in domains) {
-      expect(domain.containsKey('visualKey'), isTrue, reason: '${domain['id']}');
+      expect(domain.containsKey('visualKey'), isTrue,
+          reason: '${domain['id']}');
       expect(domain.containsKey('emoji'), isFalse, reason: '${domain['id']}');
       expect(domain['visualKey'], isA<String>());
       expect((domain['visualKey'] as String).trim(), isNotEmpty);
@@ -57,30 +59,39 @@ void main() {
         pictureCards += 1;
         expect(nurseryContainsLegacyEmoji(example.picture), isFalse);
         expect(example.picture, example.word.toLowerCase());
-        expect(File(example.assetPath).existsSync(), isTrue, reason: example.assetPath);
+        expect(File(example.assetPath).existsSync(), isTrue,
+            reason: example.assetPath);
       }
     }
     expect(pictureCards, 208);
 
     for (final activity in pack.activities) {
-      expect(nurseryContainsLegacyEmoji(activity.prompt), isFalse, reason: activity.id);
-      expect(nurseryContainsLegacyEmoji(activity.narration), isFalse, reason: activity.id);
-      expect(_containsLegacyDeep(activity.payload), isFalse, reason: activity.id);
-      expect(_containsLegacyDeep(activity.correctResponseRule), isFalse, reason: activity.id);
+      expect(nurseryContainsLegacyEmoji(activity.prompt), isFalse,
+          reason: activity.id);
+      expect(nurseryContainsLegacyEmoji(activity.narration), isFalse,
+          reason: activity.id);
+      expect(_containsLegacyDeep(activity.payload), isFalse,
+          reason: activity.id);
+      expect(_containsLegacyDeep(activity.correctResponseRule), isFalse,
+          reason: activity.id);
       for (final option in activity.options) {
-        expect(nurseryContainsLegacyEmoji(option.id), isFalse, reason: activity.id);
-        expect(nurseryContainsLegacyEmoji(option.label), isFalse, reason: activity.id);
+        expect(nurseryContainsLegacyEmoji(option.id), isFalse,
+            reason: activity.id);
+        expect(nurseryContainsLegacyEmoji(option.label), isFalse,
+            reason: activity.id);
       }
     }
   });
 
-  test('deterministic generated Nursery practice emits semantic values only', () {
+  test('deterministic generated Nursery practice emits semantic values only',
+      () {
     const generator = NurseryPracticeGenerator();
     final pack = _pack();
 
     for (final skill in pack.skills) {
       for (var seed = 0; seed < 64; seed += 1) {
-        final practice = generator.generate(pack: pack, skill: skill, seed: seed);
+        final practice =
+            generator.generate(pack: pack, skill: skill, seed: seed);
         expect(nurseryContainsLegacyEmoji(practice.prompt), isFalse,
             reason: '${skill.id}/$seed prompt');
         expect(nurseryContainsLegacyEmoji(practice.narration), isFalse,
@@ -99,15 +110,18 @@ void main() {
     }
   });
 
-  test('legacy pre-migration responses still evaluate against semantic rules', () {
+  test('legacy pre-migration responses still evaluate against semantic rules',
+      () {
     final pack = _pack();
     const evaluator = NurseryResponseEvaluator();
 
     expect(
-      evaluator.evaluate(
-        pack.activityById('nursery.knowledge_animals.g1')!,
-        '🐱',
-      ).correct,
+      evaluator
+          .evaluate(
+            pack.activityById('nursery.knowledge_animals.g1')!,
+            '🐱',
+          )
+          .correct,
       isTrue,
     );
     expect(
@@ -125,10 +139,12 @@ void main() {
       isTrue,
     );
     expect(
-      evaluator.evaluate(
-        pack.activityById('nursery.thinking_observation_listening.g1')!,
-        '⭐ ⚽',
-      ).correct,
+      evaluator
+          .evaluate(
+            pack.activityById('nursery.thinking_observation_listening.g1')!,
+            '⭐ ⚽',
+          )
+          .correct,
       isTrue,
     );
   });
@@ -148,7 +164,10 @@ void main() {
           .whereType<File>()
           .where((file) =>
               file.path.endsWith('.dart') &&
-              file.path.split(Platform.pathSeparator).last.startsWith('nursery_')),
+              file.path
+                  .split(Platform.pathSeparator)
+                  .last
+                  .startsWith('nursery_')),
       File('assets/content/nursery/pack_v1.json'),
     ];
 

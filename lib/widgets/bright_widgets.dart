@@ -11,6 +11,7 @@ import '../core/curriculum/world_mission_models.dart';
 import '../core/models/game_models.dart';
 import '../core/models/progress_models.dart';
 import '../core/presentation/game_feel_director.dart';
+import '../core/session/learning_session_exit.dart';
 import '../core/rewards/adventure_reward_engine.dart';
 import '../core/rewards/adventure_reward_models.dart';
 import '../core/services/bright_audio_service.dart';
@@ -66,7 +67,9 @@ class BrightHeader extends StatelessWidget {
                 ),
                 child: Text(
                   title == null
-                      ? 'Class ${controller.selectedClass}  ▾'
+                      ? controller.isNurseryLearner
+                          ? 'Nursery'
+                          : 'Class ${controller.selectedClass}'
                       : 'Learn • Play • Grow',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -141,7 +144,11 @@ class BrightHeader extends StatelessWidget {
               ),
               child: LayoutBuilder(
                 builder: (context, headerConstraints) {
-                  final useStackedHeader = headerConstraints.maxWidth < 420;
+                  final useStackedHeader = brightShouldStackForReadability(
+                    context: context,
+                    availableWidth: headerConstraints.maxWidth,
+                    compactWidth: 520,
+                  );
                   if (useStackedHeader) {
                     return Column(
                       mainAxisSize: MainAxisSize.min,
@@ -259,14 +266,24 @@ class _RoundAction extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) => Material(
-        color: Colors.white.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(16),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: onTap,
-          child: SizedBox(
-              width: 44, height: 44, child: Icon(icon, color: AppTheme.navy)),
+  Widget build(BuildContext context) => Semantics(
+        button: true,
+        label: 'Back',
+        child: Tooltip(
+          message: 'Back',
+          child: Material(
+            color: Colors.white.withValues(alpha: 0.92),
+            borderRadius: BorderRadius.circular(16),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(16),
+              onTap: onTap,
+              child: SizedBox(
+                width: 48,
+                height: 48,
+                child: Icon(icon, color: AppTheme.navy),
+              ),
+            ),
+          ),
         ),
       );
 }
@@ -1428,17 +1445,46 @@ class _AdventureMissionSummary extends StatelessWidget {
             }),
           ],
           const SizedBox(height: 16),
-          FilledButton.icon(
-            onPressed: onReplay,
-            icon: const Icon(Icons.replay_rounded),
-            label: Text(
-              cleared
-                  ? plan.isBoss
-                      ? 'Challenge Boss Again'
-                      : 'Replay Mission'
-                  : 'Try Again',
+          if (cleared) ...[
+            FilledButton.icon(
+              key: const Key('mission_continue_button'),
+              onPressed: () {
+                final nextLevelId = moment.nextMissionPlan?.levelId;
+                Navigator.of(context).pop<LearningSessionExit>(
+                  nextLevelId == null
+                      ? LearningSessionExit.backToWorld
+                      : LearningSessionExit.continueToLevel(nextLevelId),
+                );
+              },
+              icon: Icon(
+                moment.nextMissionPlan == null
+                    ? Icons.map_rounded
+                    : Icons.arrow_forward_rounded,
+              ),
+              label: Text(
+                moment.nextMissionPlan == null
+                    ? moment.worldComplete
+                        ? 'Back to Worlds'
+                        : 'Back to World'
+                    : 'Continue',
+              ),
             ),
-          ),
+            const SizedBox(height: 8),
+            OutlinedButton.icon(
+              key: const Key('mission_replay_button'),
+              onPressed: onReplay,
+              icon: const Icon(Icons.replay_rounded),
+              label: Text(
+                plan.isBoss ? 'Challenge Boss Again' : 'Replay Mission',
+              ),
+            ),
+          ] else
+            FilledButton.icon(
+              key: const Key('mission_try_again_button'),
+              onPressed: onReplay,
+              icon: const Icon(Icons.replay_rounded),
+              label: const Text('Try Again'),
+            ),
         ],
       ),
     );

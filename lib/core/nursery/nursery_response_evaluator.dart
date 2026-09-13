@@ -14,7 +14,6 @@ class NurseryEvaluation {
   final String? misconceptionId;
 }
 
-
 class NurseryActivityExplanation {
   const NurseryActivityExplanation({
     required this.text,
@@ -160,8 +159,8 @@ class NurseryResponseEvaluator {
 
       if (activity.skillId == 'math_add_objects' ||
           activity.skillId == 'math_add_numerals') {
-        final numericAddition = RegExp(r'(\d+)\s*\+\s*(\d+)')
-            .firstMatch(activity.prompt);
+        final numericAddition =
+            RegExp(r'(\d+)\s*\+\s*(\d+)').firstMatch(activity.prompt);
         if (numericAddition != null) {
           final left = numericAddition.group(1)!;
           final right = numericAddition.group(2)!;
@@ -192,7 +191,8 @@ class NurseryResponseEvaluator {
 
       if (activity.skillId == 'math_same_different') {
         return NurseryActivityExplanation(
-          text: 'The two things are $answer in the way this question asks us to compare them.',
+          text:
+              'The two things are $answer in the way this question asks us to compare them.',
           visualTokens: <String>[answer],
         );
       }
@@ -291,13 +291,16 @@ class NurseryResponseEvaluator {
           nurseryCanonicalLegacyVisualValue(right);
 
   bool _sameStringMap(Object? response, Object? expected) {
-    if (response is! Map || expected is! Map || response.length != expected.length) {
+    if (response is! Map ||
+        expected is! Map ||
+        response.length != expected.length) {
       return false;
     }
     final normalizedResponse = <String, String>{};
     for (final entry in response.entries) {
       if (entry.key is! String || entry.value is! String) return false;
-      normalizedResponse[nurseryCanonicalLegacyVisualValue(entry.key as String)] =
+      normalizedResponse[
+              nurseryCanonicalLegacyVisualValue(entry.key as String)] =
           nurseryCanonicalLegacyVisualValue(entry.value as String);
     }
     for (final entry in expected.entries) {
@@ -314,7 +317,8 @@ class NurseryResponseEvaluator {
       return false;
     }
     for (var index = 0; index < count; index += 1) {
-      if (response[index] is! num || (response[index] as num).toInt() != index) {
+      if (response[index] is! num ||
+          (response[index] as num).toInt() != index) {
         return false;
       }
     }

@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
+import '../../core/capabilities/learner_capability_boundary.dart';
 import '../../core/curriculum/curriculum_catalog.dart';
 import '../../core/models/game_models.dart';
+import '../../core/models/learner_stage.dart';
 import '../../core/models/progress_models.dart';
 import '../../core/services/bright_audio_service.dart';
 import '../../core/state/game_controller.dart';
@@ -39,7 +41,7 @@ class ParentDashboardScreen extends StatelessWidget {
               _ProfileManager(controller: controller),
               const SizedBox(height: 18),
               Text(
-                '${controller.activeProfileAvatar} ${controller.activeProfileName} • Class ${controller.selectedClass}',
+                '${controller.activeProfileAvatar} ${controller.activeProfileName} • ${controller.isNurseryLearner ? 'Nursery' : 'Class ${controller.selectedClass}'}',
                 style:
                     const TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
               ),
@@ -49,178 +51,225 @@ class ParentDashboardScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(18),
                   child: Column(
                     children: [
-                      DropdownButtonFormField<int>(
+                      DropdownButtonFormField<LearnerStage>(
                         key: ValueKey<String>(
-                            'class-${controller.activeProfileId}'),
-                        initialValue: controller.selectedClass,
+                            'stage-${controller.activeProfileId}'),
+                        initialValue: controller.learnerStage,
                         decoration:
-                            const InputDecoration(labelText: 'School class'),
-                        items: const [3, 4, 5]
-                            .map((value) => DropdownMenuItem<int>(
-                                value: value, child: Text('Class $value')))
-                            .toList(),
+                            const InputDecoration(labelText: 'Learning stage'),
+                        items: const [
+                          DropdownMenuItem<LearnerStage>(
+                            value: LearnerStage.nursery,
+                            child: Text('Nursery'),
+                          ),
+                          DropdownMenuItem<LearnerStage>(
+                            value: LearnerStage.school,
+                            child: Text('School'),
+                          ),
+                        ],
                         onChanged: (value) {
-                          if (value != null) controller.setClass(value);
+                          if (value != null) {
+                            controller.setLearnerStage(value);
+                          }
                         },
                       ),
+                      if (!controller.isNurseryLearner) ...[
+                        const SizedBox(height: 10),
+                        DropdownButtonFormField<int>(
+                          key: ValueKey<String>(
+                              'class-${controller.activeProfileId}'),
+                          initialValue: controller.selectedClass,
+                          decoration:
+                              const InputDecoration(labelText: 'School class'),
+                          items: LearnerCapabilityBoundary
+                              .supportedSchoolClasses
+                              .map((value) => DropdownMenuItem<int>(
+                                  value: value, child: Text('Class $value')))
+                              .toList(),
+                          onChanged: (value) {
+                            if (value != null) controller.setClass(value);
+                          },
+                        ),
+                      ],
                       const SizedBox(height: 10),
-                      _Row(
-                          label: 'Level / XP',
+                      if (controller.isNurseryLearner) ...[
+                        _Row(
+                          label: 'Nursery activities recorded',
+                          value: '${controller.nurseryAttemptEvidence.length}',
+                        ),
+                        _Row(
+                          label: 'Review ready',
                           value:
-                              'Lv ${controller.level} • ${controller.xp} XP'),
-                      _Row(label: 'All-time accuracy', value: '$accuracy%'),
-                      _Row(
-                        label: 'Today',
-                        value:
-                            '${controller.correctToday}/${controller.answersToday} correct ($dailyAccuracy%)',
-                      ),
-                      _Row(
+                              '${controller.dueNurseryReviewTasks(limit: 50).length}',
+                        ),
+                      ] else ...[
+                        _Row(
+                          label: 'Level / XP',
+                          value: 'Lv ${controller.level} • ${controller.xp} XP',
+                        ),
+                        _Row(
+                          label: 'All-time accuracy',
+                          value: '$accuracy%',
+                        ),
+                        _Row(
+                          label: 'Today',
+                          value:
+                              '${controller.correctToday}/${controller.answersToday} correct ($dailyAccuracy%)',
+                        ),
+                        _Row(
                           label: 'Learning streak',
-                          value: '${controller.streak} days'),
-                      _Row(
-                        label: 'Study time today',
-                        value: '${controller.studyMinutesToday.floor()} min',
-                      ),
+                          value: '${controller.streak} days',
+                        ),
+                        _Row(
+                          label: 'Study time today',
+                          value: '${controller.studyMinutesToday.floor()} min',
+                        ),
+                      ],
                     ],
                   ),
                 ),
               ),
-              const SizedBox(height: 18),
-              const Text(
-                'Class adventure map',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
-              ),
-              const SizedBox(height: 10),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              '${controller.completedLearningLevels}/${controller.totalLearningLevels} levels cleared',
+              if (!controller.isNurseryLearner) ...[
+                const SizedBox(height: 18),
+                const Text(
+                  'Class adventure map',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+                ),
+                const SizedBox(height: 10),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '${controller.completedLearningLevels}/${controller.totalLearningLevels} levels cleared',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w900),
+                              ),
+                            ),
+                            Text(
+                              '⭐ ${controller.learningPathStars}',
                               style:
                                   const TextStyle(fontWeight: FontWeight.w900),
                             ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        LinearProgressIndicator(
+                          value: controller.learningPathProgress,
+                          minHeight: 10,
+                          borderRadius: BorderRadius.circular(99),
+                        ),
+                        const SizedBox(height: 12),
+                        ...learningWorlds.map((world) {
+                          final completed = controller
+                              .completedLevelsForSubject(world.subject);
+                          final total =
+                              controller.totalLevelsForSubject(world.subject);
+                          final stars =
+                              controller.starsForSubject(world.subject);
+                          return ListTile(
+                            dense: true,
+                            contentPadding: EdgeInsets.zero,
+                            leading: Text(world.emoji,
+                                style: const TextStyle(fontSize: 25)),
+                            title: Text(world.title,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w800)),
+                            subtitle: LinearProgressIndicator(
+                              value: total == 0 ? 0 : completed / total,
+                              minHeight: 6,
+                              borderRadius: BorderRadius.circular(99),
+                            ),
+                            trailing: Text('$completed/$total • ⭐ $stars'),
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                const Text(
+                  'Focus areas',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+                ),
+                const SizedBox(height: 10),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: weakest.isEmpty
+                        ? const Text(
+                            'Play a few adventures first. BrightQuest will then surface the lowest-mastery areas here.',
+                            style:
+                                TextStyle(color: Colors.black54, height: 1.4),
+                          )
+                        : Column(
+                            children: weakest.map((gameId) {
+                              final game =
+                                  games.firstWhere((item) => item.id == gameId);
+                              final stats = controller.statsFor(gameId);
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                leading: CircleAvatar(
+                                  backgroundColor:
+                                      game.color.withValues(alpha: 0.12),
+                                  child: Icon(game.icon, color: game.color),
+                                ),
+                                title: Text(game.title,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w800)),
+                                subtitle: Text(
+                                  '${(stats.mastery * 100).round()}% mastery • ${(stats.accuracy * 100).round()}% accuracy',
+                                ),
+                              );
+                            }).toList(),
                           ),
-                          Text(
-                            '⭐ ${controller.learningPathStars}',
-                            style: const TextStyle(fontWeight: FontWeight.w900),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                const Text(
+                  'Learning evidence & class packs',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+                ),
+                const SizedBox(height: 10),
+                Card(
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: const Icon(Icons.insights_rounded),
+                        title: const Text('Learning evidence report'),
+                        subtitle: const Text(
+                          'See competency evidence, review due dates, misconceptions and supervised project evidence.',
+                        ),
+                        trailing: const Icon(Icons.chevron_right_rounded),
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const ParentLearningReportScreen(),
                           ),
-                        ],
+                        ),
                       ),
-                      const SizedBox(height: 10),
-                      LinearProgressIndicator(
-                        value: controller.learningPathProgress,
-                        minHeight: 10,
-                        borderRadius: BorderRadius.circular(99),
-                      ),
-                      const SizedBox(height: 12),
-                      ...learningWorlds.map((world) {
-                        final completed =
-                            controller.completedLevelsForSubject(world.subject);
-                        final total =
-                            controller.totalLevelsForSubject(world.subject);
-                        final stars = controller.starsForSubject(world.subject);
-                        return ListTile(
-                          dense: true,
-                          contentPadding: EdgeInsets.zero,
-                          leading: Text(world.emoji,
-                              style: const TextStyle(fontSize: 25)),
-                          title: Text(world.title,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w800)),
-                          subtitle: LinearProgressIndicator(
-                            value: total == 0 ? 0 : completed / total,
-                            minHeight: 6,
-                            borderRadius: BorderRadius.circular(99),
+                      const Divider(height: 1),
+                      ListTile(
+                        leading: const Icon(Icons.school_rounded),
+                        title: const Text('Class packs & restore'),
+                        subtitle: const Text(
+                          'Parent-only purchase area. Packs stay locked for sale until review and store verification are complete.',
+                        ),
+                        trailing: const Icon(Icons.chevron_right_rounded),
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const ClassPackScreen(),
                           ),
-                          trailing: Text('$completed/$total • ⭐ $stars'),
-                        );
-                      }),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 18),
-              const Text(
-                'Focus areas',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
-              ),
-              const SizedBox(height: 10),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: weakest.isEmpty
-                      ? const Text(
-                          'Play a few adventures first. BrightQuest will then surface the lowest-mastery areas here.',
-                          style: TextStyle(color: Colors.black54, height: 1.4),
-                        )
-                      : Column(
-                          children: weakest.map((gameId) {
-                            final game =
-                                games.firstWhere((item) => item.id == gameId);
-                            final stats = controller.statsFor(gameId);
-                            return ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              leading: CircleAvatar(
-                                backgroundColor:
-                                    game.color.withValues(alpha: 0.12),
-                                child: Icon(game.icon, color: game.color),
-                              ),
-                              title: Text(game.title,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w800)),
-                              subtitle: Text(
-                                '${(stats.mastery * 100).round()}% mastery • ${(stats.accuracy * 100).round()}% accuracy',
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                ),
-              ),
-              const SizedBox(height: 18),
-              const Text(
-                'Learning evidence & class packs',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
-              ),
-              const SizedBox(height: 10),
-              Card(
-                child: Column(
-                  children: [
-                    ListTile(
-                      leading: const Icon(Icons.insights_rounded),
-                      title: const Text('Learning evidence report'),
-                      subtitle: const Text(
-                        'See competency evidence, review due dates, misconceptions and supervised project evidence.',
-                      ),
-                      trailing: const Icon(Icons.chevron_right_rounded),
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => const ParentLearningReportScreen(),
-                        ),
-                      ),
-                    ),
-                    const Divider(height: 1),
-                    ListTile(
-                      leading: const Icon(Icons.school_rounded),
-                      title: const Text('Class packs & restore'),
-                      subtitle: const Text(
-                        'Parent-only purchase area. Packs stay locked for sale until review and store verification are complete.',
-                      ),
-                      trailing: const Icon(Icons.chevron_right_rounded),
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => const ClassPackScreen(),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              ],
               const SizedBox(height: 18),
               const Text(
                 'Reading & accessibility',
@@ -524,8 +573,10 @@ class ParentDashboardScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 18),
-              _DailyChallengeOverview(controller: controller),
+              if (!controller.isNurseryLearner) ...[
+                const SizedBox(height: 18),
+                _DailyChallengeOverview(controller: controller),
+              ],
               const SizedBox(height: 18),
               Card(
                 child: Padding(
@@ -632,7 +683,11 @@ class _ProfileManager extends StatelessWidget {
                 return InputChip(
                   selected: active,
                   avatar: Text(profile.avatarEmoji),
-                  label: Text('${profile.name} • C${profile.selectedClass}'),
+                  label: Text(
+                    profile.learnerStage == LearnerStage.nursery
+                        ? '${profile.name} • Nursery'
+                        : '${profile.name} • C${profile.selectedClass}',
+                  ),
                   onSelected: (_) {
                     if (!active) controller.switchProfile(profile.id);
                   },
@@ -650,6 +705,7 @@ class _ProfileManager extends StatelessWidget {
 
   Future<void> _showAddProfileDialog(BuildContext context) async {
     final nameController = TextEditingController();
+    var learnerStage = LearnerStage.school;
     var classNumber = 3;
     var avatar = '🧒';
     final created = await showDialog<bool>(
@@ -668,18 +724,42 @@ class _ProfileManager extends StatelessWidget {
                   decoration: const InputDecoration(
                       labelText: 'Child name or nickname'),
                 ),
-                DropdownButtonFormField<int>(
-                  initialValue: classNumber,
-                  decoration: const InputDecoration(labelText: 'Class'),
-                  items: const [3, 4, 5]
-                      .map((value) => DropdownMenuItem(
-                          value: value, child: Text('Class $value')))
-                      .toList(),
+                DropdownButtonFormField<LearnerStage>(
+                  initialValue: learnerStage,
+                  decoration:
+                      const InputDecoration(labelText: 'Learning stage'),
+                  items: const [
+                    DropdownMenuItem<LearnerStage>(
+                      value: LearnerStage.nursery,
+                      child: Text('Nursery'),
+                    ),
+                    DropdownMenuItem<LearnerStage>(
+                      value: LearnerStage.school,
+                      child: Text('School'),
+                    ),
+                  ],
                   onChanged: (value) {
-                    if (value != null)
-                      setDialogState(() => classNumber = value);
+                    if (value != null) {
+                      setDialogState(() => learnerStage = value);
+                    }
                   },
                 ),
+                if (learnerStage == LearnerStage.school) ...[
+                  const SizedBox(height: 10),
+                  DropdownButtonFormField<int>(
+                    initialValue: classNumber,
+                    decoration: const InputDecoration(labelText: 'Class'),
+                    items: LearnerCapabilityBoundary.supportedSchoolClasses
+                        .map((value) => DropdownMenuItem(
+                            value: value, child: Text('Class $value')))
+                        .toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        setDialogState(() => classNumber = value);
+                      }
+                    },
+                  ),
+                ],
                 const SizedBox(height: 14),
                 Wrap(
                   spacing: 8,
@@ -711,9 +791,11 @@ class _ProfileManager extends StatelessWidget {
     );
     if (created == true && context.mounted) {
       final id = controller.createProfile(
-          name: nameController.text,
-          classNumber: classNumber,
-          avatarEmoji: avatar);
+        name: nameController.text,
+        classNumber: classNumber,
+        learnerStage: learnerStage,
+        avatarEmoji: avatar,
+      );
       if (id.isEmpty && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Enter a child name first.')));

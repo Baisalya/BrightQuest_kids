@@ -375,9 +375,8 @@ class NurseryWorkedExampleVisual extends StatelessWidget {
       label: 'Worked visual example: ${tokens.join(' ')}',
       child: TweenAnimationBuilder<double>(
         tween: Tween<double>(begin: calmMotion ? 1 : 0, end: 1),
-        duration: calmMotion
-            ? Duration.zero
-            : const Duration(milliseconds: 650),
+        duration:
+            calmMotion ? Duration.zero : const Duration(milliseconds: 650),
         curve: Curves.easeOutCubic,
         builder: (context, value, child) => Wrap(
           alignment: WrapAlignment.center,
