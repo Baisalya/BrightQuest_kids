@@ -389,41 +389,32 @@ class LessonEngine {
     }
 
     final topic = _curriculumTopicForLevel(level);
-    final plannedObjective = topic?.summary ?? level.summary;
+    final missionObjective = topic?.summary ?? level.summary;
     final firstAllocated = allocated.values.firstOrNull;
-    const allocatableKinds = <LessonStepKind>{
-      LessonStepKind.workedExample,
-      LessonStepKind.guidedTry,
-      LessonStepKind.independentPractice,
-      LessonStepKind.transfer,
-      LessonStepKind.exitTicket,
-    };
+
+    // A Learning World mission has two different content layers:
+    // 1. the world/topic framing shown as the mission goal; and
+    // 2. the authored competency teaching sequence underneath it.
+    //
+    // Do not flatten those layers into one sentence. In particular, the
+    // explanation must keep the blueprint's teaching copy while activity-backed
+    // stages use the exact items allocated to this run. This is what keeps
+    // See it progressing from goal -> concept -> example instead of reading the
+    // topic summary again on every page.
     final steps = <LessonStep>[
       for (final step in base.steps)
-        if (allocated[step.kind] case final activity?)
-          _stepForAllocatedActivity(step, activity)
-        else if (step.kind == LessonStepKind.objective ||
-            step.kind == LessonStepKind.explanation)
-          _copyLessonStep(step, body: plannedObjective)
-        else if (allocatableKinds.contains(step.kind))
-          _stepWithoutAllocatedActivity(
-            step,
-            plannedObjective: plannedObjective,
-          )
-        else if (step.kind == LessonStepKind.reteach)
-          _copyLessonStep(
-            step,
-            body: firstAllocated?.explanation ?? plannedObjective,
-            hints: firstAllocated?.hints.map((hint) => hint.text).toList(),
-          )
-        else
-          step,
+        _composeMissionStep(
+          step: step,
+          allocatedActivity: allocated[step.kind],
+          missionObjective: missionObjective,
+          firstAllocatedActivity: firstAllocated,
+        ),
     ];
     return LessonFlow(
       classNumber: base.classNumber,
       competencyId: base.competencyId,
       unitId: base.unitId,
-      objective: plannedObjective,
+      objective: missionObjective,
       steps: List<LessonStep>.unmodifiable(steps),
       reviewStatus: base.reviewStatus,
     );
@@ -464,21 +455,59 @@ class LessonEngine {
     ];
   }
 
-  LessonStep _stepWithoutAllocatedActivity(
-    LessonStep step, {
-    required String plannedObjective,
+  LessonStep _composeMissionStep({
+    required LessonStep step,
+    required ContentActivity? allocatedActivity,
+    required String missionObjective,
+    required ContentActivity? firstAllocatedActivity,
   }) {
-    final body = switch (step.kind) {
-      LessonStepKind.workedExample =>
-        'Review the mission goal before the real game: $plannedObjective',
-      LessonStepKind.guidedTry =>
-        'Say which clue or strategy would help with this mission goal: $plannedObjective',
-      LessonStepKind.independentPractice =>
-        'Without a clue, explain one step you would use for this mission goal: $plannedObjective',
-      LessonStepKind.transfer =>
-        'Name a different situation where this mission goal could be useful: $plannedObjective',
+    if (allocatedActivity != null) {
+      return _stepForAllocatedActivity(step, allocatedActivity);
+    }
+
+    return switch (step.kind) {
+      // The topic/level summary is framing copy, not teaching copy.
+      LessonStepKind.objective =>
+        _copyLessonStep(step, body: missionObjective),
+
+      // Preserve authored blueprint teaching. Replacing this with the mission
+      // objective is what previously made consecutive See it pages say the
+      // same thing.
+      LessonStepKind.explanation => step,
+
+      // Capacity-aware runs may contain fewer allocated training activities.
+      // Keep those residual stages non-interactive and role-specific without
+      // leaking an unallocated activity prompt or repeating the topic summary.
+      LessonStepKind.workedExample ||
+      LessonStepKind.guidedTry ||
+      LessonStepKind.independentPractice ||
+      LessonStepKind.transfer ||
       LessonStepKind.exitTicket =>
-        'Before the game, say the key idea you will remember: $plannedObjective',
+        _stepWithoutAllocatedActivity(step),
+
+      // Reteach keeps its authored strategy text. If this run has an allocated
+      // activity, its hints can still support the learner without replacing the
+      // reteach explanation with another copy of the worked item.
+      LessonStepKind.reteach => _copyLessonStep(
+          step,
+          hints:
+              firstAllocatedActivity?.hints.map((hint) => hint.text).toList(),
+        ),
+      LessonStepKind.review => step,
+    };
+  }
+
+  LessonStep _stepWithoutAllocatedActivity(LessonStep step) {
+    final body = switch (step.kind) {
+      LessonStepKind.workedExample => step.body,
+      LessonStepKind.guidedTry =>
+        'Explain one small example of this idea in your own words.',
+      LessonStepKind.independentPractice =>
+        'Use the idea independently on a fresh example.',
+      LessonStepKind.transfer =>
+        'Tell where this idea could be useful outside this lesson.',
+      LessonStepKind.exitTicket =>
+        'Finish one independent check without a clue.',
       LessonStepKind.objective ||
       LessonStepKind.explanation ||
       LessonStepKind.reteach ||
@@ -509,14 +538,14 @@ class LessonEngine {
 
   LessonStep _copyLessonStep(
     LessonStep step, {
-    required String body,
+    String? body,
     List<String>? hints,
   }) {
     return LessonStep(
       id: step.id,
       kind: step.kind,
       title: step.title,
-      body: body,
+      body: body ?? step.body,
       activityId: step.activityId,
       hints: hints == null || hints.isEmpty ? step.hints : hints,
       requiresIndependentResponse: step.requiresIndependentResponse,

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 
 import '../capabilities/learner_capability_boundary.dart';
@@ -95,7 +97,22 @@ class GameController extends ChangeNotifier {
       List<ChildProfileSnapshot>.unmodifiable(_snapshot.profiles.values);
 
   bool get hasParentPin => (_snapshot.parentPinCode ?? '').length == 4;
+  bool get hasParentRecoveryCode =>
+      _normalizeRecoveryCode(_snapshot.parentRecoveryCode ?? '').length == 12;
   bool get isParentSessionUnlocked => _parentSessionUnlocked;
+  bool get parentPinResetPending =>
+      _parseParentResetRequestedAt() != null && hasParentPin;
+  DateTime? get parentPinResetReadyAt {
+    final requestedAt = _parseParentResetRequestedAt();
+    return requestedAt?.add(parentPinResetDelay);
+  }
+
+  static const Duration parentPinResetDelay = Duration(hours: 24);
+
+  String? get parentRecoveryCodeForUnlockedSession {
+    if (!_parentSessionUnlocked || !hasParentRecoveryCode) return null;
+    return _formatRecoveryCode(_snapshot.parentRecoveryCode!);
+  }
   bool get highContrastEnabled => _snapshot.highContrastEnabled;
   bool get reducedMotionEnabled => _snapshot.reducedMotionEnabled;
   bool get hapticsEnabled => _snapshot.hapticsEnabled;
@@ -868,6 +885,8 @@ class GameController extends ChangeNotifier {
   bool setParentPin(String code) {
     if (!_isValidPin(code)) return false;
     _snapshot.parentPinCode = code;
+    _snapshot.parentRecoveryCode = _generateParentRecoveryCode();
+    _snapshot.parentPinResetRequestedAtIso = null;
     _parentSessionUnlocked = true;
     _changed();
     return true;
@@ -875,11 +894,74 @@ class GameController extends ChangeNotifier {
 
   bool verifyParentPin(String code) {
     final valid = hasParentPin && code == _snapshot.parentPinCode;
-    if (valid) {
-      _parentSessionUnlocked = true;
+    if (!valid) return false;
+
+    _parentSessionUnlocked = true;
+    var changed = false;
+    if (!hasParentRecoveryCode) {
+      _snapshot.parentRecoveryCode = _generateParentRecoveryCode();
+      changed = true;
+    }
+    if (_snapshot.parentPinResetRequestedAtIso != null) {
+      _snapshot.parentPinResetRequestedAtIso = null;
+      changed = true;
+    }
+    if (changed) {
+      _changed();
+    } else {
       notifyListeners();
     }
-    return valid;
+    return true;
+  }
+
+  bool resetParentPinWithRecoveryCode({
+    required String recoveryCode,
+    required String newPin,
+  }) {
+    if (!_isValidPin(newPin) || !hasParentPin || !hasParentRecoveryCode) {
+      return false;
+    }
+    final supplied = _normalizeRecoveryCode(recoveryCode);
+    final stored = _normalizeRecoveryCode(_snapshot.parentRecoveryCode!);
+    if (supplied != stored) return false;
+
+    _snapshot.parentPinCode = newPin;
+    _snapshot.parentRecoveryCode = _generateParentRecoveryCode();
+    _snapshot.parentPinResetRequestedAtIso = null;
+    _parentSessionUnlocked = true;
+    _changed();
+    return true;
+  }
+
+  bool requestParentPinReset({DateTime? now}) {
+    if (!hasParentPin) return false;
+    if (_parseParentResetRequestedAt() != null) return true;
+    _snapshot.parentPinResetRequestedAtIso =
+        (now ?? DateTime.now()).toUtc().toIso8601String();
+    _changed();
+    return true;
+  }
+
+  bool canCompleteDelayedParentPinReset({DateTime? now}) {
+    final readyAt = parentPinResetReadyAt;
+    if (readyAt == null || !hasParentPin) return false;
+    return !(now ?? DateTime.now()).isBefore(readyAt);
+  }
+
+  bool completeDelayedParentPinReset(
+    String newPin, {
+    DateTime? now,
+  }) {
+    if (!_isValidPin(newPin) ||
+        !canCompleteDelayedParentPinReset(now: now)) {
+      return false;
+    }
+    _snapshot.parentPinCode = newPin;
+    _snapshot.parentRecoveryCode = _generateParentRecoveryCode();
+    _snapshot.parentPinResetRequestedAtIso = null;
+    _parentSessionUnlocked = true;
+    _changed();
+    return true;
   }
 
   void lockParentArea() {
@@ -891,6 +973,8 @@ class GameController extends ChangeNotifier {
   bool clearParentPin(String currentCode) {
     if (!verifyParentPin(currentCode)) return false;
     _snapshot.parentPinCode = null;
+    _snapshot.parentRecoveryCode = null;
+    _snapshot.parentPinResetRequestedAtIso = null;
     _parentSessionUnlocked = false;
     _changed();
     return true;
@@ -2413,6 +2497,29 @@ class GameController extends ChangeNotifier {
   bool _isValidPin(String code) =>
       code.length == 4 &&
       code.codeUnits.every((unit) => unit >= 48 && unit <= 57);
+
+  String _generateParentRecoveryCode() {
+    final random = Random.secure();
+    return List<String>.generate(
+      12,
+      (_) => random.nextInt(10).toString(),
+      growable: false,
+    ).join();
+  }
+
+  String _normalizeRecoveryCode(String value) =>
+      value.replaceAll(RegExp(r'[^0-9]'), '');
+
+  String _formatRecoveryCode(String value) {
+    final digits = _normalizeRecoveryCode(value);
+    if (digits.length != 12) return value;
+    return '${digits.substring(0, 4)}-${digits.substring(4, 8)}-${digits.substring(8, 12)}';
+  }
+
+  DateTime? _parseParentResetRequestedAt() {
+    final value = _snapshot.parentPinResetRequestedAtIso;
+    return value == null ? null : DateTime.tryParse(value);
+  }
 
   String _dateKey(DateTime value) =>
       '${value.year.toString().padLeft(4, '0')}-${value.month.toString().padLeft(2, '0')}-${value.day.toString().padLeft(2, '0')}';

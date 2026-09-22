@@ -2,10 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../core/accessibility/learning_narration_coordinator.dart';
 import '../core/content/content_repository.dart';
 import '../core/entitlements/entitlement_service.dart';
 import '../core/models/learner_stage.dart';
 import '../core/services/bright_audio_service.dart';
+import '../core/services/app_distribution_info.dart';
+import '../core/services/update_notice_service.dart';
 import '../core/state/game_controller.dart';
 import '../core/theme/app_theme.dart';
 import '../features/adventures/adventures_screen.dart';
@@ -15,6 +18,7 @@ import '../features/parent/parent_gate_screen.dart';
 import '../features/profile/profile_screen.dart';
 import '../features/progress/progress_screen.dart';
 import '../widgets/bright_adaptive.dart';
+import '../widgets/whats_new_dialog.dart';
 import 'app_persistence_boundary.dart';
 import 'brightquest_scope.dart';
 import 'learner_shell_policy.dart';
@@ -24,12 +28,17 @@ class BrightQuestApp extends StatelessWidget {
     required this.controller,
     required this.contentRepository,
     EntitlementService? entitlementService,
+    UpdateNoticeService? updateNoticeService,
+    this.showAutomaticUpdateNotice = true,
     super.key,
-  }) : entitlementService = entitlementService ?? EntitlementService();
+  })  : entitlementService = entitlementService ?? EntitlementService(),
+        updateNoticeService = updateNoticeService ?? UpdateNoticeService();
 
   final GameController controller;
   final ContentRepository contentRepository;
   final EntitlementService entitlementService;
+  final UpdateNoticeService updateNoticeService;
+  final bool showAutomaticUpdateNotice;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +54,9 @@ class BrightQuestApp extends StatelessWidget {
             return MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'BrightQuest Kids',
+              navigatorObservers: <NavigatorObserver>[
+                learningNarrationRouteObserver,
+              ],
               theme: AppTheme.light(
                 highContrast: controller.highContrastEnabled,
                 dyslexiaFriendlySpacing: controller.dyslexiaFriendlySpacing,
@@ -65,7 +77,10 @@ class BrightQuestApp extends StatelessWidget {
                   ),
                 );
               },
-              home: const MainShell(),
+              home: MainShell(
+                updateNoticeService: updateNoticeService,
+                showAutomaticUpdateNotice: showAutomaticUpdateNotice,
+              ),
             );
           },
         ),
@@ -75,7 +90,14 @@ class BrightQuestApp extends StatelessWidget {
 }
 
 class MainShell extends StatefulWidget {
-  const MainShell({super.key});
+  const MainShell({
+    required this.updateNoticeService,
+    required this.showAutomaticUpdateNotice,
+    super.key,
+  });
+
+  final UpdateNoticeService updateNoticeService;
+  final bool showAutomaticUpdateNotice;
 
   @override
   State<MainShell> createState() => _MainShellState();
@@ -87,8 +109,41 @@ class _MainShellState extends State<MainShell> {
   int? _lastClassNumber;
   LearnerStage? _lastLearnerStage;
 
+  bool _automaticUpdateNoticeChecked = false;
+
   final Map<LearnerShellDestination, Widget> _mountedPages =
       <LearnerShellDestination, Widget>{};
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(_maybeShowAutomaticUpdateNotice());
+    });
+  }
+
+  Future<void> _maybeShowAutomaticUpdateNotice() async {
+    if (_automaticUpdateNoticeChecked ||
+        !widget.showAutomaticUpdateNotice) {
+      return;
+    }
+    _automaticUpdateNoticeChecked = true;
+
+    final shouldShow = await widget.updateNoticeService.shouldShow(
+      AppDistributionInfo.updateNoticeId,
+    );
+    if (!shouldShow || !mounted) return;
+
+    final suppressThisVersion = await showBrightQuestWhatsNewDialog(
+      context,
+      automatic: true,
+    );
+    if (suppressThisVersion == true) {
+      await widget.updateNoticeService.suppress(
+        AppDistributionInfo.updateNoticeId,
+      );
+    }
+  }
 
   Widget _pageFor(LearnerShellDestination destination) =>
       _mountedPages.putIfAbsent(
@@ -103,10 +158,12 @@ class _MainShellState extends State<MainShell> {
 
   void _selectDestination(LearnerShellDestination destination) {
     if (_selectedDestination == destination) return;
+    unawaited(LearningNarrationCoordinator.instance.stopAll());
     setState(() => _selectedDestination = destination);
   }
 
   void _openParentArea() {
+    unawaited(LearningNarrationCoordinator.instance.stopAll());
     unawaited(BrightAudioService.instance.playSfx(BrightSfx.tap));
     Navigator.of(context).push<void>(
       MaterialPageRoute<void>(builder: (_) => const ParentGateScreen()),
@@ -119,11 +176,17 @@ class _MainShellState extends State<MainShell> {
     final controller = BrightQuestScope.of(context);
 
     if (_lastLearnerStage != controller.learnerStage) {
+      if (_lastLearnerStage != null) {
+        unawaited(LearningNarrationCoordinator.instance.stopAll());
+      }
       _lastLearnerStage = controller.learnerStage;
       _selectedDestination = LearnerShellDestination.home;
     }
 
     if (_lastClassNumber != controller.selectedClass) {
+      if (_lastClassNumber != null) {
+        unawaited(LearningNarrationCoordinator.instance.stopAll());
+      }
       _lastClassNumber = controller.selectedClass;
       final policy = LearnerShellPolicy.forClass(controller.selectedClass);
       if (!policy.contains(_selectedDestination)) {

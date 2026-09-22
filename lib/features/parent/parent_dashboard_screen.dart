@@ -1,18 +1,15 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
-import '../../core/capabilities/learner_capability_boundary.dart';
-import '../../core/curriculum/curriculum_catalog.dart';
-import '../../core/models/game_models.dart';
-import '../../core/models/learner_stage.dart';
-import '../../core/models/progress_models.dart';
 import '../../core/services/bright_audio_service.dart';
-import '../../core/state/game_controller.dart';
 import '../../widgets/bright_widgets.dart';
-import 'class_pack_screen.dart';
-import 'parent_learning_report_screen.dart';
+import 'parent_accessibility_screen.dart';
+import 'parent_about_app_screen.dart';
+import 'parent_audio_settings_screen.dart';
+import 'parent_child_learning_screen.dart';
+import 'parent_data_security_screen.dart';
+import 'parent_healthy_play_screen.dart';
+import 'parent_section_scaffold.dart';
 
 class ParentDashboardScreen extends StatelessWidget {
   const ParentDashboardScreen({super.key});
@@ -22,870 +19,444 @@ class ParentDashboardScreen extends StatelessWidget {
     final controller = BrightQuestScope.of(context);
     final accuracy = (controller.accuracy * 100).round();
     final dailyAccuracy = (controller.dailyAccuracy * 100).round();
-    final weakest = controller.weakestGameIds();
 
     return Column(
       children: [
         BrightHeader(
-          title: 'Parent Dashboard',
-          trailing: IconButton(
-            tooltip: 'Lock parent area',
-            onPressed: controller.lockParentArea,
-            icon: const Icon(Icons.lock_rounded),
+          title: 'Parent Center',
+          trailing: Tooltip(
+            message: 'Lock parent area',
+            child: IconButton(
+              key: const Key('parent_center_lock_button'),
+              onPressed: controller.lockParentArea,
+              icon: const Icon(Icons.lock_rounded),
+            ),
           ),
         ),
         Expanded(
-          child: ListView(
-            padding: const EdgeInsets.all(18),
-            children: [
-              _ProfileManager(controller: controller),
-              const SizedBox(height: 18),
-              Text(
-                '${controller.activeProfileAvatar} ${controller.activeProfileName} • ${controller.isNurseryLearner ? 'Nursery' : 'Class ${controller.selectedClass}'}',
-                style:
-                    const TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
-              ),
-              const SizedBox(height: 10),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(18),
-                  child: Column(
-                    children: [
-                      DropdownButtonFormField<LearnerStage>(
-                        key: ValueKey<String>(
-                            'stage-${controller.activeProfileId}'),
-                        initialValue: controller.learnerStage,
-                        decoration:
-                            const InputDecoration(labelText: 'Learning stage'),
-                        items: const [
-                          DropdownMenuItem<LearnerStage>(
-                            value: LearnerStage.nursery,
-                            child: Text('Nursery'),
+          child: ColoredBox(
+            color: const Color(0xFFF6F8FB),
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(18, 18, 18, 28),
+              children: [
+                Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1120),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _ActiveChildCard(
+                          name: controller.activeProfileName,
+                          avatar: controller.activeProfileAvatar,
+                          stageLabel: controller.isNurseryLearner
+                              ? 'Nursery'
+                              : 'Class ${controller.selectedClass}',
+                          onManage: () => _open(
+                            context,
+                            const ParentChildLearningScreen(),
                           ),
-                          DropdownMenuItem<LearnerStage>(
-                            value: LearnerStage.school,
-                            child: Text('School'),
+                        ),
+                        const SizedBox(height: 14),
+                        if (controller.isNurseryLearner)
+                          _NurserySnapshot(
+                            activities: controller.nurseryAttemptEvidence.length,
+                            reviewReady: controller
+                                .dueNurseryReviewTasks(limit: 50)
+                                .length,
+                          )
+                        else
+                          _SchoolSnapshot(
+                            level: controller.level,
+                            xp: controller.xp,
+                            accuracy: accuracy,
+                            correctToday: controller.correctToday,
+                            answersToday: controller.answersToday,
+                            dailyAccuracy: dailyAccuracy,
+                            streak: controller.streak,
+                            studyMinutes:
+                                controller.studyMinutesToday.floor(),
+                            completedLevels:
+                                controller.completedLearningLevels,
+                            totalLevels: controller.totalLearningLevels,
+                            progress: controller.learningPathProgress,
+                            stars: controller.learningPathStars,
                           ),
-                        ],
-                        onChanged: (value) {
-                          if (value != null) {
-                            controller.setLearnerStage(value);
-                          }
-                        },
-                      ),
-                      if (!controller.isNurseryLearner) ...[
-                        const SizedBox(height: 10),
-                        DropdownButtonFormField<int>(
-                          key: ValueKey<String>(
-                              'class-${controller.activeProfileId}'),
-                          initialValue: controller.selectedClass,
-                          decoration:
-                              const InputDecoration(labelText: 'School class'),
-                          items: LearnerCapabilityBoundary
-                              .supportedSchoolClasses
-                              .map((value) => DropdownMenuItem<int>(
-                                  value: value, child: Text('Class $value')))
-                              .toList(),
-                          onChanged: (value) {
-                            if (value != null) controller.setClass(value);
+                        const SizedBox(height: 20),
+                        const Text(
+                          'Manage',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        const Text(
+                          'Open only the settings you need instead of scrolling through one long parent page.',
+                          style: TextStyle(color: Colors.black54, height: 1.35),
+                        ),
+                        const SizedBox(height: 12),
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            final columns = constraints.maxWidth >= 900
+                                ? 3
+                                : constraints.maxWidth >= 400
+                                    ? 2
+                                    : 1;
+                            const gap = 12.0;
+                            final tileWidth = (constraints.maxWidth -
+                                    (columns - 1) * gap) /
+                                columns;
+                            final audio = BrightAudioService.instance;
+                            return Wrap(
+                              spacing: gap,
+                              runSpacing: gap,
+                              children: [
+                                SizedBox(
+                                  width: tileWidth,
+                                  child: ParentManagementTile(
+                                    key: const Key(
+                                        'parent_manage_child_learning'),
+                                    icon: Icons.school_rounded,
+                                    title: 'Child & learning',
+                                    subtitle:
+                                        'Profiles, class, progress, reports and class packs.',
+                                    status: controller.isNurseryLearner
+                                        ? 'Nursery profile active'
+                                        : '${controller.completedLearningLevels}/${controller.totalLearningLevels} levels cleared',
+                                    onTap: () => _open(
+                                      context,
+                                      const ParentChildLearningScreen(),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: tileWidth,
+                                  child: ParentManagementTile(
+                                    key: const Key('parent_manage_healthy_play'),
+                                    icon: Icons.health_and_safety_rounded,
+                                    title: 'Healthy play',
+                                    subtitle:
+                                        'Daily limit, learning goal and reminders.',
+                                    status: controller.timeLimitEnabled
+                                        ? '${controller.dailyTimeLimitMinutes} min daily limit'
+                                        : 'No daily time limit',
+                                    onTap: () => _open(
+                                      context,
+                                      const ParentHealthyPlayScreen(),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: tileWidth,
+                                  child: ParentManagementTile(
+                                    key: const Key('parent_manage_audio'),
+                                    icon: Icons.volume_up_rounded,
+                                    title: 'Audio & narration',
+                                    subtitle:
+                                        'BGM, game sounds, narrator and volumes.',
+                                    status: audio.appAudioEnabled
+                                        ? 'App-wide audio on'
+                                        : 'App-wide audio muted',
+                                    onTap: () => _open(
+                                      context,
+                                      const ParentAudioSettingsScreen(),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: tileWidth,
+                                  child: ParentManagementTile(
+                                    key: const Key(
+                                        'parent_manage_accessibility'),
+                                    icon: Icons.visibility_rounded,
+                                    title: 'Reading & accessibility',
+                                    subtitle:
+                                        'Spacing, reading focus, captions and language.',
+                                    status: controller.captionsEnabled
+                                        ? 'Captions on'
+                                        : 'Captions off',
+                                    onTap: () => _open(
+                                      context,
+                                      const ParentAccessibilityScreen(),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: tileWidth,
+                                  child: ParentManagementTile(
+                                    key: const Key(
+                                        'parent_manage_data_security'),
+                                    icon: Icons.admin_panel_settings_rounded,
+                                    title: 'Data & parent lock',
+                                    subtitle:
+                                        'Recovery code, parent lock and progress reset.',
+                                    status: 'Local & offline-first',
+                                    onTap: () => _open(
+                                      context,
+                                      const ParentDataSecurityScreen(),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: tileWidth,
+                                  child: ParentManagementTile(
+                                    key: const Key('parent_manage_about_updates'),
+                                    icon: Icons.info_outline_rounded,
+                                    title: 'About us & updates',
+                                    subtitle:
+                                        'Developer, support, website, version and Store status.',
+                                    status: 'Version 0.6.0+26',
+                                    onTap: () => _open(
+                                      context,
+                                      const ParentAboutAppScreen(),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
                           },
                         ),
-                      ],
-                      const SizedBox(height: 10),
-                      if (controller.isNurseryLearner) ...[
-                        _Row(
-                          label: 'Nursery activities recorded',
-                          value: '${controller.nurseryAttemptEvidence.length}',
-                        ),
-                        _Row(
-                          label: 'Review ready',
-                          value:
-                              '${controller.dueNurseryReviewTasks(limit: 50).length}',
-                        ),
-                      ] else ...[
-                        _Row(
-                          label: 'Level / XP',
-                          value: 'Lv ${controller.level} • ${controller.xp} XP',
-                        ),
-                        _Row(
-                          label: 'All-time accuracy',
-                          value: '$accuracy%',
-                        ),
-                        _Row(
-                          label: 'Today',
-                          value:
-                              '${controller.correctToday}/${controller.answersToday} correct ($dailyAccuracy%)',
-                        ),
-                        _Row(
-                          label: 'Learning streak',
-                          value: '${controller.streak} days',
-                        ),
-                        _Row(
-                          label: 'Study time today',
-                          value: '${controller.studyMinutesToday.floor()} min',
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ),
-              if (!controller.isNurseryLearner) ...[
-                const SizedBox(height: 18),
-                const Text(
-                  'Class adventure map',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
-                ),
-                const SizedBox(height: 10),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+                        const SizedBox(height: 16),
+                        const Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Icon(
+                              Icons.offline_bolt_rounded,
+                              size: 19,
+                              color: Color(0xFF415F8F),
+                            ),
+                            SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                '${controller.completedLearningLevels}/${controller.totalLearningLevels} levels cleared',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w900),
+                                'Offline-first parent controls. No ads, chat or social feeds are enabled.',
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  height: 1.35,
+                                ),
                               ),
-                            ),
-                            Text(
-                              '⭐ ${controller.learningPathStars}',
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w900),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 10),
-                        LinearProgressIndicator(
-                          value: controller.learningPathProgress,
-                          minHeight: 10,
-                          borderRadius: BorderRadius.circular(99),
-                        ),
-                        const SizedBox(height: 12),
-                        ...learningWorlds.map((world) {
-                          final completed = controller
-                              .completedLevelsForSubject(world.subject);
-                          final total =
-                              controller.totalLevelsForSubject(world.subject);
-                          final stars =
-                              controller.starsForSubject(world.subject);
-                          return ListTile(
-                            dense: true,
-                            contentPadding: EdgeInsets.zero,
-                            leading: Text(world.emoji,
-                                style: const TextStyle(fontSize: 25)),
-                            title: Text(world.title,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w800)),
-                            subtitle: LinearProgressIndicator(
-                              value: total == 0 ? 0 : completed / total,
-                              minHeight: 6,
-                              borderRadius: BorderRadius.circular(99),
-                            ),
-                            trailing: Text('$completed/$total • ⭐ $stars'),
-                          );
-                        }),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 18),
-                const Text(
-                  'Focus areas',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
-                ),
-                const SizedBox(height: 10),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: weakest.isEmpty
-                        ? const Text(
-                            'Play a few adventures first. BrightQuest will then surface the lowest-mastery areas here.',
-                            style:
-                                TextStyle(color: Colors.black54, height: 1.4),
-                          )
-                        : Column(
-                            children: weakest.map((gameId) {
-                              final game =
-                                  games.firstWhere((item) => item.id == gameId);
-                              final stats = controller.statsFor(gameId);
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                leading: CircleAvatar(
-                                  backgroundColor:
-                                      game.color.withValues(alpha: 0.12),
-                                  child: Icon(game.icon, color: game.color),
-                                ),
-                                title: Text(game.title,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w800)),
-                                subtitle: Text(
-                                  '${(stats.mastery * 100).round()}% mastery • ${(stats.accuracy * 100).round()}% accuracy',
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                  ),
-                ),
-                const SizedBox(height: 18),
-                const Text(
-                  'Learning evidence & class packs',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
-                ),
-                const SizedBox(height: 10),
-                Card(
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: const Icon(Icons.insights_rounded),
-                        title: const Text('Learning evidence report'),
-                        subtitle: const Text(
-                          'See competency evidence, review due dates, misconceptions and supervised project evidence.',
-                        ),
-                        trailing: const Icon(Icons.chevron_right_rounded),
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute<void>(
-                            builder: (_) => const ParentLearningReportScreen(),
-                          ),
-                        ),
-                      ),
-                      const Divider(height: 1),
-                      ListTile(
-                        leading: const Icon(Icons.school_rounded),
-                        title: const Text('Class packs & restore'),
-                        subtitle: const Text(
-                          'Parent-only purchase area. Packs stay locked for sale until review and store verification are complete.',
-                        ),
-                        trailing: const Icon(Icons.chevron_right_rounded),
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute<void>(
-                            builder: (_) => const ClassPackScreen(),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ],
-              const SizedBox(height: 18),
-              const Text(
-                'Reading & accessibility',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
-              ),
-              const SizedBox(height: 10),
-              Card(
-                child: Column(
-                  children: [
-                    SwitchListTile(
-                      title: const Text('Dyslexia-friendly spacing'),
-                      subtitle: const Text(
-                        'Adds breathing room between letters and lines. This is a reading preference, not a medical treatment.',
-                      ),
-                      value: controller.dyslexiaFriendlySpacing,
-                      onChanged: controller.setDyslexiaFriendlySpacing,
-                    ),
-                    SwitchListTile(
-                      title: const Text('Reading focus'),
-                      subtitle: const Text(
-                        'Highlights the current learning text and narration transcript with extra spacing and contrast.',
-                      ),
-                      value: controller.readingFocusEnabled,
-                      onChanged: controller.setReadingFocusEnabled,
-                    ),
-                    SwitchListTile(
-                      title: const Text('Captions / visible audio meaning'),
-                      subtitle: const Text(
-                        'Shows the current narration transcript and choices even when speech is muted or unavailable.',
-                      ),
-                      value: controller.captionsEnabled,
-                      onChanged: controller.setCaptionsEnabled,
-                    ),
-                    const ListTile(
-                      title: Text('Learning language'),
-                      subtitle: Text(
-                        'English (India). Hindi remains unavailable until a reviewed translation pack exists; answers are never mixed across locales.',
-                      ),
-                      trailing: Text('en-IN'),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 18),
-              const Text(
-                'Healthy play controls',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
-              ),
-              const SizedBox(height: 10),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      SwitchListTile(
-                        title: const Text('Daily time limit'),
-                        subtitle: Text(
-                          controller.timeLimitEnabled
-                              ? 'Games pause after ${controller.dailyTimeLimitMinutes} minutes of active learning-game time.'
-                              : 'Off. Learning games are not time-blocked.',
-                        ),
-                        value: controller.timeLimitEnabled,
-                        onChanged: controller.setTimeLimitEnabled,
-                      ),
-                      if (controller.timeLimitEnabled) ...[
-                        ListTile(
-                          title: Text(
-                              'Limit: ${controller.dailyTimeLimitMinutes} min'),
-                          subtitle: Text(
-                              '${controller.studyMinutesToday.floor()} min used today'),
-                        ),
-                        Slider(
-                          value: controller.dailyTimeLimitMinutes.toDouble(),
-                          min: 15,
-                          max: 180,
-                          divisions: 11,
-                          label: '${controller.dailyTimeLimitMinutes} min',
-                          onChanged: (value) => controller
-                              .setDailyTimeLimitMinutes(value.round()),
-                        ),
-                      ],
-                      ListTile(
-                          title: Text(
-                              'Daily learning goal: ${controller.dailyMinutesGoal} min')),
-                      Slider(
-                        value: controller.dailyMinutesGoal.toDouble(),
-                        min: 10,
-                        max: 60,
-                        divisions: 10,
-                        label: '${controller.dailyMinutesGoal} min',
-                        onChanged: (value) =>
-                            controller.setDailyMinutesGoal(value.round()),
-                      ),
-                      SwitchListTile(
-                        title:
-                            Text('Audio for ${controller.activeProfileName}'),
-                        subtitle: const Text(
-                            'Master switch for music, guide voice and sound effects.'),
-                        value: controller.soundEnabled,
-                        onChanged: (value) {
-                          controller.setSoundEnabled(value);
-                          unawaited(BrightAudioService.instance
-                              .setSessionEnabled(value));
-                        },
-                      ),
-                      AnimatedBuilder(
-                        animation: BrightAudioService.instance,
-                        builder: (context, _) {
-                          final audio = BrightAudioService.instance;
-                          return Column(
-                            children: [
-                              SwitchListTile(
-                                title: const Text('Background music'),
-                                subtitle: const Text(
-                                    'Gentle looping music changes with each adventure.'),
-                                value: audio.musicEnabled,
-                                onChanged: controller.soundEnabled
-                                    ? audio.setMusicEnabled
-                                    : null,
-                              ),
-                              SwitchListTile(
-                                title: const Text('Gentle guide voice'),
-                                subtitle: Text(
-                                  audio.voiceAvailable
-                                      ? 'Smart read speaks questions, choices, and answer feedback.'
-                                      : 'Install a Windows speech voice to enable narration.',
-                                ),
-                                value:
-                                    audio.voiceAvailable && audio.voiceEnabled,
-                                onChanged: controller.soundEnabled &&
-                                        audio.voiceAvailable
-                                    ? audio.setVoiceEnabled
-                                    : null,
-                              ),
-                              if (audio.availableVoices.isNotEmpty)
-                                ListTile(
-                                  title: const Text('Narration voice'),
-                                  subtitle: DropdownButton<String>(
-                                    key: const Key('guide_voice_selector'),
-                                    isExpanded: true,
-                                    value: audio.selectedVoiceId,
-                                    hint: const Text('Choose a voice'),
-                                    items: [
-                                      for (final voice in audio.availableVoices)
-                                        DropdownMenuItem<String>(
-                                          value: voice.id,
-                                          child: Text(
-                                            voice.label,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                    ],
-                                    onChanged: controller.soundEnabled &&
-                                            audio.voiceEnabled
-                                        ? (value) {
-                                            if (value != null) {
-                                              unawaited(audio.setVoice(value));
-                                            }
-                                          }
-                                        : null,
-                                  ),
-                                  trailing:
-                                      audio.selectedVoice?.isFemale == true
-                                          ? const Tooltip(
-                                              message:
-                                                  'Female voice selected by default',
-                                              child: Icon(
-                                                Icons.woman_2_rounded,
-                                                color: Color(0xFFF0549B),
-                                              ),
-                                            )
-                                          : null,
-                                ),
-                              SwitchListTile(
-                                title:
-                                    const Text('Automatic learning narration'),
-                                subtitle: const Text(
-                                    'Reads lesson steps automatically and keeps game introductions spoken. Read-aloud buttons always remain manual.'),
-                                value: audio.autoNarrationEnabled,
-                                onChanged: controller.soundEnabled &&
-                                        audio.voiceAvailable &&
-                                        audio.voiceEnabled
-                                    ? audio.setAutoNarrationEnabled
-                                    : null,
-                              ),
-                              SwitchListTile(
-                                title: const Text('Cheerful voice feedback'),
-                                subtitle: const Text(
-                                    'Short praise and encouragement after answers.'),
-                                value: audio.voiceFeedbackEnabled,
-                                onChanged: controller.soundEnabled &&
-                                        audio.voiceAvailable &&
-                                        audio.voiceEnabled
-                                    ? audio.setVoiceFeedbackEnabled
-                                    : null,
-                              ),
-                              SwitchListTile(
-                                title: const Text('Sound effects'),
-                                subtitle: const Text(
-                                    'Tap, hint, correct, star, unlock and completion sounds.'),
-                                value: audio.sfxEnabled,
-                                onChanged: controller.soundEnabled
-                                    ? audio.setSfxEnabled
-                                    : null,
-                              ),
-                              ListTile(
-                                title: Text(
-                                    'BGM music volume ${(audio.musicVolume * 100).round()}%'),
-                                subtitle: Slider(
-                                  value: audio.musicVolume,
-                                  min: 0,
-                                  max: 0.55,
-                                  onChanged: controller.soundEnabled &&
-                                          audio.musicEnabled
-                                      ? audio.setMusicVolume
-                                      : null,
-                                ),
-                              ),
-                              ListTile(
-                                title: Text(
-                                    'Game sound effects volume ${(audio.sfxVolume * 100).round()}%'),
-                                subtitle: Slider(
-                                  value: audio.sfxVolume,
-                                  min: 0.15,
-                                  max: 1,
-                                  onChanged: controller.soundEnabled &&
-                                          audio.sfxEnabled
-                                      ? audio.setSfxVolume
-                                      : null,
-                                ),
-                              ),
-                              ListTile(
-                                title: Text(
-                                    'Speech narration volume ${(audio.voiceVolume * 100).round()}%'),
-                                subtitle: Slider(
-                                  value: audio.voiceVolume,
-                                  min: 0.2,
-                                  max: 1,
-                                  onChanged: controller.soundEnabled &&
-                                          audio.voiceAvailable &&
-                                          audio.voiceEnabled
-                                      ? audio.setVoiceVolume
-                                      : null,
-                                ),
-                                trailing: IconButton(
-                                  tooltip: 'Test guide voice',
-                                  onPressed: controller.soundEnabled &&
-                                          audio.voiceAvailable &&
-                                          audio.voiceEnabled
-                                      ? audio.testVoice
-                                      : null,
-                                  icon: const Icon(
-                                      Icons.record_voice_over_rounded),
-                                ),
-                              ),
-                              ListTile(
-                                title: Text(
-                                    'Guide speed ${(audio.voiceRate * 100).round()}%'),
-                                subtitle: Slider(
-                                  value: audio.voiceRate,
-                                  min: 0.30,
-                                  max: 0.62,
-                                  divisions: 8,
-                                  onChanged: controller.soundEnabled &&
-                                          audio.voiceAvailable &&
-                                          audio.voiceEnabled
-                                      ? audio.setVoiceRate
-                                      : null,
-                                ),
-                              ),
-                              ListTile(
-                                title: Text(audio.voicePitchAvailable
-                                    ? 'Guide tone ${(audio.voicePitch * 100).round()}%'
-                                    : 'Guide tone (Android only)'),
-                                subtitle: Slider(
-                                  value: audio.voicePitch,
-                                  min: 0.80,
-                                  max: 1.30,
-                                  divisions: 10,
-                                  onChanged: controller.soundEnabled &&
-                                          audio.voiceAvailable &&
-                                          audio.voiceEnabled &&
-                                          audio.voicePitchAvailable
-                                      ? audio.setVoicePitch
-                                      : null,
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                      SwitchListTile(
-                        title: const Text('Learning reminders'),
-                        subtitle: const Text(
-                            'Saved preference; OS notification scheduling is not enabled yet.'),
-                        value: controller.remindersEnabled,
-                        onChanged: controller.setRemindersEnabled,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              if (!controller.isNurseryLearner) ...[
-                const SizedBox(height: 18),
-                _DailyChallengeOverview(controller: controller),
-              ],
-              const SizedBox(height: 18),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Local data controls',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w900),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Reset clears learning progress only for the active child. Other child profiles and the parent PIN are preserved.',
-                        style: TextStyle(color: Colors.black54, height: 1.4),
-                      ),
-                      const SizedBox(height: 12),
-                      OutlinedButton.icon(
-                        onPressed: () => _confirmReset(context),
-                        icon: const Icon(Icons.delete_outline_rounded),
-                        label: const Text('Reset active child progress'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 14),
-              const Text(
-                'Offline-first: profiles, progress and controls are stored locally. No ads, chat, purchases or social feeds are enabled.',
-                style: TextStyle(color: Colors.black54, height: 1.4),
-              ),
-            ],
+            ),
           ),
         ),
       ],
     );
   }
 
-  Future<void> _confirmReset(BuildContext context) async {
-    final controller = BrightQuestScope.of(context);
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text('Reset ${controller.activeProfileName} progress?'),
-        content: const Text(
-            'Coins, stars, XP, answers, mastery, Learning World levels, achievements and cosmetic unlocks for this child will be cleared.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Reset'),
-          ),
-        ],
-      ),
+  void _open(BuildContext context, Widget screen) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => screen),
     );
-    if (confirmed == true && context.mounted) {
-      await controller.resetProgress();
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Active child progress reset.')),
-        );
-      }
-    }
   }
 }
 
-class _ProfileManager extends StatelessWidget {
-  const _ProfileManager({required this.controller});
-  final GameController controller;
+class _ActiveChildCard extends StatelessWidget {
+  const _ActiveChildCard({
+    required this.name,
+    required this.avatar,
+    required this.stageLabel,
+    required this.onManage,
+  });
 
-  @override
-  Widget build(BuildContext context) {
-    final List<ChildProfileSnapshot> profiles = controller.profiles;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Expanded(
-                  child: Text('Child profiles',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w900)),
-                ),
-                FilledButton.tonalIcon(
-                  onPressed: () => _showAddProfileDialog(context),
-                  icon: const Icon(Icons.person_add_alt_1_rounded),
-                  label: const Text('Add'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: profiles.map((profile) {
-                final active = profile.id == controller.activeProfileId;
-                return InputChip(
-                  selected: active,
-                  avatar: Text(profile.avatarEmoji),
-                  label: Text(
-                    profile.learnerStage == LearnerStage.nursery
-                        ? '${profile.name} • Nursery'
-                        : '${profile.name} • C${profile.selectedClass}',
-                  ),
-                  onSelected: (_) {
-                    if (!active) controller.switchProfile(profile.id);
-                  },
-                  onDeleted: profiles.length <= 1 || !active
-                      ? null
-                      : () => _confirmDeleteProfile(context, profile),
-                );
-              }).toList(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _showAddProfileDialog(BuildContext context) async {
-    final nameController = TextEditingController();
-    var learnerStage = LearnerStage.school;
-    var classNumber = 3;
-    var avatar = '🧒';
-    final created = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          title: const Text('Add child profile'),
-          content: SizedBox(
-            width: 420,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: nameController,
-                  maxLength: 24,
-                  decoration: const InputDecoration(
-                      labelText: 'Child name or nickname'),
-                ),
-                DropdownButtonFormField<LearnerStage>(
-                  initialValue: learnerStage,
-                  decoration:
-                      const InputDecoration(labelText: 'Learning stage'),
-                  items: const [
-                    DropdownMenuItem<LearnerStage>(
-                      value: LearnerStage.nursery,
-                      child: Text('Nursery'),
-                    ),
-                    DropdownMenuItem<LearnerStage>(
-                      value: LearnerStage.school,
-                      child: Text('School'),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    if (value != null) {
-                      setDialogState(() => learnerStage = value);
-                    }
-                  },
-                ),
-                if (learnerStage == LearnerStage.school) ...[
-                  const SizedBox(height: 10),
-                  DropdownButtonFormField<int>(
-                    initialValue: classNumber,
-                    decoration: const InputDecoration(labelText: 'Class'),
-                    items: LearnerCapabilityBoundary.supportedSchoolClasses
-                        .map((value) => DropdownMenuItem(
-                            value: value, child: Text('Class $value')))
-                        .toList(),
-                    onChanged: (value) {
-                      if (value != null) {
-                        setDialogState(() => classNumber = value);
-                      }
-                    },
-                  ),
-                ],
-                const SizedBox(height: 14),
-                Wrap(
-                  spacing: 8,
-                  children: ['🧒', '👧', '👦', '🧑']
-                      .map(
-                        (value) => ChoiceChip(
-                          label:
-                              Text(value, style: const TextStyle(fontSize: 24)),
-                          selected: avatar == value,
-                          onSelected: (_) =>
-                              setDialogState(() => avatar = value),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.of(dialogContext).pop(false),
-                child: const Text('Cancel')),
-            FilledButton(
-                onPressed: () => Navigator.of(dialogContext).pop(true),
-                child: const Text('Create')),
-          ],
-        ),
-      ),
-    );
-    if (created == true && context.mounted) {
-      final id = controller.createProfile(
-        name: nameController.text,
-        classNumber: classNumber,
-        learnerStage: learnerStage,
-        avatarEmoji: avatar,
-      );
-      if (id.isEmpty && context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Enter a child name first.')));
-      }
-    }
-    nameController.dispose();
-  }
-
-  Future<void> _confirmDeleteProfile(
-      BuildContext context, ChildProfileSnapshot profile) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text('Delete ${profile.name}?'),
-        content: const Text(
-            'This permanently removes this child’s local learning progress.'),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: const Text('Cancel')),
-          FilledButton(
-              onPressed: () => Navigator.of(dialogContext).pop(true),
-              child: const Text('Delete')),
-        ],
-      ),
-    );
-    if (confirmed == true) controller.deleteProfile(profile.id);
-  }
-}
-
-class _DailyChallengeOverview extends StatelessWidget {
-  const _DailyChallengeOverview({required this.controller});
-  final GameController controller;
+  final String name;
+  final String avatar;
+  final String stageLabel;
+  final VoidCallback onManage;
 
   @override
   Widget build(BuildContext context) => Card(
+        margin: EdgeInsets.zero,
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              const Text('Today’s learning quests',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900)),
-              const SizedBox(height: 8),
-              ...controller.dailyChallenges
-                  .map<Widget>((DailyChallenge challenge) {
-                final value = controller.dailyChallengeValue(challenge);
-                final claimed =
-                    controller.isDailyChallengeClaimed(challenge.id);
-                return ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Icon(claimed
-                      ? Icons.check_circle_rounded
-                      : Icons.flag_rounded),
-                  title: Text(challenge.title),
-                  subtitle: LinearProgressIndicator(
-                    value:
-                        (value / challenge.target).clamp(0.0, 1.0).toDouble(),
-                  ),
-                  trailing: Text(
-                      '${value.clamp(0, challenge.target)}/${challenge.target}'),
-                );
-              }),
+              CircleAvatar(
+                radius: 28,
+                backgroundColor: const Color(0xFFEAF0F8),
+                child: Text(avatar, style: const TextStyle(fontSize: 27)),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Active child',
+                      style: TextStyle(color: Colors.black54, fontSize: 12),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    Text(stageLabel),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              FilledButton.tonal(
+                onPressed: onManage,
+                child: const Text('Manage'),
+              ),
             ],
           ),
         ),
       );
 }
 
-class _Row extends StatelessWidget {
-  const _Row({required this.label, required this.value});
-  final String label;
-  final String value;
+class _NurserySnapshot extends StatelessWidget {
+  const _NurserySnapshot({required this.activities, required this.reviewReady});
+
+  final int activities;
+  final int reviewReady;
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 7),
-        child: Row(
-          children: [
-            Expanded(
-                child:
-                    Text(label, style: const TextStyle(color: Colors.black54))),
-            Flexible(
-              child: Text(
-                value,
-                textAlign: TextAlign.end,
-                style: const TextStyle(fontWeight: FontWeight.w900),
+  Widget build(BuildContext context) => _SnapshotCard(
+        items: [
+          _SnapshotValue('Activities', '$activities'),
+          _SnapshotValue('Review ready', '$reviewReady'),
+        ],
+      );
+}
+
+class _SchoolSnapshot extends StatelessWidget {
+  const _SchoolSnapshot({
+    required this.level,
+    required this.xp,
+    required this.accuracy,
+    required this.correctToday,
+    required this.answersToday,
+    required this.dailyAccuracy,
+    required this.streak,
+    required this.studyMinutes,
+    required this.completedLevels,
+    required this.totalLevels,
+    required this.progress,
+    required this.stars,
+  });
+
+  final int level;
+  final int xp;
+  final int accuracy;
+  final int correctToday;
+  final int answersToday;
+  final int dailyAccuracy;
+  final int streak;
+  final int studyMinutes;
+  final int completedLevels;
+  final int totalLevels;
+  final double progress;
+  final int stars;
+
+  @override
+  Widget build(BuildContext context) => Card(
+        margin: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              _SnapshotCard(
+                embedded: true,
+                items: [
+                  _SnapshotValue('Level / XP', 'Lv $level • $xp XP'),
+                  _SnapshotValue('Accuracy', '$accuracy%'),
+                  _SnapshotValue(
+                    'Today',
+                    '$correctToday/$answersToday • $dailyAccuracy%',
+                  ),
+                  _SnapshotValue('Streak', '$streak days'),
+                  _SnapshotValue('Study today', '$studyMinutes min'),
+                ],
               ),
-            ),
-          ],
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      '$completedLevels/$totalLevels learning levels',
+                      style: const TextStyle(fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                  Text('⭐ $stars'),
+                ],
+              ),
+              const SizedBox(height: 7),
+              LinearProgressIndicator(
+                value: progress,
+                minHeight: 8,
+                borderRadius: BorderRadius.circular(99),
+              ),
+            ],
+          ),
         ),
       );
+}
+
+class _SnapshotCard extends StatelessWidget {
+  const _SnapshotCard({required this.items, this.embedded = false});
+
+  final List<_SnapshotValue> items;
+  final bool embedded;
+
+  @override
+  Widget build(BuildContext context) {
+    final content = LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth >= 760
+            ? (constraints.maxWidth - 24) / 3
+            : constraints.maxWidth >= 480
+                ? (constraints.maxWidth - 12) / 2
+                : constraints.maxWidth;
+        return Wrap(
+          spacing: 12,
+          runSpacing: 10,
+          children: items
+              .map(
+                (item) => SizedBox(
+                  width: width,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          item.label,
+                          style: const TextStyle(color: Colors.black54),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        item.value,
+                        style: const TextStyle(fontWeight: FontWeight.w900),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+              .toList(),
+        );
+      },
+    );
+    if (embedded) return content;
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Padding(padding: const EdgeInsets.all(16), child: content),
+    );
+  }
+}
+
+class _SnapshotValue {
+  const _SnapshotValue(this.label, this.value);
+
+  final String label;
+  final String value;
 }

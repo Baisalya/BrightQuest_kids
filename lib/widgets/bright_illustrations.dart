@@ -5,6 +5,31 @@ import 'package:flutter/material.dart';
 import '../core/presentation/game_feel_models.dart';
 import 'bright_motion.dart';
 
+class BrightQuestAppIcon extends StatelessWidget {
+  const BrightQuestAppIcon({
+    this.size = 52,
+    this.semanticLabel = true,
+    super.key,
+  });
+
+  final double size;
+  final bool semanticLabel;
+
+  @override
+  Widget build(BuildContext context) => ClipRRect(
+        borderRadius: BorderRadius.circular(size * .24),
+        child: Image.asset(
+          'assets/branding/brightquest_app_icon.png',
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+          filterQuality: FilterQuality.high,
+          semanticLabel: semanticLabel ? 'BrightQuest Kids app icon' : null,
+          excludeFromSemantics: !semanticLabel,
+        ),
+      );
+}
+
 class BrightQuestLogo extends StatelessWidget {
   const BrightQuestLogo({this.compact = false, super.key});
 
@@ -14,6 +39,118 @@ class BrightQuestLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     final top = compact ? 25.0 : 37.0;
     final bottom = compact ? 22.0 : 34.0;
+    final markSize = compact ? 36.0 : 52.0;
+    final wordmarkWidth = compact ? 90.0 : 160.0;
+
+    final wordmark = FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Text(
+                'BrightQuest',
+                style: TextStyle(
+                  fontSize: top,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -1.2,
+                  foreground: Paint()
+                    ..style = PaintingStyle.stroke
+                    ..strokeWidth = compact ? 5 : 7
+                    ..color = const Color(0xFF123A72),
+                ),
+              ),
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Bright',
+                      style: TextStyle(
+                        color: const Color(0xFFFFBD22),
+                        fontSize: top,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -1.2,
+                      ),
+                    ),
+                    TextSpan(
+                      text: 'Quest',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: top,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -1.2,
+                      ),
+                    ),
+                  ],
+                ),
+                style: const TextStyle(
+                  shadows: [
+                    Shadow(
+                      color: Color(0x44000000),
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: compact ? -1 : -3,
+                left: compact ? 52 : 76,
+                child: Text(
+                  '★',
+                  style: TextStyle(
+                    color: const Color(0xFFFFD12A),
+                    fontSize: compact ? 13 : 18,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Transform.translate(
+            offset: Offset(0, compact ? -5 : -8),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Text(
+                  'Kids',
+                  style: TextStyle(
+                    fontSize: bottom,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.2,
+                    foreground: Paint()
+                      ..style = PaintingStyle.stroke
+                      ..strokeWidth = compact ? 5 : 7
+                      ..color = Colors.white,
+                  ),
+                ),
+                ShaderMask(
+                  shaderCallback: (rect) => const LinearGradient(
+                    colors: [
+                      Color(0xFF54C43D),
+                      Color(0xFF3CB6FF),
+                      Color(0xFF8A54E8),
+                      Color(0xFFFF6B32),
+                    ],
+                  ).createShader(rect),
+                  child: Text(
+                    'Kids',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: bottom,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
     return Semantics(
       container: true,
       excludeSemantics: true,
@@ -22,95 +159,12 @@ class BrightQuestLogo extends StatelessWidget {
         constraints: BoxConstraints(maxWidth: compact ? 132 : 220),
         child: FittedBox(
           fit: BoxFit.scaleDown,
-          child: Column(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  Text(
-                    'BrightQuest',
-                    style: TextStyle(
-                      fontSize: top,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -1.2,
-                      foreground: Paint()
-                        ..style = PaintingStyle.stroke
-                        ..strokeWidth = compact ? 5 : 7
-                        ..color = const Color(0xFF123A72),
-                    ),
-                  ),
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                            text: 'Bright',
-                            style: TextStyle(
-                                color: const Color(0xFFFFBD22),
-                                fontSize: top,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: -1.2)),
-                        TextSpan(
-                            text: 'Quest',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: top,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: -1.2)),
-                      ],
-                    ),
-                    style: const TextStyle(shadows: [
-                      Shadow(
-                          color: Color(0x44000000),
-                          blurRadius: 5,
-                          offset: Offset(0, 3))
-                    ]),
-                  ),
-                  Positioned(
-                      top: compact ? -1 : -3,
-                      left: compact ? 52 : 76,
-                      child: Text('★',
-                          style: TextStyle(
-                              color: const Color(0xFFFFD12A),
-                              fontSize: compact ? 13 : 18))),
-                ],
-              ),
-              Transform.translate(
-                offset: Offset(0, compact ? -5 : -8),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Text(
-                      'Kids',
-                      style: TextStyle(
-                        fontSize: bottom,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 0.2,
-                        foreground: Paint()
-                          ..style = PaintingStyle.stroke
-                          ..strokeWidth = compact ? 5 : 7
-                          ..color = Colors.white,
-                      ),
-                    ),
-                    ShaderMask(
-                      shaderCallback: (rect) => const LinearGradient(
-                        colors: [
-                          Color(0xFF54C43D),
-                          Color(0xFF3CB6FF),
-                          Color(0xFF8A54E8),
-                          Color(0xFFFF6B32)
-                        ],
-                      ).createShader(rect),
-                      child: Text('Kids',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: bottom,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 0.2)),
-                    ),
-                  ],
-                ),
-              ),
+              BrightQuestAppIcon(size: markSize, semanticLabel: false),
+              SizedBox(width: compact ? 5 : 8),
+              SizedBox(width: wordmarkWidth, child: wordmark),
             ],
           ),
         ),

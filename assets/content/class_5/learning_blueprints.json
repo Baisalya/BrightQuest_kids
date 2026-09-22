@@ -50,7 +50,7 @@
       "unitId": "c5_math_numbers",
       "title": "Four operations",
       "objective": "Uses efficient written or mental strategies for the four operations and checks reasonableness.",
-      "teach": "Think: 12 × ? = 144. The correct value is 12.",
+      "teach": "Choose an efficient strategy for addition, subtraction, multiplication or division based on the numbers and the problem. Use inverse operations, estimation or another method to check that the result is reasonable.",
       "workedExample": "Think: 12 × ? = 144. The correct value is 12.",
       "guidedTry": {
         "prompt": "144 ÷ 12 = ?",
@@ -72,12 +72,12 @@
       },
       "reviewPrompt": "Later, solve a different four operations task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Think: 12 × ? = 144. The correct value is 12.",
+      "narrationText": "Choose an efficient strategy for addition, subtraction, multiplication or division based on the numbers and the problem. Use inverse operations, estimation or another method to check that the result is reasonable.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -165,8 +165,8 @@
       "unitId": "c5_math_fractions",
       "title": "Fraction equivalence",
       "objective": "Generates or recognises equivalent fractions and explains the relationship using a model or rule.",
-      "teach": "5/6 of 12 equal slices is 10 slices because 12 × 5 ÷ 6 = 10.",
-      "workedExample": "5/6 of 12 equal slices is 10 slices because 12 × 5 ÷ 6 = 10.",
+      "teach": "Equivalent fractions represent the same value. Multiply or divide the numerator and denominator by the same non-zero whole number, or use a model, to show why the two fractions cover the same amount.",
+      "workedExample": "The fraction 2/3 is equivalent to 4/6 because multiplying both numerator and denominator by 2 keeps the same value. A fraction model would cover the same amount of the whole.",
       "guidedTry": {
         "prompt": "Select slices to show 5/6 of a pizza with 12 equal slices.",
         "hintLevel1": "Find how many slices make one denominator part, then multiply by the numerator.",
@@ -187,12 +187,12 @@
       },
       "reviewPrompt": "Later, solve a different fraction equivalence task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "5/6 of 12 equal slices is 10 slices because 12 × 5 ÷ 6 = 10.",
+      "narrationText": "Equivalent fractions represent the same value. Multiply or divide the numerator and denominator by the same non-zero whole number, or use a model, to show why the two fractions cover the same amount.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -204,8 +204,8 @@
       "unitId": "c5_math_fractions",
       "title": "Compare fractions and decimals",
       "objective": "Compares common fractions and simple decimal representations in familiar contexts.",
-      "teach": "7/12 of 24 equal slices is 14 slices because 24 × 7 ÷ 12 = 14.",
-      "workedExample": "7/12 of 24 equal slices is 14 slices because 24 × 7 ÷ 12 = 14.",
+      "teach": "Fractions and decimals can be compared by expressing them in a common form or placing them on the same number line. Compare values, not just the size of the numerator, denominator or number of decimal digits.",
+      "workedExample": "To compare 1/2 and 0.6, write 1/2 as 0.5 or place both on the same number line. Since 0.6 is greater than 0.5, 0.6 is the larger value.",
       "guidedTry": {
         "prompt": "Select slices to show 7/12 of a pizza with 24 equal slices.",
         "hintLevel1": "Find how many slices make one denominator part, then multiply by the numerator.",
@@ -225,12 +225,12 @@
       },
       "reviewPrompt": "Later, solve a different compare fractions and decimals task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "7/12 of 24 equal slices is 14 slices because 24 × 7 ÷ 12 = 14.",
+      "narrationText": "Fractions and decimals can be compared by expressing them in a common form or placing them on the same number line. Compare values, not just the size of the numerator, denominator or number of decimal digits.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -356,8 +356,8 @@
       "unitId": "c5_math_numbers",
       "title": "Multi-step application",
       "objective": "Models a multi-step real-world problem, selects operations and explains the solution path.",
-      "teach": "Multiply first: 36 × 18 = 648. The correct value is 500.",
-      "workedExample": "Multiply first: 36 × 18 = 648. The correct value is 500.",
+      "teach": "For a real-world multi-step problem, identify what each number represents, decide the operations in order, show the intermediate results, and check the final answer against the context and an estimate.",
+      "workedExample": "A club packs 36 boxes with 18 badges in each box, then gives away 148 badges. First calculate 36 × 18 = 648; then 648 - 148 = 500 badges remain. An estimate near 500 helps check the result.",
       "guidedTry": {
         "prompt": "36 × 18 - 148 = ?",
         "hintLevel1": "Multiply first: 36 × 18 = 648.",
@@ -376,12 +376,12 @@
       },
       "reviewPrompt": "Later, solve a different multi-step application task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Multiply first: 36 × 18 = 648. The correct value is 500.",
+      "narrationText": "For a real-world multi-step problem, identify what each number represents, decide the operations in order, show the intermediate results, and check the final answer against the context and an estimate.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -469,8 +469,8 @@
       "unitId": "c5_english_reading",
       "title": "Sequence and cause-effect",
       "objective": "Explains how sequence and cause-effect shape events, explanations or instructions.",
-      "teach": "Arrange the words in sentence order to rebuild: “Arjun recorded the first clue in his notebook.”",
-      "workedExample": "Arrange the words in sentence order to rebuild: “Arjun recorded the first clue in his notebook.”",
+      "teach": "Sequence explains what happens first, next and later; cause-effect explains why an event happens and what result follows. Use connecting words and evidence from the text to keep those relationships clear.",
+      "workedExample": "Arjun saw dark clouds, so he packed a raincoat before leaving. The clouds are the cause of the decision, while “before leaving” helps place the actions in sequence.",
       "guidedTry": {
         "prompt": "Arjun recorded the first clue in his notebook.",
         "hintLevel1": "Start with “Arjun” and look for the word that naturally follows it.",
@@ -491,12 +491,12 @@
       },
       "reviewPrompt": "Later, solve a different sequence and cause-effect task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Arrange the words in sentence order to rebuild: “Arjun recorded the first clue in his notebook.”",
+      "narrationText": "Sequence explains what happens first, next and later; cause-effect explains why an event happens and what result follows. Use connecting words and evidence from the text to keep those relationships clear.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -546,8 +546,8 @@
       "unitId": "c5_english_language",
       "title": "Expanded and complex sentences",
       "objective": "Combines ideas with age-appropriate conjunctions to create clear expanded sentences.",
-      "teach": "Arrange the words in sentence order to rebuild: “Although the path was steep, the team continued bravely.”",
-      "workedExample": "Arrange the words in sentence order to rebuild: “Although the path was steep, the team continued bravely.”",
+      "teach": "A complex sentence joins related ideas so one part can depend on another. Conjunctions such as although, because, when and if show the relationship between those ideas.",
+      "workedExample": "In “Although the path was steep, the team continued bravely,” “although” connects a difficulty with what happened despite that difficulty. The conjunction shows the relationship between the two ideas.",
       "guidedTry": {
         "prompt": "Although the path was steep, the team continued bravely.",
         "hintLevel1": "Start with “Although” and look for the word that naturally follows it.",
@@ -566,12 +566,12 @@
       },
       "reviewPrompt": "Later, solve a different expanded and complex sentences task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Arrange the words in sentence order to rebuild: “Although the path was steep, the team continued bravely.”",
+      "narrationText": "A complex sentence joins related ideas so one part can depend on another. Conjunctions such as although, because, when and if show the relationship between those ideas.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -583,11 +583,11 @@
       "unitId": "c5_english_language",
       "title": "Grammar in context",
       "objective": "Identifies and applies common parts of speech by their function in a sentence.",
-      "teach": "In this sentence, “student” is the noun, “observes” is the verb, and “curious” is the adjective.",
-      "workedExample": "In this sentence, “student” is the noun, “observes” is the verb, and “curious” is the adjective.",
+      "teach": "Identify a word’s part of speech by the job it performs in that sentence. A noun names, a pronoun replaces a noun, a verb shows action or state, and modifiers such as adjectives and adverbs add detail.",
+      "workedExample": "In “The curious student observes carefully,” “student” is the noun, “observes” is the verb, “curious” is an adjective and “carefully” is an adverb. The sentence function, not the word alone, determines the label.",
       "guidedTry": {
         "prompt": "The curious student observes.",
-        "hintLevel1": "Find the naming word, then the action word, then the describing word.",
+        "hintLevel1": "Label each word by its function in the sentence, not by memorising the word outside the sentence.",
         "hintLevel2": "In this sentence, “student” is the noun, “observes” is the verb, and “curious” is the adjective."
       },
       "independentPractice": {
@@ -605,12 +605,12 @@
       },
       "reviewPrompt": "Later, solve a different grammar in context task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "In this sentence, “student” is the noun, “observes” is the verb, and “curious” is the adjective.",
+      "narrationText": "Identify a word’s part of speech by the job it performs in that sentence. A noun names, a pronoun replaces a noun, a verb shows action or state, and modifiers such as adjectives and adverbs add detail.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -622,11 +622,11 @@
       "unitId": "c5_english_language",
       "title": "Tense and agreement",
       "objective": "Maintains tense and subject-verb agreement across a short passage.",
-      "teach": "In this sentence, “student” is the noun, “observes” is the verb, and “curious” is the adjective.",
-      "workedExample": "In this sentence, “student” is the noun, “observes” is the verb, and “curious” is the adjective.",
+      "teach": "In a passage, verb tense should match the time being described and the verb form should agree with its subject. Check each sentence, then reread across sentences to make sure the pattern stays consistent.",
+      "workedExample": "“The student observes the sample and records the result” keeps present tense and singular agreement. “The students observe and record” changes both subject and verb forms consistently.",
       "guidedTry": {
         "prompt": "The curious student observes.",
-        "hintLevel1": "Find the naming word, then the action word, then the describing word.",
+        "hintLevel1": "Check tense first, then compare every subject with its verb form across the passage.",
         "hintLevel2": "In this sentence, “student” is the noun, “observes” is the verb, and “curious” is the adjective."
       },
       "independentPractice": {
@@ -644,12 +644,12 @@
       },
       "reviewPrompt": "Later, solve a different tense and agreement task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "In this sentence, “student” is the noun, “observes” is the verb, and “curious” is the adjective.",
+      "narrationText": "In a passage, verb tense should match the time being described and the verb form should agree with its subject. Check each sentence, then reread across sentences to make sure the pattern stays consistent.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -699,8 +699,8 @@
       "unitId": "c5_english_language",
       "title": "Organised composition",
       "objective": "Writes an organised paragraph or short narrative with relevant details and logical order.",
-      "teach": "Arrange the words in sentence order to rebuild: “The patient explorer waited beside the ancient gate.”",
-      "workedExample": "Arrange the words in sentence order to rebuild: “The patient explorer waited beside the ancient gate.”",
+      "teach": "An organised paragraph has one clear focus, logically ordered supporting details and connections between sentences. Draft the idea first, add only relevant details, then reread for flow and clarity.",
+      "workedExample": "A paragraph about an ancient gate could begin with the setting, add two related details about the explorer’s actions, and end with what the explorer discovers. Each sentence should support the same main event in logical order.",
       "guidedTry": {
         "prompt": "The patient explorer waited beside the ancient gate.",
         "hintLevel1": "Start with “The” and look for the word that naturally follows it.",
@@ -720,12 +720,12 @@
       },
       "reviewPrompt": "Later, solve a different organised composition task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Arrange the words in sentence order to rebuild: “The patient explorer waited beside the ancient gate.”",
+      "narrationText": "An organised paragraph has one clear focus, logically ordered supporting details and connections between sentences. Draft the idea first, add only relevant details, then reread for flow and clarity.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -775,11 +775,11 @@
       "unitId": "c5_science_inquiry",
       "title": "Human body systems",
       "objective": "Relates selected organs to basic functions such as circulation or breathing.",
-      "teach": "The heart pumps blood through blood vessels.",
+      "teach": "Body organs work as parts of systems. For example, the heart pumps blood through blood vessels so materials can be transported around the body; connect each organ with the job it performs.",
       "workedExample": "The heart pumps blood through blood vessels.",
       "guidedTry": {
         "prompt": "Which organ pumps blood around the body?",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "The heart pumps blood through blood vessels."
       },
       "independentPractice": {
@@ -796,12 +796,12 @@
       },
       "reviewPrompt": "Later, solve a different human body systems task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "The heart pumps blood through blood vessels.",
+      "narrationText": "Body organs work as parts of systems. For example, the heart pumps blood through blood vessels so materials can be transported around the body; connect each organ with the job it performs.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -813,11 +813,11 @@
       "unitId": "c5_science_inquiry",
       "title": "Plant processes",
       "objective": "Explains selected plant needs and processes using evidence from familiar observations.",
-      "teach": "Plants use carbon dioxide, water and light to make food.",
+      "teach": "Plants need light, water and carbon dioxide to make food. Roots and leaves have different roles, so explain a plant process by linking the needed input to the plant part and what happens next.",
       "workedExample": "Plants use carbon dioxide, water and light to make food.",
       "guidedTry": {
         "prompt": "Plants mainly take in which gas for photosynthesis?",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "Plants use carbon dioxide, water and light to make food."
       },
       "independentPractice": {
@@ -833,12 +833,12 @@
       },
       "reviewPrompt": "Later, solve a different plant processes task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "Plants use carbon dioxide, water and light to make food.",
+      "narrationText": "Plants need light, water and carbon dioxide to make food. Roots and leaves have different roles, so explain a plant process by linking the needed input to the plant part and what happens next.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -850,11 +850,11 @@
       "unitId": "c5_science_inquiry",
       "title": "States and reversible changes",
       "objective": "Distinguishes states of matter and identifies selected reversible and irreversible changes.",
-      "teach": "A gas spreads out and fills available space.",
-      "workedExample": "A gas spreads out and fills available space.",
+      "teach": "Matter can change state when energy is added or removed. Some changes are reversible, such as melting and freezing, while other changes form new materials and are not easily reversed.",
+      "workedExample": "Melting ice into water and freezing the water again is reversible. Burning paper forms new substances and is not easily reversed, so the two examples show different kinds of change.",
       "guidedTry": {
         "prompt": "Which state of matter spreads to fill its container?",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "A gas spreads out and fills available space."
       },
       "independentPractice": {
@@ -872,12 +872,12 @@
       },
       "reviewPrompt": "Later, solve a different states and reversible changes task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "A gas spreads out and fills available space.",
+      "narrationText": "Matter can change state when energy is added or removed. Some changes are reversible, such as melting and freezing, while other changes form new materials and are not easily reversed.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -889,11 +889,11 @@
       "unitId": "c5_science_inquiry",
       "title": "Materials and magnetism",
       "objective": "Uses observable properties, including magnetic response, to compare and classify materials.",
-      "teach": "Iron is a magnetic material.",
+      "teach": "Classify materials using evidence from observable properties. For magnetism, test whether a material is attracted to a magnet instead of assuming that every metal behaves the same way.",
       "workedExample": "Iron is a magnetic material.",
       "guidedTry": {
         "prompt": "Which material is attracted strongly by a magnet?",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "Iron is a magnetic material."
       },
       "independentPractice": {
@@ -909,12 +909,12 @@
       },
       "reviewPrompt": "Later, solve a different materials and magnetism task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "Iron is a magnetic material.",
+      "narrationText": "Classify materials using evidence from observable properties. For magnetism, test whether a material is attracted to a magnet instead of assuming that every metal behaves the same way.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -926,11 +926,11 @@
       "unitId": "c5_science_inquiry",
       "title": "Forces and motion",
       "objective": "Uses simple evidence to predict how pushes, pulls or gravity can affect motion.",
-      "teach": "A pulley changes the direction of a pulling force.",
-      "workedExample": "A pulley changes the direction of a pulling force.",
+      "teach": "Pushes and pulls can change an object’s speed, direction or motion. Describe the force, observe what changes, and use that evidence to explain or predict the motion.",
+      "workedExample": "If you push a toy car harder on the same surface, it can start moving faster. The push is the force; the change in the car’s motion is the evidence used to describe the effect.",
       "guidedTry": {
         "prompt": "Which simple machine helps lift a load using a wheel and rope?",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "A pulley changes the direction of a pulling force."
       },
       "independentPractice": {
@@ -946,12 +946,12 @@
       },
       "reviewPrompt": "Later, solve a different forces and motion task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "A pulley changes the direction of a pulling force.",
+      "narrationText": "Pushes and pulls can change an object’s speed, direction or motion. Describe the force, observe what changes, and use that evidence to explain or predict the motion.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -963,11 +963,11 @@
       "unitId": "c5_science_inquiry",
       "title": "Light and scientific inquiry",
       "objective": "Explains simple light/shadow observations and designs or evaluates a basic fair investigation.",
-      "teach": "The angle of incoming sunlight changes as Earth rotates.",
+      "teach": "Light travels from a source and blocked light can form a shadow. In an investigation, change one relevant factor, keep the others controlled, and use measured or observed shadow changes as evidence.",
       "workedExample": "The angle of incoming sunlight changes as Earth rotates.",
       "guidedTry": {
         "prompt": "Why does a shadow change length during the day?",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "The angle of incoming sunlight changes as Earth rotates."
       },
       "independentPractice": {
@@ -985,12 +985,12 @@
       },
       "reviewPrompt": "Later, solve a different light and scientific inquiry task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "The angle of incoming sunlight changes as Earth rotates.",
+      "narrationText": "Light travels from a source and blocked light can form a shadow. In an investigation, change one relevant factor, keep the others controlled, and use measured or observed shadow changes as evidence.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1002,11 +1002,11 @@
       "unitId": "c5_evs_world",
       "title": "Resources and sustainability",
       "objective": "Connects consumption choices to conservation of materials, water or energy.",
-      "teach": "Delivery carton belongs in the Paper bin in this BrightQuest sorting activity.",
-      "workedExample": "Delivery carton belongs in the Paper bin in this BrightQuest sorting activity.",
+      "teach": "Sustainable choices use materials, water and energy carefully so less is wasted. Compare choices by asking what resource is used, whether it can be reduced or reused, and what waste remains.",
+      "workedExample": "Using both sides of a sheet before recycling it reduces the demand for new paper and gets more use from the material. The choice connects everyday consumption with conserving resources.",
       "guidedTry": {
         "prompt": "Put Delivery carton in the correct waste-sorting bin.",
-        "hintLevel1": "Think about the material the item is made from, or whether it is food or plant waste.",
+        "hintLevel1": "Identify the material or resource involved first, then choose the action that is safe and avoids unnecessary waste.",
         "hintLevel2": "Delivery carton belongs in the Paper bin in this BrightQuest sorting activity."
       },
       "independentPractice": {
@@ -1024,12 +1024,12 @@
       },
       "reviewPrompt": "Later, solve a different resources and sustainability task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "diagramClassifier/localScenario",
-      "narrationText": "Delivery carton belongs in the Paper bin in this BrightQuest sorting activity.",
+      "narrationText": "Sustainable choices use materials, water and energy carefully so less is wasted. Compare choices by asking what resource is used, whether it can be reduced or reused, and what waste remains.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1041,11 +1041,11 @@
       "unitId": "c5_evs_world",
       "title": "Waste and environment",
       "objective": "Classifies waste and compares reduce, reuse and recycle actions by likely impact.",
-      "teach": "Office paper belongs in the Paper bin in this BrightQuest sorting activity.",
+      "teach": "Waste choices have different impacts. Reduce prevents waste, reuse extends an item’s life, and recycling recovers suitable materials; classify the item first, then choose the action that avoids the most unnecessary waste.",
       "workedExample": "Office paper belongs in the Paper bin in this BrightQuest sorting activity.",
       "guidedTry": {
         "prompt": "Put Office paper in the correct waste-sorting bin.",
-        "hintLevel1": "Think about the material the item is made from, or whether it is food or plant waste.",
+        "hintLevel1": "Identify the material or resource involved first, then choose the action that is safe and avoids unnecessary waste.",
         "hintLevel2": "Office paper belongs in the Paper bin in this BrightQuest sorting activity."
       },
       "independentPractice": {
@@ -1063,12 +1063,12 @@
       },
       "reviewPrompt": "Later, solve a different waste and environment task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "diagramClassifier/localScenario",
-      "narrationText": "Office paper belongs in the Paper bin in this BrightQuest sorting activity.",
+      "narrationText": "Waste choices have different impacts. Reduce prevents waste, reuse extends an item’s life, and recycling recovers suitable materials; classify the item first, then choose the action that avoids the most unnecessary waste.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1118,11 +1118,11 @@
       "unitId": "c5_evs_world",
       "title": "Responsible action",
       "objective": "Chooses and justifies a realistic child-safe action that reduces waste or protects a shared resource.",
-      "teach": "Notebook pages belongs in the Paper bin in this BrightQuest sorting activity.",
-      "workedExample": "Notebook pages belongs in the Paper bin in this BrightQuest sorting activity.",
+      "teach": "A responsible action should be realistic, safe and useful. Explain what resource or waste problem it addresses, what action a child can actually take, and why that action is likely to help.",
+      "workedExample": "If a classroom tap is dripping, a child-safe responsible action is to turn it off properly if possible and tell an adult if it still leaks. The action is realistic and helps prevent water waste.",
       "guidedTry": {
         "prompt": "Put Notebook pages in the correct waste-sorting bin.",
-        "hintLevel1": "Think about the material the item is made from, or whether it is food or plant waste.",
+        "hintLevel1": "Identify the material or resource involved first, then choose the action that is safe and avoids unnecessary waste.",
         "hintLevel2": "Notebook pages belongs in the Paper bin in this BrightQuest sorting activity."
       },
       "independentPractice": {
@@ -1140,12 +1140,12 @@
       },
       "reviewPrompt": "Later, solve a different responsible action task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "diagramClassifier/localScenario",
-      "narrationText": "Notebook pages belongs in the Paper bin in this BrightQuest sorting activity.",
+      "narrationText": "A responsible action should be realistic, safe and useful. Explain what resource or waste problem it addresses, what action a child can actually take, and why that action is likely to help.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1157,11 +1157,11 @@
       "unitId": "c5_social_maps",
       "title": "India physical geography",
       "objective": "Locates selected major physical regions and describes broad spatial relationships.",
-      "teach": "It includes many of the world’s highest peaks. The correct answer is Himalayas.",
-      "workedExample": "It includes many of the world’s highest peaks. The correct answer is Himalayas.",
+      "teach": "India’s physical geography includes major mountains, plains, plateaus, deserts, coasts and river systems. Use broad map position and physical-feature clues together instead of relying on a single memorised fact.",
+      "workedExample": "On an India map, the Himalayas form a major mountain region along the north. Their northern position and mountain-range clue work together to identify the feature.",
       "guidedTry": {
         "prompt": "Which mountain range forms a major natural boundary in northern India?",
-        "hintLevel1": "It includes many of the world’s highest peaks.",
+        "hintLevel1": "Use the map or location clue first, then connect it with the direction, place or physical feature named in the question.",
         "hintLevel2": "It includes many of the world’s highest peaks. The correct answer is Himalayas."
       },
       "independentPractice": {
@@ -1179,12 +1179,12 @@
       },
       "reviewPrompt": "Later, solve a different india physical geography task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "mapPath/evidenceHighlighter",
-      "narrationText": "It includes many of the world’s highest peaks. The correct answer is Himalayas.",
+      "narrationText": "India’s physical geography includes major mountains, plains, plateaus, deserts, coasts and river systems. Use broad map position and physical-feature clues together instead of relying on a single memorised fact.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1196,11 +1196,11 @@
       "unitId": "c5_social_maps",
       "title": "Map reasoning",
       "objective": "Uses direction, symbols and simple distance/scale ideas to interpret or plan a route.",
-      "teach": "Kolkata lies east of Mumbai. The correct answer is East.",
-      "workedExample": "Kolkata lies east of Mumbai. The correct answer is East.",
+      "teach": "Map reasoning combines symbols, direction and distance. Read the legend, compare positions, use cardinal directions for orientation, and apply the map’s distance or scale information only as shown.",
+      "workedExample": "On a map of India, Kolkata is mainly east of Mumbai. That direction comes from comparing their positions; a scale would be used separately if the task also asked about distance.",
       "guidedTry": {
         "prompt": "If you travel from Mumbai to Kolkata, your main direction is mostly…",
-        "hintLevel1": "Kolkata lies east of Mumbai.",
+        "hintLevel1": "Use the map or location clue first, then connect it with the direction, place or physical feature named in the question.",
         "hintLevel2": "Kolkata lies east of Mumbai. The correct answer is East."
       },
       "independentPractice": {
@@ -1217,12 +1217,12 @@
       },
       "reviewPrompt": "Later, solve a different map reasoning task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "mapPath/evidenceHighlighter",
-      "narrationText": "Kolkata lies east of Mumbai. The correct answer is East.",
+      "narrationText": "Map reasoning combines symbols, direction and distance. Read the legend, compare positions, use cardinal directions for orientation, and apply the map’s distance or scale information only as shown.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1234,11 +1234,11 @@
       "unitId": "c5_social_maps",
       "title": "States, rivers and features",
       "objective": "Relates selected states, rivers and physical features using an age-appropriate map.",
-      "teach": "It includes many of the world’s highest peaks. The correct answer is Himalayas.",
-      "workedExample": "It includes many of the world’s highest peaks. The correct answer is Himalayas.",
+      "teach": "States, rivers and landforms can be related by location. Use the map to connect a named feature with the state or region it passes through or borders, then check the spatial relationship.",
+      "workedExample": "When a map task asks about a river, state or landform, first locate the named region and then trace the feature’s spatial relationship. Use that relationship as the evidence for the match.",
       "guidedTry": {
         "prompt": "Which mountain range forms a major natural boundary in northern India?",
-        "hintLevel1": "It includes many of the world’s highest peaks.",
+        "hintLevel1": "Use the map or location clue first, then connect it with the direction, place or physical feature named in the question.",
         "hintLevel2": "It includes many of the world’s highest peaks. The correct answer is Himalayas."
       },
       "independentPractice": {
@@ -1256,12 +1256,12 @@
       },
       "reviewPrompt": "Later, solve a different states, rivers and features task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "mapPath/evidenceHighlighter",
-      "narrationText": "It includes many of the world’s highest peaks. The correct answer is Himalayas.",
+      "narrationText": "States, rivers and landforms can be related by location. Use the map to connect a named feature with the state or region it passes through or borders, then check the spatial relationship.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1273,11 +1273,11 @@
       "unitId": "c5_coding_ct",
       "title": "Abstraction and patterns",
       "objective": "Filters irrelevant details and recognises patterns that can simplify a route solution.",
-      "teach": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
-      "workedExample": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "teach": "Abstraction keeps the details that affect the solution and ignores details that do not. After simplifying the problem, look for repeated movement patterns that can make the route easier to plan.",
+      "workedExample": "For the route from (0, 4) to (5, 2), ignore decorative details that do not change movement. Keep the grid, obstacles, start, goal and commands, then look for movement patterns that simplify the plan.",
       "guidedTry": {
         "prompt": "Guide the robot from (0, 4) to (5, 2) within 10 commands.",
-        "hintLevel1": "Plan the route before moving. Use turns to face the next safe path.",
+        "hintLevel1": "Track the start, goal, direction and obstacles. Plan before moving, then check the result of each command.",
         "hintLevel2": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget."
       },
       "independentPractice": {
@@ -1294,12 +1294,12 @@
       },
       "reviewPrompt": "Later, solve a different abstraction and patterns task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
-      "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "narrationText": "Abstraction keeps the details that affect the solution and ignores details that do not. After simplifying the problem, look for repeated movement patterns that can make the route easier to plan.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1311,11 +1311,11 @@
       "unitId": "c5_coding_ct",
       "title": "Decomposition",
       "objective": "Splits a larger route or logic problem into ordered sub-problems with clear goals.",
-      "teach": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
-      "workedExample": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "teach": "Decomposition splits a large route or logic task into smaller sub-problems with clear start and end states. Solve and verify each sub-problem before joining them into one complete solution.",
+      "workedExample": "For the route from (0, 3) to (3, 2), divide the path into two or more mini-goals. Verify the robot’s position after each section before joining the sections into one algorithm.",
       "guidedTry": {
         "prompt": "Guide the robot from (0, 3) to (3, 2) within 5 commands.",
-        "hintLevel1": "Plan the route before moving. Use turns to face the next safe path.",
+        "hintLevel1": "Track the start, goal, direction and obstacles. Plan before moving, then check the result of each command.",
         "hintLevel2": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget."
       },
       "independentPractice": {
@@ -1333,12 +1333,12 @@
       },
       "reviewPrompt": "Later, solve a different decomposition task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
-      "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "narrationText": "Decomposition splits a large route or logic task into smaller sub-problems with clear start and end states. Solve and verify each sub-problem before joining them into one complete solution.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1350,11 +1350,11 @@
       "unitId": "c5_coding_ct",
       "title": "Algorithm efficiency",
       "objective": "Compares two working instruction sequences and identifies a simpler or more efficient one.",
-      "teach": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
-      "workedExample": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "teach": "Two algorithms can both work but use different numbers of steps. Compare correct routes by counting unnecessary moves or turns and choose the simpler sequence when it still reaches the same goal safely.",
+      "workedExample": "For the route from (0, 5) to (6, 1), first find a safe working route. Then compare alternative working sequences and remove any move or turn that is not needed to reach the same goal.",
       "guidedTry": {
         "prompt": "Guide the robot from (0, 5) to (6, 1) within 16 commands.",
-        "hintLevel1": "Plan the route before moving. Use turns to face the next safe path.",
+        "hintLevel1": "Track the start, goal, direction and obstacles. Plan before moving, then check the result of each command.",
         "hintLevel2": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget."
       },
       "independentPractice": {
@@ -1370,12 +1370,12 @@
       },
       "reviewPrompt": "Later, solve a different algorithm efficiency task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
-      "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "narrationText": "Two algorithms can both work but use different numbers of steps. Compare correct routes by counting unnecessary moves or turns and choose the simpler sequence when it still reaches the same goal safely.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1387,11 +1387,11 @@
       "unitId": "c5_coding_ct",
       "title": "Debugging",
       "objective": "Finds the first failing step in an algorithm, changes it and retests the route.",
-      "teach": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
-      "workedExample": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "teach": "Debugging means finding where an algorithm first stops matching the intended result. Trace the commands in order, change the first faulty step, then run the route again to confirm the fix.",
+      "workedExample": "For the route from (1, 6) to (6, 1), trace the current commands until the first step that sends the robot away from the intended safe path. Change that step and retest from the start.",
       "guidedTry": {
         "prompt": "Guide the robot from (1, 6) to (6, 1) within 18 commands.",
-        "hintLevel1": "Plan the route before moving. Use turns to face the next safe path.",
+        "hintLevel1": "Track the start, goal, direction and obstacles. Plan before moving, then check the result of each command.",
         "hintLevel2": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget."
       },
       "independentPractice": {
@@ -1407,12 +1407,12 @@
       },
       "reviewPrompt": "Later, solve a different debugging task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
-      "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "narrationText": "Debugging means finding where an algorithm first stops matching the intended result. Trace the commands in order, change the first faulty step, then run the route again to confirm the fix.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../core/nursery/nursery_content.dart';
 import 'nursery_game_chrome.dart';
 import 'nursery_motion.dart';
+import 'nursery_sound.dart';
 
 class NurseryTraceGame extends StatefulWidget {
   const NurseryTraceGame({
@@ -76,6 +77,7 @@ class _NurseryTraceGameState extends State<NurseryTraceGame> {
                   );
                   final next = points[reached.length];
                   if ((normalized - next).distance <= tolerance) {
+                    playNurseryOptionSound();
                     setState(() => reached.add(reached.length));
                     if (reached.length == points.length) {
                       submitted = true;
@@ -130,10 +132,13 @@ class _NurseryTraceGameState extends State<NurseryTraceGame> {
     );
   }
 
-  void _reset() => setState(() {
-        reached.clear();
-        submitted = false;
-      });
+  void _reset() {
+    playNurseryTapSound();
+    setState(() {
+      reached.clear();
+      submitted = false;
+    });
+  }
 }
 
 class _TraceGuidePainter extends CustomPainter {

@@ -50,7 +50,7 @@
       "unitId": "c4_math_numbers",
       "title": "Addition and subtraction",
       "objective": "Solves and checks multi-digit addition and subtraction in meaningful contexts.",
-      "teach": "45 + 20 = 65, then +7. The correct value is 72.",
+      "teach": "For multi-digit addition and subtraction, use place value so ones, tens, hundreds and thousands stay aligned. Break numbers apart or regroup when needed, then check with estimation or the inverse operation.",
       "workedExample": "45 + 20 = 65, then +7. The correct value is 72.",
       "guidedTry": {
         "prompt": "45 + 27 = ?",
@@ -72,12 +72,12 @@
       },
       "reviewPrompt": "Later, solve a different addition and subtraction task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "45 + 20 = 65, then +7. The correct value is 72.",
+      "narrationText": "For multi-digit addition and subtraction, use place value so ones, tens, hundreds and thousands stay aligned. Break numbers apart or regroup when needed, then check with estimation or the inverse operation.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -89,7 +89,7 @@
       "unitId": "c4_math_numbers",
       "title": "Multiplication strategies",
       "objective": "Uses place-value and distributive strategies for increasingly complex multiplication.",
-      "teach": "Use 7 × 4 = 28, then double it. The correct value is 56.",
+      "teach": "Multiplication can be simplified by breaking a factor into friendly parts. Use place value and the distributive idea to solve smaller products, then combine them to get the full product.",
       "workedExample": "Use 7 × 4 = 28, then double it. The correct value is 56.",
       "guidedTry": {
         "prompt": "7 × 8 = ?",
@@ -111,12 +111,12 @@
       },
       "reviewPrompt": "Later, solve a different multiplication strategies task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Use 7 × 4 = 28, then double it. The correct value is 56.",
+      "narrationText": "Multiplication can be simplified by breaking a factor into friendly parts. Use place value and the distributive idea to solve smaller products, then combine them to get the full product.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -128,8 +128,8 @@
       "unitId": "c4_math_numbers",
       "title": "Division strategies",
       "objective": "Uses grouping, sharing and inverse relationships to solve increasingly complex division.",
-      "teach": "Think: 6 × ? = 24. The correct value is 4.",
-      "workedExample": "Think: 6 × ? = 24. The correct value is 4.",
+      "teach": "Division can be solved by grouping, sharing or using a related multiplication fact. Check a quotient by multiplying it by the divisor and seeing whether you return to the original total.",
+      "workedExample": "To solve 24 ÷ 6, ask how many groups of 6 make 24. Because 6 × 4 = 24, the quotient is 4; multiplying 4 by 6 checks the division.",
       "guidedTry": {
         "prompt": "24 ÷ 6 = ?",
         "hintLevel1": "Think: 6 × ? = 24.",
@@ -150,12 +150,12 @@
       },
       "reviewPrompt": "Later, solve a different division strategies task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Think: 6 × ? = 24. The correct value is 4.",
+      "narrationText": "Division can be solved by grouping, sharing or using a related multiplication fact. Check a quotient by multiplying it by the divisor and seeing whether you return to the original total.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -167,8 +167,8 @@
       "unitId": "c4_math_numbers",
       "title": "Multi-step operation problems",
       "objective": "Chooses and sequences operations for a two-step number problem and explains the choice.",
-      "teach": "Multiply first, then add. The correct value is 150.",
-      "workedExample": "Multiply first, then add. The correct value is 150.",
+      "teach": "A multi-step problem needs a plan before calculation. Identify each action, choose the matching operation, solve in the correct order, and check whether the final answer fits the story.",
+      "workedExample": "A class fills 18 trays with 7 counters each and then adds 24 loose counters. First find 18 × 7 = 126, then add 24 to get 150 counters in all.",
       "guidedTry": {
         "prompt": "18 × 7 + 24 = ?",
         "hintLevel1": "Multiply first, then add.",
@@ -187,12 +187,12 @@
       },
       "reviewPrompt": "Later, solve a different multi-step operation problems task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Multiply first, then add. The correct value is 150.",
+      "narrationText": "A multi-step problem needs a plan before calculation. Identify each action, choose the matching operation, solve in the correct order, and check whether the final answer fits the story.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -204,8 +204,8 @@
       "unitId": "c4_math_fractions",
       "title": "Fraction models and equivalence",
       "objective": "Represents fractions with models and identifies simple equivalent fractions.",
-      "teach": "1/4 of 8 equal slices is 2 slices because 8 × 1 ÷ 4 = 2.",
-      "workedExample": "1/4 of 8 equal slices is 2 slices because 8 × 1 ÷ 4 = 2.",
+      "teach": "Equivalent fractions name the same amount even when the numerator and denominator are different. A model can show this when different-sized equal parts cover the same portion of the whole.",
+      "workedExample": "If 2 of 8 equal slices are selected, the fraction is 2/8. Grouping those slices into 4 equal larger parts shows the same amount as 1/4, so 2/8 and 1/4 are equivalent.",
       "guidedTry": {
         "prompt": "Select slices to show 1/4 of a pizza with 8 equal slices.",
         "hintLevel1": "Find how many slices make one denominator part, then multiply by the numerator.",
@@ -226,12 +226,12 @@
       },
       "reviewPrompt": "Later, solve a different fraction models and equivalence task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "1/4 of 8 equal slices is 2 slices because 8 × 1 ÷ 4 = 2.",
+      "narrationText": "Equivalent fractions name the same amount even when the numerator and denominator are different. A model can show this when different-sized equal parts cover the same portion of the whole.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -433,8 +433,8 @@
       "unitId": "c4_english_reading",
       "title": "Sequence and cause",
       "objective": "Explains event order and simple cause-and-effect relationships in a text.",
-      "teach": "Arrange the words in sentence order to rebuild: “Together they opened the hidden treasure chest.”",
-      "workedExample": "Arrange the words in sentence order to rebuild: “Together they opened the hidden treasure chest.”",
+      "teach": "Sequence tells the order in which events happen; cause and effect tells why one event leads to another. Look for time-order clues and for words or details that connect a reason with its result.",
+      "workedExample": "The children found a key, so they could open the treasure chest. “Found a key” is the cause and “could open the chest” is the effect; “then” could be used separately to show event order.",
       "guidedTry": {
         "prompt": "Together they opened the hidden treasure chest.",
         "hintLevel1": "Start with “Together” and look for the word that naturally follows it.",
@@ -455,12 +455,12 @@
       },
       "reviewPrompt": "Later, solve a different sequence and cause task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Arrange the words in sentence order to rebuild: “Together they opened the hidden treasure chest.”",
+      "narrationText": "Sequence tells the order in which events happen; cause and effect tells why one event leads to another. Look for time-order clues and for words or details that connect a reason with its result.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -548,8 +548,8 @@
       "unitId": "c4_english_language",
       "title": "Sentence to paragraph",
       "objective": "Combines related complete sentences into a coherent short paragraph.",
-      "teach": "Arrange the words in sentence order to rebuild: “Ria found a glowing map near the old tree.”",
-      "workedExample": "Arrange the words in sentence order to rebuild: “Ria found a glowing map near the old tree.”",
+      "teach": "A paragraph is a group of related sentences about one main idea. Put the sentences in a sensible order and use connecting words so the reader can follow how one idea leads to the next.",
+      "workedExample": "Start with a topic sentence such as “Ria found a glowing map near the old tree.” Follow it with related details about what the map looked like and what Ria did next. Those connected sentences form one short paragraph.",
       "guidedTry": {
         "prompt": "Ria found a glowing map near the old tree.",
         "hintLevel1": "Start with “Ria” and look for the word that naturally follows it.",
@@ -569,12 +569,12 @@
       },
       "reviewPrompt": "Later, solve a different sentence to paragraph task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Arrange the words in sentence order to rebuild: “Ria found a glowing map near the old tree.”",
+      "narrationText": "A paragraph is a group of related sentences about one main idea. Put the sentences in a sensible order and use connecting words so the reader can follow how one idea leads to the next.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -586,11 +586,11 @@
       "unitId": "c4_english_language",
       "title": "Parts of speech in context",
       "objective": "Identifies nouns, pronouns, verbs, adjectives and selected adverbs in meaningful sentences.",
-      "teach": "In this sentence, “dragon” is the noun, “flies” is the verb, and “brave” is the adjective.",
-      "workedExample": "In this sentence, “dragon” is the noun, “flies” is the verb, and “brave” is the adjective.",
+      "teach": "Parts of speech describe the jobs words do in a sentence. Nouns name, pronouns stand in for nouns, verbs show actions or states, adjectives describe nouns, and adverbs can add detail to actions or descriptions.",
+      "workedExample": "In “The brave dragon flies quickly,” “dragon” is a noun, “flies” is a verb, “brave” is an adjective and “quickly” is an adverb. Each label comes from the word’s job in this sentence.",
       "guidedTry": {
         "prompt": "The brave dragon flies.",
-        "hintLevel1": "Find the naming word, then the action word, then the describing word.",
+        "hintLevel1": "Ask what job each word is doing: naming, replacing a noun, showing action/state, describing a noun or adding detail to an action.",
         "hintLevel2": "In this sentence, “dragon” is the noun, “flies” is the verb, and “brave” is the adjective."
       },
       "independentPractice": {
@@ -608,12 +608,12 @@
       },
       "reviewPrompt": "Later, solve a different parts of speech in context task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "In this sentence, “dragon” is the noun, “flies” is the verb, and “brave” is the adjective.",
+      "narrationText": "Parts of speech describe the jobs words do in a sentence. Nouns name, pronouns stand in for nouns, verbs show actions or states, adjectives describe nouns, and adverbs can add detail to actions or descriptions.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -625,11 +625,11 @@
       "unitId": "c4_english_language",
       "title": "Tense consistency",
       "objective": "Uses simple tense consistently across connected sentences.",
-      "teach": "In this sentence, “dragon” is the noun, “flies” is the verb, and “brave” is the adjective.",
-      "workedExample": "In this sentence, “dragon” is the noun, “flies” is the verb, and “brave” is the adjective.",
+      "teach": "Verb tense shows time. In connected sentences, keep the tense consistent unless the time truly changes; switching from past to present without a reason can confuse the reader.",
+      "workedExample": "“The dragon flew over the hill. It landed beside the cave.” keeps both actions in the past. Changing the second verb to “lands” would switch tense without a time change.",
       "guidedTry": {
         "prompt": "The brave dragon flies.",
-        "hintLevel1": "Find the naming word, then the action word, then the describing word.",
+        "hintLevel1": "Underline the verbs and check whether they point to the same time unless the meaning intentionally changes time.",
         "hintLevel2": "In this sentence, “dragon” is the noun, “flies” is the verb, and “brave” is the adjective."
       },
       "independentPractice": {
@@ -647,12 +647,12 @@
       },
       "reviewPrompt": "Later, solve a different tense consistency task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "In this sentence, “dragon” is the noun, “flies” is the verb, and “brave” is the adjective.",
+      "narrationText": "Verb tense shows time. In connected sentences, keep the tense consistent unless the time truly changes; switching from past to present without a reason can confuse the reader.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -664,11 +664,11 @@
       "unitId": "c4_english_language",
       "title": "Agreement and pronouns",
       "objective": "Uses basic subject-verb agreement and clear pronoun references.",
-      "teach": "In this sentence, “dragon” is the noun, “flies” is the verb, and “brave” is the adjective.",
-      "workedExample": "In this sentence, “dragon” is the noun, “flies” is the verb, and “brave” is the adjective.",
+      "teach": "Subjects and verbs need to agree: a singular subject usually takes a singular verb form, while a plural subject takes a plural form. A pronoun should also point clearly to the noun it replaces.",
+      "workedExample": "In “The dragon flies. It circles the tower,” singular “dragon” matches “flies,” and “It” clearly refers to the dragon. “The dragons fly” shows the plural agreement pattern.",
       "guidedTry": {
         "prompt": "The brave dragon flies.",
-        "hintLevel1": "Find the naming word, then the action word, then the describing word.",
+        "hintLevel1": "Match the subject with its verb, then check that each pronoun has one clear noun it can refer to.",
         "hintLevel2": "In this sentence, “dragon” is the noun, “flies” is the verb, and “brave” is the adjective."
       },
       "independentPractice": {
@@ -686,12 +686,12 @@
       },
       "reviewPrompt": "Later, solve a different agreement and pronouns task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "In this sentence, “dragon” is the noun, “flies” is the verb, and “brave” is the adjective.",
+      "narrationText": "Subjects and verbs need to agree: a singular subject usually takes a singular verb form, while a plural subject takes a plural form. A pronoun should also point clearly to the noun it replaces.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -741,8 +741,8 @@
       "unitId": "c4_english_language",
       "title": "Descriptive composition",
       "objective": "Writes a short organised description or narrative using relevant details and vocabulary.",
-      "teach": "Arrange the words in sentence order to rebuild: “A gentle breeze carried silver leaves across the path.”",
-      "workedExample": "Arrange the words in sentence order to rebuild: “A gentle breeze carried silver leaves across the path.”",
+      "teach": "Descriptive writing chooses details that help the reader see, hear or imagine the scene. Organise those details around one clear focus instead of listing unrelated describing words.",
+      "workedExample": "“A gentle breeze carried silver leaves across the path” uses the details “gentle” and “silver” to help the reader picture the scene. A good description adds a few relevant details around one clear focus.",
       "guidedTry": {
         "prompt": "A gentle breeze carried silver leaves across the path.",
         "hintLevel1": "Start with “A” and look for the word that naturally follows it.",
@@ -761,12 +761,12 @@
       },
       "reviewPrompt": "Later, solve a different descriptive composition task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Arrange the words in sentence order to rebuild: “A gentle breeze carried silver leaves across the path.”",
+      "narrationText": "Descriptive writing chooses details that help the reader see, hear or imagine the scene. Organise those details around one clear focus instead of listing unrelated describing words.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -778,11 +778,11 @@
       "unitId": "c4_science_inquiry",
       "title": "Materials and changes",
       "objective": "Compares materials and distinguishes observable physical changes in familiar examples.",
-      "teach": "Many kinds of dry wood are less dense than water.",
-      "workedExample": "Many kinds of dry wood are less dense than water.",
+      "teach": "A physical change can alter a material’s shape, size or state without necessarily making it a new material. Compare observable properties before and after the change and describe only what the evidence shows.",
+      "workedExample": "If an ice cube melts, its shape changes and solid water becomes liquid water, but it is still water. That is an observable physical change and can be reversed by freezing.",
       "guidedTry": {
         "prompt": "Which object is most likely to float in water?",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "Many kinds of dry wood are less dense than water."
       },
       "independentPractice": {
@@ -800,12 +800,12 @@
       },
       "reviewPrompt": "Later, solve a different materials and changes task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "Many kinds of dry wood are less dense than water.",
+      "narrationText": "A physical change can alter a material’s shape, size or state without necessarily making it a new material. Compare observable properties before and after the change and describe only what the evidence shows.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -817,11 +817,11 @@
       "unitId": "c4_science_inquiry",
       "title": "States of water",
       "objective": "Connects melting, freezing, evaporation and condensation to changes of state.",
-      "teach": "A solid keeps a definite shape under ordinary conditions.",
-      "workedExample": "A solid keeps a definite shape under ordinary conditions.",
+      "teach": "Water can change state: ice melts to liquid water, liquid water can evaporate to water vapour, vapour can condense to liquid, and liquid can freeze to ice. Heating and cooling drive these changes.",
+      "workedExample": "Ice is solid water. When it is heated enough it melts into liquid water; cooling liquid water can freeze it back into ice, showing a reversible change of state.",
       "guidedTry": {
         "prompt": "Which state of matter keeps its own shape?",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "A solid keeps a definite shape under ordinary conditions."
       },
       "independentPractice": {
@@ -839,12 +839,12 @@
       },
       "reviewPrompt": "Later, solve a different states of water task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "A solid keeps a definite shape under ordinary conditions.",
+      "narrationText": "Water can change state: ice melts to liquid water, liquid water can evaporate to water vapour, vapour can condense to liquid, and liquid can freeze to ice. Heating and cooling drive these changes.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -856,11 +856,11 @@
       "unitId": "c4_science_inquiry",
       "title": "Plants and living systems",
       "objective": "Explains selected needs and functions of plants or other living things using observations.",
-      "teach": "Roots absorb water and minerals.",
+      "teach": "Living things have structures that help them meet their needs. In plants, roots absorb water and minerals, stems support transport, and leaves use light to help make food.",
       "workedExample": "Roots absorb water and minerals.",
       "guidedTry": {
         "prompt": "Which part of a plant takes in most water from soil?",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "Roots absorb water and minerals."
       },
       "independentPractice": {
@@ -877,12 +877,12 @@
       },
       "reviewPrompt": "Later, solve a different plants and living systems task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "Roots absorb water and minerals.",
+      "narrationText": "Living things have structures that help them meet their needs. In plants, roots absorb water and minerals, stems support transport, and leaves use light to help make food.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -894,11 +894,11 @@
       "unitId": "c4_science_inquiry",
       "title": "Forces and magnets",
       "objective": "Predicts and describes simple pushes, pulls and magnetic interactions.",
-      "teach": "Magnetic force is strongest near the poles.",
+      "teach": "A force is a push or a pull that can affect motion. Magnets can attract some materials without touching them, and magnetic effects are strongest near the magnet’s poles.",
       "workedExample": "Magnetic force is strongest near the poles.",
       "guidedTry": {
         "prompt": "A magnet has the strongest pull near its…",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "Magnetic force is strongest near the poles."
       },
       "independentPractice": {
@@ -914,12 +914,12 @@
       },
       "reviewPrompt": "Later, solve a different forces and magnets task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "Magnetic force is strongest near the poles.",
+      "narrationText": "A force is a push or a pull that can affect motion. Magnets can attract some materials without touching them, and magnetic effects are strongest near the magnet’s poles.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -931,11 +931,11 @@
       "unitId": "c4_science_inquiry",
       "title": "Fair testing",
       "objective": "Identifies what should change and what should stay the same in a simple fair test.",
-      "teach": "A fair test changes one variable while controlling the others.",
-      "workedExample": "A fair test changes one variable while controlling the others.",
+      "teach": "A fair test changes one factor on purpose while keeping other important conditions the same. This makes it easier to link any observed difference to the factor that was changed.",
+      "workedExample": "To compare how quickly ice melts in two places, change the place or temperature but keep the ice pieces and other conditions as similar as possible. Then the changed factor is easier to connect with the result.",
       "guidedTry": {
         "prompt": "Which investigation is a fair test?",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "A fair test changes one variable while controlling the others."
       },
       "independentPractice": {
@@ -951,12 +951,12 @@
       },
       "reviewPrompt": "Later, solve a different fair testing task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "A fair test changes one variable while controlling the others.",
+      "narrationText": "A fair test changes one factor on purpose while keeping other important conditions the same. This makes it easier to link any observed difference to the factor that was changed.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -968,11 +968,11 @@
       "unitId": "c4_science_inquiry",
       "title": "Observe, predict, explain",
       "objective": "Records observations, makes a prediction and revises an explanation when evidence differs.",
-      "teach": "A fair test changes one variable while controlling the others.",
-      "workedExample": "A fair test changes one variable while controlling the others.",
+      "teach": "A prediction says what you think will happen before the test; an observation records what actually happens. After the test, compare the evidence with the prediction and revise the explanation if they do not match.",
+      "workedExample": "Predict which ice sample will melt first, run the fair comparison, and record what happens. If the evidence disagrees with the prediction, keep the observation and revise the explanation.",
       "guidedTry": {
         "prompt": "Which investigation is a fair test?",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "A fair test changes one variable while controlling the others."
       },
       "independentPractice": {
@@ -990,12 +990,12 @@
       },
       "reviewPrompt": "Later, solve a different observe, predict, explain task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "A fair test changes one variable while controlling the others.",
+      "narrationText": "A prediction says what you think will happen before the test; an observation records what actually happens. After the test, compare the evidence with the prediction and revise the explanation if they do not match.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1007,11 +1007,11 @@
       "unitId": "c4_evs_world",
       "title": "Resources and waste",
       "objective": "Classifies everyday waste and connects material choices to resource use.",
-      "teach": "Newspaper belongs in the Paper bin in this BrightQuest sorting activity.",
-      "workedExample": "Newspaper belongs in the Paper bin in this BrightQuest sorting activity.",
+      "teach": "Every product uses resources. Sort waste by material so reusable or recyclable items can be handled appropriately, and connect each sorting choice to saving materials and reducing unnecessary waste.",
+      "workedExample": "A newspaper is made mainly of paper, so the activity places it in the Paper category. Sorting by material helps keep recoverable paper separate from other waste.",
       "guidedTry": {
         "prompt": "Put Newspaper in the correct waste-sorting bin.",
-        "hintLevel1": "Think about the material the item is made from, or whether it is food or plant waste.",
+        "hintLevel1": "Identify the material or resource involved first, then choose the action that is safe and avoids unnecessary waste.",
         "hintLevel2": "Newspaper belongs in the Paper bin in this BrightQuest sorting activity."
       },
       "independentPractice": {
@@ -1029,12 +1029,12 @@
       },
       "reviewPrompt": "Later, solve a different resources and waste task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "diagramClassifier/localScenario",
-      "narrationText": "Newspaper belongs in the Paper bin in this BrightQuest sorting activity.",
+      "narrationText": "Every product uses resources. Sort waste by material so reusable or recyclable items can be handled appropriately, and connect each sorting choice to saving materials and reducing unnecessary waste.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1122,11 +1122,11 @@
       "unitId": "c4_evs_world",
       "title": "Sustainable everyday actions",
       "objective": "Evaluates simple reduce/reuse/recycle choices by their likely environmental effect.",
-      "teach": "Old worksheet belongs in the Paper bin in this BrightQuest sorting activity.",
-      "workedExample": "Old worksheet belongs in the Paper bin in this BrightQuest sorting activity.",
+      "teach": "Reduce means avoiding waste before it is created, reuse means using an item again safely, and recycle means processing suitable material into something new. Prefer the action that prevents more waste when it is practical.",
+      "workedExample": "An old worksheet may be reused for rough work before it becomes waste. When it can no longer be reused, the activity classifies the paper sheet in the Paper category.",
       "guidedTry": {
         "prompt": "Put Old worksheet in the correct waste-sorting bin.",
-        "hintLevel1": "Think about the material the item is made from, or whether it is food or plant waste.",
+        "hintLevel1": "Identify the material or resource involved first, then choose the action that is safe and avoids unnecessary waste.",
         "hintLevel2": "Old worksheet belongs in the Paper bin in this BrightQuest sorting activity."
       },
       "independentPractice": {
@@ -1144,12 +1144,12 @@
       },
       "reviewPrompt": "Later, solve a different sustainable everyday actions task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "diagramClassifier/localScenario",
-      "narrationText": "Old worksheet belongs in the Paper bin in this BrightQuest sorting activity.",
+      "narrationText": "Reduce means avoiding waste before it is created, reuse means using an item again safely, and recycle means processing suitable material into something new. Prefer the action that prevents more waste when it is practical.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1161,11 +1161,11 @@
       "unitId": "c4_social_maps",
       "title": "India: states and landmarks",
       "objective": "Locates selected states, capitals and landmarks on an age-appropriate India map.",
-      "teach": "Look toward India’s eastern coast. The correct answer is Odisha.",
+      "teach": "Use map position together with landmark clues to connect a place with its state. Read the India map carefully, then check whether the landmark and location evidence point to the same answer.",
       "workedExample": "Look toward India’s eastern coast. The correct answer is Odisha.",
       "guidedTry": {
         "prompt": "Which state is famous for Konark Sun Temple?",
-        "hintLevel1": "Look toward India’s eastern coast.",
+        "hintLevel1": "Use the map or location clue first, then connect it with the direction, place or physical feature named in the question.",
         "hintLevel2": "Look toward India’s eastern coast. The correct answer is Odisha."
       },
       "independentPractice": {
@@ -1183,12 +1183,12 @@
       },
       "reviewPrompt": "Later, solve a different india: states and landmarks task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "mapPath/evidenceHighlighter",
-      "narrationText": "Look toward India’s eastern coast. The correct answer is Odisha.",
+      "narrationText": "Use map position together with landmark clues to connect a place with its state. Read the India map carefully, then check whether the landmark and location evidence point to the same answer.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1200,11 +1200,11 @@
       "unitId": "c4_social_maps",
       "title": "Directions and routes",
       "objective": "Uses cardinal directions and relative position to reason about routes between places.",
-      "teach": "Kolkata lies east of Mumbai. The correct answer is East.",
+      "teach": "Routes can be described with cardinal directions and relative position. Compare the start and destination on the map, decide the main direction of travel, and use intermediate clues to check the route.",
       "workedExample": "Kolkata lies east of Mumbai. The correct answer is East.",
       "guidedTry": {
         "prompt": "If you travel from Mumbai to Kolkata, your main direction is mostly…",
-        "hintLevel1": "Kolkata lies east of Mumbai.",
+        "hintLevel1": "Use the map or location clue first, then connect it with the direction, place or physical feature named in the question.",
         "hintLevel2": "Kolkata lies east of Mumbai. The correct answer is East."
       },
       "independentPractice": {
@@ -1220,12 +1220,12 @@
       },
       "reviewPrompt": "Later, solve a different directions and routes task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "mapPath/evidenceHighlighter",
-      "narrationText": "Kolkata lies east of Mumbai. The correct answer is East.",
+      "narrationText": "Routes can be described with cardinal directions and relative position. Compare the start and destination on the map, decide the main direction of travel, and use intermediate clues to check the route.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1237,11 +1237,11 @@
       "unitId": "c4_social_maps",
       "title": "Physical features and rivers",
       "objective": "Identifies selected major physical features and rivers and describes their broad location.",
-      "teach": "It is a major tributary of the Ganga. The correct answer is Yamuna.",
+      "teach": "Physical features include landforms and water features such as mountains, plains and rivers. Use map location and a feature’s relationships to nearby places or rivers to identify it.",
       "workedExample": "It is a major tributary of the Ganga. The correct answer is Yamuna.",
       "guidedTry": {
         "prompt": "Which river flows through Delhi?",
-        "hintLevel1": "It is a major tributary of the Ganga.",
+        "hintLevel1": "Use the map or location clue first, then connect it with the direction, place or physical feature named in the question.",
         "hintLevel2": "It is a major tributary of the Ganga. The correct answer is Yamuna."
       },
       "independentPractice": {
@@ -1258,12 +1258,12 @@
       },
       "reviewPrompt": "Later, solve a different physical features and rivers task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "mapPath/evidenceHighlighter",
-      "narrationText": "It is a major tributary of the Ganga. The correct answer is Yamuna.",
+      "narrationText": "Physical features include landforms and water features such as mountains, plains and rivers. Use map location and a feature’s relationships to nearby places or rivers to identify it.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1313,11 +1313,11 @@
       "unitId": "c4_coding_ct",
       "title": "Pattern recognition",
       "objective": "Recognises repeated movement patterns and uses them to reduce unnecessary instructions.",
-      "teach": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
-      "workedExample": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "teach": "Pattern recognition looks for movement blocks that repeat. Once you find the repeating block, you can describe the route more simply and avoid writing unnecessary commands.",
+      "workedExample": "For the route from (0, 4) to (5, 0), scan for a short move-and-turn block that occurs more than once. Grouping repeated commands helps you see whether the route can be expressed more simply.",
       "guidedTry": {
         "prompt": "Guide the robot from (0, 4) to (5, 0) within 14 commands.",
-        "hintLevel1": "Plan the route before moving. Use turns to face the next safe path.",
+        "hintLevel1": "Track the start, goal, direction and obstacles. Plan before moving, then check the result of each command.",
         "hintLevel2": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget."
       },
       "independentPractice": {
@@ -1334,12 +1334,12 @@
       },
       "reviewPrompt": "Later, solve a different pattern recognition task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
-      "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "narrationText": "Pattern recognition looks for movement blocks that repeat. Once you find the repeating block, you can describe the route more simply and avoid writing unnecessary commands.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1351,11 +1351,11 @@
       "unitId": "c4_coding_ct",
       "title": "Problem decomposition",
       "objective": "Breaks a maze or route task into smaller solvable segments.",
-      "teach": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
-      "workedExample": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "teach": "Decomposition breaks one difficult route into smaller solvable sections. Give each section a clear mini-goal, solve it, check the new position, and then continue with the next section.",
+      "workedExample": "For the route from (1, 3) to (4, 1), pick an intermediate safe point and solve only to that point first. Then use the new position as the start of the next smaller route.",
       "guidedTry": {
         "prompt": "Guide the robot from (1, 3) to (4, 1) within 8 commands.",
-        "hintLevel1": "Plan the route before moving. Use turns to face the next safe path.",
+        "hintLevel1": "Track the start, goal, direction and obstacles. Plan before moving, then check the result of each command.",
         "hintLevel2": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget."
       },
       "independentPractice": {
@@ -1372,12 +1372,12 @@
       },
       "reviewPrompt": "Later, solve a different problem decomposition task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
-      "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "narrationText": "Decomposition breaks one difficult route into smaller solvable sections. Give each section a clear mini-goal, solve it, check the new position, and then continue with the next section.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1389,11 +1389,11 @@
       "unitId": "c4_coding_ct",
       "title": "Algorithms and route checking",
       "objective": "Creates, follows and checks an ordered algorithm for a route, revising it when it fails.",
-      "teach": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
-      "workedExample": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "teach": "A route algorithm must be precise, ordered and testable. Follow the instructions one at a time, compare the result with the intended route, and revise the first command that causes the path to fail.",
+      "workedExample": "For the route from (0, 0) to (2, 1), write the commands in order and trace them one at a time. If the robot leaves the intended path, revise the first command where the trace goes wrong.",
       "guidedTry": {
         "prompt": "Guide the robot from (0, 0) to (2, 1) within 4 commands.",
-        "hintLevel1": "Plan the route before moving. Use turns to face the next safe path.",
+        "hintLevel1": "Track the start, goal, direction and obstacles. Plan before moving, then check the result of each command.",
         "hintLevel2": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget."
       },
       "independentPractice": {
@@ -1411,12 +1411,12 @@
       },
       "reviewPrompt": "Later, solve a different algorithms and route checking task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
-      "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "narrationText": "A route algorithm must be precise, ordered and testable. Follow the instructions one at a time, compare the result with the intended route, and revise the first command that causes the path to fail.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }

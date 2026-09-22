@@ -28,6 +28,78 @@ void main() {
     }
   });
 
+  test('background music uses multi-theme playlists instead of one short loop', () {
+    expect(
+      BrightAudioService.musicPlaylistSources.keys,
+      containsAll(BrightAudioService.musicPlaylistAssets.keys),
+    );
+    expect(
+      BrightAudioService.musicPlaylistSources.length,
+      BrightAudioService.musicPlaylistAssets.length,
+    );
+    expect(
+      BrightAudioService.musicPlaylistAssets.values,
+      contains(BrightAudioService.menuMusicAsset),
+    );
+
+    for (final entry in BrightAudioService.musicPlaylistSources.entries) {
+      final sources = entry.value;
+      expect(
+        sources.length,
+        greaterThanOrEqualTo(4),
+        reason: '${entry.key} should contain several distinct music themes',
+      );
+      expect(
+        sources.toSet().length,
+        sources.length,
+        reason: '${entry.key} must not repeat a source track inside one cycle',
+      );
+      for (final source in sources) {
+        expect(
+          File('assets/$source').existsSync(),
+          isTrue,
+          reason: 'Missing playlist source assets/$source',
+        );
+      }
+
+      final mixedAsset = BrightAudioService.musicPlaylistAssets[entry.key]!;
+      expect(
+        File('assets/$mixedAsset').existsSync(),
+        isTrue,
+        reason: 'Missing bundled playlist assets/$mixedAsset',
+      );
+    }
+
+    final gameTracks = <String>{
+      for (final game in games) BrightAudioService.gameMusicAssets[game.id]!,
+    };
+    expect(
+      gameTracks.length,
+      games.length,
+      reason: 'Every adventure should own a different long-form BGM mix',
+    );
+    expect(gameTracks, isNot(contains(BrightAudioService.menuMusicAsset)));
+
+    for (final game in games) {
+      expect(
+        BrightAudioService.musicPlaylistAssets.values,
+        contains(BrightAudioService.gameMusicAssets[game.id]),
+        reason: '${game.id} still points at a single-theme music loop',
+      );
+      expect(
+        BrightAudioService.musicPlaylistSources['game_${game.id}'],
+        isNotNull,
+        reason: '${game.id} should own a dedicated four-section playlist',
+      );
+    }
+
+    expect(
+      BrightAudioService.nurseryMusicAsset,
+      BrightAudioService.musicPlaylistAssets['nursery_play'],
+    );
+    expect(gameTracks, isNot(contains(BrightAudioService.nurseryMusicAsset)));
+  });
+
   test('all declared sound effects exist on disk', () {
     expect(BrightAudioService.sfxAssets.length, BrightSfx.values.length);
     for (final effect in BrightSfx.values) {
@@ -144,19 +216,38 @@ void main() {
 
   test('smart read and independent audio controls stay wired', () {
     final scaffold = File('lib/widgets/bright_widgets.dart').readAsStringSync();
-    final dashboard = File('lib/features/parent/parent_dashboard_screen.dart')
-        .readAsStringSync();
+    final coordinator = File(
+      'lib/core/accessibility/learning_narration_coordinator.dart',
+    ).readAsStringSync();
+    final audioSettings = File(
+      'lib/features/parent/parent_audio_settings_screen.dart',
+    ).readAsStringSync();
     final feedback =
         File('lib/core/services/bright_audio_service.dart').readAsStringSync();
 
-    expect(scaffold, contains('speakPrompt('));
+    // Game read-aloud is now routed through the owned narration session instead
+    // of calling BrightAudioService.speakPrompt directly from the widget tree.
+    expect(scaffold, contains('LearningAudioDirector().forGamePrompt('));
+    expect(scaffold, contains('LearningNarrationBoundary('));
+    expect(scaffold, contains('narrationSession.speakCue('));
     expect(scaffold, contains('choices: voiceChoices'));
+
+    // The coordinator remains the single bridge to the low-level prompt TTS API.
+    expect(coordinator, contains('audio.speakPrompt('));
+    expect(coordinator, contains('audio.stopVoice('));
+
     expect(feedback, contains('You chose \${answer.trim()}'));
     expect(
         feedback, contains('The correct answer is \${correctAnswer.trim()}'));
-    expect(dashboard, contains("Key('guide_voice_selector')"));
-    expect(dashboard, contains('BGM music volume'));
-    expect(dashboard, contains('Game sound effects volume'));
-    expect(dashboard, contains('Speech narration volume'));
+    expect(audioSettings, contains("Key('guide_voice_selector')"));
+    expect(audioSettings, contains("Key('app_audio_master')"));
+    expect(audioSettings, contains("Key('app_bgm_mute')"));
+    expect(audioSettings, contains("Key('app_narrator_mute')"));
+    expect(audioSettings, contains("Key('app_sfx_mute')"));
+    expect(feedback, contains("bright_audio.app_enabled"));
+    expect(feedback, contains('appAudioEnabled'));
+    expect(audioSettings, contains('BGM music volume'));
+    expect(audioSettings, contains('Game sound effects volume'));
+    expect(audioSettings, contains('Speech narration volume'));
   });
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
@@ -5,14 +7,17 @@ import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
 import '../../core/learning/adaptive_difficulty_models.dart';
 import '../../core/learning/game_evidence_adapter.dart';
+import '../../core/learning/game_turn_pacing.dart';
 import '../../core/learning/endless_practice_coordinator.dart';
 import '../../core/learning/mission_run_game_content.dart';
 import '../../core/learning/mission_run_models.dart';
 import '../../core/learning/mission_run_session_coordinator.dart';
 import '../../core/models/progress_models.dart';
+import '../../core/services/bright_audio_service.dart';
 import '../../core/services/feedback_service.dart';
 import '../../core/session/game_session_models.dart';
 import '../../widgets/bright_widgets.dart';
+import '../../widgets/game_turn_timer.dart';
 
 class MapQuestScreen extends StatefulWidget {
   const MapQuestScreen({
@@ -29,6 +34,14 @@ class MapQuestScreen extends StatefulWidget {
 }
 
 class _MapQuestScreenState extends State<MapQuestScreen> {
+  static const BrightSfxProfile _soundProfile = BrightSfxProfile.mapQuest;
+
+  void _playInteraction(BrightInteractionSfx effect) {
+    unawaited(
+      BrightAudioService.instance.playProfileSfx(_soundProfile, effect),
+    );
+  }
+
   int questionIndex = 0;
   int score = 0;
   String? selected;
@@ -42,6 +55,7 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
   int _classNumber = 4;
   int _attemptSerial = 0;
   bool _answerInFlight = false;
+  bool _timedOut = false;
   bool _sessionConfigured = false;
   MissionRunPlan? _missionRunPlan;
   List<MapQuestion> _questions = const <MapQuestion>[];
@@ -118,6 +132,7 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
     selected = checkpoint.data['selected'] as String?;
     checked = checkpoint.data['checked'] as bool? ?? false;
     correct = checkpoint.data['correct'] as bool?;
+    _timedOut = checkpoint.data['timedOut'] as bool? ?? false;
     _hintUsed = checkpoint.data['hintUsed'] as bool? ?? false;
     _attemptSerial = (checkpoint.data['attemptSerial'] as num?)?.toInt() ?? 0;
     if (checkpoint.stage == GameSessionStage.result &&
@@ -129,10 +144,12 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
   }
 
   Future<void> _check(MapQuestion question) async {
-    if (checked || selected == null || _answerInFlight) return;
-    _answerInFlight = true;
+    if (checked || selected == null || _timedOut || _answerInFlight) return;
+    setState(() => _answerInFlight = true);
+    final answeredIndex = questionIndex;
+    final selectedAnswer = selected;
     try {
-      final isCorrect = selected == question.answer;
+      final isCorrect = selectedAnswer == question.answer;
       final controller = BrightQuestScope.of(context);
       final adapter = const GameEvidenceAdapter();
       final activity = adapter.resolve(
@@ -145,7 +162,7 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
         gameId: 'map_quest',
         learningLevel: widget.learningLevel,
         correct: isCorrect,
-        attemptMarker: 'answer:$_attemptSerial:$selected',
+        attemptMarker: 'answer:$_attemptSerial:$selectedAnswer',
         topicId: question.topicId,
         difficulty: question.difficulty,
         masteryGain: 0.06,
@@ -154,32 +171,125 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
         evidenceKind: adapter.kindFor(widget.learningLevel),
         hintLevel: _hintUsed ? 1 : 0,
         responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
-        misconceptionId:
-            isCorrect ? null : adapter.misconceptionFor(activity, selected),
+        misconceptionId: isCorrect
+            ? null
+            : adapter.misconceptionFor(activity, selectedAnswer),
         confidence: _hintUsed ? 0.58 : 0.84,
       );
       if (!mounted) return;
       _attemptSerial += 1;
-      if (isCorrect) {
-        FeedbackService.correct(controller, answer: selected);
-      } else {
-        FeedbackService.wrong(
-          controller,
-          answer: selected,
-          correctAnswer: question.answer,
-          guidance: learningLevelAllowsMainGameHints(widget.learningLevel)
-              ? question.hint
-              : null,
-        );
-      }
       setState(() {
         checked = true;
         correct = isCorrect;
         if (isCorrect) score += 1;
       });
       _checkpoint();
+
+      final pacing = const GameTurnPacingPolicy().forGame(
+        gameId: 'map_quest',
+        learningLevel: widget.learningLevel,
+        endlessPractice: widget.endlessPractice,
+      );
+      if (isCorrect && pacing.autoAdvanceCorrect && controller.soundEnabled) {
+        await FeedbackService.correctAndWait(
+          controller,
+          answer: selectedAnswer,
+          minimumDuration: const Duration(milliseconds: 1200),
+          soundProfile: _soundProfile,
+        );
+        if (!mounted ||
+            questionIndex != answeredIndex ||
+            selected != selectedAnswer ||
+            correct != true) {
+          return;
+        }
+        await _next(_questions, _classNumber);
+      } else if (isCorrect) {
+        FeedbackService.correct(
+          controller,
+          answer: selectedAnswer,
+          soundProfile: _soundProfile,
+        );
+      } else if (pacing.isTimed) {
+        await FeedbackService.wrongAndWait(
+          controller,
+          answer: selectedAnswer,
+          correctAnswer: question.answer,
+          guidance: learningLevelAllowsMainGameHints(widget.learningLevel)
+              ? question.hint
+              : null,
+          minimumDuration: const Duration(milliseconds: 1200),
+          soundProfile: _soundProfile,
+        );
+      } else {
+        FeedbackService.wrong(
+          controller,
+          answer: selectedAnswer,
+          correctAnswer: question.answer,
+          guidance: learningLevelAllowsMainGameHints(widget.learningLevel)
+              ? question.hint
+              : null,
+          soundProfile: _soundProfile,
+        );
+      }
     } finally {
-      _answerInFlight = false;
+      if (mounted) {
+        setState(() => _answerInFlight = false);
+      } else {
+        _answerInFlight = false;
+      }
+    }
+  }
+
+  Future<void> _expireQuestion(MapQuestion question) async {
+    if (checked || _timedOut || finished || _answerInFlight) return;
+    setState(() => _answerInFlight = true);
+    try {
+      final controller = BrightQuestScope.of(context);
+      final adapter = const GameEvidenceAdapter();
+      final activity = adapter.resolve(
+        repository: BrightQuestScope.contentOf(context),
+        classNumber: _classNumber,
+        gameId: 'map_quest',
+        legacyContentId: question.id,
+      );
+      await controller.recordAnswerSafely(
+        gameId: 'map_quest',
+        learningLevel: widget.learningLevel,
+        correct: false,
+        attemptMarker: 'timeout:$_attemptSerial',
+        topicId: question.topicId,
+        difficulty: question.difficulty,
+        masteryGain: 0.06,
+        itemId: activity?.id,
+        competencyId: activity?.competencyId,
+        evidenceKind: adapter.kindFor(widget.learningLevel),
+        hintLevel: _hintUsed ? 1 : 0,
+        responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
+        misconceptionId: 'time_limit_exceeded',
+        confidence: 0.35,
+      );
+      if (!mounted) return;
+      _attemptSerial += 1;
+      setState(() {
+        checked = true;
+        correct = false;
+        _timedOut = true;
+      });
+      _checkpoint();
+      await FeedbackService.wrongAndWait(
+        controller,
+        correctAnswer: question.answer,
+        guidance: 'Time is up. Review the map answer, then continue when ready.',
+        minimumDuration: const Duration(milliseconds: 1200),
+        soundProfile: _soundProfile,
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _answerInFlight = false);
+      } else {
+        _answerInFlight = false;
+      }
     }
   }
 
@@ -198,7 +308,11 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
         maxScore: questions.length,
       );
       if (!mounted) return;
-      FeedbackService.complete(controller, reward: reward);
+      FeedbackService.complete(
+        controller,
+        reward: reward,
+        soundProfile: _soundProfile,
+      );
       setState(() {
         finished = true;
         missionReward = reward;
@@ -211,6 +325,7 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
       checked = false;
       correct = null;
       _hintUsed = false;
+      _timedOut = false;
       _itemStarted = DateTime.now();
     });
     _checkpoint();
@@ -277,6 +392,7 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
       checked = false;
       correct = null;
       _hintUsed = false;
+      _timedOut = false;
       _itemStarted = DateTime.now();
       finished = false;
       missionReward = null;
@@ -298,6 +414,7 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
         'checked': checked,
         if (correct != null) 'correct': correct,
         'hintUsed': _hintUsed,
+        'timedOut': _timedOut,
       },
     );
   }
@@ -307,6 +424,11 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
     final classNumber = _classNumber;
     final questions = _questions;
     final question = questions[questionIndex];
+    final pacing = const GameTurnPacingPolicy().forGame(
+      gameId: 'map_quest',
+      learningLevel: widget.learningLevel,
+      endlessPractice: widget.endlessPractice,
+    );
 
     return GameScaffold(
       learningLevel: widget.learningLevel,
@@ -327,6 +449,15 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
             total: questions.length,
             score: score,
           ),
+          if (pacing.turnLimit != null) ...[
+            const SizedBox(height: 10),
+            GameTurnTimer(
+              duration: pacing.turnLimit!,
+              resetKey: 'map:$questionIndex:${question.id}',
+              paused: checked || _timedOut || _answerInFlight || finished,
+              onExpired: () => _expireQuestion(question),
+            ),
+          ],
           const SizedBox(height: 12),
           const GameSceneBanner(
               gameId: 'map_quest',
@@ -369,11 +500,18 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
                   (value) => ChoiceChip(
                     label: Text(value),
                     selected: selected == value,
-                    onSelected: checked || finished
+                    onSelected: checked ||
+                            _timedOut ||
+                            _answerInFlight ||
+                            finished
                         ? null
                         : (_) {
+                            _playInteraction(BrightInteractionSfx.option);
                             setState(() => selected = value);
                             _checkpoint();
+                            if (pacing.autoCommitSelection) {
+                              unawaited(_check(question));
+                            }
                           },
                   ),
                 )
@@ -385,9 +523,11 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
                 ? SuccessBanner(
                     text: 'Correct! ${question.answer} is the right answer.')
                 : ErrorBanner(
-                    text: learningLevelAllowsMainGameHints(widget.learningLevel)
-                        ? 'Not this one. Hint: ${question.hint}'
-                        : 'Not this one. Recheck the map from the reference point before the next checkpoint.',
+                    text: _timedOut
+                        ? 'Time is up. ${question.answer} is the right answer. Review the map, then continue.'
+                        : learningLevelAllowsMainGameHints(widget.learningLevel)
+                            ? 'Not this one. Hint: ${question.hint}'
+                            : 'Not this one. Recheck the map from the reference point before the next checkpoint.',
                   ),
           ],
           const SizedBox(height: 18),
@@ -422,7 +562,11 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
                               );
                               setState(() => _hintUsed = true);
                               _checkpoint();
-                              FeedbackService.hint(controller, question.hint);
+                              FeedbackService.hint(
+                                controller,
+                                question.hint,
+                                soundProfile: _soundProfile,
+                              );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -435,17 +579,26 @@ class _MapQuestScreenState extends State<MapQuestScreen> {
                     label: const Text('Hint · 3 coins'),
                   ),
                 const Spacer(),
-                FilledButton.icon(
-                  onPressed: selected == null || checked
-                      ? null
-                      : () => _check(question),
-                  icon: const Icon(Icons.location_on_rounded),
-                  label: const Text('Place Pin'),
-                ),
+                if (!pacing.autoCommitSelection)
+                  FilledButton.icon(
+                    onPressed: selected == null || checked || _answerInFlight
+                        ? null
+                        : () {
+                            _playInteraction(BrightInteractionSfx.action);
+                            unawaited(_check(question));
+                          },
+                    icon: const Icon(Icons.location_on_rounded),
+                    label: const Text('Place Pin'),
+                  ),
                 if (checked) ...[
                   const SizedBox(width: 8),
                   FilledButton.icon(
-                    onPressed: () => _next(questions, classNumber),
+                    onPressed: _answerInFlight
+                        ? null
+                        : () {
+                            _playInteraction(BrightInteractionSfx.next);
+                            unawaited(_next(questions, classNumber));
+                          },
                     icon: Icon(
                       questionIndex == questions.length - 1
                           ? Icons.flag_rounded

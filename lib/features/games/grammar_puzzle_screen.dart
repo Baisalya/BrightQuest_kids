@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
@@ -9,6 +11,7 @@ import '../../core/learning/mission_run_game_content.dart';
 import '../../core/learning/mission_run_models.dart';
 import '../../core/learning/mission_run_session_coordinator.dart';
 import '../../core/models/progress_models.dart';
+import '../../core/services/bright_audio_service.dart';
 import '../../core/services/feedback_service.dart';
 import '../../core/session/game_session_models.dart';
 import '../../widgets/bright_widgets.dart';
@@ -28,6 +31,15 @@ class GrammarPuzzleScreen extends StatefulWidget {
 }
 
 class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
+  static const BrightSfxProfile _soundProfile =
+      BrightSfxProfile.grammarPuzzle;
+
+  void _playInteraction(BrightInteractionSfx effect) {
+    unawaited(
+      BrightAudioService.instance.playProfileSfx(_soundProfile, effect),
+    );
+  }
+
   int missionIndex = 0;
   int score = 0;
   String? noun;
@@ -139,6 +151,7 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
         _answerInFlight) {
       return;
     }
+    _playInteraction(BrightInteractionSfx.action);
     _answerInFlight = true;
     try {
       final isCorrect = noun == mission.noun &&
@@ -176,12 +189,14 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
           controller,
           answer: chosen,
           detail: 'Every word is in the right grammar group.',
+          soundProfile: _soundProfile,
         );
       } else {
         FeedbackService.wrong(
           controller,
           answer: chosen,
           guidance: 'Change the word categories and try again.',
+          soundProfile: _soundProfile,
         );
       }
       setState(() {
@@ -211,7 +226,11 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
         maxScore: missions.length,
       );
       if (!mounted) return;
-      FeedbackService.complete(controller, reward: reward);
+      FeedbackService.complete(
+        controller,
+        reward: reward,
+        soundProfile: _soundProfile,
+      );
       setState(() {
         finished = true;
         missionReward = reward;
@@ -232,6 +251,7 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
   }
 
   void _resetSelection() {
+    _playInteraction(BrightInteractionSfx.tap);
     setState(() {
       noun = null;
       verb = null;
@@ -385,6 +405,7 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
             selected: noun,
             enabled: correct != true,
             onChanged: (value) {
+              _playInteraction(BrightInteractionSfx.option);
               setState(() {
                 noun = value;
                 checked = false;
@@ -401,6 +422,7 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
             selected: verb,
             enabled: correct != true,
             onChanged: (value) {
+              _playInteraction(BrightInteractionSfx.option);
               setState(() {
                 verb = value;
                 checked = false;
@@ -417,6 +439,7 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
             selected: adjective,
             enabled: correct != true,
             onChanged: (value) {
+              _playInteraction(BrightInteractionSfx.option);
               setState(() {
                 adjective = value;
                 checked = false;
@@ -468,7 +491,10 @@ class _GrammarPuzzleScreenState extends State<GrammarPuzzleScreen> {
                 if (correct == true) ...[
                   const SizedBox(width: 8),
                   FilledButton.icon(
-                    onPressed: () => _next(missions, classNumber),
+                    onPressed: () {
+                      _playInteraction(BrightInteractionSfx.next);
+                      unawaited(_next(missions, classNumber));
+                    },
                     icon: Icon(
                       missionIndex == missions.length - 1
                           ? Icons.flag_rounded

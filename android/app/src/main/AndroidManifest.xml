@@ -5,7 +5,7 @@
         </intent>
     </queries>
 <application
-        android:label="brightquest_kids"
+        android:label="BrightQuest Kids"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

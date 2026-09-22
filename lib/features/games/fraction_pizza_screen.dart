@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
@@ -10,6 +12,7 @@ import '../../core/learning/mission_run_game_content.dart';
 import '../../core/learning/mission_run_models.dart';
 import '../../core/learning/mission_run_session_coordinator.dart';
 import '../../core/models/progress_models.dart';
+import '../../core/services/bright_audio_service.dart';
 import '../../core/services/feedback_service.dart';
 import '../../core/session/game_session_models.dart';
 import '../../widgets/bright_widgets.dart';
@@ -29,6 +32,15 @@ class FractionPizzaScreen extends StatefulWidget {
 }
 
 class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
+  static const BrightSfxProfile _soundProfile =
+      BrightSfxProfile.fractionPizza;
+
+  void _playInteraction(BrightInteractionSfx effect) {
+    unawaited(
+      BrightAudioService.instance.playProfileSfx(_soundProfile, effect),
+    );
+  }
+
   int missionIndex = 0;
   int selectedSlices = 0;
   int score = 0;
@@ -130,6 +142,7 @@ class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
 
   void _select(int count) {
     if (finished || correct == true) return;
+    _playInteraction(BrightInteractionSfx.option);
     setState(() {
       selectedSlices = count;
       checked = false;
@@ -140,6 +153,7 @@ class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
 
   Future<void> _check(FractionMission mission) async {
     if (checked || selectedSlices == 0 || _answerInFlight) return;
+    _playInteraction(BrightInteractionSfx.action);
     _answerInFlight = true;
     try {
       final isCorrect = fractionMatches(
@@ -183,6 +197,7 @@ class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
           controller,
           answer: chosen,
           detail: 'That matches $expected.',
+          soundProfile: _soundProfile,
         );
       } else {
         FeedbackService.wrong(
@@ -190,6 +205,7 @@ class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
           answer: chosen,
           correctAnswer: expected,
           guidance: 'Adjust the slices and try again.',
+          soundProfile: _soundProfile,
         );
       }
       setState(() {
@@ -219,7 +235,11 @@ class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
         maxScore: missions.length,
       );
       if (!mounted) return;
-      FeedbackService.complete(controller, reward: reward);
+      FeedbackService.complete(
+        controller,
+        reward: reward,
+        soundProfile: _soundProfile,
+      );
       setState(() {
         finished = true;
         missionReward = reward;
@@ -456,7 +476,10 @@ class _FractionPizzaScreenState extends State<FractionPizzaScreen> {
                 if (correct == true) ...[
                   const SizedBox(width: 10),
                   FilledButton.icon(
-                    onPressed: () => _next(missions, classNumber),
+                    onPressed: () {
+                      _playInteraction(BrightInteractionSfx.next);
+                      unawaited(_next(missions, classNumber));
+                    },
                     icon: Icon(
                       missionIndex == missions.length - 1
                           ? Icons.flag_rounded

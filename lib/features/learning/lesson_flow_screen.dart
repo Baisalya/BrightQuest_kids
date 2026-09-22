@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
 import '../../core/accessibility/learning_audio_director.dart';
+import '../../core/accessibility/learning_narration_coordinator.dart';
 import '../../core/content/content_activity.dart';
 import '../../core/content/content_repository.dart';
 import '../../core/curriculum/curriculum_models.dart';
@@ -69,7 +70,6 @@ class _LessonFlowScreenState extends State<LessonFlowScreen>
   MissionRunPlan? _missionRunPlan;
   SkillStudioPracticePlan? _skillStudioPlan;
   final Set<String> _recordedSkillActivityIds = <String>{};
-
   @override
   void initState() {
     super.initState();
@@ -225,13 +225,17 @@ class _LessonFlowScreenState extends State<LessonFlowScreen>
         ? null
         : paletteForSubject(missionPlan.identity.subject);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          missionPlan?.identity.worldTitle ?? widget.title ?? level!.title,
+    return LearningNarrationBoundary(
+      ownerLabel:
+          "LessonFlowScreen:${widget.level?.id ?? widget.competencyId ?? 'lesson'}",
+      scopeKey: narrationCue.id,
+      builder: (context, narrationSession) => Scaffold(
+        appBar: AppBar(
+          title: Text(
+            missionPlan?.identity.worldTitle ?? widget.title ?? level!.title,
+          ),
         ),
-      ),
-      body: SafeArea(
+        body: SafeArea(
         child: BrightPageBackground(
           primary: palette == null
               ? const Color(0xFFF3F7FF)
@@ -286,6 +290,7 @@ class _LessonFlowScreenState extends State<LessonFlowScreen>
                             ),
                             cue: narrationCue,
                             autoNarrate: true,
+                            narrationSession: narrationSession,
                             compact: true,
                             denseTranscript: true,
                           ),
@@ -303,6 +308,7 @@ class _LessonFlowScreenState extends State<LessonFlowScreen>
                       key: ValueKey<String>('lesson_audio:${narrationCue.id}'),
                       cue: narrationCue,
                       autoNarrate: true,
+                      narrationSession: narrationSession,
                     ),
                   ],
                   const SizedBox(height: 16),
@@ -370,6 +376,7 @@ class _LessonFlowScreenState extends State<LessonFlowScreen>
                         sessionStep: sessionStep,
                         activity: activity,
                         policy: adaptivePolicy,
+                        narrationSession: narrationSession,
                       ),
                       onAttempt: (evaluation, retries, responseTimeMs) =>
                           _recordAttempt(
@@ -379,6 +386,7 @@ class _LessonFlowScreenState extends State<LessonFlowScreen>
                         evaluation: evaluation,
                         retries: retries,
                         responseTimeMs: responseTimeMs,
+                        narrationSession: narrationSession,
                       ),
                     ),
                   ],
@@ -424,6 +432,7 @@ class _LessonFlowScreenState extends State<LessonFlowScreen>
             ),
           ),
         ),
+        ),
       ),
     );
   }
@@ -434,6 +443,7 @@ class _LessonFlowScreenState extends State<LessonFlowScreen>
     required MissionSessionStep sessionStep,
     required ContentActivity activity,
     required AdaptiveMissionPolicy? policy,
+    required LearningNarrationSession narrationSession,
   }) {
     final step = sessionStep.lessonStep;
     final mode = switch (sessionStep.supportMode) {
@@ -474,6 +484,7 @@ class _LessonFlowScreenState extends State<LessonFlowScreen>
         context: context,
         hintIndex: hintIndex,
         text: text,
+        narrationSession: narrationSession,
       ),
     );
   }
@@ -482,12 +493,23 @@ class _LessonFlowScreenState extends State<LessonFlowScreen>
     required BuildContext context,
     required int hintIndex,
     required String text,
+    required LearningNarrationSession narrationSession,
   }) {
     if (_shownHints.contains(hintIndex)) return;
     setState(() => _shownHints.add(hintIndex));
     _persistLessonState();
     if (text.trim().isNotEmpty) {
-      FeedbackService.hint(BrightQuestScope.of(context), text);
+      final narrationCue = const LearningAudioDirector().forHint(
+        ownerId:
+            '${widget.level?.id ?? widget.competencyId ?? 'lesson'}:$hintIndex',
+        text: text,
+      );
+      FeedbackService.hint(
+        BrightQuestScope.of(context),
+        text,
+        narrationSession: narrationSession,
+        narrationCue: narrationCue,
+      );
     }
   }
 
@@ -515,9 +537,11 @@ class _LessonFlowScreenState extends State<LessonFlowScreen>
     required ActivityEvaluation evaluation,
     required int retries,
     required int responseTimeMs,
+    required LearningNarrationSession narrationSession,
   }) {
     if (_attemptInFlight) return;
     _attemptInFlight = true;
+    final feedbackGuard = narrationSession.captureGuard();
     unawaited(
       _recordAttemptSafely(
         context: context,
@@ -526,6 +550,8 @@ class _LessonFlowScreenState extends State<LessonFlowScreen>
         evaluation: evaluation,
         retries: retries,
         responseTimeMs: responseTimeMs,
+        narrationSession: narrationSession,
+        feedbackGuard: feedbackGuard,
       ),
     );
   }
@@ -537,6 +563,8 @@ class _LessonFlowScreenState extends State<LessonFlowScreen>
     required ActivityEvaluation evaluation,
     required int retries,
     required int responseTimeMs,
+    required LearningNarrationSession narrationSession,
+    required LearningNarrationGuard feedbackGuard,
   }) async {
     try {
       final controller = BrightQuestScope.of(context);
@@ -595,18 +623,24 @@ class _LessonFlowScreenState extends State<LessonFlowScreen>
         hasUnrevealedHint: false,
         rescueAvailable: sessionStep.supportMode != MissionSupportMode.mastery,
       );
+      final feedbackStillCurrent =
+          narrationSession.isGuardCurrent(feedbackGuard);
       if (evaluation.correct) {
-        FeedbackService.correct(
-          controller,
-          answer: responseLabel,
-          detail: activity.explanation,
-        );
+        if (feedbackStillCurrent) {
+          FeedbackService.correct(
+            controller,
+            answer: responseLabel,
+            detail: activity.explanation,
+            narrationSession: narrationSession,
+          );
+        }
         setState(() => _completedInteractiveSteps.add(step.id));
-      } else {
+      } else if (feedbackStillCurrent) {
         FeedbackService.wrong(
           controller,
           answer: responseLabel,
           guidance: '${feedback.message} ${feedback.strategy}',
+          narrationSession: narrationSession,
         );
       }
       _persistLessonState();

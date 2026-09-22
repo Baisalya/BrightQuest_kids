@@ -149,6 +149,203 @@ void main() {
       }
     });
 
+    test('mission framing preserves authored teaching roles', () {
+      final repository = buildContentRepository();
+      final level = learningLevelById('c3_math_operations:math_market:l1')!;
+      const engine = LessonEngine();
+      final base = engine.buildForLevel(
+        repository: repository,
+        level: level,
+      );
+      final plan = coordinator.createOrRestore(
+        repository: repository,
+        level: level,
+        trainingItemCount: 5,
+        gameItemCount: 5,
+        now: DateTime.utc(2026, 9, 13, 10, 0),
+      );
+      final flow = engine.buildForLevel(
+        repository: repository,
+        level: level,
+        missionRunPlan: plan,
+      );
+      final topic = curriculumTopics.firstWhere(
+        (candidate) => candidate.id == level.curriculumTopicId,
+      );
+      final baseExplanation = base.steps.firstWhere(
+        (step) => step.kind == LessonStepKind.explanation,
+      );
+      final objective = flow.steps.firstWhere(
+        (step) => step.kind == LessonStepKind.objective,
+      );
+      final explanation = flow.steps.firstWhere(
+        (step) => step.kind == LessonStepKind.explanation,
+      );
+
+      expect(flow.objective, topic.summary);
+      expect(objective.body, topic.summary);
+      expect(explanation.body, baseExplanation.body);
+      expect(explanation.body, isNot(topic.summary));
+      expect(explanation.body, isNot(objective.body));
+
+      const allocatedKinds = <LessonStepKind>[
+        LessonStepKind.workedExample,
+        LessonStepKind.guidedTry,
+        LessonStepKind.independentPractice,
+        LessonStepKind.transfer,
+        LessonStepKind.exitTicket,
+      ];
+      for (var index = 0; index < allocatedKinds.length; index += 1) {
+        final activity = repository.activityById(
+          plan.trainingItems[index].candidate.activityId,
+        )!;
+        final step = flow.steps.firstWhere(
+          (candidate) => candidate.kind == allocatedKinds[index],
+        );
+        expect(step.activityId, activity.id);
+        final expectedBody = switch (step.kind) {
+          LessonStepKind.workedExample =>
+            '${activity.prompt} ${activity.explanation}'.trim(),
+          LessonStepKind.guidedTry ||
+          LessonStepKind.independentPractice ||
+          LessonStepKind.exitTicket =>
+            activity.prompt,
+          LessonStepKind.transfer =>
+            'Solve this fresh mission without a clue, then explain why your method works: ${activity.prompt}',
+          LessonStepKind.objective ||
+          LessonStepKind.explanation ||
+          LessonStepKind.reteach ||
+          LessonStepKind.review =>
+            throw StateError('Unexpected allocated teaching kind ${step.kind}.'),
+        };
+        expect(step.body, expectedBody);
+      }
+    });
+
+    test('all Learning World missions keep framing separate from teaching', () {
+      final repository = buildContentRepository();
+      const engine = LessonEngine();
+
+      for (final level in learningLevels) {
+        final base = engine.buildForLevel(
+          repository: repository,
+          level: level,
+        );
+        final plan = coordinator.createOrRestoreForWorldLevel(
+          repository: repository,
+          level: level,
+          now: DateTime.utc(2026, 9, 13, 10, 2),
+        );
+        final flow = engine.buildForLevel(
+          repository: repository,
+          level: level,
+          missionRunPlan: plan,
+        );
+        final topic = curriculumTopics.firstWhere(
+          (candidate) => candidate.id == level.curriculumTopicId,
+        );
+        final baseExplanation = base.steps.firstWhere(
+          (step) => step.kind == LessonStepKind.explanation,
+        );
+        final explanation = flow.steps.firstWhere(
+          (step) => step.kind == LessonStepKind.explanation,
+        );
+
+        expect(flow.objective, topic.summary, reason: level.id);
+        expect(explanation.body, baseExplanation.body, reason: level.id);
+        if (baseExplanation.body.trim() != topic.summary.trim()) {
+          expect(explanation.body, isNot(topic.summary), reason: level.id);
+        }
+        expect(
+          flow.steps.map((step) => step.kind).toList(growable: false),
+          base.steps.map((step) => step.kind).toList(growable: false),
+          reason: level.id,
+        );
+      }
+    });
+
+    test('reduced training allocation does not repeat the topic summary', () {
+      final repository = buildContentRepository();
+      final level = learningLevelById('c3_math_operations:math_market:l1')!;
+      const engine = LessonEngine();
+      final base = engine.buildForLevel(
+        repository: repository,
+        level: level,
+      );
+      final plan = coordinator.createOrRestore(
+        repository: repository,
+        level: level,
+        trainingItemCount: 1,
+        gameItemCount: 5,
+        now: DateTime.utc(2026, 9, 13, 10, 5),
+      );
+      final flow = engine.buildForLevel(
+        repository: repository,
+        level: level,
+        missionRunPlan: plan,
+      );
+      final topic = curriculumTopics.firstWhere(
+        (candidate) => candidate.id == level.curriculumTopicId,
+      );
+
+      final objective = flow.steps.firstWhere(
+        (step) => step.kind == LessonStepKind.objective,
+      );
+      final explanation = flow.steps.firstWhere(
+        (step) => step.kind == LessonStepKind.explanation,
+      );
+      final baseExplanation = base.steps.firstWhere(
+        (step) => step.kind == LessonStepKind.explanation,
+      );
+      final reteach = flow.steps.firstWhere(
+        (step) => step.kind == LessonStepKind.reteach,
+      );
+      final baseReteach = base.steps.firstWhere(
+        (step) => step.kind == LessonStepKind.reteach,
+      );
+
+      expect(objective.body, topic.summary);
+      expect(explanation.body, baseExplanation.body);
+      expect(reteach.body, baseReteach.body);
+      expect(
+        flow.steps
+            .where(
+              (step) =>
+                  step.kind != LessonStepKind.objective &&
+                  step.kind != LessonStepKind.review,
+            )
+            .where((step) => step.body == topic.summary),
+        isEmpty,
+      );
+
+      expect(
+        flow.steps
+            .firstWhere((step) => step.kind == LessonStepKind.guidedTry)
+            .body,
+        'Explain one small example of this idea in your own words.',
+      );
+      expect(
+        flow.steps
+            .firstWhere(
+              (step) => step.kind == LessonStepKind.independentPractice,
+            )
+            .body,
+        'Use the idea independently on a fresh example.',
+      );
+      expect(
+        flow.steps
+            .firstWhere((step) => step.kind == LessonStepKind.transfer)
+            .body,
+        'Tell where this idea could be useful outside this lesson.',
+      );
+      expect(
+        flow.steps
+            .firstWhere((step) => step.kind == LessonStepKind.exitTicket)
+            .body,
+        'Finish one independent check without a clue.',
+      );
+    });
+
     test('serialized plan restores after a session JSON round trip', () {
       final repository = buildContentRepository();
       final level = learningLevelById('c5_math_operations:math_market:l3')!;

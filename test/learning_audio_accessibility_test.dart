@@ -46,6 +46,42 @@ void main() {
       expect(
           cue.choices.toList(), spec.choiceValues.whereType<Object>().toList());
       expect(cue.autoEligible, isTrue);
+      expect(cue.delivery, LearningNarrationDelivery.prompt);
+    });
+
+    test('teaching cues keep goal, concept and worked reasoning roles distinct',
+        () {
+      final repository = buildContentRepository();
+      final flow = const LessonEngine().buildForCompetency(
+        repository: repository,
+        classNumber: 4,
+        competencyId: 'c4_math_fraction_models_equiv',
+      );
+      final session = const MissionSessionEngine().build(flow);
+      final objective = session.steps.firstWhere(
+        (step) => step.lessonStep.kind == LessonStepKind.objective,
+      );
+      final explanation = session.steps.firstWhere(
+        (step) => step.lessonStep.kind == LessonStepKind.explanation,
+      );
+      final worked = session.steps.firstWhere(
+        (step) => step.lessonStep.kind == LessonStepKind.workedExample,
+      );
+      const director = LearningAudioDirector();
+
+      final objectiveCue = director.forLessonStep(sessionStep: objective);
+      final explanationCue = director.forLessonStep(sessionStep: explanation);
+      final workedCue = director.forLessonStep(sessionStep: worked);
+
+      expect(objectiveCue.kind, LearningNarrationKind.missionGoal);
+      expect(explanationCue.kind, LearningNarrationKind.conceptTeaching);
+      expect(workedCue.kind, LearningNarrationKind.workedExample);
+      expect(objectiveCue.spokenText, objective.lessonStep.body);
+      expect(explanationCue.spokenText, explanation.lessonStep.body);
+      expect(workedCue.spokenText, worked.lessonStep.body);
+      expect(objectiveCue.delivery, LearningNarrationDelivery.statement);
+      expect(explanationCue.delivery, LearningNarrationDelivery.statement);
+      expect(workedCue.delivery, LearningNarrationDelivery.statement);
     });
 
     test('teaching cues repeat only the authored visible lesson text', () {
@@ -64,7 +100,7 @@ void main() {
         sessionStep: objective,
       );
 
-      expect(cue.kind, LearningNarrationKind.lesson);
+      expect(cue.kind, LearningNarrationKind.missionGoal);
       expect(cue.visibleText, objective.lessonStep.body);
       expect(cue.spokenText, objective.lessonStep.body);
       expect(cue.choices, isEmpty);
@@ -82,7 +118,108 @@ void main() {
       expect(cue.visibleText, '24 ÷ 6 = ?');
       expect(cue.spokenText, '24 ÷ 6 = ?');
       expect(cue.autoEligible, isFalse);
+      expect(cue.delivery, LearningNarrationDelivery.prompt);
       expect(cue.semanticLabel, contains('Choices: 3, 4, 5, 6'));
+    });
+
+    test('independent narration never auto-includes authored hints', () {
+      final repository = buildContentRepository();
+      final flow = const LessonEngine().buildForCompetency(
+        repository: repository,
+        classNumber: 3,
+        competencyId: 'c3_math_equal_sharing_division',
+      );
+      final session = const MissionSessionEngine().build(flow);
+      final independent = session.steps.firstWhere(
+        (step) =>
+            step.lessonStep.kind == LessonStepKind.independentPractice,
+      );
+      final activity =
+          repository.activityById(independent.lessonStep.activityId!)!;
+      final spec = const GameplayActivityResolver().resolve(activity);
+      final cue = const LearningAudioDirector().forLessonStep(
+        sessionStep: independent,
+        activity: activity,
+        activitySpec: spec,
+      );
+
+      expect(cue.kind, LearningNarrationKind.activityPrompt);
+      expect(cue.spokenText, isNotEmpty);
+      for (final hint in independent.lessonStep.hints) {
+        expect(cue.spokenText, isNot(contains(hint)));
+      }
+      for (final hint in activity.hints) {
+        expect(cue.spokenText, isNot(contains(hint.text)));
+      }
+    });
+
+    test('hint narration is manual-only and uses only the revealed authored hint',
+        () {
+      final cue = const LearningAudioDirector().forHint(
+        ownerId: 'lesson-1:0',
+        text: 'Count equal groups one at a time.',
+      );
+
+      expect(cue.kind, LearningNarrationKind.hint);
+      expect(cue.spokenText, 'Count equal groups one at a time.');
+      expect(cue.visibleText, cue.spokenText);
+      expect(cue.autoEligible, isFalse);
+      expect(cue.delivery, LearningNarrationDelivery.statement);
+    });
+
+    test('Nursery statement cues use the same narration role model', () {
+      final cue = const LearningAudioDirector().forNurseryStatement(
+        ownerId: 'teaching:alpha_uppercase:2',
+        kind: LearningNarrationKind.workedExample,
+        visibleText: 'A is for apple.',
+        spokenText: 'A is for apple.',
+      );
+
+      expect(cue.kind, LearningNarrationKind.workedExample);
+      expect(cue.visibleText, 'A is for apple.');
+      expect(cue.spokenText, 'A is for apple.');
+      expect(cue.autoEligible, isTrue);
+      expect(cue.delivery, LearningNarrationDelivery.statement);
+    });
+
+    test('Nursery prompt cues keep choices separate from prompt text', () {
+      final cue = const LearningAudioDirector().forNurseryPrompt(
+        ownerId: 'activity:alpha-choice',
+        visibleText: 'Find A.',
+        spokenText: 'Find A.',
+        choices: <Object>['A', 'B', 'C'],
+      );
+
+      expect(cue.kind, LearningNarrationKind.activityPrompt);
+      expect(cue.spokenText, 'Find A.');
+      expect(cue.choices.toList(), <Object>['A', 'B', 'C']);
+      expect(cue.delivery, LearningNarrationDelivery.prompt);
+      expect(cue.semanticLabel, contains('Choices: A, B, C'));
+    });
+
+    test('automatic continuity normalizes adjacent duplicate narration', () {
+      const policy = LearningNarrationSequencePolicy();
+      const first = LearningNarrationCue(
+        id: 'lesson:first',
+        kind: LearningNarrationKind.conceptTeaching,
+        visibleText: 'Use equal groups.',
+        spokenText: 'Use   equal groups.',
+      );
+      const second = LearningNarrationCue(
+        id: 'lesson:second',
+        kind: LearningNarrationKind.workedExample,
+        visibleText: 'USE EQUAL GROUPS.',
+        spokenText: 'USE EQUAL GROUPS.',
+      );
+
+      expect(first.automaticRepeatKey, 'use equal groups.');
+      expect(
+        policy.isAutomaticRepeat(
+          cue: second,
+          previousFingerprint: first.automaticRepeatKey,
+        ),
+        isTrue,
+      );
     });
 
     test('automatic narration policy fails closed unless every gate is open',
@@ -90,7 +227,7 @@ void main() {
       const policy = LearningAudioAccessibilityPolicy();
       const cue = LearningNarrationCue(
         id: 'lesson:test',
-        kind: LearningNarrationKind.lesson,
+        kind: LearningNarrationKind.conceptTeaching,
         visibleText: 'Visible lesson',
         spokenText: 'Visible lesson',
       );
@@ -124,7 +261,7 @@ void main() {
       }
       const visibleOnlyCue = LearningNarrationCue(
         id: 'lesson:visible-only',
-        kind: LearningNarrationKind.lesson,
+        kind: LearningNarrationKind.conceptTeaching,
         visibleText: 'Visible fallback',
         spokenText: '',
       );
@@ -382,11 +519,15 @@ void main() {
     });
 
     test('parent controls describe the integrated narration behaviour', () {
-      final dashboard = File('lib/features/parent/parent_dashboard_screen.dart')
-          .readAsStringSync();
-      expect(dashboard, contains('Automatic learning narration'));
-      expect(dashboard, contains('current narration transcript and choices'));
-      expect(dashboard, contains('Highlights the current learning text'));
+      final audioSettings = File(
+        'lib/features/parent/parent_audio_settings_screen.dart',
+      ).readAsStringSync();
+      final accessibility = File(
+        'lib/features/parent/parent_accessibility_screen.dart',
+      ).readAsStringSync();
+      expect(audioSettings, contains('Automatic learning narration'));
+      expect(accessibility, contains('current narration transcript and choices'));
+      expect(accessibility, contains('Highlights the current learning text'));
     });
   });
 }

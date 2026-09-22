@@ -57,22 +57,148 @@ enum BrightSfx {
   levelStart,
 }
 
+/// The sound identity used by an interactive learning surface.
+///
+/// Global app chrome keeps the original generic effects, while every core
+/// learning game and Nursery owns a separate pack so option taps, actions and
+/// feedback sound like the activity the child is actually playing.
+enum BrightSfxProfile {
+  global,
+  mathMarket,
+  fractionPizza,
+  scienceLab,
+  storyBuilder,
+  grammarPuzzle,
+  mapQuest,
+  codingMaze,
+  recyclingChallenge,
+  nursery,
+}
+
+/// Semantic interaction roles shared by the per-game sound packs.
+enum BrightInteractionSfx {
+  tap,
+  option,
+  action,
+  correct,
+  wrong,
+  hint,
+  complete,
+  next,
+  start,
+}
+
 class BrightAudioService extends ChangeNotifier with WidgetsBindingObserver {
   BrightAudioService._();
 
   static final BrightAudioService instance = BrightAudioService._();
 
-  static const Map<String, String> gameMusicAssets = <String, String>{
-    'math_market': 'audio/bgm/math_market.mp3',
-    'fraction_pizza': 'audio/bgm/fraction_pizza.mp3',
-    'science_lab': 'audio/bgm/science_lab.mp3',
-    'story_builder': 'audio/bgm/story_builder.mp3',
-    'grammar_puzzle': 'audio/bgm/grammar_puzzle.mp3',
-    'map_quest': 'audio/bgm/map_quest.mp3',
-    'coding_maze': 'audio/bgm/coding_maze.mp3',
-    'recycling_challenge': 'audio/bgm/recycling_challenge.mp3',
-    'rewards_room': 'audio/bgm/rewards_room.mp3',
+  static const String menuMusicAsset = 'audio/bgm/mix_menu_explorer.mp3';
+
+  /// Source themes folded into each longer background-music playlist.
+  ///
+  /// Home deliberately keeps the existing explorer mix. Every adventure now
+  /// owns its own four-section composition so Math Market, Science Lab, Story
+  /// Builder, Coding Maze, and the other games no longer share the same generic
+  /// category loop. Nursery play also has a separate, gentler playlist.
+  static const Map<String, List<String>> musicPlaylistSources =
+      <String, List<String>>{
+    'menu_explorer': <String>[
+      'audio/bgm/menu.mp3',
+      'audio/bgm/story_builder.mp3',
+      'audio/bgm/map_quest.mp3',
+      'audio/bgm/rewards_room.mp3',
+    ],
+    'game_math_market': <String>[
+      'audio/bgm/game_math_market_theme_a.mp3',
+      'audio/bgm/game_math_market_theme_b.mp3',
+      'audio/bgm/game_math_market_theme_c.mp3',
+      'audio/bgm/game_math_market_theme_d.mp3',
+    ],
+    'game_fraction_pizza': <String>[
+      'audio/bgm/game_fraction_pizza_theme_a.mp3',
+      'audio/bgm/game_fraction_pizza_theme_b.mp3',
+      'audio/bgm/game_fraction_pizza_theme_c.mp3',
+      'audio/bgm/game_fraction_pizza_theme_d.mp3',
+    ],
+    'game_science_lab': <String>[
+      'audio/bgm/game_science_lab_theme_a.mp3',
+      'audio/bgm/game_science_lab_theme_b.mp3',
+      'audio/bgm/game_science_lab_theme_c.mp3',
+      'audio/bgm/game_science_lab_theme_d.mp3',
+    ],
+    'game_story_builder': <String>[
+      'audio/bgm/game_story_builder_theme_a.mp3',
+      'audio/bgm/game_story_builder_theme_b.mp3',
+      'audio/bgm/game_story_builder_theme_c.mp3',
+      'audio/bgm/game_story_builder_theme_d.mp3',
+    ],
+    'game_grammar_puzzle': <String>[
+      'audio/bgm/game_grammar_puzzle_theme_a.mp3',
+      'audio/bgm/game_grammar_puzzle_theme_b.mp3',
+      'audio/bgm/game_grammar_puzzle_theme_c.mp3',
+      'audio/bgm/game_grammar_puzzle_theme_d.mp3',
+    ],
+    'game_map_quest': <String>[
+      'audio/bgm/game_map_quest_theme_a.mp3',
+      'audio/bgm/game_map_quest_theme_b.mp3',
+      'audio/bgm/game_map_quest_theme_c.mp3',
+      'audio/bgm/game_map_quest_theme_d.mp3',
+    ],
+    'game_coding_maze': <String>[
+      'audio/bgm/game_coding_maze_theme_a.mp3',
+      'audio/bgm/game_coding_maze_theme_b.mp3',
+      'audio/bgm/game_coding_maze_theme_c.mp3',
+      'audio/bgm/game_coding_maze_theme_d.mp3',
+    ],
+    'game_recycling_challenge': <String>[
+      'audio/bgm/game_recycling_challenge_theme_a.mp3',
+      'audio/bgm/game_recycling_challenge_theme_b.mp3',
+      'audio/bgm/game_recycling_challenge_theme_c.mp3',
+      'audio/bgm/game_recycling_challenge_theme_d.mp3',
+    ],
+    'game_rewards_room': <String>[
+      'audio/bgm/game_rewards_room_theme_a.mp3',
+      'audio/bgm/game_rewards_room_theme_b.mp3',
+      'audio/bgm/game_rewards_room_theme_c.mp3',
+      'audio/bgm/game_rewards_room_theme_d.mp3',
+    ],
+    'nursery_play': <String>[
+      'audio/bgm/nursery_theme_a.mp3',
+      'audio/bgm/nursery_theme_b.mp3',
+      'audio/bgm/nursery_theme_c.mp3',
+      'audio/bgm/nursery_theme_d.mp3',
+    ],
   };
+
+  static const Map<String, String> musicPlaylistAssets = <String, String>{
+    'menu_explorer': 'audio/bgm/mix_menu_explorer.mp3',
+    'game_math_market': 'audio/bgm/mix_game_math_market.mp3',
+    'game_fraction_pizza': 'audio/bgm/mix_game_fraction_pizza.mp3',
+    'game_science_lab': 'audio/bgm/mix_game_science_lab.mp3',
+    'game_story_builder': 'audio/bgm/mix_game_story_builder.mp3',
+    'game_grammar_puzzle': 'audio/bgm/mix_game_grammar_puzzle.mp3',
+    'game_map_quest': 'audio/bgm/mix_game_map_quest.mp3',
+    'game_coding_maze': 'audio/bgm/mix_game_coding_maze.mp3',
+    'game_recycling_challenge':
+        'audio/bgm/mix_game_recycling_challenge.mp3',
+    'game_rewards_room': 'audio/bgm/mix_game_rewards_room.mp3',
+    'nursery_play': 'audio/bgm/mix_nursery_play.mp3',
+  };
+
+  static const Map<String, String> gameMusicAssets = <String, String>{
+    'math_market': 'audio/bgm/mix_game_math_market.mp3',
+    'fraction_pizza': 'audio/bgm/mix_game_fraction_pizza.mp3',
+    'science_lab': 'audio/bgm/mix_game_science_lab.mp3',
+    'story_builder': 'audio/bgm/mix_game_story_builder.mp3',
+    'grammar_puzzle': 'audio/bgm/mix_game_grammar_puzzle.mp3',
+    'map_quest': 'audio/bgm/mix_game_map_quest.mp3',
+    'coding_maze': 'audio/bgm/mix_game_coding_maze.mp3',
+    'recycling_challenge': 'audio/bgm/mix_game_recycling_challenge.mp3',
+    'rewards_room': 'audio/bgm/mix_game_rewards_room.mp3',
+  };
+
+  static const String nurseryMusicAsset = 'audio/bgm/mix_nursery_play.mp3';
 
   static const Map<BrightSfx, String> sfxAssets = <BrightSfx, String>{
     BrightSfx.tap: 'audio/sfx/tap.mp3',
@@ -84,6 +210,151 @@ class BrightAudioService extends ChangeNotifier with WidgetsBindingObserver {
     BrightSfx.unlock: 'audio/sfx/unlock.mp3',
     BrightSfx.hint: 'audio/sfx/hint.mp3',
     BrightSfx.levelStart: 'audio/sfx/level_start.mp3',
+  };
+
+  static const Map<String, BrightSfxProfile> gameSfxProfiles =
+      <String, BrightSfxProfile>{
+    'math_market': BrightSfxProfile.mathMarket,
+    'fraction_pizza': BrightSfxProfile.fractionPizza,
+    'science_lab': BrightSfxProfile.scienceLab,
+    'story_builder': BrightSfxProfile.storyBuilder,
+    'grammar_puzzle': BrightSfxProfile.grammarPuzzle,
+    'map_quest': BrightSfxProfile.mapQuest,
+    'coding_maze': BrightSfxProfile.codingMaze,
+    'recycling_challenge': BrightSfxProfile.recyclingChallenge,
+  };
+
+  /// Complete thematic SFX packs for core games and Nursery.
+  ///
+  /// Keeping this data explicit makes missing roles fail in QA instead of
+  /// silently turning a child interaction back into the same generic click.
+  static const Map<BrightSfxProfile, Map<BrightInteractionSfx, String>>
+      profileSfxAssets =
+      <BrightSfxProfile, Map<BrightInteractionSfx, String>>{
+    BrightSfxProfile.global: <BrightInteractionSfx, String>{
+      BrightInteractionSfx.tap: 'audio/sfx/tap.mp3',
+      BrightInteractionSfx.option: 'audio/sfx/tap.mp3',
+      BrightInteractionSfx.action: 'audio/sfx/tap.mp3',
+      BrightInteractionSfx.correct: 'audio/sfx/correct.mp3',
+      BrightInteractionSfx.wrong: 'audio/sfx/wrong.mp3',
+      BrightInteractionSfx.hint: 'audio/sfx/hint.mp3',
+      BrightInteractionSfx.complete: 'audio/sfx/complete.mp3',
+      BrightInteractionSfx.next: 'audio/sfx/tap.mp3',
+      BrightInteractionSfx.start: 'audio/sfx/level_start.mp3',
+    },
+    BrightSfxProfile.mathMarket: <BrightInteractionSfx, String>{
+      BrightInteractionSfx.tap: 'audio/sfx/game_math_market_tap.mp3',
+      BrightInteractionSfx.option: 'audio/sfx/game_math_market_option.mp3',
+      BrightInteractionSfx.action: 'audio/sfx/game_math_market_action.mp3',
+      BrightInteractionSfx.correct: 'audio/sfx/game_math_market_correct.mp3',
+      BrightInteractionSfx.wrong: 'audio/sfx/game_math_market_wrong.mp3',
+      BrightInteractionSfx.hint: 'audio/sfx/game_math_market_hint.mp3',
+      BrightInteractionSfx.complete: 'audio/sfx/game_math_market_complete.mp3',
+      BrightInteractionSfx.next: 'audio/sfx/game_math_market_next.mp3',
+      BrightInteractionSfx.start: 'audio/sfx/game_math_market_start.mp3',
+    },
+    BrightSfxProfile.fractionPizza: <BrightInteractionSfx, String>{
+      BrightInteractionSfx.tap: 'audio/sfx/game_fraction_pizza_tap.mp3',
+      BrightInteractionSfx.option: 'audio/sfx/game_fraction_pizza_option.mp3',
+      BrightInteractionSfx.action: 'audio/sfx/game_fraction_pizza_action.mp3',
+      BrightInteractionSfx.correct: 'audio/sfx/game_fraction_pizza_correct.mp3',
+      BrightInteractionSfx.wrong: 'audio/sfx/game_fraction_pizza_wrong.mp3',
+      BrightInteractionSfx.hint: 'audio/sfx/game_fraction_pizza_hint.mp3',
+      BrightInteractionSfx.complete: 'audio/sfx/game_fraction_pizza_complete.mp3',
+      BrightInteractionSfx.next: 'audio/sfx/game_fraction_pizza_next.mp3',
+      BrightInteractionSfx.start: 'audio/sfx/game_fraction_pizza_start.mp3',
+    },
+    BrightSfxProfile.scienceLab: <BrightInteractionSfx, String>{
+      BrightInteractionSfx.tap: 'audio/sfx/game_science_lab_tap.mp3',
+      BrightInteractionSfx.option: 'audio/sfx/game_science_lab_option.mp3',
+      BrightInteractionSfx.action: 'audio/sfx/game_science_lab_action.mp3',
+      BrightInteractionSfx.correct: 'audio/sfx/game_science_lab_correct.mp3',
+      BrightInteractionSfx.wrong: 'audio/sfx/game_science_lab_wrong.mp3',
+      BrightInteractionSfx.hint: 'audio/sfx/game_science_lab_hint.mp3',
+      BrightInteractionSfx.complete: 'audio/sfx/game_science_lab_complete.mp3',
+      BrightInteractionSfx.next: 'audio/sfx/game_science_lab_next.mp3',
+      BrightInteractionSfx.start: 'audio/sfx/game_science_lab_start.mp3',
+    },
+    BrightSfxProfile.storyBuilder: <BrightInteractionSfx, String>{
+      BrightInteractionSfx.tap: 'audio/sfx/game_story_builder_tap.mp3',
+      BrightInteractionSfx.option: 'audio/sfx/game_story_builder_option.mp3',
+      BrightInteractionSfx.action: 'audio/sfx/game_story_builder_action.mp3',
+      BrightInteractionSfx.correct: 'audio/sfx/game_story_builder_correct.mp3',
+      BrightInteractionSfx.wrong: 'audio/sfx/game_story_builder_wrong.mp3',
+      BrightInteractionSfx.hint: 'audio/sfx/game_story_builder_hint.mp3',
+      BrightInteractionSfx.complete: 'audio/sfx/game_story_builder_complete.mp3',
+      BrightInteractionSfx.next: 'audio/sfx/game_story_builder_next.mp3',
+      BrightInteractionSfx.start: 'audio/sfx/game_story_builder_start.mp3',
+    },
+    BrightSfxProfile.grammarPuzzle: <BrightInteractionSfx, String>{
+      BrightInteractionSfx.tap: 'audio/sfx/game_grammar_puzzle_tap.mp3',
+      BrightInteractionSfx.option: 'audio/sfx/game_grammar_puzzle_option.mp3',
+      BrightInteractionSfx.action: 'audio/sfx/game_grammar_puzzle_action.mp3',
+      BrightInteractionSfx.correct: 'audio/sfx/game_grammar_puzzle_correct.mp3',
+      BrightInteractionSfx.wrong: 'audio/sfx/game_grammar_puzzle_wrong.mp3',
+      BrightInteractionSfx.hint: 'audio/sfx/game_grammar_puzzle_hint.mp3',
+      BrightInteractionSfx.complete: 'audio/sfx/game_grammar_puzzle_complete.mp3',
+      BrightInteractionSfx.next: 'audio/sfx/game_grammar_puzzle_next.mp3',
+      BrightInteractionSfx.start: 'audio/sfx/game_grammar_puzzle_start.mp3',
+    },
+    BrightSfxProfile.mapQuest: <BrightInteractionSfx, String>{
+      BrightInteractionSfx.tap: 'audio/sfx/game_map_quest_tap.mp3',
+      BrightInteractionSfx.option: 'audio/sfx/game_map_quest_option.mp3',
+      BrightInteractionSfx.action: 'audio/sfx/game_map_quest_action.mp3',
+      BrightInteractionSfx.correct: 'audio/sfx/game_map_quest_correct.mp3',
+      BrightInteractionSfx.wrong: 'audio/sfx/game_map_quest_wrong.mp3',
+      BrightInteractionSfx.hint: 'audio/sfx/game_map_quest_hint.mp3',
+      BrightInteractionSfx.complete: 'audio/sfx/game_map_quest_complete.mp3',
+      BrightInteractionSfx.next: 'audio/sfx/game_map_quest_next.mp3',
+      BrightInteractionSfx.start: 'audio/sfx/game_map_quest_start.mp3',
+    },
+    BrightSfxProfile.codingMaze: <BrightInteractionSfx, String>{
+      BrightInteractionSfx.tap: 'audio/sfx/game_coding_maze_tap.mp3',
+      BrightInteractionSfx.option: 'audio/sfx/game_coding_maze_option.mp3',
+      BrightInteractionSfx.action: 'audio/sfx/game_coding_maze_action.mp3',
+      BrightInteractionSfx.correct: 'audio/sfx/game_coding_maze_correct.mp3',
+      BrightInteractionSfx.wrong: 'audio/sfx/game_coding_maze_wrong.mp3',
+      BrightInteractionSfx.hint: 'audio/sfx/game_coding_maze_hint.mp3',
+      BrightInteractionSfx.complete: 'audio/sfx/game_coding_maze_complete.mp3',
+      BrightInteractionSfx.next: 'audio/sfx/game_coding_maze_next.mp3',
+      BrightInteractionSfx.start: 'audio/sfx/game_coding_maze_start.mp3',
+    },
+    BrightSfxProfile.recyclingChallenge: <BrightInteractionSfx, String>{
+      BrightInteractionSfx.tap: 'audio/sfx/game_recycling_challenge_tap.mp3',
+      BrightInteractionSfx.option: 'audio/sfx/game_recycling_challenge_option.mp3',
+      BrightInteractionSfx.action: 'audio/sfx/game_recycling_challenge_action.mp3',
+      BrightInteractionSfx.correct: 'audio/sfx/game_recycling_challenge_correct.mp3',
+      BrightInteractionSfx.wrong: 'audio/sfx/game_recycling_challenge_wrong.mp3',
+      BrightInteractionSfx.hint: 'audio/sfx/game_recycling_challenge_hint.mp3',
+      BrightInteractionSfx.complete: 'audio/sfx/game_recycling_challenge_complete.mp3',
+      BrightInteractionSfx.next: 'audio/sfx/game_recycling_challenge_next.mp3',
+      BrightInteractionSfx.start: 'audio/sfx/game_recycling_challenge_start.mp3',
+    },
+    BrightSfxProfile.nursery: <BrightInteractionSfx, String>{
+      BrightInteractionSfx.tap: 'audio/sfx/nursery_tap.mp3',
+      BrightInteractionSfx.option: 'audio/sfx/nursery_option.mp3',
+      BrightInteractionSfx.action: 'audio/sfx/nursery_action.mp3',
+      BrightInteractionSfx.correct: 'audio/sfx/nursery_correct.mp3',
+      BrightInteractionSfx.wrong: 'audio/sfx/nursery_wrong.mp3',
+      BrightInteractionSfx.hint: 'audio/sfx/nursery_hint.mp3',
+      BrightInteractionSfx.complete: 'audio/sfx/nursery_complete.mp3',
+      BrightInteractionSfx.next: 'audio/sfx/nursery_next.mp3',
+      BrightInteractionSfx.start: 'audio/sfx/nursery_start.mp3',
+    },
+  };
+
+  static const Map<BrightSfxProfile, double> profileVolumeScale =
+      <BrightSfxProfile, double>{
+    BrightSfxProfile.global: 1.0,
+    BrightSfxProfile.mathMarket: 0.92,
+    BrightSfxProfile.fractionPizza: 0.90,
+    BrightSfxProfile.scienceLab: 0.90,
+    BrightSfxProfile.storyBuilder: 0.88,
+    BrightSfxProfile.grammarPuzzle: 0.88,
+    BrightSfxProfile.mapQuest: 0.90,
+    BrightSfxProfile.codingMaze: 0.86,
+    BrightSfxProfile.recyclingChallenge: 0.90,
+    BrightSfxProfile.nursery: 0.76,
   };
 
   static const Map<String, String> gameIntroLines = <String, String>{
@@ -117,13 +388,17 @@ class BrightAudioService extends ChangeNotifier with WidgetsBindingObserver {
   bool _ttsConfigured = false;
   bool _sessionEnabled = true;
   bool _pausedByLifecycle = false;
-  String _requestedMusic = 'audio/bgm/menu.mp3';
+  String _requestedMusic = menuMusicAsset;
   String? _playingMusic;
   bool _voiceDucked = false;
   int _speechGeneration = 0;
   int _feedbackIndex = 0;
   String? _preferredVoiceId;
 
+  /// Device-wide parent audio master. This sits above the legacy per-profile
+  /// session gate so a parent can silence the complete app without editing
+  /// every child profile separately.
+  bool appAudioEnabled = true;
   bool musicEnabled = true;
   bool sfxEnabled = true;
   bool voiceEnabled = true;
@@ -139,6 +414,7 @@ class BrightAudioService extends ChangeNotifier with WidgetsBindingObserver {
 
   bool get initialized => _initialized;
   bool get sessionEnabled => _sessionEnabled;
+  bool get audioOutputEnabled => appAudioEnabled && _sessionEnabled;
   bool get voiceAvailable => !Platform.isWindows || _windowsVoice.available;
   bool get voicePitchAvailable => !Platform.isWindows;
   BrightVoiceOption? get selectedVoice {
@@ -153,6 +429,7 @@ class BrightAudioService extends ChangeNotifier with WidgetsBindingObserver {
     try {
       _prefs = await SharedPreferences.getInstance();
       final prefs = _prefs!;
+      appAudioEnabled = prefs.getBool('bright_audio.app_enabled') ?? true;
       musicEnabled = prefs.getBool('bright_audio.music_enabled') ?? true;
       sfxEnabled = prefs.getBool('bright_audio.sfx_enabled') ?? true;
       voiceEnabled = prefs.getBool('bright_audio.voice_enabled') ?? true;
@@ -316,19 +593,56 @@ class BrightAudioService extends ChangeNotifier with WidgetsBindingObserver {
     if (!value) {
       await stopVoice();
       await _safeMusicPause();
-    } else if (_initialized && musicEnabled && !_pausedByLifecycle) {
+    } else if (_initialized &&
+        appAudioEnabled &&
+        musicEnabled &&
+        !_pausedByLifecycle) {
       await _playMusicAsset(_requestedMusic, restart: false);
     }
   }
 
+  Future<void> setAppAudioEnabled(bool value) async {
+    if (appAudioEnabled == value) return;
+    appAudioEnabled = value;
+    await _prefs?.setBool('bright_audio.app_enabled', value);
+    if (!value) {
+      // Stop every audible channel immediately. Windows MCI needs an explicit
+      // close to stop a currently playing one-shot SFX; Android uses the two
+      // dedicated players. The requested BGM identity is intentionally kept so
+      // re-enabling resumes the correct Home/game/Nursery music.
+      await stopVoice();
+      if (Platform.isWindows) {
+        await _windowsAudio.stopAll();
+        _playingMusic = null;
+      } else {
+        try {
+          await _sfxPlayer?.stop();
+        } catch (_) {}
+        await _safeMusicPause();
+      }
+    } else if (_initialized &&
+        _sessionEnabled &&
+        musicEnabled &&
+        !_pausedByLifecycle) {
+      await _playMusicAsset(_requestedMusic, restart: false);
+    }
+    notifyListeners();
+  }
+
   Future<void> playMenuMusic({bool restart = false}) async {
-    _requestedMusic = 'audio/bgm/menu.mp3';
+    _requestedMusic = menuMusicAsset;
     if (!_canPlayMusic) return;
     await _playMusicAsset(_requestedMusic, restart: restart);
   }
 
   Future<void> playGameMusic(String gameId, {bool restart = false}) async {
-    _requestedMusic = gameMusicAssets[gameId] ?? 'audio/bgm/menu.mp3';
+    _requestedMusic = gameMusicAssets[gameId] ?? menuMusicAsset;
+    if (!_canPlayMusic) return;
+    await _playMusicAsset(_requestedMusic, restart: restart);
+  }
+
+  Future<void> playNurseryMusic({bool restart = false}) async {
+    _requestedMusic = nurseryMusicAsset;
     if (!_canPlayMusic) return;
     await _playMusicAsset(_requestedMusic, restart: restart);
   }
@@ -367,8 +681,49 @@ class BrightAudioService extends ChangeNotifier with WidgetsBindingObserver {
     }
   }
 
+  static BrightSfxProfile sfxProfileForGame(String gameId) =>
+      gameSfxProfiles[gameId] ?? BrightSfxProfile.global;
+
+  String? profileSfxAsset(
+    BrightSfxProfile profile,
+    BrightInteractionSfx effect,
+  ) =>
+      profileSfxAssets[profile]?[effect] ??
+      profileSfxAssets[BrightSfxProfile.global]?[effect];
+
+  Future<void> playGameSfx(
+    String gameId,
+    BrightInteractionSfx effect,
+  ) =>
+      playProfileSfx(sfxProfileForGame(gameId), effect);
+
+  Future<void> playNurserySfx(BrightInteractionSfx effect) =>
+      playProfileSfx(BrightSfxProfile.nursery, effect);
+
+  Future<void> playProfileSfx(
+    BrightSfxProfile profile,
+    BrightInteractionSfx effect,
+  ) async {
+    if (!_initialized || !appAudioEnabled || !_sessionEnabled || !sfxEnabled) return;
+    final asset = profileSfxAsset(profile, effect);
+    if (asset == null) return;
+    final volume = _clamp01(
+      sfxVolume * (profileVolumeScale[profile] ?? 1.0),
+    );
+    try {
+      if (Platform.isWindows) {
+        await _windowsAudio.playSfx(asset, volume: volume);
+        return;
+      }
+      final player = _sfxPlayer;
+      if (player == null) return;
+      await player.stop();
+      await player.play(AssetSource(asset), volume: volume);
+    } catch (_) {}
+  }
+
   Future<void> playSfx(BrightSfx effect) async {
-    if (!_initialized || !_sessionEnabled || !sfxEnabled) return;
+    if (!_initialized || !appAudioEnabled || !_sessionEnabled || !sfxEnabled) return;
     final asset = sfxAssets[effect];
     if (asset == null) return;
     try {
@@ -387,6 +742,7 @@ class BrightAudioService extends ChangeNotifier with WidgetsBindingObserver {
     final clean = _speechText(text);
     if (clean.isEmpty ||
         !_initialized ||
+        !appAudioEnabled ||
         !_sessionEnabled ||
         !voiceEnabled ||
         !voiceAvailable) return;
@@ -552,7 +908,9 @@ class BrightAudioService extends ChangeNotifier with WidgetsBindingObserver {
     await _prefs?.setBool('bright_audio.music_enabled', value);
     if (!value) {
       await _safeMusicPause();
-    } else if (_sessionEnabled && !_pausedByLifecycle) {
+    } else if (appAudioEnabled &&
+        _sessionEnabled &&
+        !_pausedByLifecycle) {
       await _playMusicAsset(_requestedMusic, restart: false);
     }
     notifyListeners();
@@ -642,7 +1000,11 @@ class BrightAudioService extends ChangeNotifier with WidgetsBindingObserver {
       );
 
   bool get _canPlayMusic =>
-      _initialized && _sessionEnabled && musicEnabled && !_pausedByLifecycle;
+      _initialized &&
+      appAudioEnabled &&
+      _sessionEnabled &&
+      musicEnabled &&
+      !_pausedByLifecycle;
 
   Future<void> _safeMusicPause() async {
     if (!_initialized) return;
@@ -688,7 +1050,7 @@ class BrightAudioService extends ChangeNotifier with WidgetsBindingObserver {
     if (!_initialized) return;
     if (state == AppLifecycleState.resumed) {
       _pausedByLifecycle = false;
-      if (_sessionEnabled && musicEnabled) {
+      if (appAudioEnabled && _sessionEnabled && musicEnabled) {
         unawaited(_playMusicAsset(_requestedMusic, restart: false));
       }
       return;

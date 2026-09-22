@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/nursery/nursery_content.dart';
 import 'nursery_game_value.dart';
 import 'nursery_motion.dart';
+import 'nursery_sound.dart';
 
 class NurseryKidInstruction extends StatelessWidget {
   const NurseryKidInstruction({
@@ -128,7 +129,12 @@ class NurserySelectionCard extends StatelessWidget {
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: enabled ? onTap : null,
+          onTap: enabled
+              ? () {
+                  playNurseryOptionSound();
+                  onTap();
+                }
+              : null,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
             child: Column(

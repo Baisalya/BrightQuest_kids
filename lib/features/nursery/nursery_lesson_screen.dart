@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
+import '../../core/accessibility/learning_audio_director.dart';
+import '../../core/accessibility/learning_audio_models.dart';
+import '../../core/accessibility/learning_narration_coordinator.dart';
 import '../../core/learning/learning_models.dart';
 import '../../core/nursery/nursery_content.dart';
 import '../../core/nursery/nursery_learning_models.dart';
@@ -11,12 +14,16 @@ import '../../core/nursery/nursery_review_seed_planner.dart';
 import '../../core/nursery/nursery_spoken_labels.dart';
 import '../../core/nursery/nursery_response_evaluator.dart';
 import '../../core/services/bright_audio_service.dart';
+import '../../core/services/feedback_service.dart';
+import '../../widgets/learning_accessibility_widgets.dart';
 import 'nursery_lesson_activity.dart';
 import 'nursery_lesson_journey.dart';
 import 'nursery_lesson_journey_board.dart';
+import 'nursery_lesson_narration.dart';
 import 'nursery_lesson_review.dart';
 import 'nursery_lesson_teaching.dart';
 import 'nursery_play_board.dart';
+import 'nursery_sound.dart';
 
 class NurseryLessonScreen extends StatefulWidget {
   const NurseryLessonScreen({
@@ -33,6 +40,22 @@ class NurseryLessonScreen extends StatefulWidget {
 }
 
 class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
+  @override
+  void initState() {
+    super.initState();
+    playNurseryStartSound();
+    unawaited(BrightAudioService.instance.playNurseryMusic(restart: true));
+  }
+
+  @override
+  void dispose() {
+    // Nursery lessons own a gentle play theme. Return to the existing Home
+    // explorer mix when the lesson route closes, while preserving all parent
+    // mute/volume preferences inside BrightAudioService.
+    unawaited(BrightAudioService.instance.playMenuMusic(restart: true));
+    super.dispose();
+  }
+
   static const NurseryResponseEvaluator _evaluator = NurseryResponseEvaluator();
   static const NurseryPracticeGenerator _generator = NurseryPracticeGenerator();
   static const NurseryReviewSeedPlanner _reviewSeedPlanner =
@@ -46,7 +69,6 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
   bool _correct = false;
   String? _feedback;
   NurseryGeneratedPractice? _generatedReview;
-  String? _lastAnnouncementKey;
   int _discoveryLetterIndex = 0;
   int _discoveryExampleIndex = 0;
   bool _studyVisited = false;
@@ -70,7 +92,6 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
         );
       }
     }
-    _announceCurrent();
   }
 
   bool get _reduceMotion =>
@@ -86,6 +107,48 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
         body: Center(child: Text('Nursery content is unavailable.')),
       );
     }
+
+    const narration = NurseryLessonNarration();
+    final narrationScopeKey = narration.scopeKey(
+      reviewMode: widget.reviewMode,
+      generatedReview: _generatedReview,
+      pageIndex: _pageIndex,
+      pack: pack,
+      skill: skill,
+    );
+    final narrationCue = narration.currentCue(
+      reviewMode: widget.reviewMode,
+      generatedReview: _generatedReview,
+      pageIndex: _pageIndex,
+      pack: pack,
+      skill: skill,
+      teachingText: _pageIndex >= 0 && _pageIndex < 3
+          ? _teachingNarration(skill, _pageIndex)
+          : null,
+    );
+
+    return LearningNarrationBoundary(
+      ownerLabel: 'NurseryLessonScreen:${skill.id}',
+      scopeKey: narrationScopeKey,
+      builder: (context, narrationSession) => LearningAutomaticNarrator(
+        key: ValueKey<String>('nursery_auto:${skill.id}'),
+        cue: narrationCue,
+        triggerKey: narrationScopeKey,
+        narrationSession: narrationSession,
+        child: _buildNurserySurface(
+          pack: pack,
+          skill: skill,
+          narrationSession: narrationSession,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNurserySurface({
+    required NurseryContentPack pack,
+    required NurserySkill skill,
+    required LearningNarrationSession narrationSession,
+  }) {
     if (widget.reviewMode) {
       final review = _generatedReview;
       return Scaffold(
@@ -99,10 +162,20 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
                 correct: _correct,
                 hintVisible: _hintLevel > 0,
                 reducedMotion: _reduceMotion,
-                onRead: () => _readGenerated(review),
-                onHint: () => _useGeneratedHint(review),
-                onSubmit: (response) =>
-                    _submitGenerated(skill, review, response),
+                onRead: () => _readGenerated(
+                  review,
+                  narrationSession: narrationSession,
+                ),
+                onHint: () => _useGeneratedHint(
+                  review,
+                  narrationSession: narrationSession,
+                ),
+                onSubmit: (response) => _submitGenerated(
+                  skill,
+                  review,
+                  response,
+                  narrationSession: narrationSession,
+                ),
                 onDone: _correct ? () => Navigator.of(context).pop() : null,
               ),
       );
@@ -149,6 +222,7 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
             skill,
             activities,
             completedActivityIds,
+            narrationSession: narrationSession,
           )
         : activityIndex >= 0 && activityIndex < activities.length
             ? _buildActivityPage(
@@ -156,6 +230,7 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
                 activities[activityIndex],
                 activities,
                 completedActivityIds,
+                narrationSession: narrationSession,
               )
             : const SizedBox.shrink();
     return Scaffold(
@@ -196,8 +271,9 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
   Widget _buildTeachingPage(
     NurserySkill skill,
     List<NurseryActivity> activities,
-    Set<String> completedActivityIds,
-  ) {
+    Set<String> completedActivityIds, {
+    required LearningNarrationSession narrationSession,
+  }) {
     final reducedMotion = _reduceMotion;
     final journey = NurseryLessonJourneyPlanner.build(
       activities: activities,
@@ -223,21 +299,31 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
       final selectedLetter = letter;
       final selectedExample = example;
       onHearLetter = () {
-        unawaited(_readLetterDiscovery(selectedLetter, selectedExample));
+        unawaited(_readLetterDiscovery(
+          selectedLetter,
+          selectedExample,
+          narrationSession: narrationSession,
+        ));
       };
       onAnotherWord = () {
+        playNurseryOptionSound();
         setState(() {
           _discoveryExampleIndex =
               (_discoveryExampleIndex + 1) % selectedLetter.examples.length;
         });
         final next = selectedLetter.examples[_discoveryExampleIndex];
-        unawaited(_readLetterDiscovery(selectedLetter, next));
+        unawaited(_readLetterDiscovery(
+          selectedLetter,
+          next,
+          narrationSession: narrationSession,
+        ));
       };
     }
 
     final VoidCallback onNextLetter = letterAssociations.isEmpty
         ? () {}
         : () {
+            playNurseryNextSound();
             setState(() {
               _discoveryLetterIndex =
                   (_discoveryLetterIndex + 1) % letterAssociations.length;
@@ -245,7 +331,11 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
             });
             final nextLetter = letterAssociations[_discoveryLetterIndex];
             unawaited(
-              _readLetterDiscovery(nextLetter, nextLetter.examples.first),
+              _readLetterDiscovery(
+                nextLetter,
+                nextLetter.examples.first,
+                narrationSession: narrationSession,
+              ),
             );
           };
 
@@ -254,7 +344,13 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
       reducedMotion: reducedMotion,
       letter: letter,
       letterExample: example,
-      onHearTeaching: () => unawaited(_readTeaching(skill, 2)),
+      onHearTeaching: () => unawaited(
+        _readTeaching(
+          skill,
+          2,
+          narrationSession: narrationSession,
+        ),
+      ),
       onHearLetter: onHearLetter,
       onAnotherWord: onAnotherWord,
       onNextLetter: onNextLetter,
@@ -269,20 +365,28 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
 
   Future<void> _readLetterDiscovery(
     NurseryLetterAssociation letter,
-    NurseryLetterExample example,
-  ) =>
-      BrightAudioService.instance.speak(
-        '${letter.uppercase}, ${letter.lowercase}. '
-        '${example.displayPhrase}. ${example.soundCue}.',
-        manual: true,
-      );
+    NurseryLetterExample example, {
+    required LearningNarrationSession narrationSession,
+  }) {
+    final text = '${letter.uppercase}, ${letter.lowercase}. '
+        '${example.displayPhrase}. ${example.soundCue}.';
+    final cue = const LearningAudioDirector().forNurseryStatement(
+      ownerId: 'letter:${letter.uppercase}:${example.word}',
+      kind: LearningNarrationKind.workedExample,
+      visibleText: text,
+      spokenText: nurserySpeakableText(text),
+      autoEligible: false,
+    );
+    return narrationSession.speakCue(cue, manual: true);
+  }
 
   Widget _buildActivityPage(
     NurserySkill skill,
     NurseryActivity activity,
     List<NurseryActivity> activities,
-    Set<String> completedActivityIds,
-  ) {
+    Set<String> completedActivityIds, {
+    required LearningNarrationSession narrationSession,
+  }) {
     final activityIndex =
         activities.indexWhere((item) => item.id == activity.id);
     final safeIndex = activityIndex < 0 ? 0 : activityIndex;
@@ -307,9 +411,20 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
       answerExplanation: explanation.text,
       answerVisuals: explanation.visualTokens,
       hasNextActivity: nextActivity != null,
-      onRead: () => _readActivity(activity),
-      onSubmit: (response) => _submitActivity(skill, activity, response),
-      onHint: () => _useHint(activity),
+      onRead: () => _readActivity(
+        activity,
+        narrationSession: narrationSession,
+      ),
+      onSubmit: (response) => _submitActivity(
+        skill,
+        activity,
+        response,
+        narrationSession: narrationSession,
+      ),
+      onHint: () => _useHint(
+        activity,
+        narrationSession: narrationSession,
+      ),
       onContinue: nextActivity == null
           ? _returnToBoard
           : () => _openActivity(
@@ -322,8 +437,9 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
   Future<void> _submitActivity(
     NurserySkill skill,
     NurseryActivity activity,
-    Object? response,
-  ) async {
+    Object? response, {
+    required LearningNarrationSession narrationSession,
+  }) async {
     if (_correct || _answerLocked) return;
     _answerLocked = true;
     final evaluation = _evaluator.evaluate(activity, response);
@@ -349,12 +465,12 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
     );
 
     if (evaluation.correct) {
-      unawaited(BrightAudioService.instance.playSfx(BrightSfx.correct));
-      unawaited(
-        BrightAudioService.instance.speakCorrect(
-          answer: nurserySpokenLabel(_evaluator.responseLabel(response)),
-          detail: nurserySpeakableText(activity.successFeedback),
-        ),
+      FeedbackService.correct(
+        controller,
+        answer: nurserySpokenLabel(_evaluator.responseLabel(response)),
+        detail: nurserySpeakableText(activity.successFeedback),
+        narrationSession: narrationSession,
+        soundProfile: BrightSfxProfile.nursery,
       );
       if (mounted) {
         setState(() {
@@ -364,14 +480,14 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
         });
       }
     } else {
-      unawaited(BrightAudioService.instance.playSfx(BrightSfx.wrong));
-      unawaited(
-        BrightAudioService.instance.speakWrong(
-          answer: nurserySpokenLabel(_evaluator.responseLabel(response)),
-          guidance: nurserySpeakableText(
-            '${activity.wrongFeedback} ${activity.hint}',
-          ),
+      FeedbackService.wrong(
+        controller,
+        answer: nurserySpokenLabel(_evaluator.responseLabel(response)),
+        guidance: nurserySpeakableText(
+          '${activity.wrongFeedback} ${activity.hint}',
         ),
+        narrationSession: narrationSession,
+        soundProfile: BrightSfxProfile.nursery,
       );
       if (mounted) {
         setState(() {
@@ -386,8 +502,9 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
   Future<void> _submitGenerated(
     NurserySkill skill,
     NurseryGeneratedPractice practice,
-    Object? response,
-  ) async {
+    Object? response, {
+    required LearningNarrationSession narrationSession,
+  }) async {
     if (_correct || _answerLocked) return;
     _answerLocked = true;
     final evaluation = _evaluator.evaluateGenerated(practice, response);
@@ -413,12 +530,12 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
       ),
     );
     if (evaluation.correct) {
-      unawaited(BrightAudioService.instance.playSfx(BrightSfx.correct));
-      unawaited(
-        BrightAudioService.instance.speakCorrect(
-          answer: nurserySpokenLabel(_evaluator.responseLabel(response)),
-          detail: nurserySpeakableText(practice.explanation),
-        ),
+      FeedbackService.correct(
+        controller,
+        answer: nurserySpokenLabel(_evaluator.responseLabel(response)),
+        detail: nurserySpeakableText(practice.explanation),
+        narrationSession: narrationSession,
+        soundProfile: BrightSfxProfile.nursery,
       );
       if (mounted) {
         setState(() {
@@ -428,12 +545,12 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
         });
       }
     } else {
-      unawaited(BrightAudioService.instance.playSfx(BrightSfx.wrong));
-      unawaited(
-        BrightAudioService.instance.speakWrong(
-          answer: nurserySpokenLabel(_evaluator.responseLabel(response)),
-          guidance: 'Look or listen once more, then try again.',
-        ),
+      FeedbackService.wrong(
+        controller,
+        answer: nurserySpokenLabel(_evaluator.responseLabel(response)),
+        guidance: 'Look or listen once more, then try again.',
+        narrationSession: narrationSession,
+        soundProfile: BrightSfxProfile.nursery,
       );
       if (mounted) {
         setState(() {
@@ -446,12 +563,12 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
   }
 
   void _openTeachingPage(int page) {
+    playNurseryNextSound();
     setState(() {
       _studyVisited = true;
       _pageIndex = page.clamp(0, 2).toInt();
       _resetAttemptState();
     });
-    _announceCurrent();
   }
 
   void _openActivity({
@@ -461,19 +578,19 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
     final index =
         activities.indexWhere((candidate) => candidate.id == activity.id);
     if (index < 0) return;
+    playNurseryNextSound();
     setState(() {
       _pageIndex = index + 3;
       _resetAttemptState();
     });
-    _announceCurrent();
   }
 
   void _returnToBoard() {
+    playNurseryTapSound();
     setState(() {
       _pageIndex = -1;
       _resetAttemptState();
     });
-    _announceCurrent();
   }
 
   void _resetAttemptState() {
@@ -483,58 +600,6 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
     _answerLocked = false;
     _correct = false;
     _feedback = null;
-  }
-
-  void _announceCurrent() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      final pack = BrightQuestScope.contentOf(context).nurseryPack;
-      final skill = pack?.skillById(widget.skillId);
-      if (pack == null || skill == null) return;
-      if (widget.reviewMode) {
-        final review = _generatedReview;
-        if (review == null) return;
-        final key = 'review:${review.id}';
-        if (_lastAnnouncementKey == key) return;
-        _lastAnnouncementKey = key;
-        unawaited(
-          BrightAudioService.instance.speak(
-            nurserySpeakableText(review.narration),
-          ),
-        );
-        return;
-      }
-      final key = 'lesson:${skill.id}:$_pageIndex';
-      if (_lastAnnouncementKey == key) return;
-      _lastAnnouncementKey = key;
-      if (_pageIndex < 0) {
-        unawaited(
-          BrightAudioService.instance.speak(
-            'Three easy steps. Study first, then Guided Play, then Independent Game.',
-          ),
-        );
-      } else if (_pageIndex == 0) {
-        unawaited(BrightAudioService.instance.speak(skill.objective));
-      } else if (_pageIndex == 1) {
-        unawaited(BrightAudioService.instance.speak(skill.explanation));
-      } else if (_pageIndex == 2) {
-        unawaited(
-          BrightAudioService.instance.speak(
-            nurserySpeakableText(_teachingNarration(skill, 2)),
-          ),
-        );
-      } else {
-        final activities = pack.activitiesForSkill(skill.id);
-        final index = _pageIndex - 3;
-        if (index >= 0 && index < activities.length) {
-          unawaited(
-            BrightAudioService.instance.speak(
-              nurserySpeakableText(activities[index].narration),
-            ),
-          );
-        }
-      }
-    });
   }
 
   String _teachingNarration(NurserySkill skill, int page) {
@@ -554,47 +619,97 @@ class _NurseryLessonScreenState extends State<NurseryLessonScreen> {
     return '${skill.workedExample.headline}. ${skill.workedExample.caption}';
   }
 
-  Future<void> _readTeaching(NurserySkill skill, int page) =>
-      BrightAudioService.instance.speak(
-        nurserySpeakableText(_teachingNarration(skill, page)),
-        manual: true,
-      );
+  Future<void> _readTeaching(
+    NurserySkill skill,
+    int page, {
+    required LearningNarrationSession narrationSession,
+  }) {
+    final text = _teachingNarration(skill, page);
+    final cue = const LearningAudioDirector().forNurseryStatement(
+      ownerId: 'teaching:${skill.id}:$page',
+      kind: switch (page) {
+        0 => LearningNarrationKind.missionGoal,
+        1 => LearningNarrationKind.conceptTeaching,
+        _ => LearningNarrationKind.workedExample,
+      },
+      visibleText: text,
+      spokenText: nurserySpeakableText(text),
+      autoEligible: false,
+    );
+    return narrationSession.speakCue(cue, manual: true);
+  }
 
-  Future<void> _readActivity(NurseryActivity activity) =>
-      BrightAudioService.instance.speakPrompt(
-        nurserySpeakableText(activity.narration),
-        choices: activity.options.map(
-          (option) => nurserySpokenLabel(option.label),
-        ),
-      );
+  Future<void> _readActivity(
+    NurseryActivity activity, {
+    required LearningNarrationSession narrationSession,
+  }) {
+    final cue = const LearningAudioDirector().forNurseryPrompt(
+      ownerId: 'activity:${activity.id}',
+      visibleText: activity.prompt,
+      spokenText: nurserySpeakableText(activity.narration),
+      choices: activity.options.map(
+        (option) => nurserySpokenLabel(option.label),
+      ),
+      autoEligible: false,
+    );
+    return narrationSession.speakCue(cue, manual: true);
+  }
 
-  Future<void> _readGenerated(NurseryGeneratedPractice practice) =>
-      BrightAudioService.instance.speakPrompt(
-        nurserySpeakableText(practice.narration),
-        choices: practice.options.map(
-          (option) => nurserySpokenLabel(option.label),
-        ),
-      );
+  Future<void> _readGenerated(
+    NurseryGeneratedPractice practice, {
+    required LearningNarrationSession narrationSession,
+  }) {
+    final cue = const LearningAudioDirector().forNurseryPrompt(
+      ownerId: 'review:${practice.id}',
+      visibleText: practice.prompt,
+      spokenText: nurserySpeakableText(practice.narration),
+      choices: practice.options.map(
+        (option) => nurserySpokenLabel(option.label),
+      ),
+      autoEligible: false,
+    );
+    return narrationSession.speakCue(cue, manual: true);
+  }
 
-  Future<void> _useHint(NurseryActivity activity) async {
+  void _useHint(
+    NurseryActivity activity, {
+    required LearningNarrationSession narrationSession,
+  }) {
     if (_correct) return;
     setState(() => _hintLevel = (_hintLevel + 1).clamp(0, 2).toInt());
-    await BrightAudioService.instance.playSfx(BrightSfx.hint);
-    await BrightAudioService.instance.speak(
-      nurserySpeakableText(activity.hint),
-      manual: true,
+    final hintText = nurserySpeakableText(activity.hint);
+    final cue = const LearningAudioDirector().forHint(
+      ownerId: 'nursery:${activity.id}:$_hintLevel',
+      text: hintText,
+    );
+    FeedbackService.hint(
+      BrightQuestScope.of(context),
+      hintText,
+      narrationSession: narrationSession,
+      narrationCue: cue,
+      soundProfile: BrightSfxProfile.nursery,
     );
   }
 
-  Future<void> _useGeneratedHint(NurseryGeneratedPractice practice) async {
+  void _useGeneratedHint(
+    NurseryGeneratedPractice practice, {
+    required LearningNarrationSession narrationSession,
+  }) {
     if (_correct) return;
     setState(() => _hintLevel = (_hintLevel + 1).clamp(0, 2).toInt());
-    await BrightAudioService.instance.playSfx(BrightSfx.hint);
-    await BrightAudioService.instance.speak(
-      nurserySpeakableText(
-        'Look at the choices carefully. ${practice.explanation}',
-      ),
-      manual: true,
+    final hintText = nurserySpeakableText(
+      'Look at the choices carefully. ${practice.explanation}',
+    );
+    final cue = const LearningAudioDirector().forHint(
+      ownerId: 'nursery:${practice.id}:$_hintLevel',
+      text: hintText,
+    );
+    FeedbackService.hint(
+      BrightQuestScope.of(context),
+      hintText,
+      narrationSession: narrationSession,
+      narrationCue: cue,
+      soundProfile: BrightSfxProfile.nursery,
     );
   }
 

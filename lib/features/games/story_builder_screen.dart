@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
@@ -10,6 +12,7 @@ import '../../core/learning/mission_run_game_content.dart';
 import '../../core/learning/mission_run_models.dart';
 import '../../core/learning/mission_run_session_coordinator.dart';
 import '../../core/models/progress_models.dart';
+import '../../core/services/bright_audio_service.dart';
 import '../../core/services/feedback_service.dart';
 import '../../core/session/game_session_models.dart';
 import '../../core/theme/app_theme.dart';
@@ -31,6 +34,14 @@ class StoryBuilderScreen extends StatefulWidget {
 }
 
 class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
+  static const BrightSfxProfile _soundProfile = BrightSfxProfile.storyBuilder;
+
+  void _playInteraction(BrightInteractionSfx effect) {
+    unawaited(
+      BrightAudioService.instance.playProfileSfx(_soundProfile, effect),
+    );
+  }
+
   int missionIndex = 0;
   int score = 0;
   final List<String> selected = <String>[];
@@ -145,6 +156,7 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
 
   void _addWord(String word) {
     if (finished || correct == true) return;
+    _playInteraction(BrightInteractionSfx.option);
     setState(() {
       selected.add(word);
       checked = false;
@@ -155,6 +167,7 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
 
   void _removeWord(int index) {
     if (finished || correct == true) return;
+    _playInteraction(BrightInteractionSfx.tap);
     setState(() {
       selected.removeAt(index);
       checked = false;
@@ -165,6 +178,7 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
 
   Future<void> _check(StoryMission mission) async {
     if (checked || selected.isEmpty || _answerInFlight) return;
+    _playInteraction(BrightInteractionSfx.action);
     _answerInFlight = true;
     try {
       final isCorrect = selected.join(' ') == mission.words.join(' ');
@@ -200,12 +214,14 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
           controller,
           answer: chosenSentence,
           detail: 'You built the sentence in the right order.',
+          soundProfile: _soundProfile,
         );
       } else {
         FeedbackService.wrong(
           controller,
           answer: chosenSentence,
           guidance: 'Rearrange the words and try again.',
+          soundProfile: _soundProfile,
         );
       }
       setState(() {
@@ -235,7 +251,11 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
         maxScore: missions.length,
       );
       if (!mounted) return;
-      FeedbackService.complete(controller, reward: reward);
+      FeedbackService.complete(
+        controller,
+        reward: reward,
+        soundProfile: _soundProfile,
+      );
       setState(() {
         finished = true;
         missionReward = reward;
@@ -281,7 +301,11 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
     final hintText = 'Next word: $nextWord';
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(hintText)));
-    FeedbackService.hint(controller, hintText);
+    FeedbackService.hint(
+      controller,
+      hintText,
+      soundProfile: _soundProfile,
+    );
   }
 
   void _restart() {
@@ -490,7 +514,10 @@ class _StoryBuilderScreenState extends State<StoryBuilderScreen> {
                     label: const Text('Check')),
                 if (correct == true)
                   FilledButton.icon(
-                    onPressed: () => _next(missions, classNumber),
+                    onPressed: () {
+                      _playInteraction(BrightInteractionSfx.next);
+                      unawaited(_next(missions, classNumber));
+                    },
                     icon: Icon(missionIndex == missions.length - 1
                         ? Icons.flag_rounded
                         : Icons.arrow_forward_rounded),

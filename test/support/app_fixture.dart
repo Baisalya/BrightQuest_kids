@@ -13,6 +13,7 @@ BrightQuestApp buildTestApp(
     BrightQuestApp(
       controller: controller,
       contentRepository: contentRepository ?? buildContentRepository(),
+      showAutomaticUpdateNotice: false,
     );
 
 BrightQuestScope buildTestScope({

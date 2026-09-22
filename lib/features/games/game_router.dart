@@ -347,7 +347,7 @@ void _openGameInternal(
 }
 
 Future<void> _startGameAudio(BrightAudioService audio, String gameId) async {
-  await audio.playSfx(BrightSfx.levelStart);
+  await audio.playGameSfx(gameId, BrightInteractionSfx.start);
   await audio.playGameMusic(gameId, restart: true);
   await audio.speakGameIntro(gameId);
 }

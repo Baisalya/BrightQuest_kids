@@ -65,6 +65,20 @@ class ClassCurriculumHardeningAudit {
     var checks = 0;
     const evaluator = ActivityResponseEvaluator();
     final scorableCoverage = <String>{};
+    final blueprintTeachOwners = <String, String>{};
+    final blueprintWorkedExampleOwners = <String, String>{};
+
+    String normaliseTeachingText(String value) =>
+        value.trim().toLowerCase().replaceAll(RegExp(r'\s+'), ' ');
+
+    const answerOnlyTeachingMarkers = <String>[
+      'the correct answer is',
+      'the correct value is',
+      'arrange the words in sentence order to rebuild',
+      'find the naming word, then the action word, then the describing word',
+      'a correct algorithm stays inside the grid',
+      'in this brightquest sorting activity',
+    ];
 
     void finding(
       ClassCurriculumAuditSeverity severity,
@@ -257,6 +271,47 @@ class ClassCurriculumHardeningAudit {
           blueprint.reviewPrompt,
           blueprint.narrationText,
         ].join('\n');
+        final normalisedTeach = normaliseTeachingText(blueprint.teach);
+        final normalisedWorked = normaliseTeachingText(blueprint.workedExample);
+        checks += 4;
+        if (normalisedTeach == normalisedWorked) {
+          finding(
+            ClassCurriculumAuditSeverity.high,
+            'phase_e.teach_worked_duplicate',
+            '${competency.id} uses the same text for concept teaching and the worked example.',
+          );
+        }
+        final previousTeachOwner = blueprintTeachOwners[normalisedTeach];
+        if (previousTeachOwner != null && previousTeachOwner != competency.id) {
+          finding(
+            ClassCurriculumAuditSeverity.high,
+            'phase_e.duplicate_concept_teaching',
+            '${competency.id} reuses concept teaching from $previousTeachOwner instead of teaching its own competency.',
+          );
+        } else {
+          blueprintTeachOwners[normalisedTeach] = competency.id;
+        }
+        final previousWorkedOwner =
+            blueprintWorkedExampleOwners[normalisedWorked];
+        if (previousWorkedOwner != null &&
+            previousWorkedOwner != competency.id) {
+          finding(
+            ClassCurriculumAuditSeverity.high,
+            'phase_e.duplicate_worked_example',
+            '${competency.id} reuses a worked example from $previousWorkedOwner.',
+          );
+        } else {
+          blueprintWorkedExampleOwners[normalisedWorked] = competency.id;
+        }
+        for (final marker in answerOnlyTeachingMarkers) {
+          if (normalisedTeach.contains(marker)) {
+            finding(
+              ClassCurriculumAuditSeverity.high,
+              'phase_e.answer_only_teaching',
+              '${competency.id} concept teaching still reads like an answer/hint instead of an explanation: "$marker".',
+            );
+          }
+        }
         for (final phrase in _genericBlueprintPhrases) {
           if (blueprintText.contains(phrase)) {
             finding(

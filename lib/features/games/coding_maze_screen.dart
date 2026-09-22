@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
@@ -10,6 +12,7 @@ import '../../core/learning/mission_run_game_content.dart';
 import '../../core/learning/mission_run_models.dart';
 import '../../core/learning/mission_run_session_coordinator.dart';
 import '../../core/models/progress_models.dart';
+import '../../core/services/bright_audio_service.dart';
 import '../../core/services/feedback_service.dart';
 import '../../core/session/game_session_models.dart';
 import '../../widgets/bright_widgets.dart';
@@ -29,6 +32,14 @@ class CodingMazeScreen extends StatefulWidget {
 }
 
 class _CodingMazeScreenState extends State<CodingMazeScreen> {
+  static const BrightSfxProfile _soundProfile = BrightSfxProfile.codingMaze;
+
+  void _playInteraction(BrightInteractionSfx effect) {
+    unawaited(
+      BrightAudioService.instance.playProfileSfx(_soundProfile, effect),
+    );
+  }
+
   int missionIndex = 0;
   int score = 0;
   final List<CodingCommand> commands = <CodingCommand>[];
@@ -138,6 +149,7 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
     if (finished ||
         result?.success == true ||
         commands.length >= mission.maxCommands) return;
+    _playInteraction(BrightInteractionSfx.option);
     setState(() {
       commands.add(command);
       result = null;
@@ -147,6 +159,7 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
 
   void _remove(int index) {
     if (finished || result?.success == true) return;
+    _playInteraction(BrightInteractionSfx.tap);
     setState(() {
       commands.removeAt(index);
       result = null;
@@ -156,6 +169,7 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
 
   Future<void> _run(CodingMission mission) async {
     if (commands.isEmpty || result != null || _answerInFlight) return;
+    _playInteraction(BrightInteractionSfx.action);
     _answerInFlight = true;
     try {
       final runResult = runCodingMission(mission, commands);
@@ -193,12 +207,14 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
           controller,
           answer: spokenProgram,
           detail: 'The robot reached the goal.',
+          soundProfile: _soundProfile,
         );
       } else {
         FeedbackService.wrong(
           controller,
           answer: spokenProgram,
           guidance: 'Change the commands and run the robot again.',
+          soundProfile: _soundProfile,
         );
       }
       setState(() {
@@ -227,7 +243,11 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
         maxScore: missions.length,
       );
       if (!mounted) return;
-      FeedbackService.complete(controller, reward: reward);
+      FeedbackService.complete(
+        controller,
+        reward: reward,
+        soundProfile: _soundProfile,
+      );
       setState(() {
         finished = true;
         missionReward = reward;
@@ -246,6 +266,7 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
 
   void _clear() {
     if (result?.success == true || finished) return;
+    _playInteraction(BrightInteractionSfx.tap);
     setState(() {
       commands.clear();
       result = null;
@@ -493,7 +514,10 @@ class _CodingMazeScreenState extends State<CodingMazeScreen> {
                 if (result?.success == true) ...[
                   const SizedBox(width: 8),
                   FilledButton.icon(
-                    onPressed: () => _next(missions, classNumber),
+                    onPressed: () {
+                      _playInteraction(BrightInteractionSfx.next);
+                      unawaited(_next(missions, classNumber));
+                    },
                     icon: Icon(
                       missionIndex == missions.length - 1
                           ? Icons.flag_rounded

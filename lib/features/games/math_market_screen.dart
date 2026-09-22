@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../app/brightquest_scope.dart';
@@ -7,11 +9,13 @@ import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
 import '../../core/learning/adaptive_difficulty_models.dart';
 import '../../core/learning/game_evidence_adapter.dart';
+import '../../core/learning/game_turn_pacing.dart';
 import '../../core/learning/endless_practice_coordinator.dart';
 import '../../core/learning/mission_run_models.dart';
 import '../../core/learning/mission_run_planner.dart';
 import '../../core/learning/mission_run_session_coordinator.dart';
 import '../../core/models/progress_models.dart';
+import '../../core/services/bright_audio_service.dart';
 import '../../core/services/feedback_service.dart';
 import '../../core/session/game_session_models.dart';
 import '../../core/theme/app_theme.dart';
@@ -19,6 +23,7 @@ import '../../widgets/bright_design_system.dart';
 import '../../widgets/bright_illustrations.dart';
 import '../../widgets/bright_motion.dart';
 import '../../widgets/bright_widgets.dart';
+import '../../widgets/game_turn_timer.dart';
 
 class MathMarketScreen extends StatefulWidget {
   const MathMarketScreen({
@@ -34,6 +39,14 @@ class MathMarketScreen extends StatefulWidget {
 }
 
 class _MathMarketScreenState extends State<MathMarketScreen> {
+  static const BrightSfxProfile _soundProfile = BrightSfxProfile.mathMarket;
+
+  void _playInteraction(BrightInteractionSfx effect) {
+    unawaited(
+      BrightAudioService.instance.playProfileSfx(_soundProfile, effect),
+    );
+  }
+
   int questionIndex = 0;
   int score = 0;
   int? selected;
@@ -45,6 +58,7 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
   int _classNumber = 4;
   int _attemptSerial = 0;
   bool _answerInFlight = false;
+  bool _timedOut = false;
   bool _sessionConfigured = false;
   MissionRunPlan? _missionRunPlan;
   List<MathQuestion> _questions = const <MathQuestion>[];
@@ -122,6 +136,7 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
     selected = (checkpoint.data['selected'] as num?)?.toInt();
     wasCorrect = checkpoint.data['wasCorrect'] as bool?;
     hint = checkpoint.data['hint'] as String?;
+    _timedOut = checkpoint.data['timedOut'] as bool? ?? false;
     _attemptSerial = (checkpoint.data['attemptSerial'] as num?)?.toInt() ?? 0;
     if (checkpoint.stage == GameSessionStage.result &&
         checkpoint.reward != null) {
@@ -132,8 +147,10 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
   }
 
   Future<void> _check(MathQuestion question, int value) async {
-    if (selected != null || finished || _answerInFlight) return;
-    _answerInFlight = true;
+    if (selected != null || _timedOut || finished || _answerInFlight) return;
+    _playInteraction(BrightInteractionSfx.option);
+    setState(() => _answerInFlight = true);
+    final answeredIndex = questionIndex;
     try {
       final controller = BrightQuestScope.of(context);
       final repository = BrightQuestScope.contentOf(context);
@@ -163,28 +180,117 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
       );
       if (!mounted) return;
       _attemptSerial += 1;
-      if (correct) {
-        FeedbackService.correct(controller, answer: '$value');
-      } else {
-        FeedbackService.wrong(
-          controller,
-          answer: '$value',
-          correctAnswer: '${question.answer}',
-        );
-      }
       setState(() {
         selected = value;
         wasCorrect = correct;
         if (correct) score += 1;
       });
       _checkpoint(questionsLength: _questions.length);
+
+      final pacing = const GameTurnPacingPolicy().forGame(
+        gameId: 'math_market',
+        learningLevel: widget.learningLevel,
+        endlessPractice: widget.endlessPractice,
+      );
+      if (correct && pacing.autoAdvanceCorrect && controller.soundEnabled) {
+        await FeedbackService.correctAndWait(
+          controller,
+          answer: '$value',
+          minimumDuration: const Duration(milliseconds: 1200),
+          soundProfile: _soundProfile,
+        );
+        if (!mounted ||
+            questionIndex != answeredIndex ||
+            selected != value ||
+            wasCorrect != true) {
+          return;
+        }
+        await _next(_questions, _classNumber);
+      } else if (correct) {
+        FeedbackService.correct(
+          controller,
+          answer: '$value',
+          soundProfile: _soundProfile,
+        );
+      } else if (pacing.isTimed) {
+        await FeedbackService.wrongAndWait(
+          controller,
+          answer: '$value',
+          correctAnswer: '${question.answer}',
+          minimumDuration: const Duration(milliseconds: 1200),
+          soundProfile: _soundProfile,
+        );
+      } else {
+        FeedbackService.wrong(
+          controller,
+          answer: '$value',
+          correctAnswer: '${question.answer}',
+          soundProfile: _soundProfile,
+        );
+      }
     } finally {
-      _answerInFlight = false;
+      if (mounted) {
+        setState(() => _answerInFlight = false);
+      } else {
+        _answerInFlight = false;
+      }
+    }
+  }
+
+  Future<void> _expireQuestion(MathQuestion question) async {
+    if (selected != null || _timedOut || finished || _answerInFlight) return;
+    setState(() => _answerInFlight = true);
+    try {
+      final controller = BrightQuestScope.of(context);
+      final repository = BrightQuestScope.contentOf(context);
+      const adapter = GameEvidenceAdapter();
+      final activity = adapter.resolve(
+        repository: repository,
+        classNumber: _classNumber,
+        gameId: 'math_market',
+        legacyContentId: question.id,
+      );
+      await controller.recordAnswerSafely(
+        gameId: 'math_market',
+        learningLevel: widget.learningLevel,
+        correct: false,
+        attemptMarker: 'timeout:$_attemptSerial',
+        topicId: question.topicId,
+        difficulty: question.difficulty,
+        masteryGain: 0.045,
+        itemId: activity?.id,
+        competencyId: activity?.competencyId,
+        evidenceKind: adapter.kindFor(widget.learningLevel),
+        hintLevel: hint == null ? 0 : 1,
+        responseTimeMs: DateTime.now().difference(_itemStarted).inMilliseconds,
+        misconceptionId: 'time_limit_exceeded',
+        confidence: 0.35,
+      );
+      if (!mounted) return;
+      _attemptSerial += 1;
+      setState(() {
+        _timedOut = true;
+        wasCorrect = false;
+      });
+      _checkpoint(questionsLength: _questions.length);
+      await FeedbackService.wrongAndWait(
+        controller,
+        correctAnswer: '${question.answer}',
+        guidance: 'Time is up. Review the answer, then continue when ready.',
+        minimumDuration: const Duration(milliseconds: 1200),
+        soundProfile: _soundProfile,
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _answerInFlight = false);
+      } else {
+        _answerInFlight = false;
+      }
     }
   }
 
   Future<void> _next(List<MathQuestion> questions, int classNumber) async {
-    if (selected == null) return;
+    if (selected == null && !_timedOut) return;
     if (questionIndex == questions.length - 1) {
       final controller = BrightQuestScope.of(context);
       final reward = await controller.completeRunSafely(
@@ -198,7 +304,11 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
         maxScore: questions.length,
       );
       if (!mounted) return;
-      FeedbackService.complete(controller, reward: reward);
+      FeedbackService.complete(
+        controller,
+        reward: reward,
+        soundProfile: _soundProfile,
+      );
       setState(() {
         finished = true;
         missionReward = reward;
@@ -210,6 +320,7 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
       selected = null;
       wasCorrect = null;
       hint = null;
+      _timedOut = false;
       _itemStarted = DateTime.now();
     });
     _checkpoint(questionsLength: questions.length);
@@ -233,7 +344,11 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
     }
     setState(() => hint = question.hint);
     _checkpoint(questionsLength: _questions.length);
-    FeedbackService.hint(controller, question.hint);
+    FeedbackService.hint(
+      controller,
+      question.hint,
+      soundProfile: _soundProfile,
+    );
   }
 
   void _restart() {
@@ -295,6 +410,7 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
       selected = null;
       wasCorrect = null;
       hint = null;
+      _timedOut = false;
       finished = false;
       missionReward = null;
       _itemStarted = DateTime.now();
@@ -315,6 +431,7 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
         if (selected != null) 'selected': selected,
         if (wasCorrect != null) 'wasCorrect': wasCorrect,
         if (hint != null) 'hint': hint,
+        'timedOut': _timedOut,
       },
     );
   }
@@ -361,6 +478,11 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
     final classNumber = _classNumber;
     final questions = _questions;
     final question = questions[questionIndex];
+    final pacing = const GameTurnPacingPolicy().forGame(
+      gameId: 'math_market',
+      learningLevel: widget.learningLevel,
+      endlessPractice: widget.endlessPractice,
+    );
 
     return GameScaffold(
       learningLevel: widget.learningLevel,
@@ -380,6 +502,15 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
               current: questionIndex + 1,
               total: questions.length,
               score: score),
+          if (pacing.turnLimit != null) ...[
+            const SizedBox(height: 10),
+            GameTurnTimer(
+              duration: pacing.turnLimit!,
+              resetKey: 'math:$questionIndex:${question.id}',
+              paused: selected != null || _timedOut || _answerInFlight || finished,
+              onExpired: () => _expireQuestion(question),
+            ),
+          ],
           const SizedBox(height: 12),
           LayoutBuilder(
             builder: (context, constraints) {
@@ -388,6 +519,7 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
                 question: question,
                 selected: selected,
                 wasCorrect: wasCorrect,
+                locked: _answerInFlight,
                 onSelected: (value) => _check(question, value),
               );
               final market =
@@ -416,9 +548,11 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
                     text:
                         'Correct! Great shopping maths. Keep filling the basket!')
                 : ErrorBanner(
-                    text: learningLevelAllowsMainGameHints(widget.learningLevel)
-                        ? 'Not quite. You can use a hint, then try the next market challenge.'
-                        : 'Not quite. This run stays independent — review the result, then try the next challenge.'),
+                    text: _timedOut
+                        ? 'Time is up. The answer is ${question.answer}. Review it, then continue when ready.'
+                        : learningLevelAllowsMainGameHints(widget.learningLevel)
+                            ? 'Not quite. You can use a hint, then try the next market challenge.'
+                            : 'Not quite. This run stays independent — review the result, then try the next challenge.'),
           ],
           if (finished) ...[
             const SizedBox(height: 14),
@@ -446,9 +580,13 @@ class _MathMarketScreenState extends State<MathMarketScreen> {
                     label: const Text('Hint · 5 coins'),
                   ),
                 FilledButton.icon(
-                  onPressed: selected == null
-                      ? null
-                      : () => _next(questions, classNumber),
+                  onPressed:
+                      (selected == null && !_timedOut) || _answerInFlight
+                          ? null
+                          : () {
+                              _playInteraction(BrightInteractionSfx.next);
+                              unawaited(_next(questions, classNumber));
+                            },
                   icon: Icon(questionIndex == questions.length - 1
                       ? Icons.flag_rounded
                       : Icons.arrow_forward_rounded),
@@ -470,10 +608,12 @@ class _QuestionBoard extends StatelessWidget {
       {required this.question,
       required this.selected,
       required this.wasCorrect,
+      required this.locked,
       required this.onSelected});
   final MathQuestion question;
   final int? selected;
   final bool? wasCorrect;
+  final bool locked;
   final ValueChanged<int> onSelected;
 
   @override
@@ -604,7 +744,7 @@ class _QuestionBoard extends StatelessWidget {
                                               .withValues(alpha: .40),
                                           width: 2)),
                                 ),
-                                onPressed: selected == null
+                                onPressed: selected == null && !locked
                                     ? () => onSelected(value)
                                     : null,
                                 child: Text('$value',

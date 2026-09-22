@@ -6,12 +6,14 @@ import '../../app/brightquest_scope.dart';
 import '../../core/content/game_content.dart';
 import '../../core/curriculum/curriculum_models.dart';
 import '../../core/learning/game_evidence_adapter.dart';
+import '../../core/learning/game_turn_pacing.dart';
 import '../../core/learning/endless_practice_coordinator.dart';
 import '../../core/learning/mission_run_game_content.dart';
 import '../../core/learning/mission_run_models.dart';
 import '../../core/learning/mission_run_session_coordinator.dart';
 import '../../core/learning/learning_models.dart';
 import '../../core/models/progress_models.dart';
+import '../../core/services/bright_audio_service.dart';
 import '../../core/services/feedback_service.dart';
 import '../../core/session/game_session_models.dart';
 import '../../core/theme/app_theme.dart';
@@ -19,6 +21,7 @@ import '../../widgets/bright_design_system.dart';
 import '../../widgets/bright_illustrations.dart';
 import '../../widgets/bright_motion.dart';
 import '../../widgets/bright_widgets.dart';
+import '../../widgets/game_turn_timer.dart';
 
 class ScienceLabScreen extends StatefulWidget {
   const ScienceLabScreen({
@@ -34,6 +37,14 @@ class ScienceLabScreen extends StatefulWidget {
 }
 
 class _ScienceLabScreenState extends State<ScienceLabScreen> {
+  static const BrightSfxProfile _soundProfile = BrightSfxProfile.scienceLab;
+
+  void _playInteraction(BrightInteractionSfx effect) {
+    unawaited(
+      BrightAudioService.instance.playProfileSfx(_soundProfile, effect),
+    );
+  }
+
   final Set<String> ingredients = <String>{};
   int quizIndex = 0;
   int quizScore = 0;
@@ -47,6 +58,7 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
   int _classNumber = 4;
   int _attemptSerial = 0;
   bool _answerInFlight = false;
+  bool _timedOut = false;
   bool _sessionConfigured = false;
   MissionRunPlan? _missionRunPlan;
   List<ScienceQuizQuestion> _questions = const <ScienceQuizQuestion>[];
@@ -130,6 +142,7 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
           const <String>[]);
     selectedQuiz = checkpoint.data['selectedQuiz'] as String?;
     quizCorrect = checkpoint.data['quizCorrect'] as bool?;
+    _timedOut = checkpoint.data['timedOut'] as bool? ?? false;
     experimentRecorded =
         checkpoint.data['experimentRecorded'] as bool? ?? false;
     _attemptSerial = (checkpoint.data['attemptSerial'] as num?)?.toInt() ?? 0;
@@ -143,11 +156,13 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
 
   void _addIngredient(String ingredient) {
     if (finished) return;
+    _playInteraction(BrightInteractionSfx.option);
     setState(() => ingredients.add(ingredient));
     final reaction = BrightQuestScope.contentOf(context)
         .scienceReactionForIngredients(_classNumber, ingredients);
     if (reaction.id == 'fizz' && !experimentRecorded) {
       if (_answerInFlight) return;
+      _playInteraction(BrightInteractionSfx.action);
       _answerInFlight = true;
       unawaited(_recordExperimentSafely(reaction.title, reaction.explanation));
       return;
@@ -189,6 +204,7 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
         controller,
         answer: reactionTitle,
         detail: reactionExplanation,
+        soundProfile: _soundProfile,
       );
       setState(() => experimentRecorded = true);
       _checkpoint();
@@ -199,13 +215,15 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
 
   void _clearExperiment() {
     if (finished || _answerInFlight) return;
+    _playInteraction(BrightInteractionSfx.tap);
     setState(ingredients.clear);
     _checkpoint();
   }
 
   void _answerQuiz(ScienceQuizQuestion question, String value) {
-    if (selectedQuiz != null || finished || _answerInFlight) return;
-    _answerInFlight = true;
+    if (selectedQuiz != null || _timedOut || finished || _answerInFlight) return;
+    _playInteraction(BrightInteractionSfx.option);
+    setState(() => _answerInFlight = true);
     unawaited(_answerQuizSafely(question, value));
   }
 
@@ -213,6 +231,7 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
     ScienceQuizQuestion question,
     String value,
   ) async {
+    final answeredIndex = quizIndex;
     try {
       final correct = value == question.answer;
       final controller = BrightQuestScope.of(context);
@@ -241,11 +260,48 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
       );
       if (!mounted) return;
       _attemptSerial += 1;
-      if (correct) {
+      setState(() {
+        selectedQuiz = value;
+        quizCorrect = correct;
+        if (correct) quizScore += 1;
+      });
+      _checkpoint();
+
+      final pacing = const GameTurnPacingPolicy().forGame(
+        gameId: 'science_lab',
+        learningLevel: widget.learningLevel,
+        endlessPractice: widget.endlessPractice,
+      );
+      if (correct && pacing.autoAdvanceCorrect && controller.soundEnabled) {
+        await FeedbackService.correctAndWait(
+          controller,
+          answer: value,
+          detail: question.explanation,
+          minimumDuration: const Duration(milliseconds: 1200),
+          soundProfile: _soundProfile,
+        );
+        if (!mounted ||
+            quizIndex != answeredIndex ||
+            selectedQuiz != value ||
+            quizCorrect != true) {
+          return;
+        }
+        await _nextQuiz(_questions, _classNumber);
+      } else if (correct) {
         FeedbackService.correct(
           controller,
           answer: value,
           detail: question.explanation,
+          soundProfile: _soundProfile,
+        );
+      } else if (pacing.isTimed) {
+        await FeedbackService.wrongAndWait(
+          controller,
+          answer: value,
+          correctAnswer: question.answer,
+          guidance: question.explanation,
+          minimumDuration: const Duration(milliseconds: 1200),
+          soundProfile: _soundProfile,
         );
       } else {
         FeedbackService.wrong(
@@ -253,16 +309,65 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
           answer: value,
           correctAnswer: question.answer,
           guidance: question.explanation,
+          soundProfile: _soundProfile,
         );
       }
+    } finally {
+      if (mounted) {
+        setState(() => _answerInFlight = false);
+      } else {
+        _answerInFlight = false;
+      }
+    }
+  }
+
+  Future<void> _expireQuiz(ScienceQuizQuestion question) async {
+    if (selectedQuiz != null || _timedOut || finished || _answerInFlight) return;
+    setState(() => _answerInFlight = true);
+    try {
+      final controller = BrightQuestScope.of(context);
+      final adapter = const GameEvidenceAdapter();
+      final activity = adapter.resolve(
+        repository: BrightQuestScope.contentOf(context),
+        classNumber: _classNumber,
+        gameId: 'science_lab',
+        legacyContentId: question.id,
+      );
+      await controller.recordAnswerSafely(
+        gameId: 'science_lab',
+        learningLevel: widget.learningLevel,
+        correct: false,
+        attemptMarker: 'timeout:$_attemptSerial',
+        topicId: question.topicId,
+        difficulty: question.difficulty,
+        masteryGain: 0.05,
+        itemId: activity?.id,
+        competencyId: activity?.competencyId,
+        evidenceKind: adapter.kindFor(widget.learningLevel),
+        responseTimeMs: DateTime.now().difference(_quizStarted).inMilliseconds,
+        misconceptionId: 'time_limit_exceeded',
+        confidence: 0.35,
+      );
+      if (!mounted) return;
+      _attemptSerial += 1;
       setState(() {
-        selectedQuiz = value;
-        quizCorrect = correct;
-        if (correct) quizScore += 1;
+        _timedOut = true;
+        quizCorrect = false;
       });
       _checkpoint();
+      await FeedbackService.wrongAndWait(
+        controller,
+        correctAnswer: question.answer,
+        guidance: 'Time is up. ${question.explanation}',
+        minimumDuration: const Duration(milliseconds: 1200),
+        soundProfile: _soundProfile,
+      );
     } finally {
-      _answerInFlight = false;
+      if (mounted) {
+        setState(() => _answerInFlight = false);
+      } else {
+        _answerInFlight = false;
+      }
     }
   }
 
@@ -270,7 +375,7 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
     List<ScienceQuizQuestion> questions,
     int classNumber,
   ) async {
-    if (selectedQuiz == null) return;
+    if (selectedQuiz == null && !_timedOut) return;
     if (quizIndex == questions.length - 1) {
       if (_experimentRequired && !experimentRecorded) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -292,7 +397,11 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
         maxScore: questions.length + (_experimentRequired ? 1 : 0),
       );
       if (!mounted) return;
-      FeedbackService.complete(controller, reward: reward);
+      FeedbackService.complete(
+        controller,
+        reward: reward,
+        soundProfile: _soundProfile,
+      );
       setState(() {
         finished = true;
         missionReward = reward;
@@ -303,6 +412,7 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
       quizIndex += 1;
       selectedQuiz = null;
       quizCorrect = null;
+      _timedOut = false;
       _quizStarted = DateTime.now();
     });
     _checkpoint();
@@ -368,6 +478,7 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
       _attemptSerial = 0;
       selectedQuiz = null;
       quizCorrect = null;
+      _timedOut = false;
       _quizStarted = DateTime.now();
       experimentRecorded = false;
       finished = false;
@@ -390,6 +501,7 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
         'quizScore': quizScore,
         if (selectedQuiz != null) 'selectedQuiz': selectedQuiz,
         if (quizCorrect != null) 'quizCorrect': quizCorrect,
+        'timedOut': _timedOut,
         'experimentRecorded': experimentRecorded,
       },
     );
@@ -402,6 +514,12 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
     final reaction = BrightQuestScope.contentOf(context)
         .scienceReactionForIngredients(classNumber, ingredients);
     final question = questions[quizIndex];
+    final pacing = const GameTurnPacingPolicy().forGame(
+      gameId: 'science_lab',
+      learningLevel: widget.learningLevel,
+      endlessPractice: widget.endlessPractice,
+    );
+    final timedQuizReady = !_experimentRequired || experimentRecorded;
 
     return GameScaffold(
       learningLevel: widget.learningLevel,
@@ -461,6 +579,21 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
             ),
             const SizedBox(height: 16),
           ],
+          if (pacing.turnLimit != null && timedQuizReady) ...[
+            GameTurnTimer(
+              duration: pacing.turnLimit!,
+              resetKey: 'science:$quizIndex:${question.id}',
+              paused: selectedQuiz != null || _timedOut || _answerInFlight || finished,
+              onExpired: () => _expireQuiz(question),
+            ),
+            const SizedBox(height: 12),
+          ] else if (pacing.turnLimit != null && !timedQuizReady) ...[
+            const InfoBanner(
+              icon: Icons.science_rounded,
+              text: 'Complete the experiment above to start the timed quiz.',
+            ),
+            const SizedBox(height: 12),
+          ],
           BrightSurface(
             borderColor: const Color(0xFF7B4EEB).withValues(alpha: 0.16),
             child: Column(
@@ -498,7 +631,11 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
                           width: tileWidth,
                           child: InkWell(
                             borderRadius: BorderRadius.circular(20),
-                            onTap: selectedQuiz == null && !finished
+                            onTap: selectedQuiz == null &&
+                                    !_timedOut &&
+                                    !_answerInFlight &&
+                                    !finished &&
+                                    (pacing.turnLimit == null || timedQuizReady)
                                 ? () => _answerQuiz(question, item)
                                 : null,
                             child: Container(
@@ -563,7 +700,11 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
             const SizedBox(height: 12),
             quizCorrect == true
                 ? SuccessBanner(text: 'Correct! ${question.explanation}')
-                : ErrorBanner(text: 'Not quite. ${question.explanation}'),
+                : ErrorBanner(
+                    text: _timedOut
+                        ? 'Time is up. The answer is ${question.answer}. ${question.explanation}'
+                        : 'Not quite. ${question.explanation}',
+                  ),
           ],
           const SizedBox(height: 16),
           if (finished)
@@ -580,9 +721,13 @@ class _ScienceLabScreenState extends State<ScienceLabScreen> {
             Align(
               alignment: Alignment.centerRight,
               child: FilledButton.icon(
-                onPressed: selectedQuiz == null
-                    ? null
-                    : () => _nextQuiz(questions, classNumber),
+                onPressed:
+                    (selectedQuiz == null && !_timedOut) || _answerInFlight
+                        ? null
+                        : () {
+                            _playInteraction(BrightInteractionSfx.next);
+                            unawaited(_nextQuiz(questions, classNumber));
+                          },
                 icon: Icon(quizIndex == questions.length - 1
                     ? Icons.flag_rounded
                     : Icons.arrow_forward_rounded),

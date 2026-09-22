@@ -50,7 +50,7 @@
       "unitId": "c3_math_numbers",
       "title": "Addition and subtraction",
       "objective": "Solves contextual addition and subtraction with three-digit numbers.",
-      "teach": "Subtract 20, then subtract 8. The correct value is 35.",
+      "teach": "Addition joins quantities; subtraction finds what remains or the difference. Break three-digit numbers into hundreds, tens and ones, work one place at a time, and estimate to check that the answer is sensible.",
       "workedExample": "Subtract 20, then subtract 8. The correct value is 35.",
       "guidedTry": {
         "prompt": "63 - 28 = ?",
@@ -72,12 +72,12 @@
       },
       "reviewPrompt": "Later, solve a different addition and subtraction task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Subtract 20, then subtract 8. The correct value is 35.",
+      "narrationText": "Addition joins quantities; subtraction finds what remains or the difference. Break three-digit numbers into hundreds, tens and ones, work one place at a time, and estimate to check that the answer is sensible.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -89,7 +89,7 @@
       "unitId": "c3_math_numbers",
       "title": "Multiplication as equal groups",
       "objective": "Uses repeated addition, arrays and familiar multiplication facts to solve equal-group problems.",
-      "teach": "Use the 7-times table. The correct value is 42.",
+      "teach": "Multiplication makes equal groups. You can use repeated addition, arrays or known facts, and related facts can help you solve a new multiplication more quickly.",
       "workedExample": "Use the 7-times table. The correct value is 42.",
       "guidedTry": {
         "prompt": "7 × 6 = ?",
@@ -110,12 +110,12 @@
       },
       "reviewPrompt": "Later, solve a different multiplication as equal groups task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Use the 7-times table. The correct value is 42.",
+      "narrationText": "Multiplication makes equal groups. You can use repeated addition, arrays or known facts, and related facts can help you solve a new multiplication more quickly.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -127,7 +127,7 @@
       "unitId": "c3_math_numbers",
       "title": "Division as sharing and grouping",
       "objective": "Interprets division as equal sharing or grouping and checks answers with multiplication.",
-      "teach": "Think: 6 × ? = 24. The correct value is 4.",
+      "teach": "Division can mean sharing a total equally or making equal groups. Multiplication is the inverse check: if 24 ÷ 6 = 4, then 6 × 4 must return 24.",
       "workedExample": "Think: 6 × ? = 24. The correct value is 4.",
       "guidedTry": {
         "prompt": "24 ÷ 6 = ?",
@@ -149,12 +149,12 @@
       },
       "reviewPrompt": "Later, solve a different division as sharing and grouping task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Think: 6 × ? = 24. The correct value is 4.",
+      "narrationText": "Division can mean sharing a total equally or making equal groups. Multiplication is the inverse check: if 24 ÷ 6 = 4, then 6 × 4 must return 24.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -166,8 +166,8 @@
       "unitId": "c3_math_numbers",
       "title": "Choose an operation",
       "objective": "Chooses and explains a suitable operation for a one- or two-step everyday number problem.",
-      "teach": "Multiply first, then subtract. The correct value is 60.",
-      "workedExample": "Multiply first, then subtract. The correct value is 60.",
+      "teach": "Choose the operation by asking what the story is doing: joining suggests addition, finding a difference suggests subtraction, equal groups suggest multiplication, and equal sharing suggests division. In a two-step problem, decide which action happens first.",
+      "workedExample": "A shop has 8 boxes with 9 pencils in each box, then 12 pencils are given away. Multiplication finds 8 × 9 = 72 pencils first; subtraction then finds 72 - 12 = 60.",
       "guidedTry": {
         "prompt": "8 × 9 - 12 = ?",
         "hintLevel1": "Multiply first, then subtract.",
@@ -187,12 +187,12 @@
       },
       "reviewPrompt": "Later, solve a different choose an operation task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "Multiply first, then subtract. The correct value is 60.",
+      "narrationText": "Choose the operation by asking what the story is doing: joining suggests addition, finding a difference suggests subtraction, equal groups suggest multiplication, and equal sharing suggests division. In a two-step problem, decide which action happens first.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -204,7 +204,7 @@
       "unitId": "c3_math_fractions",
       "title": "Fractions as equal parts",
       "objective": "Recognises and represents simple fractions as equal parts of a whole or collection.",
-      "teach": "1/4 of 8 equal slices is 2 slices because 8 × 1 ÷ 4 = 2.",
+      "teach": "A fraction names equal parts of a whole or a collection. The denominator tells how many equal parts make the whole, and the numerator tells how many of those parts are being considered.",
       "workedExample": "1/4 of 8 equal slices is 2 slices because 8 × 1 ÷ 4 = 2.",
       "guidedTry": {
         "prompt": "Select slices to show 1/4 of a pizza with 8 equal slices.",
@@ -226,12 +226,12 @@
       },
       "reviewPrompt": "Later, solve a different fractions as equal parts task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "numberLine/baseTen/fractionStrip/contextProblem",
-      "narrationText": "1/4 of 8 equal slices is 2 slices because 8 × 1 ÷ 4 = 2.",
+      "narrationText": "A fraction names equal parts of a whole or a collection. The denominator tells how many equal parts make the whole, and the numerator tells how many of those parts are being considered.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -471,8 +471,8 @@
       "unitId": "c3_english_reading",
       "title": "Sequence events",
       "objective": "Orders events or instructions using before, after, first and next.",
-      "teach": "Arrange the words in sentence order to rebuild: “After lunch, Mina carefully packed her school bag.”",
-      "workedExample": "Arrange the words in sentence order to rebuild: “After lunch, Mina carefully packed her school bag.”",
+      "teach": "Sequence words show order. Words such as first, next, before and after help a reader know which event happens earlier and which event follows.",
+      "workedExample": "Mina eats lunch before she packs her school bag. The phrase “After lunch” tells us lunch happens first and packing happens next, so the time word gives the event order.",
       "guidedTry": {
         "prompt": "After lunch, Mina carefully packed her school bag.",
         "hintLevel1": "Start with “After” and look for the word that naturally follows it.",
@@ -492,12 +492,12 @@
       },
       "reviewPrompt": "Later, solve a different sequence events task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Arrange the words in sentence order to rebuild: “After lunch, Mina carefully packed her school bag.”",
+      "narrationText": "Sequence words show order. Words such as first, next, before and after help a reader know which event happens earlier and which event follows.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -547,7 +547,7 @@
       "unitId": "c3_english_language",
       "title": "Build complete sentences",
       "objective": "Builds meaningful complete sentences from words or short prompts.",
-      "teach": "Arrange the words in sentence order to rebuild: “Ria found a red kite near the tree.”",
+      "teach": "A complete sentence expresses a whole idea. It usually needs someone or something to talk about and words that tell what happens, and the words must be in an order that makes sense.",
       "workedExample": "Arrange the words in sentence order to rebuild: “Ria found a red kite near the tree.”",
       "guidedTry": {
         "prompt": "Ria found a red kite near the tree.",
@@ -568,12 +568,12 @@
       },
       "reviewPrompt": "Later, solve a different build complete sentences task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Arrange the words in sentence order to rebuild: “Ria found a red kite near the tree.”",
+      "narrationText": "A complete sentence expresses a whole idea. It usually needs someone or something to talk about and words that tell what happens, and the words must be in an order that makes sense.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -585,11 +585,11 @@
       "unitId": "c3_english_language",
       "title": "Nouns and pronouns",
       "objective": "Identifies common nouns and simple pronoun references in short sentences.",
-      "teach": "In this sentence, “dog” is the noun, “runs” is the verb, and “brave” is the adjective.",
-      "workedExample": "In this sentence, “dog” is the noun, “runs” is the verb, and “brave” is the adjective.",
+      "teach": "A noun is a naming word for a person, place, animal or thing. A pronoun such as he, she, it or they can stand in for a noun so we do not repeat the same name again and again.",
+      "workedExample": "In “Ria carries a book. She reads it,” “Ria” and “book” are nouns. “She” replaces Ria and “it” replaces book, so the pronouns prevent unnecessary repetition.",
       "guidedTry": {
         "prompt": "The brave dog runs.",
-        "hintLevel1": "Find the naming word, then the action word, then the describing word.",
+        "hintLevel1": "First find the person, place, animal or thing being named. Then check whether a word such as he, she, it or they stands in for that noun.",
         "hintLevel2": "In this sentence, “dog” is the noun, “runs” is the verb, and “brave” is the adjective."
       },
       "independentPractice": {
@@ -607,12 +607,12 @@
       },
       "reviewPrompt": "Later, solve a different nouns and pronouns task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "In this sentence, “dog” is the noun, “runs” is the verb, and “brave” is the adjective.",
+      "narrationText": "A noun is a naming word for a person, place, animal or thing. A pronoun such as he, she, it or they can stand in for a noun so we do not repeat the same name again and again.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -624,11 +624,11 @@
       "unitId": "c3_english_language",
       "title": "Verbs and simple tense",
       "objective": "Identifies action/state verbs and recognises simple present/past usage.",
-      "teach": "In this sentence, “dog” is the noun, “runs” is the verb, and “brave” is the adjective.",
-      "workedExample": "In this sentence, “dog” is the noun, “runs” is the verb, and “brave” is the adjective.",
+      "teach": "A verb tells an action or a state. Tense tells when it happens: simple present is used for now or regular actions, while simple past is used for actions that already happened.",
+      "workedExample": "In “Ria walks to school,” “walks” is a present-tense verb. In “Ria walked to school yesterday,” “walked” shows that the action happened in the past.",
       "guidedTry": {
         "prompt": "The brave dog runs.",
-        "hintLevel1": "Find the naming word, then the action word, then the describing word.",
+        "hintLevel1": "Find the word that shows an action or state. Then ask whether the verb tells about now, a regular action or something that already happened.",
         "hintLevel2": "In this sentence, “dog” is the noun, “runs” is the verb, and “brave” is the adjective."
       },
       "independentPractice": {
@@ -646,12 +646,12 @@
       },
       "reviewPrompt": "Later, solve a different verbs and simple tense task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "In this sentence, “dog” is the noun, “runs” is the verb, and “brave” is the adjective.",
+      "narrationText": "A verb tells an action or a state. Tense tells when it happens: simple present is used for now or regular actions, while simple past is used for actions that already happened.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -663,11 +663,11 @@
       "unitId": "c3_english_language",
       "title": "Adjectives and description",
       "objective": "Identifies and uses describing words to make a sentence more precise.",
-      "teach": "Arrange the words in sentence order to rebuild: “A bright rainbow appeared above the quiet village.”",
-      "workedExample": "Arrange the words in sentence order to rebuild: “A bright rainbow appeared above the quiet village.”",
+      "teach": "An adjective is a describing word. It adds useful detail about a noun, such as its colour, size, number, shape or quality, so the reader can picture it more clearly.",
+      "workedExample": "In “A bright rainbow appeared above the quiet village,” “bright” describes the rainbow and “quiet” describes the village. Removing them leaves a correct sentence, but with less detail.",
       "guidedTry": {
         "prompt": "A bright rainbow appeared above the quiet village.",
-        "hintLevel1": "Start with “A” and look for the word that naturally follows it.",
+        "hintLevel1": "Find the noun, then ask which word tells what that noun is like.",
         "hintLevel2": "Arrange the words in sentence order to rebuild: “A bright rainbow appeared above the quiet village.”"
       },
       "independentPractice": {
@@ -685,12 +685,12 @@
       },
       "reviewPrompt": "Later, solve a different adjectives and description task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "accessibleOrder/evidenceHighlighter/composition",
-      "narrationText": "Arrange the words in sentence order to rebuild: “A bright rainbow appeared above the quiet village.”",
+      "narrationText": "An adjective is a describing word. It adds useful detail about a noun, such as its colour, size, number, shape or quality, so the reader can picture it more clearly.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -778,11 +778,11 @@
       "unitId": "c3_science_inquiry",
       "title": "Plant parts and needs",
       "objective": "Relates common plant parts to simple functions such as taking in water, support and reproduction.",
-      "teach": "Roots take in water and minerals from the soil.",
+      "teach": "Plant parts have different jobs. Roots take in water and minerals and help anchor the plant; stems support and carry materials; leaves help make food; flowers can help the plant reproduce.",
       "workedExample": "Roots take in water and minerals from the soil.",
       "guidedTry": {
         "prompt": "Which part of a plant usually absorbs water from soil?",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "Roots take in water and minerals from the soil."
       },
       "independentPractice": {
@@ -800,12 +800,12 @@
       },
       "reviewPrompt": "Later, solve a different plant parts and needs task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "Roots take in water and minerals from the soil.",
+      "narrationText": "Plant parts have different jobs. Roots take in water and minerals and help anchor the plant; stems support and carry materials; leaves help make food; flowers can help the plant reproduce.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -817,11 +817,11 @@
       "unitId": "c3_science_inquiry",
       "title": "Material properties",
       "objective": "Compares familiar materials using observable properties such as transparency, absorbency and floating behaviour.",
-      "teach": "Many kinds of dry wood are less dense than water.",
-      "workedExample": "Many kinds of dry wood are less dense than water.",
+      "teach": "Materials can be compared by properties we can observe or test, such as transparency, absorbency, hardness and whether an object floats. Use evidence from the property being tested rather than guessing from the object name.",
+      "workedExample": "If a piece of dry wood floats in the activity, record “floats” as the observation. That result is evidence about this object in this test; it does not mean every material will behave the same way.",
       "guidedTry": {
         "prompt": "Which object is most likely to float in water?",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "Many kinds of dry wood are less dense than water."
       },
       "independentPractice": {
@@ -839,12 +839,12 @@
       },
       "reviewPrompt": "Later, solve a different material properties task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "Many kinds of dry wood are less dense than water.",
+      "narrationText": "Materials can be compared by properties we can observe or test, such as transparency, absorbency, hardness and whether an object floats. Use evidence from the property being tested rather than guessing from the object name.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -856,11 +856,11 @@
       "unitId": "c3_science_inquiry",
       "title": "States and simple changes",
       "objective": "Distinguishes familiar solids, liquids and gases and describes melting or condensation in everyday terms.",
-      "teach": "A solid keeps a definite shape under ordinary conditions.",
+      "teach": "Solids keep their own shape, liquids flow and take the shape of their container, and gases spread out. Heating or cooling can cause changes such as melting and condensation.",
       "workedExample": "A solid keeps a definite shape under ordinary conditions.",
       "guidedTry": {
         "prompt": "Which state of matter keeps its own shape?",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "A solid keeps a definite shape under ordinary conditions."
       },
       "independentPractice": {
@@ -878,12 +878,12 @@
       },
       "reviewPrompt": "Later, solve a different states and simple changes task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "A solid keeps a definite shape under ordinary conditions.",
+      "narrationText": "Solids keep their own shape, liquids flow and take the shape of their container, and gases spread out. Heating or cooling can cause changes such as melting and condensation.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -895,11 +895,11 @@
       "unitId": "c3_science_inquiry",
       "title": "Float and sink observations",
       "objective": "Predicts and records whether familiar objects float or sink, using observations rather than memorised labels.",
-      "teach": "Many kinds of dry wood are less dense than water.",
-      "workedExample": "Many kinds of dry wood are less dense than water.",
+      "teach": "Floating and sinking are observations to test, not labels to memorise. Make a prediction, place the object in water in the activity, then record what actually happens and compare it with your prediction.",
+      "workedExample": "Before testing a dry wooden object, predict float or sink. After placing it in water, record the observed result and compare it with the prediction rather than changing the prediction after seeing the outcome.",
       "guidedTry": {
         "prompt": "Which object is most likely to float in water?",
-        "hintLevel1": "Name what you know first, then choose one useful step.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "Many kinds of dry wood are less dense than water."
       },
       "independentPractice": {
@@ -917,12 +917,12 @@
       },
       "reviewPrompt": "Later, solve a different float and sink observations task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "Many kinds of dry wood are less dense than water.",
+      "narrationText": "Floating and sinking are observations to test, not labels to memorise. Make a prediction, place the object in water in the activity, then record what actually happens and compare it with your prediction.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -934,11 +934,11 @@
       "unitId": "c3_science_inquiry",
       "title": "Observe, compare and explain",
       "objective": "Makes a simple observation, compares evidence and gives a short evidence-linked explanation.",
-      "teach": "Baking soda and vinegar release carbon dioxide gas bubbles.",
-      "workedExample": "Baking soda and vinegar release carbon dioxide gas bubbles.",
+      "teach": "A scientific observation tells what you actually notice. Compare observations carefully, then make an explanation that points back to the evidence instead of adding a guess as if it were a fact.",
+      "workedExample": "When the virtual activity shows bubbles after baking soda and vinegar are mixed, “bubbles appeared” is an observation. An explanation should refer to that observed change.",
       "guidedTry": {
         "prompt": "Mix safe virtual ingredients and observe what happens.",
-        "hintLevel1": "Observe the selected virtual ingredients and compare the result.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "Baking soda and vinegar release carbon dioxide gas bubbles."
       },
       "independentPractice": {
@@ -956,12 +956,12 @@
       },
       "reviewPrompt": "Later, solve a different observe, compare and explain task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "Baking soda and vinegar release carbon dioxide gas bubbles.",
+      "narrationText": "A scientific observation tells what you actually notice. Compare observations carefully, then make an explanation that points back to the evidence instead of adding a guess as if it were a fact.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -973,11 +973,11 @@
       "unitId": "c3_science_inquiry",
       "title": "Safe virtual investigation",
       "objective": "Follows a safe virtual investigation sequence and distinguishes an observed change from a guess.",
-      "teach": "Baking soda and vinegar release carbon dioxide gas bubbles.",
-      "workedExample": "Baking soda and vinegar release carbon dioxide gas bubbles.",
+      "teach": "A safe investigation follows the given steps in order, changes only what the activity asks you to change, and records what is observed. Keep observations separate from predictions or guesses.",
+      "workedExample": "For the virtual baking-soda-and-vinegar investigation, follow the provided steps, observe the result, and record the bubbles you see. Do not report an unobserved change as if it happened.",
       "guidedTry": {
         "prompt": "Mix safe virtual ingredients and observe what happens.",
-        "hintLevel1": "Observe the selected virtual ingredients and compare the result.",
+        "hintLevel1": "Use the scientific idea from the lesson and point to the observation or property that supports your choice.",
         "hintLevel2": "Baking soda and vinegar release carbon dioxide gas bubbles."
       },
       "independentPractice": {
@@ -995,12 +995,12 @@
       },
       "reviewPrompt": "Later, solve a different safe virtual investigation task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "predictObserveExplain/diagramClassifier",
-      "narrationText": "Baking soda and vinegar release carbon dioxide gas bubbles.",
+      "narrationText": "A safe investigation follows the given steps in order, changes only what the activity asks you to change, and records what is observed. Keep observations separate from predictions or guesses.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1088,11 +1088,11 @@
       "unitId": "c3_evs_world",
       "title": "Clean surroundings and waste",
       "objective": "Sorts common waste categories and explains how clean surroundings support people and nature.",
-      "teach": "Newspaper belongs in the Paper bin in this BrightQuest sorting activity.",
+      "teach": "Clean surroundings protect people, animals and shared spaces. Sort waste by what it is made from, keep recyclable materials separate where the activity provides that category, and avoid littering.",
       "workedExample": "Newspaper belongs in the Paper bin in this BrightQuest sorting activity.",
       "guidedTry": {
         "prompt": "Put Newspaper in the correct waste-sorting bin.",
-        "hintLevel1": "Think about the material the item is made from, or whether it is food or plant waste.",
+        "hintLevel1": "Identify the material or resource involved first, then choose the action that is safe and avoids unnecessary waste.",
         "hintLevel2": "Newspaper belongs in the Paper bin in this BrightQuest sorting activity."
       },
       "independentPractice": {
@@ -1110,12 +1110,12 @@
       },
       "reviewPrompt": "Later, solve a different clean surroundings and waste task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "diagramClassifier/localScenario",
-      "narrationText": "Newspaper belongs in the Paper bin in this BrightQuest sorting activity.",
+      "narrationText": "Clean surroundings protect people, animals and shared spaces. Sort waste by what it is made from, keep recyclable materials separate where the activity provides that category, and avoid littering.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1127,11 +1127,11 @@
       "unitId": "c3_evs_world",
       "title": "Resource care and safety",
       "objective": "Chooses simple safe actions that reduce waste and care for shared resources.",
-      "teach": "Old worksheet belongs in the Paper bin in this BrightQuest sorting activity.",
+      "teach": "Caring for resources means using only what you need, reusing safe items when possible and sorting waste correctly. A good choice should reduce waste without creating a safety risk.",
       "workedExample": "Old worksheet belongs in the Paper bin in this BrightQuest sorting activity.",
       "guidedTry": {
         "prompt": "Put Old worksheet in the correct waste-sorting bin.",
-        "hintLevel1": "Think about the material the item is made from, or whether it is food or plant waste.",
+        "hintLevel1": "Identify the material or resource involved first, then choose the action that is safe and avoids unnecessary waste.",
         "hintLevel2": "Old worksheet belongs in the Paper bin in this BrightQuest sorting activity."
       },
       "independentPractice": {
@@ -1149,12 +1149,12 @@
       },
       "reviewPrompt": "Later, solve a different resource care and safety task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "diagramClassifier/localScenario",
-      "narrationText": "Old worksheet belongs in the Paper bin in this BrightQuest sorting activity.",
+      "narrationText": "Caring for resources means using only what you need, reusing safe items when possible and sorting waste correctly. A good choice should reduce waste without creating a safety risk.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1166,11 +1166,11 @@
       "unitId": "c3_social_maps",
       "title": "Cardinal directions",
       "objective": "Uses north, south, east and west to describe simple relative locations.",
-      "teach": "Think about where morning sunlight appears. The correct answer is East.",
+      "teach": "North, south, east and west are cardinal directions. Use a map, compass clue or a familiar reference such as the direction of sunrise to describe where one place is compared with another.",
       "workedExample": "Think about where morning sunlight appears. The correct answer is East.",
       "guidedTry": {
         "prompt": "The Sun rises in which direction?",
-        "hintLevel1": "Think about where morning sunlight appears.",
+        "hintLevel1": "Use the map or location clue first, then connect it with the direction, place or physical feature named in the question.",
         "hintLevel2": "Think about where morning sunlight appears. The correct answer is East."
       },
       "independentPractice": {
@@ -1188,12 +1188,12 @@
       },
       "reviewPrompt": "Later, solve a different cardinal directions task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "mapPath/evidenceHighlighter",
-      "narrationText": "Think about where morning sunlight appears. The correct answer is East.",
+      "narrationText": "North, south, east and west are cardinal directions. Use a map, compass clue or a familiar reference such as the direction of sunrise to describe where one place is compared with another.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1205,11 +1205,11 @@
       "unitId": "c3_social_maps",
       "title": "Simple map symbols",
       "objective": "Uses a legend or simple symbols to interpret a child-friendly map.",
-      "teach": "Symbols make maps easier to read. The correct answer is Represent a place or feature.",
+      "teach": "A map symbol is a small sign that stands for a real place or feature. The map legend or key explains what each symbol means, so read the key before deciding what a symbol represents.",
       "workedExample": "Symbols make maps easier to read. The correct answer is Represent a place or feature.",
       "guidedTry": {
         "prompt": "A map symbol is mainly used to…",
-        "hintLevel1": "Symbols make maps easier to read.",
+        "hintLevel1": "Use the map or location clue first, then connect it with the direction, place or physical feature named in the question.",
         "hintLevel2": "Symbols make maps easier to read. The correct answer is Represent a place or feature."
       },
       "independentPractice": {
@@ -1226,12 +1226,12 @@
       },
       "reviewPrompt": "Later, solve a different simple map symbols task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "mapPath/evidenceHighlighter",
-      "narrationText": "Symbols make maps easier to read. The correct answer is Represent a place or feature.",
+      "narrationText": "A map symbol is a small sign that stands for a real place or feature. The map legend or key explains what each symbol means, so read the key before deciding what a symbol represents.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1243,11 +1243,11 @@
       "unitId": "c3_social_maps",
       "title": "Places and routes",
       "objective": "Identifies familiar community places and follows or describes a simple route between them.",
-      "teach": "Think of a place with shelves of books. The correct answer is Library.",
+      "teach": "Community places have different purposes, such as learning, health, safety or transport. To describe a route, identify the start and destination, then follow the places and direction clues in order.",
       "workedExample": "Think of a place with shelves of books. The correct answer is Library.",
       "guidedTry": {
         "prompt": "Which place would you use to borrow books?",
-        "hintLevel1": "Think of a place with shelves of books.",
+        "hintLevel1": "Use the map or location clue first, then connect it with the direction, place or physical feature named in the question.",
         "hintLevel2": "Think of a place with shelves of books. The correct answer is Library."
       },
       "independentPractice": {
@@ -1265,12 +1265,12 @@
       },
       "reviewPrompt": "Later, solve a different places and routes task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "mapPath/evidenceHighlighter",
-      "narrationText": "Think of a place with shelves of books. The correct answer is Library.",
+      "narrationText": "Community places have different purposes, such as learning, health, safety or transport. To describe a route, identify the start and destination, then follow the places and direction clues in order.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1282,11 +1282,11 @@
       "unitId": "c3_coding_ct",
       "title": "Instruction sequences",
       "objective": "Orders precise movement instructions to reach a simple goal.",
-      "teach": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
-      "workedExample": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "teach": "An algorithm is an ordered set of instructions. For a route, put movement commands in the exact order needed to reach the goal and check each command before moving to the next one.",
+      "workedExample": "For the route from (0, 1) to (2, 1), compare the start and goal first. Then place the needed movement commands in order and check after each command that the robot is closer to the goal and still inside the grid.",
       "guidedTry": {
         "prompt": "Guide the robot from (0, 1) to (2, 1) within 2 commands.",
-        "hintLevel1": "Plan the route before moving. Use turns to face the next safe path.",
+        "hintLevel1": "Track the start, goal, direction and obstacles. Plan before moving, then check the result of each command.",
         "hintLevel2": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget."
       },
       "independentPractice": {
@@ -1302,12 +1302,12 @@
       },
       "reviewPrompt": "Later, solve a different instruction sequences task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
-      "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "narrationText": "An algorithm is an ordered set of instructions. For a route, put movement commands in the exact order needed to reach the goal and check each command before moving to the next one.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1319,11 +1319,11 @@
       "unitId": "c3_coding_ct",
       "title": "Grid movement and turns",
       "objective": "Uses position, direction and left/right turns to move through a grid.",
-      "teach": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
-      "workedExample": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "teach": "Grid movement depends on both position and direction. A left or right turn changes which way the robot faces; a move command then changes its position in that direction.",
+      "workedExample": "For the route from (0, 3) to (2, 2), track both the robot’s square and the direction it faces. A turn changes direction; a move changes position, so check both after every command.",
       "guidedTry": {
         "prompt": "Guide the robot from (0, 3) to (2, 2) within 4 commands.",
-        "hintLevel1": "Plan the route before moving. Use turns to face the next safe path.",
+        "hintLevel1": "Track the start, goal, direction and obstacles. Plan before moving, then check the result of each command.",
         "hintLevel2": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget."
       },
       "independentPractice": {
@@ -1339,12 +1339,12 @@
       },
       "reviewPrompt": "Later, solve a different grid movement and turns task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
-      "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "narrationText": "Grid movement depends on both position and direction. A left or right turn changes which way the robot faces; a move command then changes its position in that direction.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1356,11 +1356,11 @@
       "unitId": "c3_coding_ct",
       "title": "Patterns and repeats",
       "objective": "Recognises repeated action patterns and expresses them as a repeatable sequence.",
-      "teach": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
-      "workedExample": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "teach": "When the same movement pattern happens again and again, identify the repeating block instead of treating every command as unrelated. A repeatable sequence makes the pattern easier to see and check.",
+      "workedExample": "For the route from (0, 4) to (4, 1), look for any movement block that can be repeated. Describe the repeating block first, then check that each repetition stays on a safe square.",
       "guidedTry": {
         "prompt": "Guide the robot from (0, 4) to (4, 1) within 10 commands.",
-        "hintLevel1": "Plan the route before moving. Use turns to face the next safe path.",
+        "hintLevel1": "Track the start, goal, direction and obstacles. Plan before moving, then check the result of each command.",
         "hintLevel2": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget."
       },
       "independentPractice": {
@@ -1377,12 +1377,12 @@
       },
       "reviewPrompt": "Later, solve a different patterns and repeats task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
-      "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "narrationText": "When the same movement pattern happens again and again, identify the repeating block instead of treating every command as unrelated. A repeatable sequence makes the pattern easier to see and check.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }
@@ -1394,11 +1394,11 @@
       "unitId": "c3_coding_ct",
       "title": "Decompose a route",
       "objective": "Breaks a route problem into smaller steps and checks each step against the goal.",
-      "teach": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
-      "workedExample": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "teach": "A long route is easier when it is broken into smaller goals. Solve one safe section at a time, check where the robot ends, and then plan the next section toward the final goal.",
+      "workedExample": "For the route from (0, 3) to (3, 1), choose a safe intermediate square as a mini-goal. Reach that square, check the new position, then solve the remaining section to the final goal.",
       "guidedTry": {
         "prompt": "Guide the robot from (0, 3) to (3, 1) within 7 commands.",
-        "hintLevel1": "Plan the route before moving. Use turns to face the next safe path.",
+        "hintLevel1": "Track the start, goal, direction and obstacles. Plan before moving, then check the result of each command.",
         "hintLevel2": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget."
       },
       "independentPractice": {
@@ -1415,12 +1415,12 @@
       },
       "reviewPrompt": "Later, solve a different decompose a route task without copying the earlier example, then explain how you checked it.",
       "interactionSuggested": "codingTrace/debuggingPanel",
-      "narrationText": "A correct algorithm stays inside the grid, avoids every obstacle, and reaches the goal within the command budget.",
+      "narrationText": "A long route is easier when it is broken into smaller goals. Solve one safe section at a time, check where the robot ends, and then plan the next section toward the final goal.",
       "locale": "en-IN",
       "review": {
         "status": "needsReview",
-        "revision": 2,
-        "author": "brightquest-phase-e-technical-hardening",
+        "revision": 3,
+        "author": "brightquest-step4-authored-teaching-refactor",
         "reviewerOwnerId": "primary_teacher_reviewer",
         "reviewedAt": null
       }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../app/brightquest_scope.dart';
 import '../core/accessibility/learning_audio_director.dart';
+import '../core/accessibility/learning_narration_coordinator.dart';
 import '../core/content/achievement_catalog.dart';
 import '../core/curriculum/curriculum_models.dart';
 import '../core/curriculum/world_mission_catalog.dart';
@@ -547,297 +548,308 @@ class GameScaffold extends StatelessWidget {
         : WorldMissionCatalog.planForLevel(learningLevel!);
     final layout = BrightLayout.of(context);
     final compactHeight = layout.shortViewport;
-    return Scaffold(
-      body: BrightPageBackground(
-        primary: Color.lerp(effectiveColor, Colors.white, 0.90)!,
-        secondary: const Color(0xFFFFFBEC),
-        child: Column(
-          children: [
-            BrightHeader(
-              showBack: true,
-              title: 'BrightQuest Kids',
-              trailing: voicePrompt == null
-                  ? null
-                  : IconButton(
-                      key: const Key('game_read_aloud_button'),
-                      tooltip: 'Read aloud',
-                      onPressed: () {
-                        final controller = BrightQuestScope.of(context);
-                        if (!controller.soundEnabled) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Audio is turned off for this explorer.',
+    return LearningNarrationBoundary(
+      ownerLabel: 'GameScaffold:$sceneId',
+      scopeKey: narrationCue?.id,
+      builder: (context, narrationSession) => Scaffold(
+        body: BrightPageBackground(
+          primary: Color.lerp(effectiveColor, Colors.white, 0.90)!,
+          secondary: const Color(0xFFFFFBEC),
+          child: Column(
+            children: [
+              BrightHeader(
+                showBack: true,
+                title: 'BrightQuest Kids',
+                trailing: voicePrompt == null
+                    ? null
+                    : IconButton(
+                        key: const Key('game_read_aloud_button'),
+                        tooltip: 'Read aloud',
+                        onPressed: () {
+                          final controller = BrightQuestScope.of(context);
+                          final audio = BrightAudioService.instance;
+                          if (!audio.appAudioEnabled ||
+                              !controller.soundEnabled) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  !audio.appAudioEnabled
+                                      ? 'App audio is muted in Parent controls.'
+                                      : 'Audio is turned off for this explorer.',
+                                ),
                               ),
+                            );
+                            return;
+                          }
+                          final cue = narrationCue;
+                          if (cue == null) return;
+                          unawaited(
+                            narrationSession.speakCue(
+                              cue,
+                              manual: true,
                             ),
                           );
-                          return;
-                        }
-                        unawaited(
-                          BrightAudioService.instance.speakPrompt(
-                            voicePrompt!,
-                            choices: voiceChoices,
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.volume_up_rounded),
-                    ),
-            ),
-            if (missionPlan != null)
+                        },
+                        icon: const Icon(Icons.volume_up_rounded),
+                      ),
+              ),
+              if (missionPlan != null)
+                BrightResponsive(
+                  maxWidth: 1220,
+                  padding: EdgeInsets.fromLTRB(
+                    layout.gutter,
+                    compactHeight ? 5 : 9,
+                    layout.gutter,
+                    0,
+                  ),
+                  builder: (context, breakpoint) => WorldMissionRibbon(
+                    plan: missionPlan,
+                    compact:
+                        compactHeight || breakpoint == BrightBreakpoint.compact,
+                  ),
+                ),
               BrightResponsive(
                 maxWidth: 1220,
                 padding: EdgeInsets.fromLTRB(
                   layout.gutter,
-                  compactHeight ? 5 : 9,
+                  compactHeight ? 8 : 13,
                   layout.gutter,
-                  0,
+                  compactHeight ? 4 : 7,
                 ),
-                builder: (context, breakpoint) => WorldMissionRibbon(
-                  plan: missionPlan,
-                  compact:
-                      compactHeight || breakpoint == BrightBreakpoint.compact,
-                ),
-              ),
-            BrightResponsive(
-              maxWidth: 1220,
-              padding: EdgeInsets.fromLTRB(
-                layout.gutter,
-                compactHeight ? 8 : 13,
-                layout.gutter,
-                compactHeight ? 4 : 7,
-              ),
-              builder: (context, breakpoint) {
-                final compact = breakpoint == BrightBreakpoint.compact;
-                final bannerHeight = compactHeight
-                    ? 92.0
-                    : compact
-                        ? 112.0
-                        : 128.0;
-                return BrightReveal(
-                  duration: const Duration(milliseconds: 390),
-                  beginScale: 0.985,
-                  offset: const Offset(0, -0.025),
-                  child: Container(
-                    width: double.infinity,
-                    height: bannerHeight,
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          effectiveColor,
-                          Color.lerp(effectiveColor, Colors.black, 0.18)!,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(29),
-                      border: Border.all(color: Colors.white, width: 2),
-                      boxShadow: [
-                        BoxShadow(
-                          color: effectiveColor.withValues(alpha: 0.28),
-                          blurRadius: 22,
-                          offset: const Offset(0, 9),
+                builder: (context, breakpoint) {
+                  final compact = breakpoint == BrightBreakpoint.compact;
+                  final bannerHeight = compactHeight
+                      ? 92.0
+                      : compact
+                          ? 112.0
+                          : 128.0;
+                  return BrightReveal(
+                    duration: const Duration(milliseconds: 390),
+                    beginScale: 0.985,
+                    offset: const Offset(0, -0.025),
+                    child: Container(
+                      width: double.infinity,
+                      height: bannerHeight,
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            effectiveColor,
+                            Color.lerp(effectiveColor, Colors.black, 0.18)!,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                      ],
-                    ),
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        Positioned(
-                          right: -34,
-                          top: -10,
-                          width: compact ? 190 : 280,
-                          child: Opacity(
-                            opacity: .34,
-                            child: BrightGameScene(
-                              gameId: sceneId,
-                              compact: compact,
+                        borderRadius: BorderRadius.circular(29),
+                        border: Border.all(color: Colors.white, width: 2),
+                        boxShadow: [
+                          BoxShadow(
+                            color: effectiveColor.withValues(alpha: 0.28),
+                            blurRadius: 22,
+                            offset: const Offset(0, 9),
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Positioned(
+                            right: -34,
+                            top: -10,
+                            width: compact ? 190 : 280,
+                            child: Opacity(
+                              opacity: .34,
+                              child: BrightGameScene(
+                                gameId: sceneId,
+                                compact: compact,
+                              ),
                             ),
                           ),
-                        ),
-                        Positioned(
-                          left: compact ? 12 : 18,
-                          top: compactHeight ? 11 : (compact ? 17 : 20),
-                          child: _GameMedallion(
-                            color: effectiveColor,
-                            emoji: _titleEmoji(title),
-                            compact: compact || compactHeight,
+                          Positioned(
+                            left: compact ? 12 : 18,
+                            top: compactHeight ? 11 : (compact ? 17 : 20),
+                            child: _GameMedallion(
+                              color: effectiveColor,
+                              emoji: _titleEmoji(title),
+                              compact: compact || compactHeight,
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(
-                            compactHeight
-                                ? 78
-                                : compact
-                                    ? 82
-                                    : 104,
-                            compactHeight ? 12 : (compact ? 17 : 21),
-                            compact ? 68 : 150,
-                            compactHeight ? 10 : (compact ? 13 : 18),
-                          ),
-                          child: LayoutBuilder(
-                            builder: (context, constraints) => Align(
-                              alignment: Alignment.centerLeft,
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(
+                              compactHeight
+                                  ? 78
+                                  : compact
+                                      ? 82
+                                      : 104,
+                              compactHeight ? 12 : (compact ? 17 : 21),
+                              compact ? 68 : 150,
+                              compactHeight ? 10 : (compact ? 13 : 18),
+                            ),
+                            child: LayoutBuilder(
+                              builder: (context, constraints) => Align(
                                 alignment: Alignment.centerLeft,
-                                child: SizedBox(
-                                  width: constraints.maxWidth,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        title,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: compactHeight
-                                              ? 21
-                                              : compact
-                                                  ? 23
-                                                  : 30,
-                                          fontWeight: FontWeight.w900,
-                                          shadows: const [
-                                            Shadow(
-                                              color: Color(0x33000000),
-                                              blurRadius: 3,
-                                              offset: Offset(0, 2),
-                                            ),
-                                          ],
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: SizedBox(
+                                    width: constraints.maxWidth,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          title,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: compactHeight
+                                                ? 21
+                                                : compact
+                                                    ? 23
+                                                    : 30,
+                                            fontWeight: FontWeight.w900,
+                                            shadows: const [
+                                              Shadow(
+                                                color: Color(0x33000000),
+                                                blurRadius: 3,
+                                                offset: Offset(0, 2),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        subtitle,
-                                        maxLines: compact ? 2 : 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: Colors.white
-                                              .withValues(alpha: .94),
-                                          fontSize: compactHeight
-                                              ? 10.5
-                                              : compact
-                                                  ? 11
-                                                  : 13,
-                                          fontWeight: FontWeight.w800,
-                                          height: 1.2,
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          subtitle,
+                                          maxLines: compact ? 2 : 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: Colors.white
+                                                .withValues(alpha: .94),
+                                            fontSize: compactHeight
+                                                ? 10.5
+                                                : compact
+                                                    ? 11
+                                                    : 13,
+                                            fontWeight: FontWeight.w800,
+                                            height: 1.2,
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        if (!compactHeight)
-                          Positioned(
-                            right: compact ? 10 : 16,
-                            bottom: compact ? 10 : 14,
-                            child: Container(
-                              constraints: BoxConstraints(
-                                maxWidth: compact ? 58 : 220,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 9,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: .92),
-                                borderRadius: BorderRadius.circular(14),
-                                border: equippedCosmetic == null
-                                    ? null
-                                    : Border.all(
-                                        color: cosmeticColor.withValues(
-                                            alpha: .26),
+                          if (!compactHeight)
+                            Positioned(
+                              right: compact ? 10 : 16,
+                              bottom: compact ? 10 : 14,
+                              child: Container(
+                                constraints: BoxConstraints(
+                                  maxWidth: compact ? 58 : 220,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 9,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: .92),
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: equippedCosmetic == null
+                                      ? null
+                                      : Border.all(
+                                          color: cosmeticColor.withValues(
+                                              alpha: .26),
+                                        ),
+                                ),
+                                child: equippedCosmetic == null || compact
+                                    ? Text(
+                                        equippedCosmetic?.emoji ??
+                                            _titleEmoji(title),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: compact ? 22 : 27),
+                                      )
+                                    : Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            equippedCosmetic.emoji,
+                                            style: const TextStyle(fontSize: 23),
+                                          ),
+                                          const SizedBox(width: 7),
+                                          Flexible(
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  'EQUIPPED',
+                                                  style: TextStyle(
+                                                    color: AppTheme.inkMuted,
+                                                    fontSize: 8,
+                                                    fontWeight: FontWeight.w900,
+                                                    letterSpacing: .8,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  equippedCosmetic.title,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    color: AppTheme.navy,
+                                                    fontSize: 10.5,
+                                                    fontWeight: FontWeight.w900,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
                               ),
-                              child: equippedCosmetic == null || compact
-                                  ? Text(
-                                      equippedCosmetic?.emoji ??
-                                          _titleEmoji(title),
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: compact ? 22 : 27),
-                                    )
-                                  : Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          equippedCosmetic.emoji,
-                                          style: const TextStyle(fontSize: 23),
-                                        ),
-                                        const SizedBox(width: 7),
-                                        Flexible(
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                'EQUIPPED',
-                                                style: TextStyle(
-                                                  color: AppTheme.inkMuted,
-                                                  fontSize: 8,
-                                                  fontWeight: FontWeight.w900,
-                                                  letterSpacing: .8,
-                                                ),
-                                              ),
-                                              Text(
-                                                equippedCosmetic.title,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  color: AppTheme.navy,
-                                                  fontSize: 10.5,
-                                                  fontWeight: FontWeight.w900,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
-            if (narrationCue != null)
-              BrightResponsive(
-                maxWidth: 1220,
-                padding: EdgeInsets.fromLTRB(
-                  layout.gutter,
-                  0,
-                  layout.gutter,
-                  compactHeight ? 3 : 6,
-                ),
-                builder: (context, breakpoint) => LearningNarrationBar(
-                  key: ValueKey<String>('game_audio:${narrationCue.id}'),
-                  cue: narrationCue,
-                  compact: true,
-                ),
+                  );
+                },
               ),
-            Expanded(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1220),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: layout.isPhone ? 0 : 6,
-                    ),
-                    child: child,
+              if (narrationCue != null)
+                BrightResponsive(
+                  maxWidth: 1220,
+                  padding: EdgeInsets.fromLTRB(
+                    layout.gutter,
+                    0,
+                    layout.gutter,
+                    compactHeight ? 3 : 6,
+                  ),
+                  builder: (context, breakpoint) => LearningNarrationBar(
+                    key: ValueKey<String>('game_audio:${narrationCue.id}'),
+                    cue: narrationCue,
+                    compact: true,
+                    narrationSession: narrationSession,
                   ),
                 ),
+              Expanded(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1220),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: layout.isPhone ? 0 : 6,
+                      ),
+                      child: child,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

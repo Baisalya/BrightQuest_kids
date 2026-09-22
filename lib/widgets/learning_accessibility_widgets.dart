@@ -4,8 +4,117 @@ import 'package:flutter/material.dart';
 
 import '../app/brightquest_scope.dart';
 import '../core/accessibility/learning_audio_models.dart';
+import '../core/accessibility/learning_narration_coordinator.dart';
 import '../core/services/bright_audio_service.dart';
 import '../core/theme/app_theme.dart';
+
+/// Headless automatic narrator for learning surfaces that already own a
+/// [LearningNarrationSession] through [LearningNarrationBoundary].
+///
+/// This keeps auto-speech out of build methods and lets Nursery, lessons and
+/// future learning surfaces share the same audio-preference checks and
+/// cancellation semantics without duplicating route/app lifecycle ownership.
+class LearningAutomaticNarrator extends StatefulWidget {
+  const LearningAutomaticNarrator({
+    required this.cue,
+    required this.narrationSession,
+    required this.child,
+    this.triggerKey,
+    super.key,
+  });
+
+  final LearningNarrationCue cue;
+  final LearningNarrationSession narrationSession;
+  final Widget child;
+
+  /// Stable identity for automatic narration. When omitted, [cue.id] is used.
+  /// A surface may keep this stable while interactive details inside the same
+  /// visible stage change and are read only after an explicit learner action.
+  final Object? triggerKey;
+
+  @override
+  State<LearningAutomaticNarrator> createState() =>
+      _LearningAutomaticNarratorState();
+}
+
+class _LearningAutomaticNarratorState extends State<LearningAutomaticNarrator> {
+  static const _policy = LearningAudioAccessibilityPolicy();
+
+  Object? _autoNarratedKey;
+  bool _autoNarrationScheduled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    BrightAudioService.instance.addListener(_handleAudioStateChanged);
+    _requestAutoNarration();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _requestAutoNarration();
+  }
+
+  @override
+  void didUpdateWidget(covariant LearningAutomaticNarrator oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final oldTriggerKey = oldWidget.triggerKey ?? oldWidget.cue.id;
+    final newTriggerKey = widget.triggerKey ?? widget.cue.id;
+    if (oldTriggerKey != newTriggerKey ||
+        !identical(
+          oldWidget.narrationSession,
+          widget.narrationSession,
+        )) {
+      _autoNarratedKey = null;
+    }
+    _requestAutoNarration();
+  }
+
+  @override
+  void dispose() {
+    BrightAudioService.instance.removeListener(_handleAudioStateChanged);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
+
+  void _handleAudioStateChanged() {
+    _requestAutoNarration();
+  }
+
+  void _requestAutoNarration() {
+    final triggerKey = widget.triggerKey ?? widget.cue.id;
+    if (_autoNarratedKey == triggerKey || _autoNarrationScheduled) {
+      return;
+    }
+    _autoNarrationScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _autoNarrationScheduled = false;
+      final currentTriggerKey = widget.triggerKey ?? widget.cue.id;
+      if (!mounted || _autoNarratedKey == currentTriggerKey) return;
+      final audio = BrightAudioService.instance;
+      final controller = BrightQuestScope.of(context);
+      final shouldNarrate = audio.initialized &&
+          _policy.shouldAutoNarrate(
+            cue: widget.cue,
+            soundEnabled: controller.soundEnabled && audio.appAudioEnabled,
+            voiceEnabled: audio.voiceEnabled,
+            voiceAvailable: audio.voiceAvailable,
+            autoNarrationEnabled: audio.autoNarrationEnabled,
+          );
+      if (!shouldNarrate) return;
+      _autoNarratedKey = currentTriggerKey;
+      unawaited(
+        widget.narrationSession.speakCue(
+          widget.cue,
+          manual: false,
+        ),
+      );
+    });
+  }
+}
 
 /// A single accessible boundary for visible narration text + manual read aloud.
 ///
@@ -18,12 +127,17 @@ class LearningNarrationBar extends StatefulWidget {
     this.autoNarrate = false,
     this.compact = false,
     this.denseTranscript = false,
+    this.narrationSession,
     super.key,
   });
 
   final LearningNarrationCue cue;
   final bool autoNarrate;
   final bool compact;
+
+  /// Optional screen-owned narration session. When omitted, this bar owns a
+  /// route-aware session for its own lifetime.
+  final LearningNarrationSession? narrationSession;
 
   /// Single-row transcript treatment for wide but vertically constrained
   /// interactive lessons. The full cue remains available through Semantics.
@@ -33,16 +147,76 @@ class LearningNarrationBar extends StatefulWidget {
   State<LearningNarrationBar> createState() => _LearningNarrationBarState();
 }
 
-class _LearningNarrationBarState extends State<LearningNarrationBar> {
+class _LearningNarrationBarState extends State<LearningNarrationBar>
+    with RouteAware {
   static const _policy = LearningAudioAccessibilityPolicy();
   String? _autoNarratedCueId;
+  bool _autoNarrationScheduled = false;
+  LearningNarrationSession? _ownedSession;
+  ModalRoute<dynamic>? _route;
+
+  LearningNarrationSession get _narrationSession =>
+      widget.narrationSession ?? _ownedSession!;
+
+  bool get _ownsSession => widget.narrationSession == null;
+
+  @override
+  void initState() {
+    super.initState();
+    _ensureOwnedSession();
+    BrightAudioService.instance.addListener(_handleAudioStateChanged);
+    _requestAutoNarration();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _syncRouteSubscription();
+    _requestAutoNarration();
+  }
 
   @override
   void didUpdateWidget(covariant LearningNarrationBar oldWidget) {
     super.didUpdateWidget(oldWidget);
+    final ownerChanged =
+        !identical(oldWidget.narrationSession, widget.narrationSession);
+    if (ownerChanged) {
+      unawaited(_ownedSession?.dispose());
+      _ownedSession = null;
+      _unsubscribeRoute();
+      _ensureOwnedSession();
+      _syncRouteSubscription();
+    }
     if (oldWidget.cue.id != widget.cue.id) {
       _autoNarratedCueId = null;
+      if (_ownsSession) {
+        unawaited(_narrationSession.advanceScope());
+      }
     }
+    _requestAutoNarration();
+  }
+
+  @override
+  void dispose() {
+    BrightAudioService.instance.removeListener(_handleAudioStateChanged);
+    _unsubscribeRoute();
+    unawaited(_ownedSession?.dispose());
+    super.dispose();
+  }
+
+  @override
+  void didPushNext() {
+    if (_ownsSession) unawaited(_narrationSession.suspend());
+  }
+
+  @override
+  void didPopNext() {
+    if (_ownsSession) _narrationSession.resume();
+  }
+
+  @override
+  void didPop() {
+    if (_ownsSession) unawaited(_narrationSession.stop());
   }
 
   @override
@@ -52,10 +226,6 @@ class _LearningNarrationBarState extends State<LearningNarrationBar> {
       animation: BrightAudioService.instance,
       builder: (context, _) {
         final audio = BrightAudioService.instance;
-        _scheduleAutoNarrationIfNeeded(
-          controllerSoundEnabled: controller.soundEnabled,
-          audio: audio,
-        );
 
         final showTranscript = _policy.shouldShowTranscript(
           captionsEnabled: controller.captionsEnabled,
@@ -63,6 +233,7 @@ class _LearningNarrationBarState extends State<LearningNarrationBar> {
         );
         final canRead = widget.cue.hasSpokenText &&
             controller.soundEnabled &&
+            audio.appAudioEnabled &&
             audio.initialized &&
             audio.voiceAvailable &&
             audio.voiceEnabled;
@@ -76,7 +247,8 @@ class _LearningNarrationBarState extends State<LearningNarrationBar> {
         // affordance. Collapsing the otherwise-disabled narration chrome keeps
         // short lesson viewports focused on the response interaction. Captions
         // and Reading Focus still render the full transcript even with audio off.
-        if (!controller.soundEnabled && !showTranscript) {
+        if ((!controller.soundEnabled || !audio.appAudioEnabled) &&
+            !showTranscript) {
           return const SizedBox.shrink();
         }
 
@@ -180,12 +352,16 @@ class _LearningNarrationBarState extends State<LearningNarrationBar> {
               const SizedBox(width: 8),
               Tooltip(
                 message: canRead
-                    ? 'Read aloud'
-                    : !controller.soundEnabled
-                        ? 'Audio is off for this explorer'
-                        : !audio.voiceEnabled
-                            ? 'Narration voice is turned off'
-                            : 'Narration voice is unavailable',
+                    ? (_autoNarratedCueId == widget.cue.id
+                        ? 'Read again'
+                        : 'Read aloud')
+                    : !audio.appAudioEnabled
+                        ? 'App audio is muted by a parent'
+                        : !controller.soundEnabled
+                            ? 'Audio is off for this explorer'
+                            : !audio.voiceEnabled
+                                ? 'Narration voice is turned off'
+                                : 'Narration voice is unavailable',
                 child: IconButton(
                   key: const Key('learning_read_aloud_button'),
                   onPressed: canRead ? _readAloud : null,
@@ -202,9 +378,8 @@ class _LearningNarrationBarState extends State<LearningNarrationBar> {
                   message: 'Stop narration',
                   child: IconButton(
                     key: const Key('learning_stop_narration_button'),
-                    onPressed: () => unawaited(
-                      BrightAudioService.instance.stopVoice(),
-                    ),
+                    onPressed: () =>
+                        unawaited(_narrationSession.stop()),
                     icon: const Icon(Icons.stop_circle_outlined),
                     visualDensity: VisualDensity.compact,
                     constraints: const BoxConstraints(
@@ -293,7 +468,11 @@ class _LearningNarrationBarState extends State<LearningNarrationBar> {
             ),
             IconButton(
               key: const Key('learning_read_aloud_button'),
-              tooltip: canRead ? 'Read aloud' : 'Narration is unavailable',
+              tooltip: canRead
+                  ? (_autoNarratedCueId == widget.cue.id
+                      ? 'Read again'
+                      : 'Read aloud')
+                  : 'Narration is unavailable',
               onPressed: canRead ? _readAloud : null,
               icon: const Icon(Icons.volume_up_rounded, size: 18),
               visualDensity: VisualDensity.compact,
@@ -304,9 +483,7 @@ class _LearningNarrationBarState extends State<LearningNarrationBar> {
               IconButton(
                 key: const Key('learning_stop_narration_button'),
                 tooltip: 'Stop narration',
-                onPressed: () => unawaited(
-                  BrightAudioService.instance.stopVoice(),
-                ),
+                onPressed: () => unawaited(_narrationSession.stop()),
                 icon: const Icon(Icons.stop_circle_outlined, size: 18),
                 visualDensity: VisualDensity.compact,
                 constraints:
@@ -319,45 +496,71 @@ class _LearningNarrationBarState extends State<LearningNarrationBar> {
     );
   }
 
-  void _scheduleAutoNarrationIfNeeded({
-    required bool controllerSoundEnabled,
-    required BrightAudioService audio,
-  }) {
-    if (!widget.autoNarrate || _autoNarratedCueId == widget.cue.id) return;
-    final shouldNarrate = _policy.shouldAutoNarrate(
-      cue: widget.cue,
-      soundEnabled: controllerSoundEnabled,
-      voiceEnabled: audio.voiceEnabled,
-      voiceAvailable: audio.voiceAvailable,
-      autoNarrationEnabled: audio.autoNarrationEnabled,
+  void _ensureOwnedSession() {
+    if (!_ownsSession || _ownedSession != null) return;
+    _ownedSession = LearningNarrationCoordinator.instance.createSession(
+      ownerLabel: 'LearningNarrationBar',
     );
-    if (!audio.initialized || !shouldNarrate) return;
+  }
 
-    _autoNarratedCueId = widget.cue.id;
+  void _syncRouteSubscription() {
+    if (!_ownsSession) {
+      _unsubscribeRoute();
+      return;
+    }
+    final nextRoute = ModalRoute.of(context);
+    if (identical(nextRoute, _route)) return;
+    _unsubscribeRoute();
+    if (nextRoute == null) return;
+    _route = nextRoute;
+    learningNarrationRouteObserver.subscribe(this, nextRoute);
+  }
+
+  void _unsubscribeRoute() {
+    if (_route == null) return;
+    learningNarrationRouteObserver.unsubscribe(this);
+    _route = null;
+  }
+
+  void _handleAudioStateChanged() {
+    _requestAutoNarration();
+  }
+
+  /// Requests automatic narration from widget lifecycle callbacks/listeners.
+  /// No speech side effect is initiated from build().
+  void _requestAutoNarration() {
+    if (!widget.autoNarrate ||
+        _autoNarratedCueId == widget.cue.id ||
+        _autoNarrationScheduled) {
+      return;
+    }
+    _autoNarrationScheduled = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || widget.cue.id != _autoNarratedCueId) return;
-      final latestAudio = BrightAudioService.instance;
+      _autoNarrationScheduled = false;
+      if (!mounted || _autoNarratedCueId == widget.cue.id) return;
+      final audio = BrightAudioService.instance;
       final controller = BrightQuestScope.of(context);
-      final stillAllowed = _policy.shouldAutoNarrate(
-        cue: widget.cue,
-        soundEnabled: controller.soundEnabled,
-        voiceEnabled: latestAudio.voiceEnabled,
-        voiceAvailable: latestAudio.voiceAvailable,
-        autoNarrationEnabled: latestAudio.autoNarrationEnabled,
-      );
-      if (!latestAudio.initialized || !stillAllowed) {
-        _autoNarratedCueId = null;
-        return;
-      }
-      _readAloud();
+      final shouldNarrate = audio.initialized &&
+          _policy.shouldAutoNarrate(
+            cue: widget.cue,
+            soundEnabled: controller.soundEnabled && audio.appAudioEnabled,
+            voiceEnabled: audio.voiceEnabled,
+            voiceAvailable: audio.voiceAvailable,
+            autoNarrationEnabled: audio.autoNarrationEnabled,
+          );
+      if (!shouldNarrate) return;
+      _autoNarratedCueId = widget.cue.id;
+      _narrate(manual: false);
     });
   }
 
-  void _readAloud() {
+  void _readAloud() => _narrate(manual: true);
+
+  void _narrate({required bool manual}) {
     unawaited(
-      BrightAudioService.instance.speakPrompt(
-        widget.cue.spokenText,
-        choices: widget.cue.choices,
+      _narrationSession.speakCue(
+        widget.cue,
+        manual: manual,
       ),
     );
   }

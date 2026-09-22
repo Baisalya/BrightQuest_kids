@@ -4,6 +4,7 @@ import '../../core/nursery/nursery_spoken_labels.dart';
 import '../../core/nursery/nursery_visuals.dart';
 import 'nursery_motion.dart';
 import 'nursery_visual.dart';
+import 'nursery_sound.dart';
 
 /// Picture-first rendering for an authored Nursery answer or matching value.
 ///
@@ -223,7 +224,12 @@ class NurseryGameAnswerCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: enabled ? onTap : null,
+          onTap: enabled
+              ? () {
+                  playNurseryOptionSound();
+                  onTap();
+                }
+              : null,
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: minHeight),
             child: Padding(

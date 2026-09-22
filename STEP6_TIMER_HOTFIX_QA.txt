@@ -1,0 +1,72 @@
+BrightQuest Kids — Step 6 Feedback Sequencing Timer Hotfix QA
+==============================================================
+
+Input failure evidence from local Windows `flutter test`:
+1. One stale static assertion expected the old literal:
+   isGlobalGuardCurrent(globalGuard)
+   while Step 6 now keeps the global guard inside _FeedbackTurn and checks:
+   isGlobalGuardCurrent(turn.globalGuard)
+2. Two Nursery widget tests failed with a pending 180 ms Timer from
+   FeedbackService._playCorrectAudio after the widget tree was disposed.
+
+Root cause
+----------
+The Step 6 correctness/wrong-answer pauses used Future.delayed. Guard checks
+prevented stale speech after the delay completed, but Future.delayed itself is
+not cancellable. If the narration owner was disposed during that pause, Flutter
+widget tests correctly detected the still-live Timer. This was also a real
+lifecycle hygiene issue: stale delayed work remained scheduled even though it
+could no longer speak.
+
+Production fix
+--------------
+- Feedback turns now own cancellable Timer-based pauses.
+- A newer feedback turn cancels the previous turn immediately.
+- LearningNarrationCoordinator exposes a short-lived global invalidation
+  listener registration.
+- Real scope/route invalidation synchronously notifies those listeners.
+- A feedback turn cancels and completes its pending wait immediately on scope,
+  route, or session disposal.
+- Existing guard checks remain in place after the pause.
+- No Future.delayed remains in FeedbackService.
+- Prompt interruption still does NOT advance narration scope.
+
+Test fix
+--------
+- Updated the stale static assertion to the actual Step 6 guard shape.
+- Added static checks for cancellable feedback waits and no Future.delayed.
+- Added a coordinator regression test proving invalidation listeners fire and
+  can be unregistered.
+- Existing Nursery integration tests remain unchanged; they should now verify
+  the timer leak is actually gone rather than hiding it with extra pump time.
+
+Files changed relative to Step 6 FULL
+-------------------------------------
+1. lib/core/accessibility/learning_narration_coordinator.dart
+2. lib/core/services/feedback_service.dart
+3. test/learning_narration_lifecycle_test.dart
+
+Static validation performed in this workspace
+---------------------------------------------
+- Exactly 3 files differ from Step 6 baseline: PASS
+- Balanced Dart delimiters/strings scan for all 3 changed Dart files: PASS
+- No trailing whitespace in changed files: PASS
+- No Future<void>.delayed(...) in FeedbackService: PASS
+- Previous feedback turn cancellation present: PASS
+- Global invalidation listener registration present: PASS
+- Scope invalidation notifies pending feedback: PASS
+- stopAll notifies pending feedback: PASS
+- Cancellable Timer cleanup present: PASS
+- Canceled wait completes its Future: PASS
+- Stale lifecycle static assertion updated: PASS
+- New listener regression test present: PASS
+
+Runtime limitation
+------------------
+Flutter/Dart CLI is not installed in this execution workspace, so no claim is
+made that `flutter test` passed here. Run the FULL hotfix locally with:
+
+flutter test
+
+Expected target: the prior static guard failure disappears and the two Nursery
+pending-timer failures no longer leave a Timer after widget disposal.

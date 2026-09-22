@@ -11,8 +11,9 @@ void main() {
     final shell = File('lib/app/learner_shell_policy.dart').readAsStringSync();
     final controller =
         File('lib/core/state/game_controller.dart').readAsStringSync();
-    final parent = File('lib/features/parent/parent_dashboard_screen.dart')
-        .readAsStringSync();
+    final parentLearning = File(
+      'lib/features/parent/parent_child_learning_screen.dart',
+    ).readAsStringSync();
     final classPacks =
         File('lib/features/parent/class_pack_screen.dart').readAsStringSync();
     final entitlements = File('lib/core/entitlements/entitlement_service.dart')
@@ -49,7 +50,7 @@ void main() {
     );
 
     expect(
-      parent,
+      parentLearning,
       contains('LearnerCapabilityBoundary.supportedSchoolClasses'),
     );
     expect(

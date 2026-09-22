@@ -4,6 +4,7 @@ import '../../core/nursery/nursery_content.dart';
 import '../../core/nursery/nursery_spoken_labels.dart';
 import 'nursery_game_chrome.dart';
 import 'nursery_game_value.dart';
+import 'nursery_sound.dart';
 
 class NurserySortBucketsGame extends StatefulWidget {
   const NurserySortBucketsGame({
@@ -88,7 +89,10 @@ class _NurserySortBucketsGameState extends State<NurserySortBucketsGame> {
                 child: FilledButton.tonal(
                   onPressed: !widget.enabled || selectedItem == null
                       ? null
-                      : () => _assign(bucket, items.length),
+                      : () {
+                          playNurseryActionSound();
+                          _assign(bucket, items.length);
+                        },
                   style: FilledButton.styleFrom(
                     minimumSize: const Size(132, 92),
                     padding: const EdgeInsets.symmetric(

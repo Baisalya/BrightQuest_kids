@@ -375,6 +375,8 @@ class PlayerSnapshot {
     Map<String, ChildProfileSnapshot>? profiles,
     Map<int, ClassEntitlement>? entitlementCache,
     this.parentPinCode,
+    this.parentRecoveryCode,
+    this.parentPinResetRequestedAtIso,
     this.highContrastEnabled = false,
     this.reducedMotionEnabled = false,
     this.hapticsEnabled = true,
@@ -390,6 +392,8 @@ class PlayerSnapshot {
   Map<String, ChildProfileSnapshot> profiles;
   Map<int, ClassEntitlement> entitlementCache;
   String? parentPinCode;
+  String? parentRecoveryCode;
+  String? parentPinResetRequestedAtIso;
   bool highContrastEnabled;
   bool reducedMotionEnabled;
   bool hapticsEnabled;
@@ -420,6 +424,8 @@ class PlayerSnapshot {
               MapEntry<String, Object?>(key.toString(), value.toJson()),
         ),
         'parentPinCode': parentPinCode,
+        'parentRecoveryCode': parentRecoveryCode,
+        'parentPinResetRequestedAtIso': parentPinResetRequestedAtIso,
         'highContrastEnabled': highContrastEnabled,
         'reducedMotionEnabled': reducedMotionEnabled,
         'hapticsEnabled': hapticsEnabled,
@@ -463,6 +469,9 @@ class PlayerSnapshot {
         profiles: profiles,
         entitlementCache: entitlements,
         parentPinCode: json['parentPinCode'] as String?,
+        parentRecoveryCode: json['parentRecoveryCode'] as String?,
+        parentPinResetRequestedAtIso:
+            json['parentPinResetRequestedAtIso'] as String?,
         highContrastEnabled: json['highContrastEnabled'] as bool? ?? false,
         reducedMotionEnabled: json['reducedMotionEnabled'] as bool? ?? false,
         hapticsEnabled: json['hapticsEnabled'] as bool? ?? true,
