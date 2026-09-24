@@ -41,9 +41,10 @@ dart format lib test tool
 5. static release-safety validator;
 6. Phase-D accessibility/localization/performance tests;
 7. complete Flutter test suite;
-8. `flutter analyze`;
-9. Android release AAB build;
-10. normal crash-isolated Windows release build.
+8. `flutter analyze`.
+
+The default command is QA-only. Add `-BuildAndroidAab` or `-BuildWindows` only
+when that artifact is explicitly requested. See `STORE_RELEASE_RUNBOOK.md`.
 
 Only the PowerShell runner may print:
 
@@ -51,7 +52,10 @@ Only the PowerShell runner may print:
 === Phase D completed successfully ===
 ```
 
-because the final automated gate includes a Windows release build. The shell runner can validate the same source/tests and Android AAB on a non-Windows host, but it cannot close the Windows build gate.
+The success line proves only the selected QA/build actions. A default run does
+not prove an Android or Windows artifact was built. The shell runner can
+validate the same source/tests on a non-Windows host, but it cannot close a
+separately requested Windows build gate.
 
 ## Release-candidate output vs commercial release
 

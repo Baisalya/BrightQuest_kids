@@ -13,8 +13,8 @@ This checklist separates **implemented automated gates** from **results that sti
 - [x] A–Z Garden 128×128 thumbnail decode optimization implemented.
 - [x] Max-text/high-contrast/reduced-motion responsive Nursery widget coverage added.
 - [x] Stable answer semantics regression added.
-- [x] Android release AAB build step added to the Windows Phase D gate.
-- [x] Normal crash-isolated Windows release build step added to the Windows Phase D gate.
+- [x] Optional Android release AAB switch added to the Phase D gate.
+- [x] Optional normal Windows release-build switch added to the Phase D gate.
 
 ## Machine verification — pending until run
 
@@ -27,8 +27,9 @@ This checklist separates **implemented automated gates** from **results that sti
 - [ ] focused Phase D tests pass
 - [ ] complete Flutter regression suite passes
 - [ ] `flutter analyze` reports zero issues
-- [ ] Android release AAB builds successfully
-- [ ] normal Windows release build succeeds without restoring unsafe Windows TTS/semantics defaults
+- [ ] Android release AAB builds successfully when `-BuildAndroidAab` is selected
+- [ ] normal Windows release build succeeds when `-BuildWindows` is selected,
+      without restoring unsafe Windows TTS/semantics defaults
 - [ ] runner prints `=== Phase D completed successfully ===`
 
 ## External release evidence — intentionally pending
@@ -43,4 +44,6 @@ This checklist separates **implemented automated gates** from **results that sti
 - [ ] Windows Narrator semantics canary qualification
 - [ ] signed store artifacts and reviewer/support instructions accepted
 
-A green automated Phase D creates a **technical release candidate**. It does not by itself make the ₹299 pack commercially eligible.
+A default green automated Phase D is **QA evidence only**. Artifact builds occur
+only with their explicit switches. Neither result by itself makes the ₹299 pack
+commercially eligible.

@@ -1,5 +1,11 @@
 # BrightQuest Kids Release QA Checklist
 
+Read `STORE_RELEASE_RUNBOOK.md` before acting. QA, Android AAB packaging,
+Windows release building, future MSIX packaging, Store upload, and promotion are
+separate jobs. Do not run this QA checklist automatically when the owner asks
+only for an artifact or Store action and confirms the current source is already
+tested.
+
 ## Automated gate
 
 - Run `tool\qa\run_step12.ps1` on Windows (or `tool/qa/run_step12.sh` in CI/Linux/macOS) for the current production-hardening gate.
@@ -8,7 +14,8 @@
 - Run `flutter test` and all content/release tools.
 - Verify root lifecycle durability flushes both authoritative progress and resumable mission slots on inactive/hidden/paused/detached and memory-pressure events.
 - Verify system accessibility text scaling is preserved up to the Step 12 tested 2x ceiling rather than overwritten by the in-app reading-size preference.
-- Build Android release AAB/APK and Windows release executable.
+- Build artifacts only when separately requested. QA completion alone does not
+  build an Android AAB or Windows executable.
 - Verify schema-v5 migration from legacy saves and corrupted-save fallback.
 - Verify Class 3/4/5 content and free samples offline.
 - Verify no `AD_ID`, ads SDK, child chat or social upload path is present.

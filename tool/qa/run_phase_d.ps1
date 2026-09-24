@@ -1,3 +1,9 @@
+[CmdletBinding()]
+param(
+    [switch]$BuildAndroidAab,
+    [switch]$BuildWindows
+)
+
 $ErrorActionPreference = 'Stop'
 
 function Invoke-PhaseDStep {
@@ -47,13 +53,19 @@ Invoke-PhaseDStep 'BrightQuest Phase D: final static analysis' {
     flutter analyze
 }
 
-Invoke-PhaseDStep 'BrightQuest Phase D: Android release candidate AAB' {
-    flutter build appbundle --release
+if ($BuildAndroidAab) {
+    Invoke-PhaseDStep 'BrightQuest Phase D: Android release candidate AAB' {
+        flutter build appbundle --release
+    }
 }
 
-Invoke-PhaseDStep 'BrightQuest Phase D: safe Windows release candidate' {
-    flutter build windows --release
+if ($BuildWindows) {
+    Invoke-PhaseDStep 'BrightQuest Phase D: safe Windows release candidate' {
+        flutter build windows --release
+    }
 }
 
 Write-Host '=== Phase D completed successfully ==='
-Write-Host 'Technical release candidates built. External teacher/pilot/store/privacy/real-device qualification gates remain pending.'
+Write-Host "Android AAB built: $($BuildAndroidAab.IsPresent)"
+Write-Host "Windows release built: $($BuildWindows.IsPresent)"
+Write-Host 'QA completed. Artifact builds run only when their explicit switches are supplied. External teacher/pilot/store/privacy/real-device qualification gates remain pending.'
