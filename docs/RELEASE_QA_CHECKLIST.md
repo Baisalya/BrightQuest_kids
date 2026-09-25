@@ -14,8 +14,8 @@ tested.
 - Run `flutter test` and all content/release tools.
 - Verify root lifecycle durability flushes both authoritative progress and resumable mission slots on inactive/hidden/paused/detached and memory-pressure events.
 - Verify system accessibility text scaling is preserved up to the Step 12 tested 2x ceiling rather than overwritten by the in-app reading-size preference.
-- Build artifacts only when separately requested. QA completion alone does not
-  build an Android AAB or Windows executable.
+- The QA runners never build artifacts and accept no build switch. Generate an
+  Android AAB or Windows executable only with a separate packaging command.
 - Verify schema-v5 migration from legacy saves and corrupted-save fallback.
 - Verify Class 3/4/5 content and free samples offline.
 - Verify no `AD_ID`, ads SDK, child chat or social upload path is present.

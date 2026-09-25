@@ -43,8 +43,9 @@ dart format lib test tool
 7. complete Flutter test suite;
 8. `flutter analyze`.
 
-The default command is QA-only. Add `-BuildAndroidAab` or `-BuildWindows` only
-when that artifact is explicitly requested. See `STORE_RELEASE_RUNBOOK.md`.
+The command is permanently QA-only and accepts no artifact-build switch. Use
+the separate packaging commands in `STORE_RELEASE_RUNBOOK.md` when an artifact
+is explicitly requested.
 
 Only the PowerShell runner may print:
 
@@ -52,10 +53,9 @@ Only the PowerShell runner may print:
 === Phase D completed successfully ===
 ```
 
-The success line proves only the selected QA/build actions. A default run does
-not prove an Android or Windows artifact was built. The shell runner can
-validate the same source/tests on a non-Windows host, but it cannot close a
-separately requested Windows build gate.
+The success line proves QA only and never proves an Android or Windows artifact
+was built. The shell runner validates the same source/tests on a non-Windows
+host; artifact generation remains a separate job.
 
 ## Release-candidate output vs commercial release
 

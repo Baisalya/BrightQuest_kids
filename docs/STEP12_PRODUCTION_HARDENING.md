@@ -33,19 +33,15 @@ Windows PowerShell:
 tool\qa\run_step12.ps1
 ```
 
-To additionally produce local release builds after all automated gates pass:
-
-```powershell
-tool\qa\run_step12.ps1 -BuildReleaseArtifacts
-```
-
 Linux/macOS/CI:
 
 ```bash
 tool/qa/run_step12.sh
 ```
 
-Set `BUILD_RELEASE_ARTIFACTS=1` to include Android/Windows release build commands where the host supports them.
+Both runners are permanently QA-only. They accept no artifact-build option or
+environment variable. Generate Android/Windows artifacts later with a separate
+packaging command when explicitly requested.
 
 ## Fail-closed external gates
 

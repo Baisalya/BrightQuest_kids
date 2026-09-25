@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BUILD_RELEASE_ARTIFACTS="${BUILD_RELEASE_ARTIFACTS:-0}"
-
 step() {
   printf '\n=== %s ===\n' "$1"
 }
@@ -29,11 +27,4 @@ flutter test
 step 'Step 12: final static analysis'
 flutter analyze
 
-if [[ "$BUILD_RELEASE_ARTIFACTS" == "1" ]]; then
-  step 'Step 12: Android release AAB build'
-  flutter build appbundle --release
-  step 'Step 12: Windows release build'
-  flutter build windows --release
-fi
-
-printf '\nStep 12 automated gates completed. External real-device/store/teacher/pilot/privacy qualification remains pending.\n'
+printf '\nStep 12 QA gates completed. No Android AAB, Windows build, or MSIX was generated. External real-device/store/teacher/pilot/privacy qualification remains pending.\n'

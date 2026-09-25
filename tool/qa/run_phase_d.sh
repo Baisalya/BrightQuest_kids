@@ -26,8 +26,5 @@ flutter test
 echo '=== BrightQuest Phase D: final static analysis ==='
 flutter analyze
 
-echo '=== BrightQuest Phase D: Android release candidate AAB ==='
-flutter build appbundle --release
-
 echo '=== Phase D non-Windows automated gate completed ==='
-echo 'Run tool/qa/run_phase_d.ps1 on Windows to build the safe Windows release candidate and close the automated Phase D gate.'
+echo 'QA only: no Android AAB, Windows build, or MSIX was generated. Use a separate packaging command for artifacts.'

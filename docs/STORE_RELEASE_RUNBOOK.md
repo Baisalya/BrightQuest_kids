@@ -4,19 +4,18 @@ This is the first file an AI should read for a BrightQuest release request.
 
 ## Choose one action
 
-If the owner has not already selected an action, ask which one is wanted:
+If the owner has not already selected an action, ask which of these three jobs
+is wanted:
 
 1. QA/testing only.
-2. Android AAB build only.
-3. Windows executable build only.
-4. Microsoft Store MSIX build.
-5. Upload an existing artifact to testing.
-6. Promote the exact tested artifact to Production.
+2. Generate only: choose Android AAB, Windows executable, or future MSIX.
+3. Store action only: upload an existing artifact or promote the exact tested
+   artifact to Production.
 
-Do not combine these automatically. When the owner says the current source is
-already tested, do not rerun Phase D merely because an artifact was requested.
-Store upload/promotion always reuses the existing artifact and never rebuilds
-it.
+Never combine QA and artifact generation in one command. When the owner says
+the current source is already tested, do not rerun Phase D merely because an
+artifact was requested. Store upload/promotion always reuses the existing
+artifact and never rebuilds or retests it.
 
 ## QA only
 
@@ -28,12 +27,8 @@ This default runs Phase D validation, the complete Flutter tests, and analysis.
 It does not build Android or Windows artifacts. Record the source commit or
 working-tree identity, date, commands, and result before reusing this evidence.
 
-Fresh QA plus one explicitly requested technical artifact is also supported:
-
-```powershell
-.\tool\qa\run_phase_d.ps1 -BuildAndroidAab
-.\tool\qa\run_phase_d.ps1 -BuildWindows
-```
+`run_phase_d.ps1` and `run_phase_d.sh` are permanently QA-only. They accept no
+artifact-build switch.
 
 ## Android AAB packaging only
 
@@ -58,7 +53,7 @@ flutter build windows --release
 ```
 
 This is not a Microsoft Store MSIX. BrightQuest has no canonical Partner Center
-identity/manifest/MSIX packaging workflow yet. If action 4 is selected, stop and
+identity/manifest/MSIX packaging workflow yet. If MSIX generation is selected, stop and
 report that MSIX packaging must first be implemented and verified; never rename
 the Windows build or an archive to `.msix`.
 

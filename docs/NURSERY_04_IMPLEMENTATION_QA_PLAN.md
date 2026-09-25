@@ -281,10 +281,10 @@ dart format lib test tool
 The default Phase D gate performs the final technical regression sweep,
 localization consistency review, accessibility stress checks at the supported
 1.3 text scale/high-contrast/reduced-motion settings, source/runtime
-performance-budget checks, the full Flutter suite and analyzer. Android and
-Windows artifacts are separate optional actions selected with
-`-BuildAndroidAab` or `-BuildWindows`; they are not built by default. A green
-automated Phase D is QA evidence only. Teacher/content sign-off, supervised
+performance-budget checks, the full Flutter suite and analyzer. The Phase D
+runner has no artifact-build switches. Android AAB and Windows generation use
+separate packaging commands. A green automated Phase D is QA evidence only.
+Teacher/content sign-off, supervised
 child pilot evidence, production billing/store verification, privacy/store
 review, real Android device qualification and native Windows
 crash/Narrator/accessibility soak remain external gates and may not be inferred

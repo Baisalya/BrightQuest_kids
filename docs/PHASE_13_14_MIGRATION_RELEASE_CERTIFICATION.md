@@ -82,9 +82,7 @@ Certified behavior:
 6. representative Phase 1–12 architecture/regression gates;
 7. deterministic mission/content quality audit;
 8. full `flutter test`;
-9. optional Windows release build;
-10. optional Android App Bundle release build;
-11. certificate emission **only after every selected gate passes**.
+9. QA certificate emission **only after every gate passes**.
 
 The certificate is written to:
 
@@ -102,15 +100,8 @@ powershell -ExecutionPolicy Bypass -File .\tool\phase13_14_release_certification
 powershell -ExecutionPolicy Bypass -File .\tool\phase13_14_release_certification.ps1 -RequireCleanGit
 ```
 
-### Include release builds
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\tool\phase13_14_release_certification.ps1 -BuildWindows -BuildAndroid
-```
-
-Release builds are optional because Windows SDK state and Android signing/store
-configuration are machine/release-channel concerns. If selected, a build
-failure fails certification.
+This certification runner is permanently QA-only. It accepts no Android or
+Windows build switch; artifact generation is a separate packaging action.
 
 ## Release interpretation
 

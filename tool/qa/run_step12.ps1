@@ -1,7 +1,3 @@
-param(
-    [switch]$BuildReleaseArtifacts
-)
-
 $ErrorActionPreference = 'Stop'
 
 function Invoke-Step12 {
@@ -46,14 +42,6 @@ Invoke-Step12 'Step 12: final static analysis' {
     flutter analyze
 }
 
-if ($BuildReleaseArtifacts) {
-    Invoke-Step12 'Step 12: Android release AAB build' {
-        flutter build appbundle --release
-    }
-    Invoke-Step12 'Step 12: Windows release build' {
-        flutter build windows --release
-    }
-}
-
 Write-Host '=== Step 12 automated gates completed ==='
+Write-Host 'QA only: no Android AAB, Windows build, or MSIX was generated.'
 Write-Host 'Real-device, native Windows soak, teacher/pilot, store billing, privacy/listing and signed-artifact gates remain external and must not be auto-approved.'

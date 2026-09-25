@@ -1,7 +1,5 @@
 ﻿param(
-  [switch]$RequireCleanGit,
-  [switch]$BuildWindows,
-  [switch]$BuildAndroid
+  [switch]$RequireCleanGit
 )
 
 $ErrorActionPreference = "Stop"
@@ -103,18 +101,6 @@ Invoke-GateStep "Full Flutter regression suite" {
   flutter test
 }
 
-if ($BuildWindows) {
-  Invoke-GateStep "Windows release build" {
-    flutter build windows --release
-  }
-}
-
-if ($BuildAndroid) {
-  Invoke-GateStep "Android App Bundle release build" {
-    flutter build appbundle --release
-  }
-}
-
 $FlutterVersion = Get-CommandOutput { flutter --version }
 $DartVersion = Get-CommandOutput { dart --version }
 $CertifiedAt = (Get-Date).ToString("yyyy-MM-ddTHH:mm:ssK")
@@ -132,8 +118,7 @@ $Lines = @(
   "Git branch: $GitBranch",
   "Git working tree: $DirtyLabel",
   "Require clean git: $RequireCleanGit",
-  "Windows release build selected: $BuildWindows",
-  "Android App Bundle selected: $BuildAndroid",
+  "Artifact generation: none (QA-only certification)",
   "",
   "Certified invariants:",
   "- Progress persistence schema remains v6.",
